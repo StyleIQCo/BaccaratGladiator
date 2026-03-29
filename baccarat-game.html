@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Baccarat Gladiator – Play & Learn</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Raleway:wght@300;400;600&display=swap');
+
+  :root {
+    --gold: #c9a84c;
+    --gold-light: #f0d080;
+    --green: #1a5c2a;
+    --green-light: #236b33;
+    --felt: #0e3d1a;
+    --dark: #0a0a0a;
+    --card-bg: #fff;
+    --red: #cc2222;
+    --chip-blue: #2244aa;
+    --chip-red: #aa2222;
+    --chip-green: #226622;
+    --chip-black: #222;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: radial-gradient(ellipse at top, #1a1a2e 0%, #0d0d0d 70%);
+    font-family: 'Raleway', sans-serif;
+    color: #f0e6c8;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ─── HEADER ─── */
+  header {
+    text-align: center;
+    padding: 24px 16px 12px;
+    border-bottom: 1px solid rgba(201,168,76,0.3);
+    background: linear-gradient(180deg, rgba(0,0,0,0.6) 0%, transparent 100%);
+  }
+  header h1 {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(1.8rem, 5vw, 3rem);
+    color: var(--gold);
+    text-shadow: 0 0 30px rgba(201,168,76,0.5);
+    letter-spacing: 4px;
+  }
+  header p { color: rgba(240,230,200,0.6); font-size: 0.85rem; margin-top: 4px; letter-spacing: 2px; }
+
+  /* ─── TABS ─── */
+  .tabs {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    padding: 16px;
+  }
+  .tab-btn {
+    font-family: 'Cinzel', serif;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    padding: 10px 22px;
+    border: 1px solid var(--gold);
+    background: transparent;
+    color: var(--gold);
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.25s;
+  }
+  .tab-btn.active, .tab-btn:hover {
+    background: var(--gold);
+    color: #000;
+  }
+
+  /* ─── GAME TABLE ─── */
+  #tab-game { display: block; }
+  #tab-tutorial, #tab-strategy { display: none; }
+
+  .game-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 16px;
+  }
+
+  /* ─── SCORE BOARD ─── */
+  .scoreboard {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .score-box {
+    background: rgba(0,0,0,0.4);
+    border: 1px solid var(--gold);
+    border-radius: 8px;
+    padding: 10px 24px;
+    text-align: center;
+    min-width: 90px;
+  }
+  .score-box .label { font-size: 0.65rem; letter-spacing: 2px; color: var(--gold); text-transform: uppercase; }
+  .score-box .value { font-family: 'Cinzel', serif; font-size: 1.4rem; color: #fff; }
+
+  /* ─── FELT TABLE ─── */
+  .felt-table {
+    background: radial-gradient(ellipse at center, var(--green-light) 0%, var(--felt) 100%);
+    border: 3px solid var(--gold);
+    border-radius: 16px;
+    padding: 24px 16px;
+    position: relative;
+    box-shadow: 0 0 40px rgba(0,0,0,0.8), inset 0 0 60px rgba(0,0,0,0.3);
+    margin-bottom: 20px;
+  }
+
+  .table-sections {
+    display: grid;
+    grid-template-columns: 1fr 80px 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .hand-section {
+    border: 1px solid rgba(201,168,76,0.4);
+    border-radius: 10px;
+    padding: 12px;
+    text-align: center;
+    background: rgba(0,0,0,0.2);
+    min-height: 160px;
+  }
+  .hand-section h3 {
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+    color: var(--gold);
+    margin-bottom: 10px;
+  }
+
+  .tie-section {
+    border: 1px solid rgba(201,168,76,0.4);
+    border-radius: 10px;
+    padding: 8px 4px;
+    text-align: center;
+    background: rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .tie-section span {
+    font-family: 'Cinzel', serif;
+    font-size: 0.55rem;
+    letter-spacing: 1px;
+    color: var(--gold);
+  }
+
+  /* ─── PLAYING CARDS ─── */
+  .cards-row {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    min-height: 90px;
+    align-items: center;
+  }
+
+  .card {
+    width: 58px;
+    height: 82px;
+    background: var(--card-bg);
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 4px 5px;
+    box-shadow: 2px 2px 6px rgba(0,0,0,0.5);
+    position: relative;
+    font-family: 'Raleway', sans-serif;
+    font-weight: 700;
+    transition: transform 0.3s ease;
+  }
+  .card:hover { transform: translateY(-4px); }
+
+  .card .top-rank { font-size: 0.75rem; line-height: 1; }
+  .card .suit-big { font-size: 1.6rem; text-align: center; line-height: 1; margin: auto; }
+  .card .bot-rank { font-size: 0.75rem; line-height: 1; transform: rotate(180deg); align-self: flex-end; }
+
+  .card.red .top-rank, .card.red .suit-big, .card.red .bot-rank { color: var(--red); }
+  .card.black .top-rank, .card.black .suit-big, .card.black .bot-rank { color: #111; }
+
+  .card.facedown {
+    background: linear-gradient(135deg, #1a1a8a 25%, #2233cc 50%, #1a1a8a 75%);
+    background-size: 20px 20px;
+  }
+  .card.facedown .top-rank, .card.facedown .suit-big, .card.facedown .bot-rank { display: none; }
+
+  .hand-value {
+    font-family: 'Cinzel', serif;
+    font-size: 1.8rem;
+    color: var(--gold-light);
+    margin-top: 8px;
+    text-shadow: 0 0 10px rgba(201,168,76,0.5);
+  }
+
+  .result-badge {
+    display: inline-block;
+    margin-top: 6px;
+    padding: 3px 12px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    letter-spacing: 1px;
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+  }
+  .result-badge.win { background: var(--gold); color: #000; }
+  .result-badge.lose { background: #662222; color: #fff; }
+  .result-badge.tie { background: #445; color: var(--gold); border: 1px solid var(--gold); }
+
+  /* ─── BETTING AREA ─── */
+  .betting-area {
+    border-top: 1px solid rgba(201,168,76,0.3);
+    padding-top: 16px;
+  }
+
+  .bet-slots {
+    display: grid;
+    grid-template-columns: 1fr 80px 1fr;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+
+  .bet-slot {
+    border: 2px dashed rgba(201,168,76,0.3);
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-height: 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+  }
+  .bet-slot:hover { border-color: var(--gold); background: rgba(201,168,76,0.05); }
+  .bet-slot.selected { border-color: var(--gold); border-style: solid; background: rgba(201,168,76,0.1); }
+
+  .bet-slot .slot-name { font-size: 0.65rem; letter-spacing: 1.5px; color: var(--gold); text-transform: uppercase; }
+  .bet-slot .slot-odds { font-size: 0.6rem; color: rgba(240,230,200,0.5); }
+  .bet-slot .slot-bet { font-size: 1rem; font-family: 'Cinzel', serif; color: #fff; }
+
+  /* ─── CHIPS ─── */
+  .chips-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+
+  .chip {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    border: 3px dashed rgba(255,255,255,0.5);
+    cursor: pointer;
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.15s, box-shadow 0.15s;
+    box-shadow: 2px 2px 6px rgba(0,0,0,0.5);
+    user-select: none;
+    position: relative;
+  }
+  .chip::before {
+    content: '';
+    position: absolute;
+    inset: 4px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.2);
+  }
+  .chip:hover { transform: scale(1.1); box-shadow: 0 0 16px rgba(255,255,255,0.3); }
+  .chip:active { transform: scale(0.95); }
+
+  .chip-1    { background: radial-gradient(circle, #aaa 0%, #555 100%); }
+  .chip-5    { background: radial-gradient(circle, #dd4444 0%, #881111 100%); }
+  .chip-25   { background: radial-gradient(circle, #44aa44 0%, #226622 100%); }
+  .chip-100  { background: radial-gradient(circle, #4466cc 0%, #223388 100%); }
+  .chip-500  { background: radial-gradient(circle, #9933cc 0%, #551188 100%); }
+
+  /* ─── BUTTONS ─── */
+  .action-btns {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    font-family: 'Cinzel', serif;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    padding: 12px 26px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 700;
+  }
+  .btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  .btn-deal   { background: var(--gold); color: #000; }
+  .btn-deal:hover:not(:disabled) { background: var(--gold-light); box-shadow: 0 0 20px rgba(201,168,76,0.5); }
+
+  .btn-clear  { background: transparent; color: var(--gold); border: 1px solid var(--gold); }
+  .btn-clear:hover:not(:disabled) { background: rgba(201,168,76,0.1); }
+
+  .btn-new    { background: #1a5c2a; color: #fff; border: 1px solid var(--gold); }
+  .btn-new:hover:not(:disabled) { background: #236b33; }
+
+  /* ─── BALANCE ─── */
+  .balance-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .balance-info { display: flex; gap: 20px; flex-wrap: wrap; }
+  .bal-item { font-size: 0.8rem; }
+  .bal-item span { font-family: 'Cinzel', serif; color: var(--gold); }
+
+  /* ─── MESSAGE ─── */
+  .message-bar {
+    text-align: center;
+    min-height: 36px;
+    font-family: 'Cinzel', serif;
+    font-size: 1rem;
+    color: var(--gold-light);
+    padding: 6px;
+    letter-spacing: 1px;
+  }
+
+  /* ─── HISTORY ─── */
+  .history-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    justify-content: center;
+    margin-top: 12px;
+  }
+  .history-bead {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    font-size: 0.55rem;
+    font-family: 'Cinzel', serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-weight: 700;
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+  }
+  .bead-b { background: #cc2222; }
+  .bead-p { background: #2244aa; }
+  .bead-t { background: #226622; }
+
+  /* ─── TUTORIAL TAB ─── */
+  #tab-tutorial, #tab-strategy {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  .tutorial-section {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  .tutorial-section h2 {
+    font-family: 'Cinzel', serif;
+    color: var(--gold);
+    font-size: 1.1rem;
+    margin-bottom: 12px;
+    letter-spacing: 2px;
+    border-bottom: 1px solid rgba(201,168,76,0.2);
+    padding-bottom: 8px;
+  }
+  .tutorial-section p { line-height: 1.7; color: rgba(240,230,200,0.85); margin-bottom: 10px; font-size: 0.9rem; }
+  .tutorial-section ul { margin-left: 20px; }
+  .tutorial-section li { margin-bottom: 6px; line-height: 1.6; color: rgba(240,230,200,0.85); font-size: 0.9rem; }
+
+  .card-table-mini {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0;
+    font-size: 0.85rem;
+  }
+  .card-table-mini th {
+    background: rgba(201,168,76,0.15);
+    color: var(--gold);
+    padding: 8px 12px;
+    text-align: left;
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+  }
+  .card-table-mini td {
+    padding: 7px 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    color: rgba(240,230,200,0.8);
+  }
+  .card-table-mini tr:hover td { background: rgba(255,255,255,0.03); }
+
+  .highlight-box {
+    background: rgba(201,168,76,0.08);
+    border-left: 3px solid var(--gold);
+    padding: 12px 16px;
+    margin: 10px 0;
+    border-radius: 0 6px 6px 0;
+    font-size: 0.88rem;
+    color: rgba(240,230,200,0.9);
+    line-height: 1.6;
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 540px) {
+    .table-sections, .bet-slots { grid-template-columns: 1fr; }
+    .tie-section { min-height: 60px; flex-direction: row; justify-content: space-around; }
+    .chip { width: 44px; height: 44px; font-size: 0.6rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>♠ BACCARAT GLADIATOR ♠</h1>
+  <p>PLAY · LEARN · MASTER THE GAME</p>
+</header>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="showTab('game')">🎲 Play</button>
+  <button class="tab-btn" onclick="showTab('tutorial')">📖 Tutorial</button>
+  <button class="tab-btn" onclick="showTab('strategy')">🧠 Strategy</button>
+</div>
+
+<!-- ════════════════════════════════ GAME TAB ════════════════════════════════ -->
+<div id="tab-game">
+<div class="game-container">
+
+  <!-- SCOREBOARD -->
+  <div class="scoreboard">
+    <div class="score-box"><div class="label">Banker</div><div class="value" id="score-b">0</div></div>
+    <div class="score-box"><div class="label">Player</div><div class="value" id="score-p">0</div></div>
+    <div class="score-box"><div class="label">Tie</div><div class="value" id="score-t">0</div></div>
+    <div class="score-box"><div class="label">Round</div><div class="value" id="score-r">0</div></div>
+  </div>
+
+  <!-- FELT TABLE -->
+  <div class="felt-table">
+
+    <!-- HANDS -->
+    <div class="table-sections">
+      <div class="hand-section">
+        <h3>⚔ BANKER</h3>
+        <div class="cards-row" id="banker-cards"></div>
+        <div class="hand-value" id="banker-value">—</div>
+        <div id="banker-badge"></div>
+      </div>
+      <div class="tie-section">
+        <span>T</span><span>I</span><span>E</span>
+        <span style="margin-top:6px;font-size:1rem;color:var(--gold)">8:1</span>
+      </div>
+      <div class="hand-section">
+        <h3>🛡 PLAYER</h3>
+        <div class="cards-row" id="player-cards"></div>
+        <div class="hand-value" id="player-value">—</div>
+        <div id="player-badge"></div>
+      </div>
+    </div>
+
+    <!-- MESSAGE -->
+    <div class="message-bar" id="message">Place your bet and press DEAL</div>
+
+    <!-- BETTING -->
+    <div class="betting-area">
+      <div class="bet-slots">
+        <div class="bet-slot" id="slot-banker" onclick="selectBetSlot('banker')">
+          <div class="slot-name">Banker</div>
+          <div class="slot-odds">Pays 1:1 (5% comm.)</div>
+          <div class="slot-bet" id="bet-banker-display">$0</div>
+        </div>
+        <div class="bet-slot" id="slot-tie" onclick="selectBetSlot('tie')">
+          <div class="slot-name">Tie</div>
+          <div class="slot-odds">Pays 8:1</div>
+          <div class="slot-bet" id="bet-tie-display">$0</div>
+        </div>
+        <div class="bet-slot" id="slot-player" onclick="selectBetSlot('player')">
+          <div class="slot-name">Player</div>
+          <div class="slot-odds">Pays 1:1</div>
+          <div class="slot-bet" id="bet-player-display">$0</div>
+        </div>
+      </div>
+
+      <div class="balance-bar">
+        <div class="balance-info">
+          <div class="bal-item">Balance: <span id="balance">$1,000</span></div>
+          <div class="bal-item">Total Bet: <span id="total-bet">$0</span></div>
+        </div>
+        <button class="btn btn-clear" id="btn-clear" onclick="clearBets()">Clear Bets</button>
+      </div>
+
+      <div class="chips-row">
+        <div class="chip chip-1"  onclick="addChip(1)">$1</div>
+        <div class="chip chip-5"  onclick="addChip(5)">$5</div>
+        <div class="chip chip-25" onclick="addChip(25)">$25</div>
+        <div class="chip chip-100" onclick="addChip(100)">$100</div>
+        <div class="chip chip-500" onclick="addChip(500)">$500</div>
+      </div>
+
+      <div class="action-btns">
+        <button class="btn btn-deal" id="btn-deal" onclick="deal()">DEAL</button>
+        <button class="btn btn-new"  id="btn-new"  onclick="newRound()" style="display:none">NEW ROUND</button>
+      </div>
+    </div>
+
+    <!-- BEAD ROAD -->
+    <div class="history-row" id="history"></div>
+  </div>
+</div>
+</div>
+
+<!-- ════════════════════════════════ TUTORIAL TAB ════════════════════════════════ -->
+<div id="tab-tutorial">
+
+  <div class="tutorial-section">
+    <h2>🎯 WHAT IS BACCARAT?</h2>
+    <p>Baccarat is one of the oldest and most prestigious casino card games in the world, famously favored by James Bond. It's a comparing card game played between two hands: the <strong style="color:var(--gold)">Player</strong> and the <strong style="color:var(--gold)">Banker</strong>. Your job is simply to bet on which hand will be closest to 9.</p>
+    <div class="highlight-box">💡 <strong>Key fact:</strong> You don't play the hands yourself — you just bet on the outcome. This makes Baccarat one of the easiest casino games to learn!</div>
+  </div>
+
+  <div class="tutorial-section">
+    <h2>🃏 CARD VALUES</h2>
+    <table class="card-table-mini">
+      <tr><th>Card</th><th>Value</th></tr>
+      <tr><td>Ace</td><td>1 point</td></tr>
+      <tr><td>2 through 9</td><td>Face value</td></tr>
+      <tr><td>10, Jack, Queen, King</td><td>0 points (zero)</td></tr>
+    </table>
+    <div class="highlight-box">💡 <strong>The magic of 9:</strong> If the total exceeds 9, only the last digit counts. So a hand of 7 + 8 = 15 counts as <strong>5</strong>. A hand of 9 + 6 = 15 is also <strong>5</strong>.</div>
+  </div>
+
+  <div class="tutorial-section">
+    <h2>🎮 HOW A ROUND WORKS</h2>
+    <ul>
+      <li><strong>Step 1 – Place your bet:</strong> Choose Banker, Player, or Tie before cards are dealt.</li>
+      <li><strong>Step 2 – Deal:</strong> Both Player and Banker receive two cards face up.</li>
+      <li><strong>Step 3 – Natural Win:</strong> If either hand totals 8 or 9 with two cards, it's a "Natural" — no more cards are drawn.</li>
+      <li><strong>Step 4 – Third card rule:</strong> A third card may be drawn automatically based on strict rules (see below).</li>
+      <li><strong>Step 5 – Closest to 9 wins!</strong></li>
+    </ul>
+  </div>
+
+  <div class="tutorial-section">
+    <h2>📋 THIRD CARD RULES</h2>
+    <p><strong style="color:var(--gold)">Player Third Card Rule:</strong></p>
+    <table class="card-table-mini">
+      <tr><th>Player Total</th><th>Action</th></tr>
+      <tr><td>0, 1, 2, 3, 4, 5</td><td>Draw a third card</td></tr>
+      <tr><td>6, 7</td><td>Stand (no draw)</td></tr>
+      <tr><td>8, 9</td><td>Natural — no draw</td></tr>
+    </table>
+    <br/>
+    <p><strong style="color:var(--gold)">Banker Third Card Rule:</strong></p>
+    <table class="card-table-mini">
+      <tr><th>Banker Total</th><th>Action</th></tr>
+      <tr><td>0, 1, 2</td><td>Always draw</td></tr>
+      <tr><td>3</td><td>Draw unless Player's 3rd card was 8</td></tr>
+      <tr><td>4</td><td>Draw if Player's 3rd card was 2-7</td></tr>
+      <tr><td>5</td><td>Draw if Player's 3rd card was 4-7</td></tr>
+      <tr><td>6</td><td>Draw if Player's 3rd card was 6-7</td></tr>
+      <tr><td>7</td><td>Stand</td></tr>
+      <tr><td>8, 9</td><td>Natural — no draw</td></tr>
+    </table>
+    <div class="highlight-box">💡 <strong>Don't memorize this!</strong> In both real casinos and this app, these rules are applied automatically. You never need to decide — the game handles it.</div>
+  </div>
+
+  <div class="tutorial-section">
+    <h2>💰 PAYOUTS</h2>
+    <table class="card-table-mini">
+      <tr><th>Bet</th><th>Payout</th><th>House Edge</th></tr>
+      <tr><td>Player wins</td><td>1:1 (even money)</td><td>1.24%</td></tr>
+      <tr><td>Banker wins</td><td>1:1 minus 5% commission</td><td>1.06%</td></tr>
+      <tr><td>Tie</td><td>8:1</td><td>14.4%</td></tr>
+    </table>
+    <div class="highlight-box">💡 The Banker bet has the <strong>lowest house edge</strong> of any bet in Baccarat. The 5% commission exists precisely because Banker wins slightly more often!</div>
+  </div>
+
+</div>
+
+<!-- ════════════════════════════════ STRATEGY TAB ════════════════════════════════ -->
+<div id="tab-strategy">
+
+  <div class="tutorial-section">
+    <h2>🧠 CORE STRATEGY PRINCIPLES</h2>
+    <p>Baccarat has one of the lowest house edges in the casino, but no strategy can overcome a mathematical edge over the long run. The goal is to maximize enjoyment and manage your bankroll wisely.</p>
+    <div class="highlight-box">🏆 <strong>The #1 Baccarat tip:</strong> Always bet on Banker. At 1.06% house edge, it's statistically the best bet in Baccarat — better than Player (1.24%) and far better than Tie (14.4%).</div>
+  </div>
+
+  <div class="tutorial-section">
+    <h2>📊 THE THREE BETS COMPARED</h2>
+    <table class="card-table-mini">
+      <tr><th>Bet</th><th>Win %</th><th>House Edge</th><th>Verdict</th></tr>
+      <tr><td>Banker</td><td>45.86%</td><td>1.06%</td><td style="color:#44cc44">✅ Best bet</td></tr>
+      <tr><td>Player</td><td>44.62%</td><td>1.24%</td><td style="color:#cccc44">⚠️ Good bet</td></tr>
+      <tr><td>Tie</td><td>9.52%</td><td>14.4%</td><td style="color:#cc4444">❌ Avoid</td></tr>
+    </table>
+  </div>
+
+  <div class="tutorial-section">
+    <h2>📈 POPULAR BETTING SYSTEMS</h2>
+    <p><strong style="color:var(--gold)">Martingale System:</strong> Double your bet after each loss. One win recovers all losses. Risky with table limits and big losing streaks.</p>
+    <p><strong style="color:var(--gold)">Paroli System (Reverse Martingale):</strong> Double your bet after each win, reset after 3 consecutive wins. Low risk, captures winning streaks.</p>
+    <p><strong style="color:var(--gold)">1-3-2-4 System:</strong> Bet 1 unit, then 3, then 2, then 4 in sequence. Reset after a loss or completing the cycle. Limits losses while letting wins compound.</p>
+    <p><strong style="color:var(--gold)">Flat Betting:</strong> Bet the same amount every hand. Simple, low variance, best for beginners and bankroll preservation.</p>
+    <div class="highlight-box">⚠️ <strong>Important:</strong> Betting systems can add structure and fun, but none change the house edge. Always set a loss limit before you play!</div>
+  </div>
+
+  <div class="tutorial-section">
+    <h2>💼 BANKROLL MANAGEMENT</h2>
+    <ul>
+      <li>Set a session budget before you play and <strong>never exceed it</strong>.</li>
+      <li>A common rule: never bet more than <strong>2-5% of your session bankroll</strong> on a single hand.</li>
+      <li>Set a win goal (e.g., +50%) and walk away when you reach it.</li>
+      <li>Avoid chasing losses — streaks of 7-10 losses in a row are statistically normal.</li>
+      <li>Take regular breaks — decision fatigue affects judgment.</li>
+    </ul>
+  </div>
+
+  <div class="tutorial-section">
+    <h2>🔮 THE "BEAD ROAD" TRACKER</h2>
+    <p>In real casinos (and in this app), players track results with a "Bead Road" — a visual history of Banker wins (<span style="color:#cc2222">●</span>), Player wins (<span style="color:#4488ff">●</span>), and Ties (<span style="color:#44aa44">●</span>).</p>
+    <div class="highlight-box">💡 <strong>Pattern betting:</strong> Some players bet with or against streaks (e.g., "follow the shoe" if Banker wins 3 in a row). Statistically, each hand is independent — but streaks are psychologically real and fun to follow!</div>
+  </div>
+
+</div>
+
+<script>
+// ═══════════════════════════════════════════
+//  BACCARAT GLADIATOR — GAME ENGINE
+// ═══════════════════════════════════════════
+
+// STATE
+let balance = 1000;
+let bets = { banker: 0, player: 0, tie: 0 };
+let selectedSlot = 'banker';
+let gamePhase = 'betting'; // betting | dealt
+let scores = { banker: 0, player: 0, tie: 0, rounds: 0 };
+let history = [];
+
+// DECK
+const RANKS = ['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
+const SUITS = ['♠','♥','♦','♣'];
+const RED_SUITS = ['♥','♦'];
+let shoe = [];
+
+function buildShoe() {
+  shoe = [];
+  for (let d = 0; d < 6; d++)
+    for (let s of SUITS)
+      for (let r of RANKS)
+        shoe.push({ rank: r, suit: s });
+  shuffle(shoe);
+}
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+}
+
+function draw() {
+  if (shoe.length < 10) buildShoe();
+  return shoe.pop();
+}
+
+function cardValue(card) {
+  if (card.rank === 'A') return 1;
+  if (['10','J','Q','K'].includes(card.rank)) return 0;
+  return parseInt(card.rank);
+}
+
+function handTotal(cards) {
+  return cards.reduce((sum, c) => (sum + cardValue(c)) % 10, 0);
+}
+
+// ─── TABS ───
+function showTab(name) {
+  document.getElementById('tab-game').style.display     = name === 'game'     ? 'block' : 'none';
+  document.getElementById('tab-tutorial').style.display = name === 'tutorial' ? 'block' : 'none';
+  document.getElementById('tab-strategy').style.display = name === 'strategy' ? 'block' : 'none';
+  document.querySelectorAll('.tab-btn').forEach((b, i) => {
+    b.classList.toggle('active', ['game','tutorial','strategy'][i] === name);
+  });
+}
+
+// ─── BETTING ───
+function selectBetSlot(slot) {
+  selectedSlot = slot;
+  document.querySelectorAll('.bet-slot').forEach(el => el.classList.remove('selected'));
+  document.getElementById('slot-' + slot).classList.add('selected');
+}
+
+function addChip(val) {
+  if (gamePhase !== 'betting') return;
+  if (balance < val) { setMsg('Not enough balance!'); return; }
+  bets[selectedSlot] += val;
+  balance -= val;
+  updateUI();
+}
+
+function clearBets() {
+  if (gamePhase !== 'betting') return;
+  balance += bets.banker + bets.player + bets.tie;
+  bets = { banker: 0, player: 0, tie: 0 };
+  updateUI();
+}
+
+function totalBet() {
+  return bets.banker + bets.player + bets.tie;
+}
+
+// ─── DEAL ───
+function deal() {
+  if (totalBet() === 0) { setMsg('Place a bet first!'); return; }
+  gamePhase = 'dealt';
+  document.getElementById('btn-deal').style.display = 'none';
+  document.getElementById('btn-new').style.display  = 'inline-block';
+
+  // Build hands
+  let pHand = [draw(), draw()];
+  let bHand = [draw(), draw()];
+
+  let pTotal = handTotal(pHand);
+  let bTotal = handTotal(bHand);
+
+  // Natural check
+  const natural = pTotal >= 8 || bTotal >= 8;
+
+  if (!natural) {
+    // Player third card
+    let pThird = null;
+    if (pTotal <= 5) {
+      pThird = draw();
+      pHand.push(pThird);
+      pTotal = handTotal(pHand);
+    }
+
+    // Banker third card (only if no natural)
+    const bNeeds = bankerDraw(bTotal, pThird);
+    if (bNeeds) {
+      bHand.push(draw());
+      bTotal = handTotal(bHand);
+    }
+  }
+
+  // Render cards
+  renderCards('player-cards', pHand);
+  renderCards('banker-cards', bHand);
+  document.getElementById('player-value').textContent = pTotal;
+  document.getElementById('banker-value').textContent = bTotal;
+
+  // Determine winner
+  let winner;
+  if (pTotal === bTotal) winner = 'tie';
+  else if (bTotal > pTotal) winner = 'banker';
+  else winner = 'player';
+
+  // Update score
+  scores.rounds++;
+  if (winner === 'tie') scores.tie++;
+  else if (winner === 'banker') scores.banker++;
+  else scores.player++;
+
+  // Payout
+  let net = 0;
+  if (winner === 'tie') {
+    if (bets.tie > 0) net += bets.tie * 8;   // 8:1
+    net += bets.tie; // return stake
+    net += bets.banker; // push
+    net += bets.player; // push
+    balance += bets.banker + bets.player + net;
+    // Correct: on tie, banker/player bets push (return) and tie pays 8:1
+    balance = balance; // already added
+    // Recalculate cleanly
+    balance -= bets.banker + bets.player; // we pre-subtracted, re-add push
+    balance += bets.banker + bets.player;
+    if (bets.tie > 0) { balance += bets.tie * 8; } // winnings
+    // tie stake returned already (was deducted at chip placement)
+    balance += bets.tie;
+  } else if (winner === 'banker') {
+    if (bets.banker > 0) {
+      const win = Math.floor(bets.banker * 0.95);
+      balance += bets.banker + win;
+      net = win;
+    }
+    // player loses, tie loses (already deducted)
+  } else {
+    if (bets.player > 0) {
+      balance += bets.player * 2;
+      net = bets.player;
+    }
+    // banker loses, tie loses
+  }
+
+  // Build message
+  let msg = '';
+  if (winner === 'tie') {
+    msg = '🤝 TIE! ' + (bets.tie > 0 ? `You win $${bets.tie * 8}!` : 'All bets push.');
+  } else if (winner === 'banker') {
+    msg = '🏦 BANKER WINS! ' + (bets.banker > 0 ? `You win $${Math.floor(bets.banker * 0.95)}` : bets.player > 0 ? 'You lose.' : '');
+  } else {
+    msg = '🛡 PLAYER WINS! ' + (bets.player > 0 ? `You win $${bets.player}` : bets.banker > 0 ? 'You lose.' : '');
+  }
+  setMsg(msg);
+
+  // Badges
+  const winnerMap = { banker: 'WINS', player: 'WINS', tie: 'TIE' };
+  setBadge('banker-badge', winner === 'banker' ? 'win' : winner === 'tie' ? 'tie' : 'lose', winner === 'banker' ? 'WINNER' : winner === 'tie' ? 'TIE' : 'LOSES');
+  setBadge('player-badge', winner === 'player' ? 'win' : winner === 'tie' ? 'tie' : 'lose', winner === 'player' ? 'WINNER' : winner === 'tie' ? 'TIE' : 'LOSES');
+
+  // History bead
+  history.push(winner);
+  if (history.length > 60) history.shift();
+  renderHistory();
+
+  // Reset bets
+  bets = { banker: 0, player: 0, tie: 0 };
+  updateScores();
+  updateUI();
+}
+
+function bankerDraw(bTotal, pThird) {
+  if (bTotal <= 2) return true;
+  if (bTotal === 7) return false;
+  if (pThird === null) {
+    // Player stood
+    return bTotal <= 5;
+  }
+  const pv = cardValue(pThird);
+  if (bTotal === 3) return pv !== 8;
+  if (bTotal === 4) return pv >= 2 && pv <= 7;
+  if (bTotal === 5) return pv >= 4 && pv <= 7;
+  if (bTotal === 6) return pv === 6 || pv === 7;
+  return false;
+}
+
+// ─── RENDER CARDS ───
+function renderCards(elId, cards) {
+  const container = document.getElementById(elId);
+  container.innerHTML = '';
+  cards.forEach((card, i) => {
+    const div = document.createElement('div');
+    div.className = 'card ' + (RED_SUITS.includes(card.suit) ? 'red' : 'black');
+    div.style.animationDelay = (i * 0.1) + 's';
+    div.innerHTML = `
+      <div class="top-rank">${card.rank}${card.suit}</div>
+      <div class="suit-big">${card.suit}</div>
+      <div class="bot-rank">${card.rank}${card.suit}</div>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function setBadge(elId, type, text) {
+  const el = document.getElementById(elId);
+  el.innerHTML = `<span class="result-badge ${type}">${text}</span>`;
+}
+
+function renderHistory() {
+  const el = document.getElementById('history');
+  el.innerHTML = '';
+  history.forEach(h => {
+    const bead = document.createElement('div');
+    bead.className = 'history-bead bead-' + h[0];
+    bead.title = h.charAt(0).toUpperCase() + h.slice(1);
+    bead.textContent = h[0].toUpperCase();
+    el.appendChild(bead);
+  });
+}
+
+// ─── NEW ROUND ───
+function newRound() {
+  gamePhase = 'betting';
+  document.getElementById('banker-cards').innerHTML = '';
+  document.getElementById('player-cards').innerHTML = '';
+  document.getElementById('banker-value').textContent = '—';
+  document.getElementById('player-value').textContent = '—';
+  document.getElementById('banker-badge').innerHTML = '';
+  document.getElementById('player-badge').innerHTML = '';
+  document.getElementById('btn-deal').style.display = 'inline-block';
+  document.getElementById('btn-new').style.display  = 'none';
+
+  if (balance <= 0) {
+    balance = 1000;
+    setMsg('Reloaded $1,000 — Good luck!');
+  } else {
+    setMsg('Place your bet and press DEAL');
+  }
+  updateUI();
+}
+
+// ─── UI HELPERS ───
+function updateUI() {
+  document.getElementById('balance').textContent     = '$' + balance.toLocaleString();
+  document.getElementById('total-bet').textContent   = '$' + totalBet().toLocaleString();
+  document.getElementById('bet-banker-display').textContent = '$' + bets.banker;
+  document.getElementById('bet-player-display').textContent = '$' + bets.player;
+  document.getElementById('bet-tie-display').textContent    = '$' + bets.tie;
+}
+
+function updateScores() {
+  document.getElementById('score-b').textContent = scores.banker;
+  document.getElementById('score-p').textContent = scores.player;
+  document.getElementById('score-t').textContent = scores.tie;
+  document.getElementById('score-r').textContent = scores.rounds;
+}
+
+function setMsg(text) {
+  document.getElementById('message').textContent = text;
+}
+
+// ─── INIT ───
+buildShoe();
+selectBetSlot('banker');
+updateUI();
+updateScores();
+</script>
+</body>
+</html>
