@@ -1057,26 +1057,23 @@ header h1 {
     </div>
   </div>
 
-  <!-- TALON BET -->
+  <!-- PAIR BETS -->
   <div class="talon-wrap">
     <div class="talon-top">
-      <span class="talon-title">TALON BET</span>
-      <span class="talon-hint">— Player's 3rd card · pushes if no draw</span>
+      <span class="talon-title">PAIR BETS</span>
+      <span class="talon-hint">— First two cards of either hand form a pair · 11:1</span>
     </div>
-    <div class="talon-options">
-      <button class="talon-opt" id="topt-high"  onclick="setTalonType('high')">High 7-9 · 3:1</button>
-      <button class="talon-opt" id="topt-low"   onclick="setTalonType('low')">Low A-6 · 1:1</button>
-      <button class="talon-opt" id="topt-red"   onclick="setTalonType('red')">Red ♥♦ · 1:1</button>
-      <button class="talon-opt" id="topt-black" onclick="setTalonType('black')">Black ♠♣ · 1:1</button>
-      <button class="talon-opt" id="topt-none"  onclick="setTalonType(null)" style="border-color:rgba(255,255,255,0.1);color:rgba(240,230,200,0.3);">Off</button>
-    </div>
-    <div class="talon-bet-row">
-      <div class="talon-bet-slot" id="slot-talon" onclick="selectSlot('talon')">
-        <div class="sname">Talon · <span id="talon-type-label">Select type above</span></div>
-        <div class="samt" id="amt-talon">$0</div>
+    <div class="talon-bet-row" style="gap:6px;">
+      <div class="talon-bet-slot" id="slot-pPair" onclick="selectSlot('pPair')">
+        <div class="sname" style="color:#2244cc;">Player Pair · 11:1</div>
+        <div class="samt" id="amt-pPair">$0</div>
       </div>
-      <span id="talon-result-note"></span>
+      <div class="talon-bet-slot" id="slot-bPair" onclick="selectSlot('bPair')">
+        <div class="sname" style="color:#cc2222;">Banker Pair · 11:1</div>
+        <div class="samt" id="amt-bPair">$0</div>
+      </div>
     </div>
+    <span id="pair-result-note" style="font-size:0.58rem;color:#b090e0;font-style:italic;display:block;margin-top:4px;min-height:1em;"></span>
   </div>
 
   <!-- CHIPS -->
@@ -1173,8 +1170,8 @@ const MODE_RULES={
       <div class="rule-item"><div class="payout">0.95:1</div>Banker win (5% commission)</div>
       <div class="rule-item"><div class="payout">1:1</div>Player win</div>
       <div class="rule-item"><div class="payout">8:1</div>Tie</div>
-      <div class="rule-item"><div class="payout">3:1 / 1:1</div>Talon — High (7-9) / Low (A-6)</div>
-      <div class="rule-item"><div class="payout">1:1</div>Talon — Red or Black suit</div>
+      <div class="rule-item"><div class="payout">11:1</div>Player Pair — Player's first 2 cards same rank</div>
+      <div class="rule-item"><div class="payout">11:1</div>Banker Pair — Banker's first 2 cards same rank</div>
     </div>`
   },
   ez:{
@@ -1187,6 +1184,7 @@ const MODE_RULES={
       <div class="rule-item"><div class="payout">25:1</div>Panda 8 — Player 3-card total of 8</div>
       <div class="rule-item"><div class="payout">1:1</div>Player win</div>
       <div class="rule-item"><div class="payout">8:1</div>Tie</div>
+      <div class="rule-item"><div class="payout">11:1</div>Player Pair / Banker Pair (both modes)</div>
     </div>`
   },
   tiger:{
@@ -1207,8 +1205,8 @@ const MODE_RULES={
 // ── GAME STATE ──────────────────────────────────────────────────
 let gameMode='standard';
 let balance=1000;
-let bets={banker:0,player:0,tie:0,dragon7:0,panda8:0,bigTiger:0,smallTiger:0,tigerTie:0,talon:0};
-let talonType=null;
+let bets={banker:0,player:0,tie:0,dragon7:0,panda8:0,bigTiger:0,smallTiger:0,tigerTie:0,pPair:0,bPair:0};
+// (Talon removed — replaced by Pair bets)
 let selSlot='banker';
 let phase='betting';   // 'betting' | 'revealing' | 'dealt'
 let results=[], shoe=[], scores={B:0,P:0,T:0};
@@ -1286,24 +1284,8 @@ function setMode(m){
 function toggleRules(){ rulesOpen=!rulesOpen; document.getElementById('mode-rules-panel').classList.toggle('open',rulesOpen); if(rulesOpen) showRules(); }
 function showRules(){ document.getElementById('mode-rules-panel').innerHTML=MODE_RULES[gameMode].html; }
 
-// ── TALON ────────────────────────────────────────────────────────
-function setTalonType(t){
-  talonType=t;
-  document.querySelectorAll('.talon-opt').forEach(el=>el.classList.remove('selected'));
-  if(t){
-    document.getElementById('topt-'+t).classList.add('selected');
-    document.getElementById('talon-type-label').textContent=
-      t==='high'?'High 7-9 (3:1)':t==='low'?'Low A-6 (1:1)':t==='red'?'Red ♥♦ (1:1)':'Black ♠♣ (1:1)';
-  } else {
-    document.getElementById('topt-none').classList.add('selected');
-    document.getElementById('talon-type-label').textContent='Select type above';
-    balance+=bets.talon; bets.talon=0; refreshUI();
-  }
-}
-
 // ── BETTING ──────────────────────────────────────────────────────
 function selectSlot(slot){
-  if(slot==='talon'&&!talonType){ setMsg('Select a Talon type first!'); return; }
   selSlot=slot;
   document.querySelectorAll('.bet-slot,.talon-bet-slot').forEach(el=>el.classList.remove('active'));
   const el=document.getElementById('slot-'+slot);
@@ -1318,7 +1300,7 @@ function addChip(val){
 function clearBets(){
   if(phase!=='betting') return;
   balance+=Object.values(bets).reduce((a,b)=>a+b,0);
-  bets={banker:0,player:0,tie:0,dragon7:0,panda8:0,bigTiger:0,smallTiger:0,tigerTie:0,talon:0};
+  bets={banker:0,player:0,tie:0,dragon7:0,panda8:0,bigTiger:0,smallTiger:0,tigerTie:0,pPair:0,bPair:0};
   refreshUI();
 }
 function totalBet(){ return Object.values(bets).reduce((a,b)=>a+b,0); }
@@ -1450,7 +1432,7 @@ function deal(){
   document.getElementById('banker-val').textContent='?';
   document.getElementById('player-val').textContent='?';
 
-  bets={banker:0,player:0,tie:0,dragon7:0,panda8:0,bigTiger:0,smallTiger:0,tigerTie:0,talon:0};
+  bets={banker:0,player:0,tie:0,dragon7:0,panda8:0,bigTiger:0,smallTiger:0,tigerTie:0,pPair:0,bPair:0};
   refreshUI();
   setMsg('🎴 Click your cards to squeeze! Ask the dealer to reveal banker cards.');
 }
@@ -1648,22 +1630,20 @@ function resolveHand(){
     if(b.smallTiger>0){ if(r.isSmallTiger){ const w=b.smallTiger*20; balance+=b.smallTiger+w; netChange+=w; msgs.push(`🐯 Small Tiger! +$${w}`); } else netChange-=b.smallTiger; }
   }
 
-  // ── Talon
-  if(b.talon>0&&talonType){
-    if(r.pThird===null){
-      balance+=b.talon;
-      document.getElementById('talon-result-note').textContent='↩ No draw — Talon push';
-    } else {
-      const tv=cardVal(r.pThird), ts=r.pThird.suit, isRed2=RED_S.has(ts);
-      let tWin=false, tPay=0;
-      if(talonType==='high'&&tv>=7&&tv<=9)  { tWin=true; tPay=b.talon*3; }
-      if(talonType==='low' &&tv>=1&&tv<=6)  { tWin=true; tPay=b.talon*1; }
-      if(talonType==='red' &&isRed2)        { tWin=true; tPay=b.talon*1; }
-      if(talonType==='black'&&!isRed2)      { tWin=true; tPay=b.talon*1; }
-      if(tWin){ balance+=b.talon+tPay; netChange+=tPay; msgs.push(`Talon +$${tPay} (${r.pThird.rank}${r.pThird.suit})`); document.getElementById('talon-result-note').textContent=`✓ Talon: ${r.pThird.rank}${r.pThird.suit} — Win!`; }
-      else    { netChange-=b.talon; document.getElementById('talon-result-note').textContent=`✗ Talon: ${r.pThird.rank}${r.pThird.suit}`; }
-    }
-  } else { document.getElementById('talon-result-note').textContent=''; }
+  // ── Pair Bets (available in all modes)
+  // A pair = Player's or Banker's first two cards share the same rank
+  const pIsPair = r.pH[0].rank === r.pH[1].rank;
+  const bIsPair = r.bH[0].rank === r.bH[1].rank;
+  const pairNotes=[];
+  if(b.pPair>0){
+    if(pIsPair){ const w=b.pPair*11; balance+=b.pPair+w; netChange+=w; msgs.push(`🃏 Player Pair! +$${w}`); pairNotes.push(`✓ Player Pair (${r.pH[0].rank}${r.pH[0].suit}${r.pH[1].suit}) +$${w}`); }
+    else { netChange-=b.pPair; pairNotes.push(`✗ Player Pair — no pair`); }
+  }
+  if(b.bPair>0){
+    if(bIsPair){ const w=b.bPair*11; balance+=b.bPair+w; netChange+=w; msgs.push(`🃏 Banker Pair! +$${w}`); pairNotes.push(`✓ Banker Pair (${r.bH[0].rank}${r.bH[0].suit}${r.bH[1].suit}) +$${w}`); }
+    else { netChange-=b.bPair; pairNotes.push(`✗ Banker Pair — no pair`); }
+  }
+  document.getElementById('pair-result-note').textContent=pairNotes.join('  ·  ');
 
   // ── Badges
   const bBadge=r.winner==='B'?(r.isDragon7&&gameMode==='ez'?'push':'win'):r.winner==='T'?'tie':'lose';
@@ -1744,7 +1724,7 @@ function newRound(){
   document.getElementById('btn-new').style.display='none';
   document.getElementById('btn-clear').disabled=false;
   document.getElementById('msg-bar').className='msg-bar';
-  document.getElementById('talon-result-note').textContent='';
+  document.getElementById('pair-result-note').textContent='';
   if(balance<=0){ balance=1000; setMsg('Reloaded $1,000 — Good luck!'); }
   else if(trialExpired) setMsg('Trial ended — upgrade to keep playing!');
   else setMsg('Select a bet slot, place chips, then DEAL');
@@ -1766,7 +1746,8 @@ function refreshUI(){
   document.getElementById('amt-bigTiger').textContent='$'+bets.bigTiger;
   document.getElementById('amt-smallTiger').textContent='$'+bets.smallTiger;
   document.getElementById('amt-tigerTie').textContent='$'+bets.tigerTie;
-  document.getElementById('amt-talon').textContent='$'+bets.talon;
+  document.getElementById('amt-pPair').textContent='$'+bets.pPair;
+  document.getElementById('amt-bPair').textContent='$'+bets.bPair;
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -1944,7 +1925,7 @@ let soundEnabled = true;
 
 // ── INIT ──────────────────────────────────────────────────────────
 buildShoe();
-setTalonType(null);
+// pair bets init (no special setup needed)
 selectSlot('banker');
 refreshUI();
 updateAllRoads();
@@ -2128,7 +2109,7 @@ function startAutoPlay(){
   if(totalBet()===0){
     const fallback = lastBet && Object.values(lastBet).reduce((a,b)=>a+b,0)>0
       ? lastBet
-      : {banker:5,player:0,tie:0,dragon7:0,panda8:0,bigTiger:0,smallTiger:0,tigerTie:0,talon:0};
+      : {banker:5,player:0,tie:0,dragon7:0,panda8:0,bigTiger:0,smallTiger:0,tigerTie:0,pPair:0,bPair:0};
     // apply fallback bet
     const cost = Object.values(fallback).reduce((a,b)=>a+b,0);
     if(balance < cost){ setMsg('Not enough balance for auto-play!'); return; }
