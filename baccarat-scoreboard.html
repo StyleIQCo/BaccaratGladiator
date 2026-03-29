@@ -26,7 +26,7 @@
 #splash-overlay {
   position:fixed; inset:0; z-index:10000;
   display:flex; flex-direction:column;
-  align-items:center; justify-content:flex-end;
+  align-items:center; justify-content:center;
   overflow:hidden;
   transition:opacity 0.8s ease;
 }
@@ -54,8 +54,10 @@
 }
 .splash-content {
   position:relative; z-index:5;
-  text-align:center; padding:0 20px clamp(28px,7vh,60px);
+  text-align:center; padding:clamp(16px,4vh,40px) 20px clamp(20px,4vh,40px);
   width:100%;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  min-height:100%;
 }
 .splash-ornament {
   font-family:'Cinzel',serif;
@@ -141,6 +143,47 @@
   background:#fff; opacity:0; pointer-events:none; transition:opacity 0.07s ease;
 }
 #splash-flash.on { opacity:0.65; }
+
+/* ── ANIMATED GLADIATOR CARD ── */
+.splash-card-wrap {
+  perspective:900px;
+  margin-bottom:clamp(14px,3vh,28px);
+  animation:splashFadeUp 0.6s ease 0.1s both;
+}
+.splash-card {
+  width:clamp(130px,22vw,190px);
+  height:clamp(182px,31vw,266px);
+  position:relative; transform-style:preserve-3d;
+  animation: cardFlipIn 1.1s cubic-bezier(0.34,1.4,0.64,1) 0.2s both,
+             cardFloat 4s ease-in-out 1.8s infinite;
+  filter:drop-shadow(0 8px 32px rgba(0,0,0,0.7)) drop-shadow(0 0 20px rgba(201,168,76,0.35));
+}
+.splash-card-back,.splash-card-face {
+  position:absolute; inset:0; border-radius:clamp(7px,1.2vw,11px);
+  backface-visibility:hidden;
+}
+.splash-card-back { transform:rotateY(180deg); }
+/* Shine sweep on face after flip */
+.splash-card-face::after {
+  content:''; position:absolute; inset:0; border-radius:inherit;
+  background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,0.18) 50%,transparent 70%);
+  animation:cardShine 3s ease-in-out 1.4s infinite;
+}
+@keyframes cardFlipIn {
+  0%   { transform:rotateY(180deg) scale(0.55) translateY(-40px); }
+  60%  { transform:rotateY(-8deg)  scale(1.04) translateY(4px); }
+  80%  { transform:rotateY(4deg)   scale(1.01); }
+  100% { transform:rotateY(0deg)   scale(1)    translateY(0); }
+}
+@keyframes cardFloat {
+  0%,100% { transform:translateY(0)    rotate(-0.8deg); }
+  50%     { transform:translateY(-10px) rotate(0.8deg); }
+}
+@keyframes cardShine {
+  0%,100% { opacity:0; transform:translateX(-60%); }
+  40%     { opacity:1; transform:translateX(0); }
+  60%     { opacity:0; transform:translateX(60%); }
+}
 @keyframes splashFadeUp {
   from{opacity:0;transform:translateY(22px);} to{opacity:1;transform:translateY(0);}
 }
@@ -691,6 +734,158 @@ header h1 {
   <div class="sp" style="--x:91%; --d:10s; --dl:1.2s; --dr:20px;"></div>
   <button class="splash-sound-btn" id="splash-snd-btn" onclick="toggleSplashSnd()">🔊</button>
   <div class="splash-content">
+
+    <!-- ── ANIMATED GLADIATOR CARD ── -->
+    <div class="splash-card-wrap">
+      <div class="splash-card">
+
+        <!-- CARD BACK -->
+        <div class="splash-card-back">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 190 266" width="100%" height="100%">
+            <rect width="190" height="266" rx="11" fill="#0e1f3d"/>
+            <rect x="5" y="5" width="180" height="256" rx="8" fill="none" stroke="#c9a84c" stroke-width="1.5"/>
+            <rect x="9" y="9" width="172" height="248" rx="6" fill="none" stroke="rgba(201,168,76,0.4)" stroke-width="0.7"/>
+            <!-- Diamond tiling -->
+            <pattern id="dp" x="0" y="0" width="18" height="18" patternUnits="userSpaceOnUse">
+              <path d="M9 2 L16 9 L9 16 L2 9 Z" fill="none" stroke="rgba(201,168,76,0.18)" stroke-width="0.8"/>
+            </pattern>
+            <rect x="10" y="10" width="170" height="246" rx="5" fill="url(#dp)"/>
+            <!-- Center BG logo -->
+            <text x="95" y="130" font-family="serif" font-size="28" font-weight="bold" fill="rgba(201,168,76,0.5)" text-anchor="middle">BG</text>
+            <text x="95" y="152" font-family="serif" font-size="10" fill="rgba(201,168,76,0.35)" text-anchor="middle" letter-spacing="4">♠ ♠ ♠</text>
+          </svg>
+        </div>
+
+        <!-- CARD FACE -->
+        <div class="splash-card-face">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 190 266" width="100%" height="100%">
+            <defs>
+              <linearGradient id="cardBg" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#fdf8f0"/>
+                <stop offset="100%" stop-color="#f5ede0"/>
+              </linearGradient>
+              <linearGradient id="helmGold" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#e8c84a"/>
+                <stop offset="50%" stop-color="#c9a830"/>
+                <stop offset="100%" stop-color="#8b6914"/>
+              </linearGradient>
+              <linearGradient id="helmShadow" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#d4a820"/>
+                <stop offset="100%" stop-color="#6b4f0a"/>
+              </linearGradient>
+            </defs>
+
+            <!-- Card base -->
+            <rect width="190" height="266" rx="11" fill="url(#cardBg)"/>
+            <!-- Outer border (dark red) -->
+            <rect x="4" y="4" width="182" height="258" rx="8" fill="none" stroke="#8b1a1a" stroke-width="2.5"/>
+            <!-- Inner border (gold) -->
+            <rect x="8" y="8" width="174" height="250" rx="6" fill="none" stroke="#c9a84c" stroke-width="1.2"/>
+            <!-- Corner filigree lines -->
+            <line x1="8" y1="28" x2="24" y2="28" stroke="#8b1a1a" stroke-width="0.8"/>
+            <line x1="8" y1="238" x2="24" y2="238" stroke="#8b1a1a" stroke-width="0.8"/>
+            <line x1="166" y1="28" x2="182" y2="28" stroke="#8b1a1a" stroke-width="0.8"/>
+            <line x1="166" y1="238" x2="182" y2="238" stroke="#8b1a1a" stroke-width="0.8"/>
+
+            <!-- Top-left corner index -->
+            <text x="14" y="23" font-family="'Georgia',serif" font-size="13" font-weight="bold" fill="#8b1a1a">B</text>
+            <text x="15" y="34" font-family="serif" font-size="11" fill="#1a1a1a">♠</text>
+
+            <!-- Bottom-right corner index (rotated) -->
+            <g transform="rotate(180,95,133)">
+              <text x="14" y="23" font-family="'Georgia',serif" font-size="13" font-weight="bold" fill="#8b1a1a">G</text>
+              <text x="15" y="34" font-family="serif" font-size="11" fill="#1a1a1a">♠</text>
+            </g>
+
+            <!-- "BACCARAT" title -->
+            <text x="95" y="58" font-family="'Georgia',serif" font-size="13" font-weight="bold"
+                  fill="#8b1a1a" text-anchor="middle" letter-spacing="2">BACCARAT</text>
+            <!-- Title underline ornament -->
+            <line x1="40" y1="63" x2="150" y2="63" stroke="#c9a84c" stroke-width="0.8"/>
+            <circle cx="95" cy="63" r="2" fill="#c9a84c"/>
+
+            <!-- GLADIATOR HELMET SVG (centered at 95,145) -->
+            <!-- Crest base -->
+            <ellipse cx="95" cy="82" rx="10" ry="6" fill="#8b1a1a"/>
+            <!-- Red plume -->
+            <path d="M 85 82 Q 80 70 84 62 Q 88 55 95 60 Q 102 55 106 62 Q 110 70 105 82 Z"
+                  fill="#cc2222"/>
+            <path d="M 87 80 Q 83 70 86 63 Q 90 57 95 61" fill="none" stroke="#aa1111" stroke-width="0.7"/>
+            <path d="M 103 80 Q 107 70 104 63 Q 100 57 95 61" fill="none" stroke="#aa1111" stroke-width="0.7"/>
+            <!-- Plume highlight -->
+            <path d="M 91 76 Q 89 68 91 62" fill="none" stroke="rgba(255,120,100,0.5)" stroke-width="1.2"/>
+
+            <!-- Helmet skull -->
+            <path d="M 62 118 Q 62 95 68 87 Q 75 78 95 77 Q 115 78 122 87 Q 128 95 128 118 L 125 130 Q 119 138 95 140 Q 71 138 65 130 Z"
+                  fill="url(#helmGold)"/>
+            <!-- Skull highlight -->
+            <path d="M 75 88 Q 72 95 72 108" fill="none" stroke="rgba(255,240,160,0.6)" stroke-width="2"/>
+            <path d="M 85 80 Q 82 87 82 100" fill="none" stroke="rgba(255,240,160,0.4)" stroke-width="1.5"/>
+
+            <!-- Cheek guards -->
+            <path d="M 62 118 L 58 140 Q 58 152 65 155 L 72 156 Q 66 145 67 130 Z" fill="url(#helmShadow)"/>
+            <path d="M 128 118 L 132 140 Q 132 152 125 155 L 118 156 Q 124 145 123 130 Z" fill="url(#helmShadow)"/>
+            <!-- Cheek guard details -->
+            <line x1="60" y1="130" x2="70" y2="128" stroke="rgba(201,168,76,0.5)" stroke-width="0.7"/>
+            <line x1="60" y1="136" x2="70" y2="134" stroke="rgba(201,168,76,0.5)" stroke-width="0.7"/>
+            <line x1="130" y1="130" x2="120" y2="128" stroke="rgba(201,168,76,0.5)" stroke-width="0.7"/>
+            <line x1="130" y1="136" x2="120" y2="134" stroke="rgba(201,168,76,0.5)" stroke-width="0.7"/>
+
+            <!-- Neck guard (nape) -->
+            <path d="M 72 156 Q 72 165 80 168 L 95 170 L 110 168 Q 118 165 118 156 L 110 155 Q 95 158 80 155 Z"
+                  fill="url(#helmShadow)"/>
+
+            <!-- Face opening (T-bar visor) -->
+            <!-- Dark face area -->
+            <path d="M 72 100 Q 72 92 80 89 L 95 88 L 110 89 Q 118 92 118 100 L 116 120 Q 115 132 95 133 Q 75 132 74 120 Z"
+                  fill="#1a1208"/>
+            <!-- Visor T-bar -->
+            <rect x="70" y="100" width="50" height="5" rx="2" fill="url(#helmGold)"/>
+            <rect x="91" y="105" width="8" height="25" rx="2" fill="url(#helmGold)"/>
+            <!-- Visor eye slits -->
+            <rect x="73" y="103" width="16" height="2.5" rx="1" fill="#0a0806"/>
+            <rect x="101" y="103" width="16" height="2.5" rx="1" fill="#0a0806"/>
+            <!-- Visor highlight -->
+            <rect x="70" y="100" width="50" height="2" rx="1" fill="rgba(255,240,160,0.4)"/>
+
+            <!-- Helmet ridge line -->
+            <path d="M 95 77 L 95 100" stroke="rgba(255,240,160,0.35)" stroke-width="1.5"/>
+            <!-- Side trim -->
+            <path d="M 62 98 Q 60 108 62 118" fill="none" stroke="rgba(201,168,76,0.7)" stroke-width="1.5"/>
+            <path d="M 128 98 Q 130 108 128 118" fill="none" stroke="rgba(201,168,76,0.7)" stroke-width="1.5"/>
+
+            <!-- Colosseum silhouette (faint background) -->
+            <path d="M 30 175 L 30 168 Q 35 160 42 163 L 42 158 Q 47 152 54 155 L 54 150 Q 95 145 136 150 L 136 155 Q 143 152 148 158 L 148 163 Q 155 160 160 168 L 160 175 Z"
+                  fill="rgba(139,26,26,0.07)"/>
+            <!-- Colosseum arches -->
+            <path d="M 35 175 L 35 165 Q 37 160 40 165 L 40 175" fill="rgba(139,26,26,0.06)"/>
+            <path d="M 44 175 L 44 163 Q 47 157 50 163 L 50 175" fill="rgba(139,26,26,0.06)"/>
+            <path d="M 54 175 L 54 162 Q 57 156 60 162 L 60 175" fill="rgba(139,26,26,0.06)"/>
+
+            <!-- Laurel wreath hint -->
+            <text x="95" y="183" font-family="serif" font-size="9" fill="rgba(139,100,20,0.45)" text-anchor="middle" letter-spacing="1">• ❧ ❧ ❧ •</text>
+
+            <!-- "GLADIATOR" title -->
+            <line x1="40" y1="193" x2="150" y2="193" stroke="#c9a84c" stroke-width="0.8"/>
+            <circle cx="95" cy="193" r="2" fill="#c9a84c"/>
+            <text x="95" y="208" font-family="'Georgia',serif" font-size="13" font-weight="bold"
+                  fill="#1a1a1a" text-anchor="middle" letter-spacing="3">GLADIATOR</text>
+
+            <!-- Bottom ornament -->
+            <text x="95" y="224" font-family="serif" font-size="8" fill="rgba(139,26,26,0.5)" text-anchor="middle" letter-spacing="2">✦ SPQR ✦</text>
+
+            <!-- Corner decorative flourishes -->
+            <path d="M 16 44 Q 20 48 16 52" fill="none" stroke="#c9a84c" stroke-width="0.7"/>
+            <path d="M 174 44 Q 170 48 174 52" fill="none" stroke="#c9a84c" stroke-width="0.7"/>
+            <path d="M 16 214 Q 20 218 16 222" fill="none" stroke="#c9a84c" stroke-width="0.7"/>
+            <path d="M 174 214 Q 170 218 174 222" fill="none" stroke="#c9a84c" stroke-width="0.7"/>
+          </svg>
+        </div>
+
+      </div>
+    </div>
+    <!-- ── END CARD ── -->
+
     <div class="splash-ornament">✦ &nbsp; ENTER THE ARENA &nbsp; ✦</div>
     <div class="splash-sub">THE ULTIMATE</div>
     <div class="splash-title">BACCARAT<br><span>GLADIATOR</span></div>
@@ -2193,11 +2388,12 @@ function enterArena(){
   const flash=document.getElementById('splash-flash');
   flash.classList.add('on');
   setTimeout(()=>{
+    flash.classList.remove('on');   // ← clear flash so it doesn't grey out the game
     stopSplashTheme();
     const overlay=document.getElementById('splash-overlay');
     overlay.classList.add('hide');
-    setTimeout(()=>overlay.remove(), 900);
-  }, 80);
+    setTimeout(()=>{ overlay.remove(); flash.remove(); }, 900);
+  }, 120);
 }
 </script>
 </body>
