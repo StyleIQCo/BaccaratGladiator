@@ -552,10 +552,15 @@ header h1 {
     <h1>♠ BACCARAT GLADIATOR ♠</h1>
     <div class="header-sub" id="mode-subtitle">STANDARD · 5% COMMISSION · ALL 5 ROADS</div>
   </div>
-  <div style="text-align:right;">
-    <div style="font-family:'Cinzel',serif;color:var(--gold);font-size:0.72rem;" id="hdr-balance">Balance: $1,000</div>
-    <div style="font-size:0.58rem;color:rgba(240,230,200,0.4);" id="hdr-rounds">Round 0</div>
-    <div id="hdr-trial" class="trial-badge">Free Trial: 10 hands remaining</div>
+  <div style="text-align:right;display:flex;align-items:center;gap:10px;">
+    <button id="btn-sound" onclick="toggleSound()" title="Toggle sound"
+      style="background:none;border:1px solid rgba(201,168,76,0.35);border-radius:5px;
+             color:var(--gold);font-size:0.85rem;padding:3px 7px;cursor:pointer;line-height:1;">🔊</button>
+    <div>
+      <div style="font-family:'Cinzel',serif;color:var(--gold);font-size:0.72rem;" id="hdr-balance">Balance: $1,000</div>
+      <div style="font-size:0.58rem;color:rgba(240,230,200,0.4);" id="hdr-rounds">Round 0</div>
+      <div id="hdr-trial" class="trial-badge">Free Trial: 10 hands remaining</div>
+    </div>
   </div>
 </header>
 
@@ -867,6 +872,7 @@ let trialExpired = false;
 // ── AUTO-PLAY ─────────────────────────────────────────────────────
 let autoPlayRemaining = 0;
 let autoPlayBetsSnapshot = null;
+let lastBet = null;   // remembered from most recent hand
 
 // Pending hand state (set during deal, used when all revealed)
 let pendingHand=null;
@@ -898,6 +904,7 @@ function buildShoe(){
     const j=Math.floor(Math.random()*(i+1));
     [shoe[i],shoe[j]]=[shoe[j],shoe[i]];
   }
+  soundShuffle();
 }
 function drawCard(){ if(shoe.length<15) buildShoe(); return shoe.pop(); }
 function cardVal(c){ if(c.rank==='A') return 1; if(['10','J','Q','K'].includes(c.rank)) return 0; return parseInt(c.rank); }
@@ -1014,6 +1021,7 @@ function triggerSqueeze(container, id){
   if(inner.classList.contains('revealed')||inner.classList.contains('squeezing')) return;
   container.classList.remove('squeeze-ready');
   inner.classList.add('squeezing');
+  soundSqueeze();
   inner.addEventListener('animationend', ()=>{
     inner.classList.remove('squeezing');
     inner.classList.add('revealed');
@@ -1109,6 +1117,9 @@ function renderInitialCards(){
   // Player: 2 face-down, clickable
   pRow.appendChild(makeCardEl(pendingHand.pH[0],'pc0',true,false));
   pRow.appendChild(makeCardEl(pendingHand.pH[1],'pc1',true,false));
+
+  // Staggered deal sounds: banker 1, player 1, banker 2, player 2
+  [0, 0.13, 0.26, 0.39].forEach(d => soundDeal(d));
 }
 
 function renderThirdCards(){
@@ -1140,6 +1151,8 @@ function renderThirdCards(){
 
   if(hasThird){
     zone.classList.add('visible');
+    // deal sounds for third card(s)
+    let tc=0; if(pThird){ soundDeal(tc*0.14); tc++; } if(bThird){ soundDeal(tc*0.14); }
     setMsg('Third card(s) dealt! Squeeze them to reveal the result.');
   }
   updateRevealButtons();
@@ -1322,7 +1335,13 @@ function resolveHand(){
   document.getElementById('msg-bar').className='msg-bar '+msgCls;
   document.getElementById('msg-bar').textContent=wLabel+special+netStr;
 
+  // ── play outcome sound ──
+  if(netChange>0) soundWin();
+  else if(netChange<0) soundLose();
+
   results.push(r.winner);
+  // remember this bet for auto-play re-use
+  lastBet = {...r.betsSnapshot};
   document.getElementById('btn-clear').disabled=false;
   refreshUI();
   updateAllRoads();
@@ -1576,6 +1595,153 @@ selectSlot('banker');
 refreshUI();
 updateAllRoads();
 
+// ══════════════════════════════════════════════════════════════════
+//  SOUND ENGINE  (Web Audio API — fully synthesized, no files)
+// ══════════════════════════════════════════════════════════════════
+let _audioCtx = null;
+function getAudioCtx(){
+  if(!_audioCtx) _audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+  if(_audioCtx.state==='suspended') _audioCtx.resume();
+  return _audioCtx;
+}
+
+// Master volume (user can mute via button)
+let soundEnabled = true;
+function toggleSound(){
+  soundEnabled = !soundEnabled;
+  document.getElementById('btn-sound').textContent = soundEnabled ? '🔊' : '🔇';
+}
+
+// ── Shuffle: rushing white-noise swish ──
+function soundShuffle(){
+  if(!soundEnabled) return;
+  const ctx = getAudioCtx(), now = ctx.currentTime, dur = 0.45;
+  const bufLen = Math.floor(ctx.sampleRate * dur);
+  const buf = ctx.createBuffer(1, bufLen, ctx.sampleRate);
+  const d = buf.getChannelData(0);
+  for(let i=0;i<bufLen;i++) d[i] = Math.random()*2-1;
+  const src = ctx.createBufferSource(); src.buffer = buf;
+  const filt = ctx.createBiquadFilter();
+  filt.type = 'bandpass'; filt.Q.value = 1.5;
+  filt.frequency.setValueAtTime(600, now);
+  filt.frequency.linearRampToValueAtTime(2400, now+0.18);
+  filt.frequency.linearRampToValueAtTime(800, now+dur);
+  const gain = ctx.createGain();
+  gain.gain.setValueAtTime(0, now);
+  gain.gain.linearRampToValueAtTime(0.28, now+0.06);
+  gain.gain.linearRampToValueAtTime(0.22, now+0.28);
+  gain.gain.exponentialRampToValueAtTime(0.001, now+dur);
+  src.connect(filt); filt.connect(gain); gain.connect(ctx.destination);
+  src.start(now);
+}
+
+// ── Deal: crisp card-slap on felt ──
+function soundDeal(delay=0){
+  if(!soundEnabled) return;
+  const ctx = getAudioCtx(), now = ctx.currentTime + delay;
+  // thump
+  const o1 = ctx.createOscillator();
+  o1.type='sine'; o1.frequency.setValueAtTime(260, now);
+  o1.frequency.exponentialRampToValueAtTime(70, now+0.08);
+  const g1 = ctx.createGain();
+  g1.gain.setValueAtTime(0.5, now); g1.gain.exponentialRampToValueAtTime(0.001, now+0.1);
+  o1.connect(g1); g1.connect(ctx.destination); o1.start(now); o1.stop(now+0.1);
+  // high-freq click (paper snap)
+  const noiseLen = Math.floor(ctx.sampleRate * 0.025);
+  const nbuf = ctx.createBuffer(1, noiseLen, ctx.sampleRate);
+  const nd = nbuf.getChannelData(0);
+  for(let i=0;i<noiseLen;i++) nd[i] = (Math.random()*2-1)*(1-i/noiseLen);
+  const ns = ctx.createBufferSource(); ns.buffer = nbuf;
+  const nf = ctx.createBiquadFilter(); nf.type='highpass'; nf.frequency.value=3000;
+  const ng = ctx.createGain(); ng.gain.value = 0.4;
+  ns.connect(nf); nf.connect(ng); ng.connect(ctx.destination); ns.start(now);
+}
+
+// ── Squeeze: swoosh card-flip ──
+function soundSqueeze(){
+  if(!soundEnabled) return;
+  const ctx = getAudioCtx(), now = ctx.currentTime, dur = 0.38;
+  const bufLen = Math.floor(ctx.sampleRate * dur);
+  const buf = ctx.createBuffer(1, bufLen, ctx.sampleRate);
+  const d = buf.getChannelData(0);
+  for(let i=0;i<bufLen;i++) d[i] = Math.random()*2-1;
+  const src = ctx.createBufferSource(); src.buffer = buf;
+  const filt = ctx.createBiquadFilter(); filt.type='bandpass'; filt.Q.value=4;
+  filt.frequency.setValueAtTime(300, now);
+  filt.frequency.exponentialRampToValueAtTime(3200, now+dur*0.45);
+  filt.frequency.exponentialRampToValueAtTime(700, now+dur);
+  const gain = ctx.createGain();
+  gain.gain.setValueAtTime(0.12, now);
+  gain.gain.linearRampToValueAtTime(0.22, now+dur*0.4);
+  gain.gain.exponentialRampToValueAtTime(0.001, now+dur);
+  src.connect(filt); filt.connect(gain); gain.connect(ctx.destination); src.start(now);
+  // add a little "clack" at the flip midpoint
+  setTimeout(()=>{ if(!soundEnabled) return;
+    const ctx2=getAudioCtx(), t=ctx2.currentTime;
+    const oc=ctx2.createOscillator(); oc.type='square'; oc.frequency.value=1200;
+    const gc=ctx2.createGain(); gc.gain.setValueAtTime(0.08,t); gc.gain.exponentialRampToValueAtTime(0.001,t+0.04);
+    oc.connect(gc); gc.connect(ctx2.destination); oc.start(t); oc.stop(t+0.04);
+  }, dur*0.5*1000);
+}
+
+// ── Win: bright ascending fanfare ──
+function soundWin(){
+  if(!soundEnabled) return;
+  const ctx = getAudioCtx(), now = ctx.currentTime;
+  // Ascending arpeggio: C5-E5-G5-C6
+  [[523,0],[659,0.11],[784,0.22],[1047,0.36]].forEach(([freq,t])=>{
+    const o = ctx.createOscillator(); o.type='triangle'; o.frequency.value=freq;
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0, now+t);
+    g.gain.linearRampToValueAtTime(0.28, now+t+0.04);
+    g.gain.exponentialRampToValueAtTime(0.001, now+t+0.38);
+    o.connect(g); g.connect(ctx.destination); o.start(now+t); o.stop(now+t+0.4);
+  });
+  // sparkle shimmer
+  setTimeout(()=>{ if(!soundEnabled) return;
+    const ctx2=getAudioCtx(), t2=ctx2.currentTime;
+    [1320,1568,2093].forEach((f,i)=>{
+      const o=ctx2.createOscillator(); o.type='sine'; o.frequency.value=f;
+      const g=ctx2.createGain();
+      g.gain.setValueAtTime(0,t2+i*0.06); g.gain.linearRampToValueAtTime(0.12,t2+i*0.06+0.03);
+      g.gain.exponentialRampToValueAtTime(0.001,t2+i*0.06+0.18);
+      o.connect(g); g.connect(ctx2.destination); o.start(t2+i*0.06); o.stop(t2+i*0.06+0.2);
+    });
+  }, 500);
+}
+
+// ── Lose: descending groan ──
+function soundLose(){
+  if(!soundEnabled) return;
+  const ctx = getAudioCtx(), now = ctx.currentTime, dur = 0.9;
+  // Sawtooth groan descending
+  const osc = ctx.createOscillator(); osc.type='sawtooth';
+  osc.frequency.setValueAtTime(200, now);
+  osc.frequency.exponentialRampToValueAtTime(75, now+dur);
+  // Vibrato
+  const lfo = ctx.createOscillator(); lfo.type='sine'; lfo.frequency.value=5.5;
+  const lfoG = ctx.createGain(); lfoG.gain.value=10;
+  lfo.connect(lfoG); lfoG.connect(osc.frequency);
+  const gain = ctx.createGain();
+  gain.gain.setValueAtTime(0.22, now);
+  gain.gain.linearRampToValueAtTime(0.32, now+0.12);
+  gain.gain.exponentialRampToValueAtTime(0.001, now+dur);
+  // Sub thud
+  const sub = ctx.createOscillator(); sub.type='sine';
+  sub.frequency.setValueAtTime(120, now);
+  sub.frequency.exponentialRampToValueAtTime(40, now+0.4);
+  const subG = ctx.createGain();
+  subG.gain.setValueAtTime(0.3, now); subG.gain.exponentialRampToValueAtTime(0.001, now+0.45);
+  const dist = ctx.createWaveShaper();
+  const curve = new Float32Array(256);
+  for(let i=0;i<256;i++){ const x=i*2/256-1; curve[i]=Math.tanh(2*x); }
+  dist.curve = curve;
+  osc.connect(dist); dist.connect(gain); gain.connect(ctx.destination);
+  sub.connect(subG); subG.connect(ctx.destination);
+  lfo.start(now); osc.start(now); sub.start(now);
+  osc.stop(now+dur); sub.stop(now+0.5); lfo.stop(now+dur);
+}
+
 // ── FREE TRIAL HELPERS ───────────────────────────────────────────
 function updateTrialBadge(){
   const el=document.getElementById('hdr-trial');
@@ -1605,7 +1771,18 @@ function checkTrialBlock(){
 function startAutoPlay(){
   if(phase!=='betting'){ setMsg('Finish the current hand first!'); return; }
   if(checkTrialBlock()) return;
-  if(totalBet()===0){ setMsg('Place a bet first, then hit Auto ×5!'); return; }
+  // If no active bet, reuse last bet or default $5 on Banker
+  if(totalBet()===0){
+    const fallback = lastBet && Object.values(lastBet).reduce((a,b)=>a+b,0)>0
+      ? lastBet
+      : {banker:5,player:0,tie:0,dragon7:0,panda8:0,bigTiger:0,smallTiger:0,tigerTie:0,talon:0};
+    // apply fallback bet
+    const cost = Object.values(fallback).reduce((a,b)=>a+b,0);
+    if(balance < cost){ setMsg('Not enough balance for auto-play!'); return; }
+    bets = {...fallback};
+    balance -= cost;
+    refreshUI();
+  }
   // snapshot bets so we repeat them each hand
   autoPlayBetsSnapshot={...bets};
   autoPlayRemaining=5;

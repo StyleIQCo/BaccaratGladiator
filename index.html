@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Baccarat Gladiator</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Cinzel+Decorative:wght@400;700&display=swap');
+
+*{ margin:0; padding:0; box-sizing:border-box; }
+
+html, body {
+  width:100%; height:100%;
+  background:#000;
+  overflow:hidden;
+  font-family:'Cinzel', serif;
+}
+
+/* ── SPLASH CONTAINER ── */
+#splash {
+  position:relative; width:100vw; height:100vh;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  overflow:hidden;
+}
+
+/* Background image */
+#splash-bg {
+  position:absolute; inset:0;
+  width:100%; height:100%;
+  object-fit:cover; object-position:center;
+  opacity:0;
+  transition:opacity 1.8s ease;
+}
+#splash-bg.loaded { opacity:1; }
+
+/* Dark vignette overlay */
+.vignette {
+  position:absolute; inset:0;
+  background:radial-gradient(ellipse at center,
+    rgba(0,0,0,0.1) 0%,
+    rgba(0,0,0,0.45) 55%,
+    rgba(0,0,0,0.82) 100%);
+  pointer-events:none;
+}
+
+/* Bottom gradient to ground the text */
+.bottom-fade {
+  position:absolute; bottom:0; left:0; right:0; height:55%;
+  background:linear-gradient(to top, rgba(0,0,0,0.88) 0%, transparent 100%);
+  pointer-events:none;
+}
+
+/* ── CONTENT LAYER ── */
+.content {
+  position:relative; z-index:10;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:flex-end;
+  height:100%; width:100%;
+  padding-bottom:clamp(28px, 7vh, 64px);
+  text-align:center;
+}
+
+/* Decorative top ornament */
+.ornament {
+  position:absolute; top:clamp(16px,4vh,36px); left:50%; transform:translateX(-50%);
+  font-size:clamp(0.7rem,2vw,1rem);
+  color:rgba(201,168,76,0.5);
+  letter-spacing:6px;
+  opacity:0; animation:fadeUp 1s ease 0.8s forwards;
+}
+
+/* Title block */
+.title-block {
+  opacity:0; transform:translateY(30px);
+  animation:fadeUp 1s ease 0.4s forwards;
+}
+
+.sub-title {
+  font-size:clamp(0.6rem,2vw,0.85rem);
+  letter-spacing:clamp(6px,2vw,14px);
+  color:rgba(201,168,76,0.7);
+  margin-bottom:6px;
+  text-transform:uppercase;
+}
+
+.main-title {
+  font-family:'Cinzel Decorative', serif;
+  font-size:clamp(2.4rem,8vw,5.5rem);
+  font-weight:700;
+  line-height:1;
+  color:#fff;
+  text-shadow:
+    0 0 40px rgba(201,168,76,0.6),
+    0 0 80px rgba(201,168,76,0.3),
+    2px 2px 8px rgba(0,0,0,0.9);
+  letter-spacing:clamp(4px,1.5vw,12px);
+}
+
+.main-title span {
+  color:#c9a84c;
+  text-shadow:
+    0 0 30px rgba(201,168,76,0.9),
+    0 0 60px rgba(201,168,76,0.5),
+    2px 2px 8px rgba(0,0,0,0.9);
+}
+
+/* Gold divider line */
+.divider {
+  width:clamp(120px,30vw,280px); height:1px;
+  background:linear-gradient(90deg, transparent, #c9a84c, transparent);
+  margin:clamp(10px,2vh,20px) auto;
+  opacity:0; animation:fadeIn 1s ease 1s forwards;
+}
+
+/* Tagline */
+.tagline {
+  font-size:clamp(0.6rem,1.8vw,0.88rem);
+  letter-spacing:clamp(3px,1vw,7px);
+  color:rgba(240,230,200,0.65);
+  margin-bottom:clamp(24px,5vh,48px);
+  opacity:0; animation:fadeIn 1s ease 1.2s forwards;
+}
+
+/* Enter button */
+.enter-btn {
+  position:relative;
+  font-family:'Cinzel', serif;
+  font-size:clamp(0.75rem,2vw,1rem);
+  letter-spacing:clamp(4px,1.5vw,8px);
+  text-transform:uppercase;
+  color:#000;
+  background:linear-gradient(135deg, #f0d080 0%, #c9a84c 50%, #a07830 100%);
+  border:none; border-radius:3px;
+  padding:clamp(12px,2vh,18px) clamp(28px,6vw,56px);
+  cursor:pointer;
+  box-shadow:
+    0 0 20px rgba(201,168,76,0.5),
+    0 4px 20px rgba(0,0,0,0.6);
+  opacity:0; animation:fadeUp 1s ease 1.5s forwards;
+  transition:transform 0.15s ease, box-shadow 0.15s ease;
+  overflow:hidden;
+}
+.enter-btn::before {
+  content:'';
+  position:absolute; inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,0.25),transparent);
+  pointer-events:none;
+}
+.enter-btn:hover {
+  transform:scale(1.04);
+  box-shadow:0 0 35px rgba(201,168,76,0.75), 0 6px 24px rgba(0,0,0,0.7);
+}
+.enter-btn:active { transform:scale(0.97); }
+
+/* Free trial note */
+.trial-note {
+  margin-top:12px;
+  font-size:clamp(0.52rem,1.4vw,0.65rem);
+  color:rgba(240,230,200,0.35);
+  letter-spacing:2px;
+  opacity:0; animation:fadeIn 1s ease 2s forwards;
+}
+
+/* Sound toggle */
+.sound-toggle {
+  position:absolute; top:clamp(12px,3vh,24px); right:clamp(12px,3vw,24px);
+  z-index:20;
+  background:rgba(0,0,0,0.45);
+  border:1px solid rgba(201,168,76,0.35);
+  border-radius:6px;
+  color:rgba(201,168,76,0.8);
+  font-size:clamp(0.75rem,2vw,1rem);
+  padding:6px 10px; cursor:pointer;
+  transition:all 0.2s;
+}
+.sound-toggle:hover { border-color:#c9a84c; color:#c9a84c; }
+
+/* Version / build */
+.build-note {
+  position:absolute; bottom:8px; right:12px;
+  font-size:0.5rem; color:rgba(240,230,200,0.18);
+  letter-spacing:1px; z-index:10;
+}
+
+/* SPQR badge */
+.spqr-badge {
+  position:absolute; top:clamp(12px,3vh,24px); left:clamp(12px,3vw,24px);
+  z-index:20;
+  font-size:clamp(0.55rem,1.5vw,0.7rem);
+  color:rgba(201,168,76,0.45);
+  letter-spacing:3px;
+  opacity:0; animation:fadeIn 1.5s ease 1s forwards;
+}
+
+/* ── CINEMATIC FLASH on enter ── */
+#flash {
+  position:fixed; inset:0; z-index:999;
+  background:#fff; opacity:0; pointer-events:none;
+  transition:opacity 0.08s ease;
+}
+#flash.on { opacity:0.7; }
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(24px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity:0; }
+  to   { opacity:1; }
+}
+
+/* Gold particles (CSS only) */
+.particle {
+  position:absolute; width:3px; height:3px;
+  border-radius:50%; background:#c9a84c;
+  pointer-events:none; z-index:5;
+  animation:floatUp var(--dur) ease-in var(--delay) infinite;
+  left:var(--x); bottom:-10px; opacity:0;
+}
+@keyframes floatUp {
+  0%   { transform:translateY(0) translateX(0) scale(1); opacity:0; }
+  10%  { opacity:0.6; }
+  80%  { opacity:0.3; }
+  100% { transform:translateY(-80vh) translateX(var(--drift)) scale(0); opacity:0; }
+}
+</style>
+</head>
+<body>
+
+<div id="flash"></div>
+
+<div id="splash">
+  <!-- Background image — save your image as splash-bg.jpg in this folder -->
+  <img id="splash-bg" src="splash-bg.jpg" alt="Baccarat Gladiator"
+       onload="this.classList.add('loaded')"
+       onerror="this.style.display='none'; document.getElementById('splash').style.background='radial-gradient(ellipse at 50% 30%,#1a3a1c,#050a05)'"/>
+
+  <div class="vignette"></div>
+  <div class="bottom-fade"></div>
+
+  <!-- Gold particles -->
+  <div class="particle" style="--x:8%;  --dur:7s;  --delay:0s;   --drift:20px;"></div>
+  <div class="particle" style="--x:18%; --dur:9s;  --delay:1.5s; --drift:-15px;"></div>
+  <div class="particle" style="--x:30%; --dur:6s;  --delay:3s;   --drift:10px;"></div>
+  <div class="particle" style="--x:50%; --dur:11s; --delay:0.5s; --drift:-25px;"></div>
+  <div class="particle" style="--x:65%; --dur:8s;  --delay:2.2s; --drift:18px;"></div>
+  <div class="particle" style="--x:78%; --dur:7s;  --delay:4s;   --drift:-12px;"></div>
+  <div class="particle" style="--x:90%; --dur:10s; --delay:1s;   --drift:22px;"></div>
+
+  <div class="spqr-badge">SPQR · MMXXVI</div>
+  <div class="ornament">✦ &nbsp; ENTER THE ARENA &nbsp; ✦</div>
+
+  <button class="sound-toggle" id="snd-btn" onclick="toggleSplashSound()" title="Toggle sound">🔊</button>
+
+  <div class="content">
+    <div class="title-block">
+      <div class="sub-title">The Ultimate</div>
+      <div class="main-title">BACCARAT<br><span>GLADIATOR</span></div>
+    </div>
+
+    <div class="divider"></div>
+    <div class="tagline">MASTER THE CARDS · CONQUER THE ARENA</div>
+
+    <button class="enter-btn" id="enter-btn" onclick="enterArena()">
+      ⚔ &nbsp; ENTER THE ARENA &nbsp; ⚔
+    </button>
+    <div class="trial-note">FREE TRIAL · 10 HANDS · NO REGISTRATION REQUIRED</div>
+  </div>
+
+  <div class="build-note">BACCARAT GLADIATOR v2.0</div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════════════════
+//  GLADIATOR THEME — Web Audio API synthesized epic fanfare
+// ══════════════════════════════════════════════════════════════════
+let audioCtx = null;
+let themeNodes = [];
+let splashSoundOn = true;
+let themeStarted = false;
+
+function getCtx(){
+  if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+  if(audioCtx.state==='suspended') audioCtx.resume();
+  return audioCtx;
+}
+
+function toggleSplashSound(){
+  splashSoundOn = !splashSoundOn;
+  document.getElementById('snd-btn').textContent = splashSoundOn ? '🔊' : '🔇';
+  if(splashSoundOn){
+    if(!themeStarted) startTheme();
+  } else {
+    stopTheme();
+  }
+}
+
+function stopTheme(){
+  themeNodes.forEach(n=>{ try{ n.stop(); }catch(e){} });
+  themeNodes=[];
+}
+
+// ── THEME MUSIC ──────────────────────────────────────────────────
+// Gladiator-style epic: low drone + brass fanfare + percussion loop
+function startTheme(){
+  if(!splashSoundOn) return;
+  themeStarted = true;
+  const ctx = getCtx();
+  const master = ctx.createGain();
+  master.gain.setValueAtTime(0, ctx.currentTime);
+  master.gain.linearRampToValueAtTime(0.55, ctx.currentTime + 2.5);
+  master.connect(ctx.destination);
+
+  // ── 1. DEEP DRONE (tonic D) ──────────────────────────────────
+  function makeDrone(freq, gainVal, type='sawtooth'){
+    const osc = ctx.createOscillator();
+    osc.type = type; osc.frequency.value = freq;
+    const g = ctx.createGain(); g.gain.value = gainVal;
+    const lp = ctx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=400; lp.Q.value=0.7;
+    osc.connect(lp); lp.connect(g); g.connect(master);
+    osc.start(); themeNodes.push(osc);
+    return osc;
+  }
+  makeDrone(36.7, 0.22, 'sine');    // D1 sub bass
+  makeDrone(73.4, 0.14, 'sine');    // D2 bass
+  makeDrone(110,  0.05, 'triangle');// A2 fifth
+
+  // ── 2. PERCUSSION LOOP ────────────────────────────────────────
+  const BPM = 72;
+  const beat = 60 / BPM;
+  const loopLen = beat * 8; // 8-beat phrase
+
+  function scheduleDrum(type, times, vol){
+    times.forEach(t => {
+      const now = ctx.currentTime;
+      const when = now + t;
+      if(type==='kick'){
+        const o=ctx.createOscillator(); o.type='sine';
+        o.frequency.setValueAtTime(180,when); o.frequency.exponentialRampToValueAtTime(40, when+0.18);
+        const g=ctx.createGain();
+        g.gain.setValueAtTime(vol, when); g.gain.exponentialRampToValueAtTime(0.001, when+0.35);
+        o.connect(g); g.connect(master); o.start(when); o.stop(when+0.36); themeNodes.push(o);
+      }
+      if(type==='snare'){
+        const bufLen=Math.floor(ctx.sampleRate*0.12);
+        const buf=ctx.createBuffer(1,bufLen,ctx.sampleRate);
+        const d=buf.getChannelData(0);
+        for(let i=0;i<bufLen;i++) d[i]=(Math.random()*2-1)*(1-i/bufLen);
+        const src=ctx.createBufferSource(); src.buffer=buf;
+        const bpf=ctx.createBiquadFilter(); bpf.type='bandpass'; bpf.frequency.value=1800; bpf.Q.value=0.8;
+        const g=ctx.createGain(); g.gain.setValueAtTime(vol,when); g.gain.exponentialRampToValueAtTime(0.001,when+0.12);
+        src.connect(bpf); bpf.connect(g); g.connect(master); src.start(when); themeNodes.push(src);
+      }
+      if(type==='hhat'){
+        const bufLen=Math.floor(ctx.sampleRate*0.05);
+        const buf=ctx.createBuffer(1,bufLen,ctx.sampleRate);
+        const d=buf.getChannelData(0);
+        for(let i=0;i<bufLen;i++) d[i]=(Math.random()*2-1)*(1-i/bufLen);
+        const src=ctx.createBufferSource(); src.buffer=buf;
+        const hp=ctx.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=8000;
+        const g=ctx.createGain(); g.gain.setValueAtTime(vol*0.5,when); g.gain.exponentialRampToValueAtTime(0.001,when+0.05);
+        src.connect(hp); hp.connect(g); g.connect(master); src.start(when); themeNodes.push(src);
+      }
+    });
+  }
+
+  // Roman war-drum pattern (repeats)
+  function schedulePercLoop(loopStart, rep){
+    const b=beat;
+    // Kicks: beats 1, 3 (strong downbeats)
+    scheduleDrum('kick', [loopStart, loopStart+b*2, loopStart+b*4, loopStart+b*6].map(x=>x-ctx.currentTime+0.1), 0.5);
+    // Snares: beats 2, 4 (upbeats)
+    scheduleDrum('snare',[loopStart+b, loopStart+b*3, loopStart+b*5, loopStart+b*7].map(x=>x-ctx.currentTime+0.1), 0.3);
+    // Hi-hat every half beat
+    const hhTimes=[];
+    for(let i=0;i<16;i++) hhTimes.push(loopStart+i*b*0.5);
+    scheduleDrum('hhat', hhTimes.map(x=>x-ctx.currentTime+0.1), 0.15);
+    if(rep<20) setTimeout(()=>schedulePercLoop(loopStart+loopLen, rep+1), (loopLen-beat)*1000);
+  }
+  setTimeout(()=>schedulePercLoop(ctx.currentTime+beat*0.5, 0), 800);
+
+  // ── 3. BRASS FANFARE MELODY ──────────────────────────────────
+  // D-minor modal: D F A C D (dark heroic)
+  // Frequencies: D3=146.8, F3=174.6, A3=220, C4=261.6, D4=293.7, F4=349.2, A4=440
+  const melody = [
+    // [freq, startBeat, durBeats, vol]
+    // Opening fanfare (starts at beat 2)
+    [293.7, 2,   0.8, 0.6],   // D4
+    [349.2, 3,   0.8, 0.55],  // F4
+    [440,   4,   0.8, 0.6],   // A4
+    [587.3, 5,   1.5, 0.65],  // D5 (high point)
+    [440,   6.5, 0.5, 0.5],   // A4 fall
+    [349.2, 7,   1.0, 0.5],   // F4
+
+    // Second phrase (beats 9-16) — deeper call
+    [220,   9,   0.5, 0.5],   // A3
+    [261.6, 9.5, 0.5, 0.5],   // C4
+    [293.7, 10,  0.8, 0.6],   // D4
+    [261.6, 11,  0.5, 0.45],  // C4
+    [220,   11.5,0.5, 0.45],  // A3
+    [174.6, 12,  1.5, 0.55],  // F3
+
+    // Third phrase — triumphant rise
+    [293.7, 14,  0.4, 0.55],  // D4
+    [349.2, 14.5,0.4, 0.55],  // F4
+    [440,   15,  0.4, 0.6],   // A4
+    [523.3, 15.5,0.4, 0.6],   // C5
+    [587.3, 16,  2.5, 0.7],   // D5 sustained
+    [440,   18.5,0.5, 0.5],   // A4
+    [293.7, 19,  2.0, 0.55],  // D4 resolve
+  ];
+
+  function playBrass(freq, startBeat, durBeats, vol){
+    const t = ctx.currentTime + startBeat * beat + 0.5; // 0.5s initial delay
+    const dur = durBeats * beat;
+    // Sawtooth + filter for brass timbre
+    const osc = ctx.createOscillator();
+    osc.type = 'sawtooth'; osc.frequency.value = freq;
+    // Add slight detuned unison for thickness
+    const osc2 = ctx.createOscillator();
+    osc2.type = 'sawtooth'; osc2.frequency.value = freq * 1.005;
+
+    const filt = ctx.createBiquadFilter();
+    filt.type = 'lowpass';
+    filt.frequency.setValueAtTime(800, t);
+    filt.frequency.linearRampToValueAtTime(2200, t + 0.08);
+    filt.frequency.exponentialRampToValueAtTime(900, t + dur);
+    filt.Q.value = 1.2;
+
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(vol * 0.28, t + 0.06);  // attack
+    g.gain.setValueAtTime(vol * 0.28, t + dur - 0.15);
+    g.gain.exponentialRampToValueAtTime(0.001, t + dur);   // release
+
+    const merge = ctx.createChannelMerger();
+    osc.connect(filt); osc2.connect(filt); filt.connect(g); g.connect(master);
+
+    osc.start(t); osc2.start(t);
+    osc.stop(t + dur + 0.05); osc2.stop(t + dur + 0.05);
+    themeNodes.push(osc, osc2);
+  }
+
+  melody.forEach(([f, sb, db, v]) => playBrass(f, sb, db, v));
+
+  // ── 4. LOW STRINGS TREMOLO PAD ────────────────────────────────
+  function makePad(freq, startBeat, durBeats, vol){
+    const t = ctx.currentTime + startBeat * beat;
+    const dur = durBeats * beat;
+    const osc = ctx.createOscillator();
+    osc.type = 'triangle'; osc.frequency.value = freq;
+    // tremolo LFO
+    const lfo = ctx.createOscillator(); lfo.type='sine'; lfo.frequency.value=6.5;
+    const lfoG = ctx.createGain(); lfoG.gain.value = 0.15;
+    lfo.connect(lfoG); lfoG.connect(osc.frequency);
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(vol*0.2, t+0.3);
+    g.gain.setValueAtTime(vol*0.2, t+dur-0.5);
+    g.gain.exponentialRampToValueAtTime(0.001, t+dur);
+    osc.connect(g); g.connect(master);
+    lfo.start(t); osc.start(t); osc.stop(t+dur); lfo.stop(t+dur);
+    themeNodes.push(osc, lfo);
+  }
+
+  // D-minor chord pad under the melody
+  [[146.8,0,20,0.6],[174.6,0,20,0.45],[220,0,20,0.4]].forEach(([f,s,d,v])=>makePad(f,s,d,v));
+
+  // ── 5. LOOP: repeat melody every ~21 beats ────────────────────
+  const loopSec = 21 * beat;
+  function scheduleLoop(rep){
+    if(rep >= 10) return; // stop after ~10 repeats
+    setTimeout(()=>{
+      if(!splashSoundOn) return;
+      melody.forEach(([f,sb,db,v]) => playBrass(f, sb, db, v));
+      scheduleLoop(rep+1);
+    }, loopSec * 1000);
+  }
+  setTimeout(()=>scheduleLoop(1), loopSec * 1000);
+}
+
+// ── AUTO-START THEME ON FIRST INTERACTION ────────────────────────
+// (browsers block audio until user gesture — we start on first touch/click)
+let themeArmed = false;
+function armTheme(){
+  if(themeArmed) return;
+  themeArmed = true;
+  if(splashSoundOn) startTheme();
+}
+document.addEventListener('click',    armTheme, {once:true});
+document.addEventListener('touchstart',armTheme, {once:true});
+
+// ── ENTER ARENA ──────────────────────────────────────────────────
+function enterArena(){
+  armTheme(); // ensure audio context unlocked
+  // Cinematic flash
+  const flash = document.getElementById('flash');
+  flash.classList.add('on');
+  stopTheme();
+  // Play a short sword-clash sound
+  swordClash();
+  setTimeout(()=>{
+    window.location.href='baccarat-scoreboard.html';
+  }, 180);
+}
+
+function swordClash(){
+  const ctx = getCtx(), now = ctx.currentTime;
+  // metallic ring
+  [880, 1320, 1760, 2200].forEach((f,i)=>{
+    const o=ctx.createOscillator(); o.type='triangle'; o.frequency.value=f;
+    const g=ctx.createGain();
+    g.gain.setValueAtTime(0.15-i*0.025, now); g.gain.exponentialRampToValueAtTime(0.001, now+0.6);
+    o.connect(g); g.connect(ctx.destination); o.start(now); o.stop(now+0.65);
+  });
+  // impact noise
+  const bufLen=Math.floor(ctx.sampleRate*0.08);
+  const buf=ctx.createBuffer(1,bufLen,ctx.sampleRate);
+  const d=buf.getChannelData(0);
+  for(let i=0;i<bufLen;i++) d[i]=(Math.random()*2-1)*(1-i/bufLen)*0.8;
+  const src=ctx.createBufferSource(); src.buffer=buf;
+  const g=ctx.createGain(); g.gain.value=0.5;
+  src.connect(g); g.connect(ctx.destination); src.start(now);
+}
+</script>
+</body>
+</html>
