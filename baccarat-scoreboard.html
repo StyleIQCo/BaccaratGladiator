@@ -22,6 +22,89 @@
   --tiger-col:#cc6600;
 }
 
+/* ─── TRIAL BADGE ─── */
+.trial-badge {
+  font-size:0.58rem; letter-spacing:1px;
+  color:rgba(240,230,200,0.55); margin-top:2px;
+  transition: color 0.3s;
+}
+.trial-badge.warning { color:#ffaa00; }
+.trial-badge.critical { color:#ff5555; animation:trialPulse 0.9s ease-in-out infinite; }
+@keyframes trialPulse { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
+
+/* ─── UPGRADE OVERLAY ─── */
+.upgrade-overlay {
+  display:none; position:fixed; inset:0; z-index:9999;
+  background:rgba(0,0,0,0.92);
+  align-items:center; justify-content:center;
+}
+.upgrade-overlay.show { display:flex; }
+.upgrade-box {
+  background:linear-gradient(160deg,#0d1f10 0%,#122818 100%);
+  border:2px solid var(--gold); border-radius:14px;
+  padding:28px 32px; text-align:center;
+  max-width:400px; width:90%; box-shadow:0 0 60px rgba(201,168,76,0.25);
+}
+.upgrade-logo {
+  font-family:'Cinzel',serif; font-size:2rem;
+  color:var(--gold); margin-bottom:6px;
+}
+.upgrade-box h2 {
+  font-family:'Cinzel',serif; color:var(--gold-lt);
+  font-size:1.3rem; margin-bottom:10px;
+}
+.upgrade-box p {
+  color:rgba(240,230,200,0.8); font-size:0.8rem;
+  line-height:1.65; margin-bottom:18px;
+}
+.upgrade-tiers {
+  display:flex; gap:8px; justify-content:center; margin-bottom:18px;
+}
+.upgrade-tier {
+  flex:1; background:rgba(201,168,76,0.07);
+  border:1px solid rgba(201,168,76,0.25);
+  border-radius:8px; padding:10px 6px; position:relative;
+}
+.upgrade-tier.featured {
+  background:rgba(201,168,76,0.14);
+  border-color:var(--gold);
+  transform:scale(1.04);
+}
+.tier-badge {
+  position:absolute; top:-9px; left:50%; transform:translateX(-50%);
+  background:var(--gold); color:#000;
+  font-size:0.5rem; font-family:'Cinzel',serif;
+  padding:2px 6px; border-radius:10px; white-space:nowrap;
+}
+.tier-name { font-size:0.62rem; color:rgba(240,230,200,0.7); margin-bottom:4px; }
+.tier-price { font-family:'Cinzel',serif; color:var(--gold-lt); font-size:1rem; }
+.upgrade-cta {
+  background:var(--gold); color:#000;
+  font-family:'Cinzel',serif; font-size:0.8rem;
+  letter-spacing:1px; border:none; border-radius:6px;
+  padding:10px 24px; cursor:pointer; width:100%;
+  transition:background 0.2s;
+}
+.upgrade-cta:hover { background:var(--gold-lt); }
+
+/* ─── AUTO PLAY BUTTON ─── */
+.btn-auto {
+  background:transparent;
+  color:#ffdd66; border:1px solid #ffdd66;
+  font-size:0.65rem; letter-spacing:1px; white-space:nowrap;
+}
+.btn-auto:hover:not(:disabled) { background:rgba(255,221,102,0.12); }
+.btn-auto:disabled { opacity:0.35; cursor:not-allowed; }
+
+/* ─── AUTO PROGRESS BAR ─── */
+.auto-progress {
+  display:none; padding:4px 12px;
+  font-family:'Cinzel',serif; font-size:0.65rem;
+  color:var(--gold-lt); letter-spacing:1.5px;
+  text-align:center; background:rgba(255,221,102,0.06);
+  border-top:1px solid rgba(255,221,102,0.15);
+}
+
 * { box-sizing:border-box; margin:0; padding:0; }
 body {
   background:#0a0e0a;
@@ -472,8 +555,35 @@ header h1 {
   <div style="text-align:right;">
     <div style="font-family:'Cinzel',serif;color:var(--gold);font-size:0.72rem;" id="hdr-balance">Balance: $1,000</div>
     <div style="font-size:0.58rem;color:rgba(240,230,200,0.4);" id="hdr-rounds">Round 0</div>
+    <div id="hdr-trial" class="trial-badge">Free Trial: 10 hands remaining</div>
   </div>
 </header>
+
+<!-- ═══════ UPGRADE OVERLAY ═══════ -->
+<div class="upgrade-overlay" id="upgrade-overlay">
+  <div class="upgrade-box">
+    <div class="upgrade-logo">♠ BG ♠</div>
+    <h2>Trial Complete!</h2>
+    <p>You've played your <strong>10 free hands</strong>. Unlock the full <em>Baccarat Gladiator</em> experience — unlimited play, all 3 variants, side bets, and the complete strategy guide.</p>
+    <div class="upgrade-tiers">
+      <div class="upgrade-tier">
+        <div class="tier-name">App Only</div>
+        <div class="tier-price">$9.99</div>
+      </div>
+      <div class="upgrade-tier featured">
+        <div class="tier-badge">BEST VALUE</div>
+        <div class="tier-name">App + Tutorial</div>
+        <div class="tier-price">$19.99</div>
+      </div>
+      <div class="upgrade-tier">
+        <div class="tier-name">Full Bundle</div>
+        <div class="tier-price">$34.99</div>
+      </div>
+    </div>
+    <button class="upgrade-cta" onclick="document.getElementById('upgrade-overlay').classList.remove('show')">▶ Continue Demo (No Bets)</button>
+    <div style="font-size:0.6rem;color:rgba(240,230,200,0.3);margin-top:10px;">Demo mode: watch the game, bets disabled</div>
+  </div>
+</div>
 
 <!-- ═══════ MODE BAR ═══════ -->
 <div class="mode-bar">
@@ -629,10 +739,12 @@ header h1 {
       Balance: <span id="bal-display">$1,000</span>
       &nbsp;Bet: <span id="bet-display">$0</span>
     </div>
-    <button class="btn btn-clear" id="btn-clear" onclick="clearBets()">Clear</button>
-    <button class="btn btn-deal"  id="btn-deal"  onclick="deal()">DEAL</button>
-    <button class="btn btn-new"   id="btn-new"   onclick="newRound()" style="display:none">New Round</button>
+    <button class="btn btn-clear"  id="btn-clear"  onclick="clearBets()">Clear</button>
+    <button class="btn btn-deal"   id="btn-deal"   onclick="deal()">DEAL</button>
+    <button class="btn btn-new"    id="btn-new"    onclick="newRound()" style="display:none">New Round</button>
+    <button class="btn btn-auto"   id="btn-auto"   onclick="startAutoPlay()" title="Auto-deal next 5 hands with current bets">⚡ Auto ×5</button>
   </div>
+  <div class="auto-progress" id="auto-progress"></div>
 
   <div class="msg-bar" id="msg-bar">Select a mode · place bets · DEAL</div>
 </div>
@@ -747,6 +859,15 @@ let phase='betting';   // 'betting' | 'revealing' | 'dealt'
 let results=[], shoe=[], scores={B:0,P:0,T:0};
 let rulesOpen=false;
 
+// ── FREE TRIAL ────────────────────────────────────────────────────
+const FREE_HAND_LIMIT = 10;
+let freeHandsUsed = 0;
+let trialExpired = false;
+
+// ── AUTO-PLAY ─────────────────────────────────────────────────────
+let autoPlayRemaining = 0;
+let autoPlayBetsSnapshot = null;
+
 // Pending hand state (set during deal, used when all revealed)
 let pendingHand=null;
 /*
@@ -833,6 +954,7 @@ function selectSlot(slot){
 }
 function addChip(val){
   if(phase!=='betting') return;
+  if(checkTrialBlock()) return;
   if(balance<val){ setMsg('Not enough balance!'); return; }
   bets[selSlot]=(bets[selSlot]||0)+val; balance-=val; refreshUI();
 }
@@ -914,6 +1036,7 @@ function revealCards(ids, delayBetween=180){
 // ── DEAL ─────────────────────────────────────────────────────────
 function deal(){
   if(totalBet()===0){ setMsg('Place a bet first!'); return; }
+  if(checkTrialBlock()) return;
   phase='revealing';
 
   document.getElementById('btn-deal').style.display='none';
@@ -1203,6 +1326,27 @@ function resolveHand(){
   document.getElementById('btn-clear').disabled=false;
   refreshUI();
   updateAllRoads();
+
+  // ── free trial tracking ──
+  freeHandsUsed++;
+  updateTrialBadge();
+  if(freeHandsUsed>=FREE_HAND_LIMIT && !trialExpired){
+    trialExpired=true;
+    setTimeout(()=>{ document.getElementById('upgrade-overlay').classList.add('show'); }, 900);
+  }
+
+  // ── auto-play continuation ──
+  if(autoPlayRemaining>0){
+    autoPlayRemaining--;
+    updateAutoProgress();
+    if(autoPlayRemaining>0){
+      setTimeout(()=>{ newRound(); setTimeout(()=>autoPlayNextHand(), 350); }, 1200);
+    } else {
+      autoPlayRemaining=0;
+      document.getElementById('auto-progress').style.display='none';
+      document.getElementById('btn-auto').disabled=false;
+    }
+  }
 }
 
 // ── BADGES + HELPERS ─────────────────────────────────────────────
@@ -1223,12 +1367,17 @@ function newRound(){
   document.getElementById('third-card-zone').classList.remove('visible');
   document.getElementById('dealer-controls').style.display='none';
   document.getElementById('player-controls').style.display='none';
-  document.getElementById('btn-deal').style.display='inline-block';
+  // only show Deal btn when not in auto-play mode
+  if(autoPlayRemaining<=0){
+    document.getElementById('btn-deal').style.display='inline-block';
+    document.getElementById('btn-auto').disabled=trialExpired;
+  }
   document.getElementById('btn-new').style.display='none';
   document.getElementById('btn-clear').disabled=false;
   document.getElementById('msg-bar').className='msg-bar';
   document.getElementById('talon-result-note').textContent='';
   if(balance<=0){ balance=1000; setMsg('Reloaded $1,000 — Good luck!'); }
+  else if(trialExpired) setMsg('Trial ended — upgrade to keep playing!');
   else setMsg('Select a bet slot, place chips, then DEAL');
   selectSlot('banker');
   refreshUI();
@@ -1426,6 +1575,140 @@ setTalonType(null);
 selectSlot('banker');
 refreshUI();
 updateAllRoads();
+
+// ── FREE TRIAL HELPERS ───────────────────────────────────────────
+function updateTrialBadge(){
+  const el=document.getElementById('hdr-trial');
+  if(!el) return;
+  const rem=Math.max(0, FREE_HAND_LIMIT-freeHandsUsed);
+  if(trialExpired){
+    el.textContent='Demo mode — upgrade to play';
+    el.className='trial-badge critical';
+    return;
+  }
+  el.textContent=`Free Trial: ${rem} hand${rem===1?'':'s'} remaining`;
+  if(rem<=2) el.className='trial-badge critical';
+  else if(rem<=5) el.className='trial-badge warning';
+  else el.className='trial-badge';
+}
+
+// Block chips/deal when trial expired (called from addChip + deal)
+function checkTrialBlock(){
+  if(trialExpired){
+    document.getElementById('upgrade-overlay').classList.add('show');
+    return true;
+  }
+  return false;
+}
+
+// ── AUTO-PLAY HELPERS ────────────────────────────────────────────
+function startAutoPlay(){
+  if(phase!=='betting'){ setMsg('Finish the current hand first!'); return; }
+  if(checkTrialBlock()) return;
+  if(totalBet()===0){ setMsg('Place a bet first, then hit Auto ×5!'); return; }
+  // snapshot bets so we repeat them each hand
+  autoPlayBetsSnapshot={...bets};
+  autoPlayRemaining=5;
+  document.getElementById('btn-auto').disabled=true;
+  document.getElementById('btn-deal').style.display='none';
+  updateAutoProgress();
+  autoPlayNextHand();
+}
+
+function autoPlayNextHand(){
+  if(checkTrialBlock()){ autoPlayRemaining=0; document.getElementById('btn-auto').disabled=false; document.getElementById('auto-progress').style.display='none'; return; }
+  // restore bet snapshot
+  balance+=Object.values(bets).reduce((a,b)=>a+b,0); // refund any leftover
+  bets={...autoPlayBetsSnapshot};
+  balance-=Object.values(bets).reduce((a,b)=>a+b,0);
+  refreshUI();
+  // run deal but flag for instant reveal
+  dealAuto();
+}
+
+function updateAutoProgress(){
+  const bar=document.getElementById('auto-progress');
+  const done=5-autoPlayRemaining;
+  if(autoPlayRemaining<=0){ bar.style.display='none'; return; }
+  bar.style.display='block';
+  bar.textContent=`⚡ AUTO-PLAY  •  Hand ${done+1} of 5  ${'▮'.repeat(done+1)}${'▯'.repeat(4-done)}`;
+}
+
+// Auto-deal: same as deal() but instantly resolves without animation
+function dealAuto(){
+  if(totalBet()===0) return;
+  phase='revealing';
+  document.getElementById('btn-deal').style.display='none';
+  document.getElementById('btn-new').style.display='none';
+  document.getElementById('btn-clear').disabled=true;
+  if(shoe.length<15) buildShoe();
+
+  const pH=[drawCard(),drawCard()];
+  const bH=[drawCard(),drawCard()];
+  const pT=total(pH), bT=total(bH);
+  let pThird=null, bThird=null;
+  const isNat=(pT>=8||bT>=8);
+  if(!isNat){
+    if(pT<=5){ pThird=drawCard(); }
+    if(bankerDraws(bT,pThird)) bThird=drawCard();
+  }
+  const pFinal=total([...pH,...(pThird?[pThird]:[])]);
+  const bFinal=total([...bH,...(bThird?[bThird]:[])]);
+  const winner=pFinal>bFinal?'P':bFinal>pFinal?'B':'T';
+
+  const isDragon7=(gameMode==='ez'&&winner==='B'&&bFinal===7&&bThird);
+  const isPanda8=(gameMode==='ez'&&winner==='P'&&pFinal===8&&pThird);
+  const isBigTiger=(gameMode==='tiger'&&winner==='B'&&bFinal===6&&!bThird);
+  const isSmallTiger=(gameMode==='tiger'&&winner==='B'&&bFinal===6&&bThird);
+  const isTigerTie=(gameMode==='tiger'&&winner==='T'&&pFinal===6&&bFinal===6);
+
+  pendingHand={pH,bH,pThird,bThird,pT:pFinal,bT:bFinal,winner,
+    isDragon7,isPanda8,isBigTiger,isSmallTiger,isTigerTie,
+    betsSnapshot:{...bets}};
+
+  // Show cards face-up instantly (no squeeze)
+  renderInitialCardsAuto();
+  if(pThird||bThird) renderThirdCardsAuto();
+
+  // brief pause then resolve
+  setTimeout(()=>resolveHand(), 700);
+}
+
+function renderInitialCardsAuto(){
+  const bRow=document.getElementById('banker-cards');
+  const pRow=document.getElementById('player-cards');
+  bRow.innerHTML=''; pRow.innerHTML='';
+  [pendingHand.bH[0],pendingHand.bH[1]].forEach((c,i)=>{ bRow.appendChild(makeFaceUpCardEl(c,'bc'+i)); });
+  [pendingHand.pH[0],pendingHand.pH[1]].forEach((c,i)=>{ pRow.appendChild(makeFaceUpCardEl(c,'pc'+i)); });
+  revealState={bankerInitial:[true,true],playerInitial:[true,true],bankerThird:false,playerThird:false,thirdDealt:false};
+}
+
+function renderThirdCardsAuto(){
+  const zone=document.getElementById('third-card-zone');
+  const bTRow=document.getElementById('banker-third-cards');
+  const pTRow=document.getElementById('player-third-cards');
+  bTRow.innerHTML=''; pTRow.innerHTML='';
+  if(pendingHand.bThird){ bTRow.appendChild(makeFaceUpCardEl(pendingHand.bThird,'bc2')); revealState.bankerThird=true; }
+  if(pendingHand.pThird){ pTRow.appendChild(makeFaceUpCardEl(pendingHand.pThird,'pc2')); revealState.playerThird=true; }
+  revealState.thirdDealt=true;
+  zone.classList.add('visible');
+}
+
+function makeFaceUpCardEl(card,id){
+  const container=document.createElement('div');
+  container.className='card-container done'; container.id=id;
+  container.style.cursor='default';
+  const inner=document.createElement('div');
+  inner.className='card-inner revealed';
+  const back=document.createElement('div'); back.className='card-back-face';
+  inner.appendChild(back);
+  const face=document.createElement('div');
+  const isRed=RED_S.has(card.suit);
+  face.className='card-face '+(isRed?'red':'black');
+  face.innerHTML=`<span>${card.rank}${card.suit}</span><span class="suit-big">${card.suit}</span><span>${card.rank}${card.suit}</span>`;
+  inner.appendChild(face); container.appendChild(inner);
+  return container;
+}
 </script>
 </body>
 </html>
