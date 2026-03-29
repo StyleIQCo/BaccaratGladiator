@@ -22,6 +22,130 @@
   --tiger-col:#cc6600;
 }
 
+/* ─── SPLASH SCREEN OVERLAY ─── */
+#splash-overlay {
+  position:fixed; inset:0; z-index:10000;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:flex-end;
+  overflow:hidden;
+  transition:opacity 0.8s ease;
+}
+#splash-overlay.hide { opacity:0; pointer-events:none; }
+#splash-bg-img {
+  position:absolute; inset:0; width:100%; height:100%;
+  object-fit:cover; object-position:center;
+  opacity:0; transition:opacity 1.8s ease;
+}
+#splash-bg-img.loaded { opacity:1; }
+.splash-dark-bg {
+  position:absolute; inset:0;
+  background:radial-gradient(ellipse at 50% 30%, #1a3a1c, #050a05);
+}
+.splash-vignette {
+  position:absolute; inset:0;
+  background:radial-gradient(ellipse at center,
+    rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.45) 55%, rgba(0,0,0,0.82) 100%);
+  pointer-events:none;
+}
+.splash-bottom-fade {
+  position:absolute; bottom:0; left:0; right:0; height:55%;
+  background:linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 100%);
+  pointer-events:none;
+}
+.splash-content {
+  position:relative; z-index:5;
+  text-align:center; padding:0 20px clamp(28px,7vh,60px);
+  width:100%;
+}
+.splash-ornament {
+  font-family:'Cinzel',serif;
+  font-size:clamp(0.6rem,2vw,0.85rem);
+  color:rgba(201,168,76,0.5); letter-spacing:6px;
+  margin-bottom:clamp(6px,1.5vh,14px);
+  animation:splashFadeUp 1s ease 0.6s both;
+}
+.splash-sub {
+  font-family:'Cinzel',serif;
+  font-size:clamp(0.6rem,2vw,0.8rem);
+  letter-spacing:clamp(6px,2vw,14px);
+  color:rgba(201,168,76,0.65); margin-bottom:4px;
+  animation:splashFadeUp 1s ease 0.3s both;
+}
+.splash-title {
+  font-family:'Cinzel',serif; font-weight:900;
+  font-size:clamp(2rem,7vw,4.8rem);
+  line-height:1.05; letter-spacing:clamp(4px,1.5vw,10px);
+  color:#fff;
+  text-shadow:0 0 40px rgba(201,168,76,0.6),0 0 80px rgba(201,168,76,0.25),2px 2px 8px rgba(0,0,0,0.95);
+  animation:splashFadeUp 1s ease 0.3s both;
+}
+.splash-title span {
+  color:#c9a84c;
+  text-shadow:0 0 30px rgba(201,168,76,0.9),0 0 60px rgba(201,168,76,0.4),2px 2px 8px rgba(0,0,0,0.95);
+}
+.splash-divider {
+  width:clamp(100px,28vw,260px); height:1px;
+  background:linear-gradient(90deg,transparent,#c9a84c,transparent);
+  margin:clamp(8px,1.8vh,18px) auto;
+  animation:splashFade 1s ease 1s both;
+}
+.splash-tagline {
+  font-family:'Cinzel',serif;
+  font-size:clamp(0.55rem,1.6vw,0.78rem);
+  letter-spacing:clamp(3px,1vw,7px);
+  color:rgba(240,230,200,0.55);
+  margin-bottom:clamp(20px,4vh,42px);
+  animation:splashFade 1s ease 1.2s both;
+}
+.splash-enter-btn {
+  font-family:'Cinzel',serif;
+  font-size:clamp(0.7rem,2vw,0.95rem);
+  letter-spacing:clamp(4px,1.5vw,8px);
+  color:#000;
+  background:linear-gradient(135deg,#f0d080,#c9a84c,#a07830);
+  border:none; border-radius:3px;
+  padding:clamp(11px,2vh,17px) clamp(26px,5vw,52px);
+  cursor:pointer;
+  box-shadow:0 0 24px rgba(201,168,76,0.55),0 4px 18px rgba(0,0,0,0.65);
+  transition:transform 0.15s,box-shadow 0.15s;
+  animation:splashFadeUp 1s ease 1.5s both;
+}
+.splash-enter-btn:hover { transform:scale(1.05); box-shadow:0 0 40px rgba(201,168,76,0.8),0 6px 22px rgba(0,0,0,0.7); }
+.splash-enter-btn:active { transform:scale(0.97); }
+.splash-trial-note {
+  margin-top:10px; font-size:clamp(0.5rem,1.3vw,0.62rem);
+  color:rgba(240,230,200,0.3); letter-spacing:2px;
+  animation:splashFade 1s ease 2s both;
+}
+.splash-sound-btn {
+  position:absolute; top:clamp(10px,3vh,22px); right:clamp(10px,3vw,22px);
+  z-index:6; background:rgba(0,0,0,0.4);
+  border:1px solid rgba(201,168,76,0.35); border-radius:5px;
+  color:rgba(201,168,76,0.8); font-size:0.9rem;
+  padding:5px 9px; cursor:pointer; transition:all 0.2s;
+}
+.splash-sound-btn:hover { border-color:#c9a84c; color:#c9a84c; }
+.sp {
+  position:absolute; width:3px; height:3px; border-radius:50%;
+  background:#c9a84c; pointer-events:none; z-index:4;
+  animation:spFloat var(--d) ease-in var(--dl) infinite;
+  left:var(--x); bottom:-8px; opacity:0;
+}
+@keyframes spFloat {
+  0%{transform:translateY(0) translateX(0) scale(1);opacity:0;}
+  10%{opacity:0.55;} 80%{opacity:0.25;}
+  100%{transform:translateY(-90vh) translateX(var(--dr)) scale(0);opacity:0;}
+}
+#splash-flash {
+  position:fixed; inset:0; z-index:10001;
+  background:#fff; opacity:0; pointer-events:none; transition:opacity 0.07s ease;
+}
+#splash-flash.on { opacity:0.65; }
+@keyframes splashFadeUp {
+  from{opacity:0;transform:translateY(22px);} to{opacity:1;transform:translateY(0);}
+}
+@keyframes splashFade { from{opacity:0;} to{opacity:1;} }
+
 /* ─── TRIAL BADGE ─── */
 .trial-badge {
   font-size:0.58rem; letter-spacing:1px;
@@ -545,6 +669,37 @@ header h1 {
 </style>
 </head>
 <body>
+
+<!-- ═══════ SPLASH FLASH ═══════ -->
+<div id="splash-flash"></div>
+
+<!-- ═══════ SPLASH OVERLAY ═══════ -->
+<div id="splash-overlay">
+  <div class="splash-dark-bg"></div>
+  <img id="splash-bg-img" src="splash-bg.jpg" alt=""
+       onload="this.classList.add('loaded')"
+       onerror="this.style.display='none'"/>
+  <div class="splash-vignette"></div>
+  <div class="splash-bottom-fade"></div>
+  <!-- Gold particles -->
+  <div class="sp" style="--x:7%;  --d:7s;  --dl:0s;   --dr:18px;"></div>
+  <div class="sp" style="--x:19%; --d:9s;  --dl:1.8s; --dr:-14px;"></div>
+  <div class="sp" style="--x:33%; --d:6s;  --dl:3.2s; --dr:10px;"></div>
+  <div class="sp" style="--x:51%; --d:11s; --dl:0.6s; --dr:-22px;"></div>
+  <div class="sp" style="--x:66%; --d:8s;  --dl:2.4s; --dr:16px;"></div>
+  <div class="sp" style="--x:80%; --d:7s;  --dl:4.1s; --dr:-11px;"></div>
+  <div class="sp" style="--x:91%; --d:10s; --dl:1.2s; --dr:20px;"></div>
+  <button class="splash-sound-btn" id="splash-snd-btn" onclick="toggleSplashSnd()">🔊</button>
+  <div class="splash-content">
+    <div class="splash-ornament">✦ &nbsp; ENTER THE ARENA &nbsp; ✦</div>
+    <div class="splash-sub">THE ULTIMATE</div>
+    <div class="splash-title">BACCARAT<br><span>GLADIATOR</span></div>
+    <div class="splash-divider"></div>
+    <div class="splash-tagline">MASTER THE CARDS &nbsp;·&nbsp; CONQUER THE ARENA</div>
+    <button class="splash-enter-btn" onclick="enterArena()">⚔ &nbsp; ENTER THE ARENA &nbsp; ⚔</button>
+    <div class="splash-trial-note">FREE TRIAL · 10 HANDS · NO REGISTRATION REQUIRED</div>
+  </div>
+</div>
 
 <!-- ═══════ HEADER ═══════ -->
 <header>
@@ -1885,6 +2040,161 @@ function makeFaceUpCardEl(card,id){
   face.innerHTML=`<span>${card.rank}${card.suit}</span><span class="suit-big">${card.suit}</span><span>${card.rank}${card.suit}</span>`;
   inner.appendChild(face); container.appendChild(inner);
   return container;
+}
+
+// ══════════════════════════════════════════════════════════════════
+//  SPLASH SCREEN — theme music + enter transition
+// ══════════════════════════════════════════════════════════════════
+let splashAudioCtx = null;
+let splashThemeNodes = [];
+let splashSndOn = true;
+let splashThemeStarted = false;
+
+function getSplashCtx(){
+  if(!splashAudioCtx) splashAudioCtx=new (window.AudioContext||window.webkitAudioContext)();
+  if(splashAudioCtx.state==='suspended') splashAudioCtx.resume();
+  return splashAudioCtx;
+}
+
+function toggleSplashSnd(){
+  splashSndOn=!splashSndOn;
+  document.getElementById('splash-snd-btn').textContent=splashSndOn?'🔊':'🔇';
+  if(splashSndOn){ if(!splashThemeStarted) startSplashTheme(); }
+  else stopSplashTheme();
+}
+
+function stopSplashTheme(){
+  splashThemeNodes.forEach(n=>{ try{ n.stop(); }catch(e){} });
+  splashThemeNodes=[];
+}
+
+function startSplashTheme(){
+  if(!splashSndOn||splashThemeStarted) return;
+  splashThemeStarted=true;
+  const ctx=getSplashCtx();
+  const master=ctx.createGain();
+  master.gain.setValueAtTime(0,ctx.currentTime);
+  master.gain.linearRampToValueAtTime(0.5,ctx.currentTime+2.5);
+  master.connect(ctx.destination);
+
+  // Deep drone
+  [[36.7,'sine',0.22],[73.4,'sine',0.13],[110,'triangle',0.05]].forEach(([f,t,g])=>{
+    const o=ctx.createOscillator(); o.type=t; o.frequency.value=f;
+    const gn=ctx.createGain(); gn.gain.value=g;
+    const lp=ctx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=400;
+    o.connect(lp); lp.connect(gn); gn.connect(master); o.start(); splashThemeNodes.push(o);
+  });
+
+  // Percussion loop
+  const BPM=72, beat=60/BPM, loopLen=beat*8;
+  function drum(type,times,vol){
+    times.forEach(when=>{
+      if(type==='kick'){
+        const o=ctx.createOscillator(); o.type='sine';
+        o.frequency.setValueAtTime(180,when); o.frequency.exponentialRampToValueAtTime(40,when+0.18);
+        const g=ctx.createGain(); g.gain.setValueAtTime(vol,when); g.gain.exponentialRampToValueAtTime(0.001,when+0.35);
+        o.connect(g); g.connect(master); o.start(when); o.stop(when+0.36); splashThemeNodes.push(o);
+      } else if(type==='snare'){
+        const buf=ctx.createBuffer(1,Math.floor(ctx.sampleRate*0.12),ctx.sampleRate);
+        const d=buf.getChannelData(0); for(let i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*(1-i/d.length);
+        const s=ctx.createBufferSource(); s.buffer=buf;
+        const bp=ctx.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=1800; bp.Q.value=0.8;
+        const g=ctx.createGain(); g.gain.setValueAtTime(vol,when); g.gain.exponentialRampToValueAtTime(0.001,when+0.12);
+        s.connect(bp); bp.connect(g); g.connect(master); s.start(when); splashThemeNodes.push(s);
+      } else if(type==='hhat'){
+        const buf=ctx.createBuffer(1,Math.floor(ctx.sampleRate*0.05),ctx.sampleRate);
+        const d=buf.getChannelData(0); for(let i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*(1-i/d.length);
+        const s=ctx.createBufferSource(); s.buffer=buf;
+        const hp=ctx.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=8000;
+        const g=ctx.createGain(); g.gain.setValueAtTime(vol*0.5,when); g.gain.exponentialRampToValueAtTime(0.001,when+0.05);
+        s.connect(hp); hp.connect(g); g.connect(master); s.start(when); splashThemeNodes.push(s);
+      }
+    });
+  }
+  function percLoop(ls,rep){
+    const n=ctx.currentTime, b=beat;
+    drum('kick', [ls,ls+b*2,ls+b*4,ls+b*6], 0.5);
+    drum('snare',[ls+b,ls+b*3,ls+b*5,ls+b*7], 0.3);
+    const hh=[]; for(let i=0;i<16;i++) hh.push(ls+i*b*0.5);
+    drum('hhat',hh,0.15);
+    if(rep<25) setTimeout(()=>percLoop(ls+loopLen,rep+1),(loopLen-beat)*1000);
+  }
+  setTimeout(()=>percLoop(ctx.currentTime+beat*0.5,0),800);
+
+  // Brass melody (D-minor heroic)
+  const mel=[
+    [293.7,2,0.8,0.6],[349.2,3,0.8,0.55],[440,4,0.8,0.6],[587.3,5,1.5,0.65],
+    [440,6.5,0.5,0.5],[349.2,7,1.0,0.5],
+    [220,9,0.5,0.5],[261.6,9.5,0.5,0.5],[293.7,10,0.8,0.6],
+    [261.6,11,0.5,0.45],[220,11.5,0.5,0.45],[174.6,12,1.5,0.55],
+    [293.7,14,0.4,0.55],[349.2,14.5,0.4,0.55],[440,15,0.4,0.6],
+    [523.3,15.5,0.4,0.6],[587.3,16,2.5,0.7],[440,18.5,0.5,0.5],[293.7,19,2.0,0.55]
+  ];
+  function brass(freq,startB,durB,vol){
+    const t=ctx.currentTime+startB*beat+0.5, dur=durB*beat;
+    const o=ctx.createOscillator(); o.type='sawtooth'; o.frequency.value=freq;
+    const o2=ctx.createOscillator(); o2.type='sawtooth'; o2.frequency.value=freq*1.005;
+    const filt=ctx.createBiquadFilter(); filt.type='lowpass'; filt.Q.value=1.2;
+    filt.frequency.setValueAtTime(800,t); filt.frequency.linearRampToValueAtTime(2200,t+0.08);
+    filt.frequency.exponentialRampToValueAtTime(900,t+dur);
+    const g=ctx.createGain();
+    g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(vol*0.27,t+0.06);
+    g.gain.setValueAtTime(vol*0.27,t+dur-0.15); g.gain.exponentialRampToValueAtTime(0.001,t+dur);
+    o.connect(filt); o2.connect(filt); filt.connect(g); g.connect(master);
+    o.start(t); o2.start(t); o.stop(t+dur+0.05); o2.stop(t+dur+0.05);
+    splashThemeNodes.push(o,o2);
+  }
+  mel.forEach(([f,sb,db,v])=>brass(f,sb,db,v));
+
+  // String pad
+  [[146.8,0,25,0.6],[174.6,0,25,0.45],[220,0,25,0.4]].forEach(([f,s,d,v])=>{
+    const t=ctx.currentTime+s*beat, dur=d*beat;
+    const o=ctx.createOscillator(); o.type='triangle'; o.frequency.value=f;
+    const lfo=ctx.createOscillator(); lfo.type='sine'; lfo.frequency.value=6.5;
+    const lg=ctx.createGain(); lg.gain.value=10; lfo.connect(lg); lg.connect(o.frequency);
+    const g=ctx.createGain(); g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(v*0.18,t+0.3);
+    g.gain.setValueAtTime(v*0.18,t+dur-0.5); g.gain.exponentialRampToValueAtTime(0.001,t+dur);
+    o.connect(g); g.connect(master); lfo.start(t); o.start(t); o.stop(t+dur); lfo.stop(t+dur);
+    splashThemeNodes.push(o,lfo);
+  });
+
+  // Loop melody every ~21 beats
+  const loopSec=21*beat;
+  function melLoop(rep){
+    if(rep>=12) return;
+    setTimeout(()=>{ if(!splashSndOn) return; mel.forEach(([f,sb,db,v])=>brass(f,sb,db,v)); melLoop(rep+1); },loopSec*1000);
+  }
+  setTimeout(()=>melLoop(1),loopSec*1000);
+}
+
+// Start theme on first user interaction (browser audio policy)
+document.addEventListener('click',  ()=>{ if(!splashThemeStarted&&document.getElementById('splash-overlay')&&!document.getElementById('splash-overlay').classList.contains('hide')) startSplashTheme(); },{once:true});
+document.addEventListener('touchstart',()=>{ if(!splashThemeStarted&&document.getElementById('splash-overlay')&&!document.getElementById('splash-overlay').classList.contains('hide')) startSplashTheme(); },{once:true});
+
+function enterArena(){
+  if(!splashThemeStarted) startSplashTheme();
+  // sword clash sound
+  const ctx=getSplashCtx(), now=ctx.currentTime;
+  [880,1320,1760,2200].forEach((f,i)=>{
+    const o=ctx.createOscillator(); o.type='triangle'; o.frequency.value=f;
+    const g=ctx.createGain(); g.gain.setValueAtTime(0.14-i*0.02,now); g.gain.exponentialRampToValueAtTime(0.001,now+0.55);
+    o.connect(g); g.connect(ctx.destination); o.start(now); o.stop(now+0.6);
+  });
+  const bufLen=Math.floor(ctx.sampleRate*0.07);
+  const buf=ctx.createBuffer(1,bufLen,ctx.sampleRate); const d=buf.getChannelData(0);
+  for(let i=0;i<bufLen;i++) d[i]=(Math.random()*2-1)*(1-i/bufLen)*0.7;
+  const s=ctx.createBufferSource(); s.buffer=buf;
+  const g=ctx.createGain(); g.gain.value=0.45; s.connect(g); g.connect(ctx.destination); s.start(now);
+
+  // Flash + fade out overlay
+  const flash=document.getElementById('splash-flash');
+  flash.classList.add('on');
+  setTimeout(()=>{
+    stopSplashTheme();
+    const overlay=document.getElementById('splash-overlay');
+    overlay.classList.add('hide');
+    setTimeout(()=>overlay.remove(), 900);
+  }, 80);
 }
 </script>
 </body>
