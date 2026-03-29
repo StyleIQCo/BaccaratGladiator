@@ -1743,6 +1743,10 @@ function updateStats(streaks){
   } else document.getElementById('stat-streak').textContent='—';
 }
 
+// ── SOUND STATE (must be declared before buildShoe() which calls soundShuffle) ──
+let _audioCtx = null;
+let soundEnabled = true;
+
 // ── INIT ──────────────────────────────────────────────────────────
 buildShoe();
 setTalonType(null);
@@ -1753,7 +1757,7 @@ updateAllRoads();
 // ══════════════════════════════════════════════════════════════════
 //  SOUND ENGINE  (Web Audio API — fully synthesized, no files)
 // ══════════════════════════════════════════════════════════════════
-let _audioCtx = null;
+// Declared here (after buildShoe call site) — functions use them via closure
 function getAudioCtx(){
   if(!_audioCtx) _audioCtx = new (window.AudioContext||window.webkitAudioContext)();
   if(_audioCtx.state==='suspended') _audioCtx.resume();
@@ -1761,7 +1765,6 @@ function getAudioCtx(){
 }
 
 // Master volume (user can mute via button)
-let soundEnabled = true;
 function toggleSound(){
   soundEnabled = !soundEnabled;
   document.getElementById('btn-sound').textContent = soundEnabled ? '🔊' : '🔇';
