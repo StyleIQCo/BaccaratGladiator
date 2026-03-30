@@ -645,30 +645,36 @@ header h1 {
 .third-slot { text-align:center; }
 
 /* ─── SCOREBOARDS ─── */
-.scoreboards { padding:8px 10px 12px; background:var(--felt); }
+.scoreboards {
+  padding:8px 10px 12px;
+  background:linear-gradient(180deg,#2a1a08 0%,#1e1304 100%);
+  border-top:2px solid rgba(201,168,76,0.3);
+}
 .boards-label {
   font-family:'Cinzel',serif; font-size:0.6rem; letter-spacing:3px;
-  color:var(--gold); text-align:center; padding:4px 0 7px; opacity:0.75;
+  color:var(--gold); text-align:center; padding:4px 0 7px; opacity:0.8;
 }
-.roads-row1 { display:grid; grid-template-columns:220px 1fr; gap:6px; margin-bottom:6px; }
-.roads-row2 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; margin-bottom:8px; }
+.roads-row1 { display:grid; grid-template-columns:220px 1fr; gap:5px; margin-bottom:5px; }
+.roads-row2 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:5px; margin-bottom:8px; }
 .road-panel {
-  border:1px solid rgba(201,168,76,0.22); border-radius:4px; overflow:hidden;
-  background:#0d1f10; box-shadow:inset 0 0 8px rgba(0,0,0,0.5);
+  border:1px solid rgba(140,100,30,0.5); border-radius:3px; overflow:hidden;
+  box-shadow:0 2px 8px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,240,180,0.08);
 }
 .road-hdr {
-  background:linear-gradient(90deg,rgba(201,168,76,0.12),rgba(201,168,76,0.06));
-  border-bottom:1px solid rgba(201,168,76,0.18);
-  padding:4px 8px; display:flex; justify-content:space-between; align-items:center;
+  background:linear-gradient(90deg,#1a0d04,#2a1a08,#1a0d04);
+  border-bottom:1px solid rgba(140,100,30,0.45);
+  padding:3px 8px; display:flex; justify-content:space-between; align-items:center;
 }
-.road-hdr .road-name { font-family:'Cinzel',serif; font-size:0.58rem; color:var(--gold); letter-spacing:1.5px; }
-.road-hdr .road-count { font-size:0.52rem; color:rgba(240,230,200,0.45); }
+.road-hdr .road-name {
+  font-family:'Cinzel',serif; font-size:0.56rem; color:#d4a820; letter-spacing:1.5px; text-transform:uppercase;
+}
+.road-hdr .road-count { font-size:0.5rem; color:rgba(200,170,100,0.5); }
 .road-scroll {
   overflow-x:auto; overflow-y:hidden; scrollbar-width:thin;
-  scrollbar-color:rgba(201,168,76,0.35) transparent;
+  scrollbar-color:rgba(160,120,40,0.4) transparent;
 }
-.road-scroll::-webkit-scrollbar { height:4px; }
-.road-scroll::-webkit-scrollbar-thumb { background:rgba(201,168,76,0.35); border-radius:2px; }
+.road-scroll::-webkit-scrollbar { height:3px; }
+.road-scroll::-webkit-scrollbar-thumb { background:rgba(160,120,40,0.4); border-radius:2px; }
 .road-scroll canvas { display:block; }
 
 /* ─── DRAGON 7 / PANDA 8 CELEBRATION ─── */
@@ -725,26 +731,35 @@ header h1 {
 }
 
 /* ─── STATS + LEGEND ─── */
-.stats-bar { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; padding:5px 0 0; }
-.stat-item  { font-size:0.68rem; text-align:center; }
-.stat-item .sv { font-family:'Cinzel',serif; font-size:0.85rem; display:block; }
-.stat-item.b .sv { color:var(--banker); }
-.stat-item.p .sv { color:var(--player); }
-.stat-item.t .sv { color:var(--tie); }
-.stat-item .sl { color:rgba(240,230,200,0.4); font-size:0.56rem; letter-spacing:1px; text-transform:uppercase; }
+.stats-bar {
+  display:flex; gap:12px; justify-content:center; flex-wrap:wrap;
+  padding:6px 0 4px;
+  background:rgba(0,0,0,0.25);
+  border-radius:4px; margin-bottom:5px;
+}
+.stat-item  { font-size:0.66rem; text-align:center; }
+.stat-item .sv { font-family:'Cinzel',serif; font-size:0.88rem; display:block; }
+.stat-item.b .sv { color:#ff5555; }
+.stat-item.p .sv { color:#5588ff; }
+.stat-item.t .sv { color:#44cc66; }
+.stat-item .sl { color:rgba(200,170,100,0.55); font-size:0.54rem; letter-spacing:1px; text-transform:uppercase; }
 
-.legend { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; padding:7px; border-top:1px solid rgba(201,168,76,0.1); margin-top:5px; }
-.leg-item { display:flex; align-items:center; gap:4px; font-size:0.6rem; color:rgba(240,230,200,0.55); }
-.leg-dot  { width:11px; height:11px; border-radius:50%; flex-shrink:0; }
-.leg-dot.b  { background:var(--banker); }
-.leg-dot.p  { background:var(--player); }
-.leg-dot.t  { background:var(--tie); }
-.leg-dot.rd { background:var(--red-d); }
-.leg-dot.bd { background:var(--blue-d); }
+.legend {
+  display:flex; gap:10px; justify-content:center; flex-wrap:wrap;
+  padding:5px 8px; border-top:1px solid rgba(140,100,30,0.3); margin-top:4px;
+  background:rgba(0,0,0,0.15); border-radius:0 0 4px 4px;
+}
+.leg-item { display:flex; align-items:center; gap:4px; font-size:0.58rem; color:rgba(200,175,110,0.7); }
+.leg-dot  { width:11px; height:11px; border-radius:50%; flex-shrink:0; border:1px solid rgba(0,0,0,0.3); }
+.leg-dot.b  { background:#cc1111; }
+.leg-dot.p  { background:#1540cc; }
+.leg-dot.t  { background:#0f8f2e; }
+.leg-dot.rd { background:#cc1111; border:1px solid #cc1111; background:transparent; }
+.leg-dot.bd { background:#1540cc; border:1px solid #1540cc; background:transparent; }
 .leg-slash  { width:13px; height:13px; position:relative; flex-shrink:0; }
 .leg-slash::before {
   content:''; position:absolute; left:2px; top:8px;
-  width:9px; height:2px; background:var(--red-d);
+  width:9px; height:2px; background:#cc1111;
   transform:rotate(-45deg); transform-origin:left center; border-radius:1px;
 }
 
@@ -1528,9 +1543,11 @@ header h1 {
 // ── CONSTANTS ──────────────────────────────────────────────────
 const ROWS=6, BIG_CELL=30, SM_CELL=22;
 const MIN_BEAD_COLS=10, MIN_BIG_COLS=22, MIN_SM_COLS=12;
-const BANKER_C='#d42020', PLAYER_C='#1a4fd6', TIE_C='#17a34a';
-const RED_D='#e83535', BLUE_D='#2d65e8';
-const GRID_BG='#0d1f10', GRID_LINE='rgba(255,255,255,0.13)';
+// Casino scoreboard colors (on light cream background)
+const BANKER_C='#cc1111', PLAYER_C='#1540cc', TIE_C='#0f8f2e';
+const RED_D='#cc1111', BLUE_D='#1540cc';
+// Light cream background matching real casino displays
+const GRID_BG='#f0e8c8', GRID_LINE='rgba(100,80,30,0.22)';
 const RANKS=['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
 const SUITS=['♠','♥','♦','♣'];
 const RED_S=new Set(['♥','♦']);
@@ -2196,13 +2213,21 @@ function circ(ctx,cx,cy,r,fill,stroke,sw){
 // Draw tie slash through a circle (standard casino style: green diagonal line)
 function drawTieLine(ctx,cx,cy,r,count){
   ctx.save();
-  ctx.strokeStyle=TIE_C; ctx.lineWidth=1.8; ctx.lineCap='round';
-  ctx.beginPath();ctx.moveTo(cx-r*0.8,cy+r*0.8);ctx.lineTo(cx+r*0.8,cy-r*0.8);ctx.stroke();
+  // White outline for contrast over filled circle
+  ctx.strokeStyle='rgba(255,255,255,0.6)'; ctx.lineWidth=3.2; ctx.lineCap='round';
+  ctx.beginPath();ctx.moveTo(cx-r*0.78,cy+r*0.78);ctx.lineTo(cx+r*0.78,cy-r*0.78);ctx.stroke();
+  // Green slash on top
+  ctx.strokeStyle='#00cc44'; ctx.lineWidth=1.8;
+  ctx.beginPath();ctx.moveTo(cx-r*0.78,cy+r*0.78);ctx.lineTo(cx+r*0.78,cy-r*0.78);ctx.stroke();
   if(count>1){
-    ctx.fillStyle=TIE_C;
-    ctx.font=`bold ${Math.round(r*1.1)}px Arial`;
+    // Small count bubble
+    const bx=cx+r*0.62,by=cy-r*0.62;
+    ctx.beginPath();ctx.arc(bx,by,r*0.38,0,Math.PI*2);
+    ctx.fillStyle='#00cc44';ctx.fill();
+    ctx.fillStyle='#fff';
+    ctx.font=`bold ${Math.round(r*0.58)}px Arial`;
     ctx.textAlign='center';ctx.textBaseline='middle';
-    ctx.fillText(count,cx+r*0.55,cy-r*0.55);
+    ctx.fillText(count,bx,by);
   }
   ctx.restore();
 }
@@ -2210,15 +2235,20 @@ function drawTieLine(ctx,cx,cy,r,count){
 // Draw pair dot in corner of a circle
 function drawPairDot(ctx,cx,cy,r,side){
   // Player pair = blue dot bottom-left; Banker pair = red dot bottom-right
+  const dr=r*0.28;
   if(side==='pp'){
-    ctx.beginPath();ctx.arc(cx-r*0.6,cy+r*0.6,r*0.26,0,Math.PI*2);
-    ctx.fillStyle=PLAYER_C; ctx.fill();
-    ctx.strokeStyle='#fff'; ctx.lineWidth=0.7; ctx.stroke();
+    const dx=cx-r*0.58,dy=cy+r*0.58;
+    ctx.beginPath();ctx.arc(dx,dy,dr+1.2,0,Math.PI*2);
+    ctx.fillStyle='#fff';ctx.fill();
+    ctx.beginPath();ctx.arc(dx,dy,dr,0,Math.PI*2);
+    ctx.fillStyle=PLAYER_C;ctx.fill();
   }
   if(side==='bp'){
-    ctx.beginPath();ctx.arc(cx+r*0.6,cy+r*0.6,r*0.26,0,Math.PI*2);
-    ctx.fillStyle=BANKER_C; ctx.fill();
-    ctx.strokeStyle='#fff'; ctx.lineWidth=0.7; ctx.stroke();
+    const dx=cx+r*0.58,dy=cy+r*0.58;
+    ctx.beginPath();ctx.arc(dx,dy,dr+1.2,0,Math.PI*2);
+    ctx.fillStyle='#fff';ctx.fill();
+    ctx.beginPath();ctx.arc(dx,dy,dr,0,Math.PI*2);
+    ctx.fillStyle=BANKER_C;ctx.fill();
   }
 }
 
@@ -2250,28 +2280,23 @@ function renderBeadRoad(res){
   canvas.width=numCols*cell;canvas.height=ROWS*cell;
   const ctx=canvas.getContext('2d');makeGrid(ctx,canvas.width,canvas.height,cell);
   cells.forEach(c=>{
-    const cx=c.col*cell+cell/2,cy=c.row*cell+cell/2,r=cell*0.39;
+    const cx=c.col*cell+cell/2,cy=c.row*cell+cell/2,r=cell*0.4;
     const color=c.side==='B'?BANKER_C:c.side==='P'?PLAYER_C:TIE_C;
-    // Filled circle with slight gradient sheen
+    // Filled circle (casino bead style)
     circ(ctx,cx,cy,r,color,null);
-    // Inner highlight
+    // Thin inner highlight arc
     ctx.save();
-    const grad=ctx.createRadialGradient(cx-r*0.25,cy-r*0.25,r*0.05,cx,cy,r);
-    grad.addColorStop(0,'rgba(255,255,255,0.25)');grad.addColorStop(1,'rgba(0,0,0,0)');
+    const grad=ctx.createRadialGradient(cx-r*0.3,cy-r*0.3,r*0.04,cx,cy,r);
+    grad.addColorStop(0,'rgba(255,255,255,0.30)');grad.addColorStop(0.5,'rgba(255,255,255,0.08)');grad.addColorStop(1,'rgba(0,0,0,0.10)');
     ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fillStyle=grad;ctx.fill();
     ctx.restore();
-    // Thin white border
-    circ(ctx,cx,cy,r,null,'rgba(255,255,255,0.35)',0.8);
-    // Letter label (B/P/T)
-    ctx.fillStyle='rgba(255,255,255,0.9)';
-    ctx.font=`bold ${Math.round(cell*0.38)}px Arial`;
-    ctx.textAlign='center';ctx.textBaseline='middle';
-    ctx.fillText(c.side,cx,cy);
+    // Dark ring border (like real casino beads)
+    circ(ctx,cx,cy,r,null,'rgba(0,0,0,0.25)',1.2);
     // Dragon 7 badge
-    if(c.d7) drawBadge(ctx,cx,cy,r,'D7','#ffd700','#7a0000');
+    if(c.d7) drawBadge(ctx,cx,cy,r,'D7','#ffd700','#6a0000');
     // Panda 8 badge
-    if(c.p8) drawBadge(ctx,cx,cy,r,'P8','#ffffff','#004d00');
-    // Pair dots
+    if(c.p8) drawBadge(ctx,cx,cy,r,'P8','#f0fff4','#003d00');
+    // Pair dots (small corner circles — standard casino style)
     if(c.pp) drawPairDot(ctx,cx,cy,r,'pp');
     if(c.bp) drawPairDot(ctx,cx,cy,r,'bp');
   });
@@ -2286,29 +2311,34 @@ function renderBigRoad(br,preds){
   const numCols=Math.max(MIN_BIG_COLS,maxCol+4);
   canvas.width=numCols*cell;canvas.height=ROWS*cell;
   const ctx=canvas.getContext('2d');makeGrid(ctx,canvas.width,canvas.height,cell);
-  // Prediction ghost circles
+  // Prediction ghost circles (dashed outline on light bg)
   if(preds){
     const dp=(pred,sc)=>{
       if(!pred?.bigCell)return;
       const{vCol,vRow}=pred.bigCell,cx=vCol*cell+cell/2,cy=vRow*cell+cell/2;
-      ctx.save();ctx.setLineDash([3,3]);ctx.strokeStyle=sc+'88';ctx.lineWidth=1.5;
-      ctx.beginPath();ctx.arc(cx,cy,cell*0.4,0,Math.PI*2);ctx.stroke();ctx.restore();
+      ctx.save();ctx.setLineDash([4,3]);ctx.strokeStyle=sc+'99';ctx.lineWidth=2;
+      ctx.beginPath();ctx.arc(cx,cy,cell*0.41,0,Math.PI*2);ctx.stroke();ctx.restore();
     };
     dp(preds.B,BANKER_C);dp(preds.P,PLAYER_C);
   }
-  // Draw circles
+  // Draw circles — filled (matches real Shuffle Master casino display)
   cells.forEach(c=>{
-    const cx=c.vCol*cell+cell/2,cy=c.vRow*cell+cell/2,r=cell*0.4;
+    const cx=c.vCol*cell+cell/2,cy=c.vRow*cell+cell/2,r=cell*0.41;
     const color=c.side==='B'?BANKER_C:PLAYER_C;
-    // Outline-only circle (casino standard for Big Road)
-    circ(ctx,cx,cy,r,null,color,2.4);
+    // Filled circle
+    circ(ctx,cx,cy,r,color,null);
+    // Glossy inner highlight
+    ctx.save();
+    const grad=ctx.createRadialGradient(cx-r*0.3,cy-r*0.3,r*0.04,cx,cy,r);
+    grad.addColorStop(0,'rgba(255,255,255,0.28)');grad.addColorStop(0.55,'rgba(255,255,255,0.06)');grad.addColorStop(1,'rgba(0,0,0,0.12)');
+    ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fillStyle=grad;ctx.fill();
+    ctx.restore();
+    // Dark ring border
+    circ(ctx,cx,cy,r,null,'rgba(0,0,0,0.22)',1.2);
     // Tie slash(es) through the circle
     if(c.ties>0) drawTieLine(ctx,cx,cy,r,c.ties);
-    // Dragon 7 inner crown mark
-    if(c.d7){
-      ctx.fillStyle='#ffd700';ctx.font=`bold ${Math.round(cell*0.32)}px Arial`;
-      ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('🐉',cx,cy);
-    }
+    // Dragon 7: gold star/crown badge inside circle
+    if(c.d7) drawBadge(ctx,cx,cy,r*0.9,'D7','#ffd700','#6a0000');
     // Pair dots
     if(c.pp) drawPairDot(ctx,cx,cy,r,'pp');
     if(c.bp) drawPairDot(ctx,cx,cy,r,'bp');
@@ -2328,9 +2358,9 @@ function renderDerived(canvasId,scrollId,countId,entries,preds,cockroach){
       const col=Math.floor(pred.idx/ROWS),row=pred.idx%ROWS;
       const cx=col*cell+cell/2+ox,cy=row*cell+cell/2;
       const color=pred.color==='red'?RED_D:BLUE_D;
-      if(cockroach){slash(ctx,cx,cy,cell,color,0.4);}
-      else{ctx.save();ctx.setLineDash([2,2]);circ(ctx,cx,cy,cell*0.33,null,color+'cc',1.5);ctx.restore();}
-      ctx.fillStyle=color+'dd';ctx.font=`bold ${Math.round(cell*0.28)}px Arial`;
+      if(cockroach){slash(ctx,cx,cy,cell,color,0.38);}
+      else{ctx.save();ctx.setLineDash([3,2]);circ(ctx,cx,cy,cell*0.34,null,color+'aa',1.5);ctx.restore();}
+      ctx.fillStyle=color+'bb';ctx.font=`bold ${Math.round(cell*0.28)}px Arial`;
       ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(label,cx,cy);
     };
     const same=preds.B&&preds.P&&preds.B.idx===preds.P.idx;
@@ -2341,8 +2371,12 @@ function renderDerived(canvasId,scrollId,countId,entries,preds,cockroach){
     const col=Math.floor(idx/ROWS),row=idx%ROWS;
     const cx=col*cell+cell/2,cy=row*cell+cell/2;
     const c=color==='red'?RED_D:BLUE_D;
-    if(cockroach) slash(ctx,cx,cy,cell,c,1);
-    else          circ(ctx,cx,cy,cell*0.33,c,null);
+    if(cockroach){
+      slash(ctx,cx,cy,cell,c,1);
+    } else {
+      // Outline circles for derived roads (standard)
+      circ(ctx,cx,cy,cell*0.34,null,c,1.8);
+    }
   });
   scroll.scrollLeft=scroll.scrollWidth;
   const ce=document.getElementById(countId);
