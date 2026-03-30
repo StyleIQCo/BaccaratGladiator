@@ -552,6 +552,43 @@ header h1 {
 .side-bets-panel { display:none; }
 .side-bets-panel.visible { display:block; }
 
+/* ─── PERCENTAGE CHART ─── */
+.pct-chart {
+  padding:5px 10px 2px;
+  background:rgba(0,0,0,0.2); border-radius:4px;
+  margin-bottom:3px;
+}
+.pct-chart-title {
+  font-size:0.48rem; letter-spacing:2px; color:rgba(200,170,100,0.45);
+  text-transform:uppercase; text-align:center; margin-bottom:4px;
+}
+.pct-bar-wrap {
+  display:flex; align-items:center; gap:6px; margin:3px 0;
+}
+.pct-bar-label {
+  width:14px; font-size:0.62rem; font-family:'Cinzel',serif; font-weight:700;
+  text-align:right;
+}
+.pct-bar-label.bl { color:#ff5555; }
+.pct-bar-label.pl { color:#5588ff; }
+.pct-bar-label.tl { color:#44cc66; }
+.pct-bar-track {
+  flex:1; height:9px; background:rgba(0,0,0,0.35);
+  border-radius:5px; overflow:hidden;
+}
+.pct-bar {
+  height:100%; border-radius:5px;
+  transition:width 0.6s cubic-bezier(.25,.8,.25,1);
+  min-width:0;
+}
+.banker-bar { background:linear-gradient(90deg,#aa1111,#ee3333); }
+.player-bar { background:linear-gradient(90deg,#1133aa,#3355ee); }
+.tie-bar    { background:linear-gradient(90deg,#0a6622,#22aa44); }
+.pct-bar-pct {
+  width:34px; font-size:0.58rem; font-family:'Cinzel',serif;
+  color:rgba(200,175,110,0.75); text-align:right;
+}
+
 /* ─── TALON ─── */
 .talon-wrap {
   grid-column:1/-1;
@@ -1340,8 +1377,8 @@ header h1 {
 <!-- ═══════ MODE BAR ═══════ -->
 <div class="mode-bar">
   <button class="mode-tab active" id="tab-standard" onclick="setMode('standard')">Standard</button>
-  <button class="mode-tab ez"     id="tab-ez"       onclick="setMode('ez')">EZ Baccarat</button>
-  <button class="mode-tab tiger"  id="tab-tiger"    onclick="setMode('tiger')">Tiger Baccarat</button>
+  <button class="mode-tab ez"     id="tab-ez"       onclick="setMode('ez')">🐉🐼 Panda &amp; Dragon</button>
+  <button class="mode-tab tiger"  id="tab-tiger"    onclick="setMode('tiger')">🐯 Tiger Baccarat</button>
   <button class="mode-info-btn"   onclick="toggleRules()">Rules ▾</button>
 </div>
 <div class="mode-rules" id="mode-rules-panel"></div>
@@ -1417,7 +1454,7 @@ header h1 {
 
   <!-- EZ SIDE BETS -->
   <div class="side-bets-wrap side-bets-panel" id="ez-side-panel">
-    <div class="side-bets-label">EZ Side Bets</div>
+    <div class="side-bets-label">🐉🐼 Dragon &amp; Panda Bonuses</div>
     <div class="side-bets-row">
       <div class="bet-slot dragon-slot" id="slot-dragon7" onclick="selectSlot('dragon7')">
         <div class="sname">Dragon 7</div>
@@ -1436,15 +1473,15 @@ header h1 {
   <div class="side-bets-wrap side-bets-panel" id="tiger-side-panel">
     <div class="side-bets-label">Tiger Side Bets</div>
     <div class="side-bets-row">
-      <div class="bet-slot tiger-slot" id="slot-bigTiger"   onclick="selectSlot('bigTiger')">
-        <div class="sname">Big Tiger</div>
-        <div class="sodds">Banker 2-card 6 · 12:1</div>
-        <div class="samt" id="amt-bigTiger">$0</div>
-      </div>
       <div class="bet-slot tiger-slot" id="slot-smallTiger" onclick="selectSlot('smallTiger')">
         <div class="sname">Small Tiger</div>
-        <div class="sodds">Banker 3-card 6 · 20:1</div>
+        <div class="sodds">Banker 2-card 6 · 22:1</div>
         <div class="samt" id="amt-smallTiger">$0</div>
+      </div>
+      <div class="bet-slot tiger-slot" id="slot-bigTiger"   onclick="selectSlot('bigTiger')">
+        <div class="sname">Big Tiger</div>
+        <div class="sodds">Banker 3-card 6 · 50:1</div>
+        <div class="samt" id="amt-bigTiger">$0</div>
       </div>
       <div class="bet-slot tiger-slot" id="slot-tigerTie"   onclick="selectSlot('tigerTie')">
         <div class="sname">Tiger Tie</div>
@@ -1454,23 +1491,30 @@ header h1 {
     </div>
   </div>
 
-  <!-- PAIR BETS -->
+  <!-- GOLDEN TALON SIDE BETS -->
   <div class="talon-wrap">
     <div class="talon-top">
-      <span class="talon-title">PAIR BETS</span>
-      <span class="talon-hint">— First two cards of either hand form a pair · 11:1</span>
+      <span class="talon-title">⚔️ GOLDEN TALON</span>
+      <span class="talon-hint">— Exclusive Gladiator side bets · All modes</span>
     </div>
-    <div class="talon-bet-row" style="gap:6px;">
-      <div class="talon-bet-slot" id="slot-pPair" onclick="selectSlot('pPair')">
-        <div class="sname" style="color:#2244cc;">Player Pair · 11:1</div>
-        <div class="samt" id="amt-pPair">$0</div>
+    <div class="talon-bet-row" style="gap:5px;">
+      <div class="talon-bet-slot" id="slot-natural9" onclick="selectSlot('natural9')">
+        <div class="sname" style="color:#ffd700;letter-spacing:1px;">Natural 9 · 9:1</div>
+        <div style="font-size:0.46rem;color:rgba(240,230,200,0.35);margin:1px 0;">Winner's 2-card total = 9</div>
+        <div class="samt" id="amt-natural9">$0</div>
       </div>
-      <div class="talon-bet-slot" id="slot-bPair" onclick="selectSlot('bPair')">
-        <div class="sname" style="color:#cc2222;">Banker Pair · 11:1</div>
-        <div class="samt" id="amt-bPair">$0</div>
+      <div class="talon-bet-slot" id="slot-natural8" onclick="selectSlot('natural8')">
+        <div class="sname" style="color:#ffcc44;letter-spacing:1px;">Natural 8 · 6:1</div>
+        <div style="font-size:0.46rem;color:rgba(240,230,200,0.35);margin:1px 0;">Winner's 2-card total = 8</div>
+        <div class="samt" id="amt-natural8">$0</div>
+      </div>
+      <div class="talon-bet-slot" id="slot-perfectPair" onclick="selectSlot('perfectPair')">
+        <div class="sname" style="color:#cc88ff;letter-spacing:1px;">Perfect Pair · 25:1</div>
+        <div style="font-size:0.46rem;color:rgba(240,230,200,0.35);margin:1px 0;">Same rank &amp; suit in either hand</div>
+        <div class="samt" id="amt-perfectPair">$0</div>
       </div>
     </div>
-    <span id="pair-result-note" style="font-size:0.58rem;color:#b090e0;font-style:italic;display:block;margin-top:4px;min-height:1em;"></span>
+    <span id="talon-result-note" style="font-size:0.58rem;color:#c9a84c;font-style:italic;display:block;margin-top:4px;min-height:1em;"></span>
   </div>
 
   <!-- CHIPS -->
@@ -1529,9 +1573,29 @@ header h1 {
     <div class="stat-item b"><span class="sv" id="stat-b">0</span><span class="sl">Banker</span></div>
     <div class="stat-item p"><span class="sv" id="stat-p">0</span><span class="sl">Player</span></div>
     <div class="stat-item t"><span class="sv" id="stat-t">0</span><span class="sl">Tie</span></div>
+    <div class="stat-item"><span class="sv" id="stat-nat" style="color:#ffd700;">0</span><span class="sl">Naturals</span></div>
     <div class="stat-item"><span class="sv" id="stat-rounds">0</span><span class="sl">Rounds</span></div>
     <div class="stat-item"><span class="sv" id="stat-streak">—</span><span class="sl">Streak</span></div>
     <div class="stat-item"><span class="sv" id="stat-shoe">312</span><span class="sl">Shoe left</span></div>
+  </div>
+  <!-- B/P/T PERCENTAGE DISTRIBUTION CHART -->
+  <div class="pct-chart" id="pct-chart" style="display:none;">
+    <div class="pct-chart-title">Distribution Chart</div>
+    <div class="pct-bar-wrap">
+      <div class="pct-bar-label bl">B</div>
+      <div class="pct-bar-track"><div class="pct-bar banker-bar" id="pct-bar-b" style="width:0%"></div></div>
+      <div class="pct-bar-pct" id="pct-pct-b" style="color:#ff5555;">0%</div>
+    </div>
+    <div class="pct-bar-wrap">
+      <div class="pct-bar-label pl">P</div>
+      <div class="pct-bar-track"><div class="pct-bar player-bar" id="pct-bar-p" style="width:0%"></div></div>
+      <div class="pct-bar-pct" id="pct-pct-p" style="color:#5588ff;">0%</div>
+    </div>
+    <div class="pct-bar-wrap">
+      <div class="pct-bar-label tl">T</div>
+      <div class="pct-bar-track"><div class="pct-bar tie-bar" id="pct-bar-t" style="width:0%"></div></div>
+      <div class="pct-bar-pct" id="pct-pct-t" style="color:#44cc66;">0%</div>
+    </div>
   </div>
   <div class="legend">
     <div class="leg-item"><div class="leg-dot b"></div> Banker</div>
@@ -1570,34 +1634,35 @@ const MODE_RULES={
       <div class="rule-item"><div class="payout">0.95:1</div>Banker win (5% commission)</div>
       <div class="rule-item"><div class="payout">1:1</div>Player win</div>
       <div class="rule-item"><div class="payout">8:1</div>Tie</div>
-      <div class="rule-item"><div class="payout">11:1</div>Player Pair — Player's first 2 cards same rank</div>
-      <div class="rule-item"><div class="payout">11:1</div>Banker Pair — Banker's first 2 cards same rank</div>
+      <div class="rule-item"><div class="payout">9:1</div>⚔️ Golden Talon — Natural 9 (winning 2-card 9)</div>
+      <div class="rule-item"><div class="payout">6:1</div>⚔️ Golden Talon — Natural 8 (winning 2-card 8)</div>
+      <div class="rule-item"><div class="payout">25:1</div>⚔️ Golden Talon — Perfect Pair (same rank &amp; suit)</div>
     </div>`
   },
   ez:{
-    sub:'EZ BACCARAT · NO COMMISSION · DRAGON 7 · PANDA 8',
-    html:`<strong>EZ Baccarat</strong> — No 5% commission. Dragon 7 banker wins push; Dragon/Panda side bets available.
+    sub:'PANDA & DRAGON BACCARAT · NO COMMISSION · DRAGON 7 · PANDA 8',
+    html:`<strong>🐉🐼 Panda &amp; Dragon Baccarat</strong> — No commission. Dragon 7 banker wins push. Dragon &amp; Panda bonus bets available.
     <div class="rules-grid">
       <div class="rule-item"><div class="payout">1:1</div>Banker win (no commission)</div>
       <div class="rule-item"><div class="payout">PUSH</div>Banker wins on 3-card 7 (Dragon 7 triggers)</div>
-      <div class="rule-item"><div class="payout">40:1</div>Dragon 7 — Banker 3-card total of 7</div>
-      <div class="rule-item"><div class="payout">25:1</div>Panda 8 — Player 3-card total of 8</div>
-      <div class="rule-item"><div class="payout">1:1</div>Player win</div>
-      <div class="rule-item"><div class="payout">8:1</div>Tie</div>
-      <div class="rule-item"><div class="payout">11:1</div>Player Pair / Banker Pair (both modes)</div>
+      <div class="rule-item"><div class="payout">40:1</div>🐉 Dragon 7 — Banker 3-card total of 7</div>
+      <div class="rule-item"><div class="payout">25:1</div>🐼 Panda 8 — Player 3-card total of 8</div>
+      <div class="rule-item"><div class="payout">9:1</div>⚔️ Golden Talon — Natural 9</div>
+      <div class="rule-item"><div class="payout">6:1</div>⚔️ Golden Talon — Natural 8</div>
+      <div class="rule-item"><div class="payout">25:1</div>⚔️ Golden Talon — Perfect Pair</div>
     </div>`
   },
   tiger:{
-    sub:'TIGER BACCARAT · NO COMMISSION · BIG/SMALL TIGER',
-    html:`<strong>Tiger Baccarat</strong> — No commission. Banker 6 pays half. Tiger side bets available.
+    sub:'TIGER BACCARAT · NO COMMISSION · SMALL 22:1 · BIG 50:1',
+    html:`<strong>🐯 Tiger Baccarat</strong> — No commission. Banker 6 pays half. Tiger bonus side bets available.
     <div class="rules-grid">
       <div class="rule-item"><div class="payout">½:1</div>Banker wins with total 6 (half pay)</div>
-      <div class="rule-item"><div class="payout">1:1</div>All other Banker wins</div>
-      <div class="rule-item"><div class="payout">12:1</div>Big Tiger — Banker 2-card 6</div>
-      <div class="rule-item"><div class="payout">20:1</div>Small Tiger — Banker 3-card 6</div>
-      <div class="rule-item"><div class="payout">35:1</div>Tiger Tie — Both P &amp; B have 6</div>
-      <div class="rule-item"><div class="payout">1:1</div>Player win</div>
-      <div class="rule-item"><div class="payout">8:1</div>Tie (non-6)</div>
+      <div class="rule-item"><div class="payout">1:1</div>All other Banker wins (no commission)</div>
+      <div class="rule-item"><div class="payout">22:1</div>🐯 Small Tiger — Banker 2-card 6</div>
+      <div class="rule-item"><div class="payout">50:1</div>🐯 Big Tiger — Banker 3-card 6</div>
+      <div class="rule-item"><div class="payout">35:1</div>🐯 Tiger Tie — Both P &amp; B total 6</div>
+      <div class="rule-item"><div class="payout">9:1</div>⚔️ Golden Talon — Natural 9</div>
+      <div class="rule-item"><div class="payout">6:1</div>⚔️ Golden Talon — Natural 8</div>
     </div>`
   }
 };
@@ -1605,9 +1670,10 @@ const MODE_RULES={
 // ── GAME STATE ──────────────────────────────────────────────────
 let gameMode='standard';
 let balance=1000;
-let bets={banker:0,player:0,tie:0,dragon7:0,panda8:0,bigTiger:0,smallTiger:0,tigerTie:0,pPair:0,bPair:0};
-// (Talon removed — replaced by Pair bets)
+let bets={banker:0,player:0,tie:0,dragon7:0,panda8:0,bigTiger:0,smallTiger:0,tigerTie:0,natural9:0,natural8:0,perfectPair:0};
+// Golden Talon side bets replace Pair bets
 let selSlot='banker';
+let natWins=0;  // count of natural (2-card 8/9) wins this shoe
 let phase='betting';   // 'betting' | 'revealing' | 'dealt'
 let results=[], shoe=[], scores={B:0,P:0,T:0};
 let rulesOpen=false;
@@ -1679,7 +1745,7 @@ function setMode(m){
   document.getElementById('mode-subtitle').textContent=MODE_RULES[m].sub;
   if(rulesOpen) showRules();
   clearBets();
-  setMsg('Mode: '+(m==='standard'?'Standard':m==='ez'?'EZ Baccarat':'Tiger Baccarat')+' — Place your bets!');
+  setMsg('Mode: '+(m==='standard'?'Standard':m==='ez'?'Panda & Dragon Baccarat':'Tiger Baccarat')+' — Place your bets!');
 }
 function toggleRules(){ rulesOpen=!rulesOpen; document.getElementById('mode-rules-panel').classList.toggle('open',rulesOpen); if(rulesOpen) showRules(); }
 function showRules(){ document.getElementById('mode-rules-panel').innerHTML=MODE_RULES[gameMode].html; }
@@ -1695,12 +1761,21 @@ function addChip(val){
   if(phase!=='betting') return;
   if(checkTrialBlock()) return;
   if(balance<val){ setMsg('Not enough balance!'); return; }
+  // House rule: cannot bet on both Banker AND Player simultaneously
+  if(selSlot==='player' && bets.banker>0){
+    setMsg('⚠️ You cannot bet on both Banker and Player. Clear your Banker bet first.');
+    return;
+  }
+  if(selSlot==='banker' && bets.player>0){
+    setMsg('⚠️ You cannot bet on both Banker and Player. Clear your Player bet first.');
+    return;
+  }
   bets[selSlot]=(bets[selSlot]||0)+val; balance-=val; refreshUI();
 }
 function clearBets(){
   if(phase!=='betting') return;
   balance+=Object.values(bets).reduce((a,b)=>a+b,0);
-  bets={banker:0,player:0,tie:0,dragon7:0,panda8:0,bigTiger:0,smallTiger:0,tigerTie:0,pPair:0,bPair:0};
+  bets={banker:0,player:0,tie:0,dragon7:0,panda8:0,bigTiger:0,smallTiger:0,tigerTie:0,natural9:0,natural8:0,perfectPair:0};
   refreshUI();
 }
 function totalBet(){ return Object.values(bets).reduce((a,b)=>a+b,0); }
@@ -1800,8 +1875,8 @@ function deal(){
   if(pT===bT) winner='T'; else if(bT>pT) winner='B'; else winner='P';
   const isDragon7   = winner==='B'&&bH.length===3&&bT===7;
   const isPanda8    = winner==='P'&&pH.length===3&&pT===8;
-  const isBigTiger  = winner==='B'&&bT===6&&bH.length===2;
-  const isSmallTiger= winner==='B'&&bT===6&&bH.length===3;
+  const isSmallTiger= winner==='B'&&bT===6&&bH.length===2;  // 2-card banker 6 = Small Tiger
+  const isBigTiger  = winner==='B'&&bT===6&&bH.length===3;  // 3-card banker 6 = Big Tiger
   const isTigerTie  = winner==='T'&&pT===6&&bT===6;
 
   pendingHand={
@@ -1832,7 +1907,7 @@ function deal(){
   document.getElementById('banker-val').textContent='?';
   document.getElementById('player-val').textContent='?';
 
-  bets={banker:0,player:0,tie:0,dragon7:0,panda8:0,bigTiger:0,smallTiger:0,tigerTie:0,pPair:0,bPair:0};
+  bets={banker:0,player:0,tie:0,dragon7:0,panda8:0,bigTiger:0,smallTiger:0,tigerTie:0,natural9:0,natural8:0,perfectPair:0};
   refreshUI();
   setMsg('🎴 Click your cards to squeeze! Ask the dealer to reveal banker cards.');
 }
@@ -2026,24 +2101,40 @@ function resolveHand(){
   // ── Tiger side bets
   if(gameMode==='tiger'){
     if(b.tigerTie>0)  { if(r.isTigerTie)  { const w=b.tigerTie*35;   balance+=b.tigerTie+w;   netChange+=w; msgs.push(`🐯 Tiger Tie! +$${w}`); }   else netChange-=b.tigerTie; }
-    if(b.bigTiger>0)  { if(r.isBigTiger)  { const w=b.bigTiger*12;   balance+=b.bigTiger+w;   netChange+=w; msgs.push(`🐯 Big Tiger! +$${w}`); }   else netChange-=b.bigTiger; }
-    if(b.smallTiger>0){ if(r.isSmallTiger){ const w=b.smallTiger*20; balance+=b.smallTiger+w; netChange+=w; msgs.push(`🐯 Small Tiger! +$${w}`); } else netChange-=b.smallTiger; }
+    if(b.smallTiger>0){ if(r.isSmallTiger){ const w=b.smallTiger*22; balance+=b.smallTiger+w; netChange+=w; msgs.push(`🐯 Small Tiger! +$${w}`); } else netChange-=b.smallTiger; }
+    if(b.bigTiger>0)  { if(r.isBigTiger)  { const w=b.bigTiger*50;   balance+=b.bigTiger+w;   netChange+=w; msgs.push(`🐯 Big Tiger! +$${w}`); }   else netChange-=b.bigTiger; }
   }
 
-  // ── Pair Bets (available in all modes)
-  // A pair = Player's or Banker's first two cards share the same rank
+  // ── Golden Talon Side Bets (available in all modes)
   const pIsPair = r.pH[0].rank === r.pH[1].rank;
   const bIsPair = r.bH[0].rank === r.bH[1].rank;
-  const pairNotes=[];
-  if(b.pPair>0){
-    if(pIsPair){ const w=b.pPair*11; balance+=b.pPair+w; netChange+=w; msgs.push(`🃏 Player Pair! +$${w}`); pairNotes.push(`✓ Player Pair (${r.pH[0].rank}${r.pH[0].suit}${r.pH[1].suit}) +$${w}`); }
-    else { netChange-=b.pPair; pairNotes.push(`✗ Player Pair — no pair`); }
+  const pIsPerfPair = r.pH[0].rank === r.pH[1].rank && r.pH[0].suit === r.pH[1].suit;
+  const bIsPerfPair = r.bH[0].rank === r.bH[1].rank && r.bH[0].suit === r.bH[1].suit;
+  const hasPerfPair = pIsPerfPair || bIsPerfPair;
+
+  // isNatural flag for Golden Talon (winning hand 2-card natural)
+  const winScore = r.winner==='B'?r.bT : r.winner==='P'?r.pT : r.pT;
+  const winCards = r.winner==='B'?r.bH : r.winner==='P'?r.pH : null;
+  const isNatural9 = winCards && winCards.length===2 && winScore===9;
+  const isNatural8 = winCards && winCards.length===2 && winScore===8;
+  const isNatural  = isNatural9 || isNatural8;
+
+  const talonNotes=[];
+  if(b.natural9>0){
+    if(isNatural9){ const w=b.natural9*9; balance+=b.natural9+w; netChange+=w; msgs.push(`⚔️ Natural 9! +$${w}`); talonNotes.push(`✓ Natural 9 +$${w}`); }
+    else { netChange-=b.natural9; talonNotes.push(`✗ Natural 9 — no win`); }
   }
-  if(b.bPair>0){
-    if(bIsPair){ const w=b.bPair*11; balance+=b.bPair+w; netChange+=w; msgs.push(`🃏 Banker Pair! +$${w}`); pairNotes.push(`✓ Banker Pair (${r.bH[0].rank}${r.bH[0].suit}${r.bH[1].suit}) +$${w}`); }
-    else { netChange-=b.bPair; pairNotes.push(`✗ Banker Pair — no pair`); }
+  if(b.natural8>0){
+    if(isNatural8){ const w=b.natural8*6; balance+=b.natural8+w; netChange+=w; msgs.push(`⚔️ Natural 8! +$${w}`); talonNotes.push(`✓ Natural 8 +$${w}`); }
+    else { netChange-=b.natural8; talonNotes.push(`✗ Natural 8 — no win`); }
   }
-  document.getElementById('pair-result-note').textContent=pairNotes.join('  ·  ');
+  if(b.perfectPair>0){
+    if(hasPerfPair){
+      const which = pIsPerfPair&&bIsPerfPair?'Both':pIsPerfPair?'Player':'Banker';
+      const w=b.perfectPair*25; balance+=b.perfectPair+w; netChange+=w; msgs.push(`⚔️ Perfect Pair! +$${w}`); talonNotes.push(`✓ ${which} Perfect Pair +$${w}`);
+    } else { netChange-=b.perfectPair; talonNotes.push(`✗ Perfect Pair — no match`); }
+  }
+  document.getElementById('talon-result-note').textContent=talonNotes.join('  ·  ');
 
   // ── Badges
   const bBadge=r.winner==='B'?(r.isDragon7&&gameMode==='ez'?'push':'win'):r.winner==='T'?'tie':'lose';
@@ -2070,14 +2161,14 @@ function resolveHand(){
   else if(netChange<0) soundLose();
 
   // Store rich result: winner, special flags, pair flags, winning score, natural flag
-  const winScore = r.winner==='B'?r.bT : r.winner==='P'?r.pT : r.pT;
-  const isNatural = (r.winner==='B'&&r.bH.length===2&&(r.bT===8||r.bT===9))
-                  ||(r.winner==='P'&&r.pH.length===2&&(r.pT===8||r.pT===9));
+  // (winScore, isNatural, isNatural9, isNatural8 already computed above in Golden Talon section)
   results.push({w:r.winner, d7:!!r.isDragon7, p8:!!r.isPanda8, pp:pIsPair, bp:bIsPair, score:winScore, nat:isNatural});
-  // Special win celebrations
+  if(isNatural) natWins++;
+  // Special win celebrations (priority: Dragon7 > Panda8 > Tiger > Natural)
   if(r.isDragon7){ triggerSpecialAnim('dragon7'); soundDragon7(); }
   else if(r.isPanda8){ triggerSpecialAnim('panda8'); soundPanda8(); }
   else if(r.isBigTiger||r.isSmallTiger||r.isTigerTie){ triggerSpecialAnim('tiger'); soundTiger(); }
+  else if(isNatural){ triggerSpecialAnim(isNatural9?'natural9':'natural8'); soundNatural(); }
   // remember this bet for auto-play re-use
   lastBet = {...r.betsSnapshot};
   document.getElementById('btn-clear').disabled=false;
@@ -2132,7 +2223,7 @@ function newRound(){
   document.getElementById('btn-new').style.display='none';
   document.getElementById('btn-clear').disabled=false;
   document.getElementById('msg-bar').className='msg-bar';
-  document.getElementById('pair-result-note').textContent='';
+  document.getElementById('talon-result-note').textContent='';
   if(balance<=0){ balance=1000; setMsg('Reloaded $1,000 — Good luck!'); }
   else if(trialExpired) setMsg('Trial ended — upgrade to keep playing!');
   else setMsg('Select a bet slot, place chips, then DEAL');
@@ -2154,8 +2245,9 @@ function refreshUI(){
   document.getElementById('amt-bigTiger').textContent='$'+bets.bigTiger;
   document.getElementById('amt-smallTiger').textContent='$'+bets.smallTiger;
   document.getElementById('amt-tigerTie').textContent='$'+bets.tigerTie;
-  document.getElementById('amt-pPair').textContent='$'+bets.pPair;
-  document.getElementById('amt-bPair').textContent='$'+bets.bPair;
+  document.getElementById('amt-natural9').textContent='$'+bets.natural9;
+  document.getElementById('amt-natural8').textContent='$'+bets.natural8;
+  document.getElementById('amt-perfectPair').textContent='$'+bets.perfectPair;
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -2309,7 +2401,17 @@ function renderBeadRoad(res){
     }
   });
 
-  scroll.scrollLeft=scroll.scrollWidth;
+  // Scroll to show latest results — use rAF so browser has laid out the new canvas size
+  const beadScrollEl=scroll;
+  requestAnimationFrame(()=>{
+    if(cells.length>0){
+      const lastCol=cells[cells.length-1].col;
+      const target=Math.max(0,(lastCol+1)*cell - beadScrollEl.clientWidth + cell*0.5);
+      beadScrollEl.scrollLeft=target;
+    } else {
+      beadScrollEl.scrollLeft=0;
+    }
+  });
   document.getElementById('bead-count').textContent=`${res.length} hands`;
 }
 
@@ -2362,7 +2464,8 @@ function renderBigRoad(br,preds){
     if(c.bp) pairDot(ctx,cx,cy,r,BANKER_C,false);
   });
 
-  scroll.scrollLeft=scroll.scrollWidth;
+  const bigScrollEl=scroll;
+  requestAnimationFrame(()=>{ bigScrollEl.scrollLeft=bigScrollEl.scrollWidth; });
   document.getElementById('big-count').textContent=`${streaks.length} streaks`;
 }
 
@@ -2402,7 +2505,8 @@ function renderDerived(canvasId,scrollId,countId,entries,preds,cockroach){
     else circ(ctx,cx,cy,cell*0.33,null,c,1.8);
   });
 
-  scroll.scrollLeft=scroll.scrollWidth;
+  const drScrollEl=scroll;
+  requestAnimationFrame(()=>{ drScrollEl.scrollLeft=drScrollEl.scrollWidth; });
   const ce=document.getElementById(countId);
   if(ce) ce.textContent=entries.length>0?`${entries.length} entries`:'—';
 }
@@ -2426,8 +2530,16 @@ function triggerSpecialAnim(type){
               bg:'linear-gradient(135deg,#1a1000 0%,#3d2800 40%,#1a1000 100%)',
               titleGrad:'linear-gradient(90deg,#ffd700,#ff9900,#ffd700)',
               sub_c:'#ffcc55', glow:'rgba(255,140,0,0.6)', ring:'#ff8800' },
+    natural9:{ emoji:'⚔️', title:'NATURAL 9',  sub:'GLADIATOR WINS!',
+              bg:'linear-gradient(135deg,#0d1a0d 0%,#0a2a1a 40%,#0d1a0d 100%)',
+              titleGrad:'linear-gradient(90deg,#ffd700,#ffffff,#ffd700)',
+              sub_c:'#c9a84c', glow:'rgba(201,168,76,0.7)', ring:'#c9a84c' },
+    natural8:{ emoji:'🗡️', title:'NATURAL 8',  sub:'GLADIATOR STRIKES!',
+              bg:'linear-gradient(135deg,#0d1220 0%,#142240 40%,#0d1220 100%)',
+              titleGrad:'linear-gradient(90deg,#c0d8ff,#ffd700,#c0d8ff)',
+              sub_c:'#aaccff', glow:'rgba(160,200,255,0.6)', ring:'#6699ff' },
   };
-  const cfg=cfgMap[type]||cfgMap.dragon7;
+  const cfg=cfgMap[type]||cfgMap.natural9;
 
   const overlay=document.createElement('div');
   overlay.id='special-anim-overlay';
@@ -2468,6 +2580,7 @@ function updateStats(streaks){
   document.getElementById('stat-b').textContent=b+pct(b);
   document.getElementById('stat-p').textContent=p+pct(p);
   document.getElementById('stat-t').textContent=t+pct(t);
+  document.getElementById('stat-nat').textContent=natWins;
   document.getElementById('stat-rounds').textContent=tot;
   document.getElementById('hdr-rounds').textContent=`Round ${tot}`;
   document.getElementById('stat-shoe').textContent=shoe.length;
@@ -2475,6 +2588,20 @@ function updateStats(streaks){
     const last=streaks[streaks.length-1];
     document.getElementById('stat-streak').textContent=`${last.side==='B'?'Bnk':'Plr'} ×${last.count}`;
   } else document.getElementById('stat-streak').textContent='—';
+  // ── Update percentage distribution chart
+  const chart=document.getElementById('pct-chart');
+  if(tot>0){
+    chart.style.display='block';
+    const bp=Math.round(b/tot*100), pp=Math.round(p/tot*100), tp=Math.round(t/tot*100);
+    document.getElementById('pct-bar-b').style.width=bp+'%';
+    document.getElementById('pct-bar-p').style.width=pp+'%';
+    document.getElementById('pct-bar-t').style.width=tp+'%';
+    document.getElementById('pct-pct-b').textContent=bp+'%';
+    document.getElementById('pct-pct-p').textContent=pp+'%';
+    document.getElementById('pct-pct-t').textContent=tp+'%';
+  } else {
+    chart.style.display='none';
+  }
 }
 
 // ── SOUND STATE (must be declared before buildShoe() which calls soundShuffle) ──
@@ -2483,10 +2610,11 @@ let soundEnabled = true;
 
 // ── INIT ──────────────────────────────────────────────────────────
 buildShoe();
-// pair bets init (no special setup needed)
+setMode('standard');   // enforce standard mode side-bet visibility on load
 selectSlot('banker');
 refreshUI();
 updateAllRoads();
+updateTrialBadge();    // show correct hands-remaining count on load
 
 // ══════════════════════════════════════════════════════════════════
 //  SOUND ENGINE  (Web Audio API — fully synthesized, no files)
@@ -2716,6 +2844,42 @@ function soundTiger(){
   imp.connect(ig); ig.connect(ctx.destination); imp.start(now); imp.stop(now+0.28);
 }
 
+// ── Natural 8/9: Gladiator sword-clash + crowd roar ──
+function soundNatural(){
+  if(!soundEnabled) return;
+  const ctx=getAudioCtx(), now=ctx.currentTime;
+  // Sword clash: metallic ring
+  [880,1108,1320,1760,2200].forEach((f,i)=>{
+    const o=ctx.createOscillator(); o.type='triangle'; o.frequency.value=f;
+    const g=ctx.createGain();
+    g.gain.setValueAtTime(0.18-i*0.02, now+i*0.02);
+    g.gain.exponentialRampToValueAtTime(0.001, now+i*0.02+0.6);
+    o.connect(g); g.connect(ctx.destination); o.start(now+i*0.02); o.stop(now+i*0.02+0.65);
+  });
+  // Crowd roar: filtered noise swell
+  const bufLen=Math.floor(ctx.sampleRate*1.2);
+  const buf=ctx.createBuffer(1,bufLen,ctx.sampleRate);
+  const d=buf.getChannelData(0);
+  for(let i=0;i<bufLen;i++) d[i]=Math.random()*2-1;
+  const ns=ctx.createBufferSource(); ns.buffer=buf;
+  const filt=ctx.createBiquadFilter(); filt.type='bandpass'; filt.Q.value=0.8;
+  filt.frequency.setValueAtTime(400,now); filt.frequency.linearRampToValueAtTime(1200,now+0.5);
+  filt.frequency.exponentialRampToValueAtTime(500,now+1.2);
+  const ng=ctx.createGain();
+  ng.gain.setValueAtTime(0,now); ng.gain.linearRampToValueAtTime(0.22,now+0.3);
+  ng.gain.exponentialRampToValueAtTime(0.001,now+1.2);
+  ns.connect(filt); filt.connect(ng); ng.connect(ctx.destination); ns.start(now);
+  // Triumphant horn: C5-G5
+  [[523,0.1],[784,0.3],[1047,0.55]].forEach(([freq,t])=>{
+    const o=ctx.createOscillator(); o.type='sawtooth'; o.frequency.value=freq;
+    const lp=ctx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=1800;
+    const g=ctx.createGain();
+    g.gain.setValueAtTime(0,now+t); g.gain.linearRampToValueAtTime(0.24,now+t+0.05);
+    g.gain.exponentialRampToValueAtTime(0.001,now+t+0.4);
+    o.connect(lp); lp.connect(g); g.connect(ctx.destination); o.start(now+t); o.stop(now+t+0.45);
+  });
+}
+
 // ── FREE TRIAL HELPERS ───────────────────────────────────────────
 function updateTrialBadge(){
   const el=document.getElementById('hdr-trial');
@@ -2749,7 +2913,7 @@ function startAutoPlay(){
   if(totalBet()===0){
     const fallback = lastBet && Object.values(lastBet).reduce((a,b)=>a+b,0)>0
       ? lastBet
-      : {banker:5,player:0,tie:0,dragon7:0,panda8:0,bigTiger:0,smallTiger:0,tigerTie:0,pPair:0,bPair:0};
+      : {banker:5,player:0,tie:0,dragon7:0,panda8:0,bigTiger:0,smallTiger:0,tigerTie:0,natural9:0,natural8:0,perfectPair:0};
     // apply fallback bet
     const cost = Object.values(fallback).reduce((a,b)=>a+b,0);
     if(balance < cost){ setMsg('Not enough balance for auto-play!'); return; }
@@ -2809,8 +2973,8 @@ function dealAuto(){
 
   const isDragon7=(gameMode==='ez'&&winner==='B'&&bFinal===7&&bThird);
   const isPanda8=(gameMode==='ez'&&winner==='P'&&pFinal===8&&pThird);
-  const isBigTiger=(gameMode==='tiger'&&winner==='B'&&bFinal===6&&!bThird);
-  const isSmallTiger=(gameMode==='tiger'&&winner==='B'&&bFinal===6&&bThird);
+  const isSmallTiger=(gameMode==='tiger'&&winner==='B'&&bFinal===6&&!bThird);  // 2-card = Small
+  const isBigTiger=(gameMode==='tiger'&&winner==='B'&&bFinal===6&&bThird);     // 3-card = Big
   const isTigerTie=(gameMode==='tiger'&&winner==='T'&&pFinal===6&&bFinal===6);
 
   pendingHand={pH,bH,pThird,bThird,pT:pFinal,bT:bFinal,winner,
