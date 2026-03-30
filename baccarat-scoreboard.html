@@ -523,9 +523,9 @@ header h1 {
 }
 .bet-slot:hover { border-color:var(--gold); }
 .bet-slot.active { border-color:var(--gold); border-style:solid; background:rgba(201,168,76,0.09); }
-.bet-slot .sname { font-size:0.58rem; letter-spacing:1.5px; color:var(--gold); text-transform:uppercase; }
+.bet-slot .sname { font-size:0.6rem; letter-spacing:1.5px; color:var(--gold); text-transform:uppercase; }
 .bet-slot .sodds { font-size:0.52rem; color:rgba(240,230,200,0.4); }
-.bet-slot .samt  { font-family:'Cinzel',serif; font-size:0.9rem; color:#fff; }
+.bet-slot .samt  { font-family:'Cinzel',serif; font-size:1.1rem; font-weight:700; color:#fff; }
 .bet-slot.tie-slot { padding:4px; }
 
 .bet-slot.dragon-slot  { border-color:rgba(184,134,11,0.4); }
@@ -590,27 +590,36 @@ header h1 {
   display:flex; gap:6px; justify-content:center; flex-wrap:wrap; align-items:center;
 }
 .chip {
-  width:38px; height:38px; border-radius:50%;
-  border:2px dashed rgba(255,255,255,0.5);
+  width:54px; height:54px; border-radius:50%;
+  border:3px dashed rgba(255,255,255,0.55);
   cursor:pointer; font-family:'Cinzel',serif;
-  font-size:0.58rem; font-weight:700; color:#fff;
+  font-size:0.78rem; font-weight:900; color:#fff;
   display:flex; align-items:center; justify-content:center;
-  transition:transform 0.15s; user-select:none;
+  transition:transform 0.15s, box-shadow 0.15s;
+  user-select:none; box-shadow:0 3px 8px rgba(0,0,0,0.5);
+  text-shadow:0 1px 2px rgba(0,0,0,0.7);
 }
-.chip:hover { transform:scale(1.12); }
-.c1   { background:radial-gradient(circle,#aaa 0%,#666 100%); }
-.c5   { background:radial-gradient(circle,#e84444 0%,#991111 100%); }
-.c25  { background:radial-gradient(circle,#44bb44 0%,#226622 100%); }
-.c100 { background:radial-gradient(circle,#4466cc 0%,#223388 100%); }
-.c500 { background:radial-gradient(circle,#9933cc 0%,#551188 100%); }
+.chip:hover { transform:scale(1.14); box-shadow:0 6px 18px rgba(0,0,0,0.6); }
+.c1   { background:radial-gradient(circle at 35% 35%,#ccc 0%,#777 100%); }
+.c5   { background:radial-gradient(circle at 35% 35%,#ff5555 0%,#aa1111 100%); }
+.c25  { background:radial-gradient(circle at 35% 35%,#55cc55 0%,#227722 100%); }
+.c100 { background:radial-gradient(circle at 35% 35%,#5577ee 0%,#224499 100%); }
+.c500 { background:radial-gradient(circle at 35% 35%,#bb44ee 0%,#661199 100%); }
 
 /* ─── ACTIONS ─── */
 .action-btns {
   grid-column:1/-1;
   display:flex; gap:8px; justify-content:center; flex-wrap:wrap; align-items:center;
 }
-.bal-info { display:flex; gap:10px; align-items:center; font-size:0.75rem; flex-wrap:wrap; }
-.bal-info span { font-family:'Cinzel',serif; color:var(--gold); }
+.bal-info {
+  display:flex; gap:14px; align-items:center; font-size:0.82rem;
+  flex-wrap:wrap; background:rgba(0,0,0,0.35); border-radius:6px;
+  padding:6px 14px; border:1px solid rgba(201,168,76,0.2);
+}
+.bal-info span {
+  font-family:'Cinzel',serif; color:var(--gold);
+  font-size:1.25rem; font-weight:700; letter-spacing:1px;
+}
 .btn {
   font-family:'Cinzel',serif; font-size:0.7rem; letter-spacing:1px;
   padding:8px 16px; border:none; border-radius:4px;
@@ -1295,7 +1304,7 @@ header h1 {
       style="background:none;border:1px solid rgba(201,168,76,0.35);border-radius:5px;
              color:var(--gold);font-size:0.85rem;padding:3px 7px;cursor:pointer;line-height:1;">🔊</button>
     <div>
-      <div style="font-family:'Cinzel',serif;color:var(--gold);font-size:0.72rem;" id="hdr-balance">Balance: $1,000</div>
+      <div style="font-family:'Cinzel',serif;color:var(--gold);font-size:0.85rem;font-weight:700;" id="hdr-balance">Balance: $1,000</div>
       <div style="font-size:0.58rem;color:rgba(240,230,200,0.4);" id="hdr-rounds">Round 0</div>
       <div id="hdr-trial" class="trial-badge">Free Trial: 10 hands remaining</div>
     </div>
@@ -1604,7 +1613,7 @@ let results=[], shoe=[], scores={B:0,P:0,T:0};
 let rulesOpen=false;
 
 // ── FREE TRIAL ────────────────────────────────────────────────────
-const FREE_HAND_LIMIT = 10;
+const FREE_HAND_LIMIT = 40;
 let freeHandsUsed = 0;
 let trialExpired = false;
 
@@ -2060,10 +2069,15 @@ function resolveHand(){
   if(netChange>0) soundWin();
   else if(netChange<0) soundLose();
 
-  results.push({w:r.winner, d7:!!r.isDragon7, p8:!!r.isPanda8, pp:pIsPair, bp:bIsPair});
-  // Dragon 7 / Panda 8 celebration animation
-  if(r.isDragon7) triggerSpecialAnim('dragon7');
-  else if(r.isPanda8) triggerSpecialAnim('panda8');
+  // Store rich result: winner, special flags, pair flags, winning score, natural flag
+  const winScore = r.winner==='B'?r.bT : r.winner==='P'?r.pT : r.pT;
+  const isNatural = (r.winner==='B'&&r.bH.length===2&&(r.bT===8||r.bT===9))
+                  ||(r.winner==='P'&&r.pH.length===2&&(r.pT===8||r.pT===9));
+  results.push({w:r.winner, d7:!!r.isDragon7, p8:!!r.isPanda8, pp:pIsPair, bp:bIsPair, score:winScore, nat:isNatural});
+  // Special win celebrations
+  if(r.isDragon7){ triggerSpecialAnim('dragon7'); soundDragon7(); }
+  else if(r.isPanda8){ triggerSpecialAnim('panda8'); soundPanda8(); }
+  else if(r.isBigTiger||r.isSmallTiger||r.isTigerTie){ triggerSpecialAnim('tiger'); soundTiger(); }
   // remember this bet for auto-play re-use
   lastBet = {...r.betsSnapshot};
   document.getElementById('btn-clear').disabled=false;
@@ -2147,7 +2161,7 @@ function refreshUI(){
 // ═══════════════════════════════════════════════════════════════
 //  ROAD ALGORITHMS
 // ═══════════════════════════════════════════════════════════════
-function computeBeadRoad(res){ return res.map((r,i)=>({col:Math.floor(i/ROWS),row:i%ROWS,side:r.w,d7:r.d7,p8:r.p8,pp:r.pp,bp:r.bp})); }
+function computeBeadRoad(res){ return res.map((r,i)=>({col:Math.floor(i/ROWS),row:i%ROWS,side:r.w,d7:r.d7,p8:r.p8,pp:r.pp,bp:r.bp,score:r.score,nat:r.nat})); }
 
 function computeBigRoad(res){
   const streaks=[],cells=[];
@@ -2158,7 +2172,7 @@ function computeBigRoad(res){
     if(w!==curSide){ curSide=w; streakIdx++; vCol++; vRow=0; streaks.push({side:w,count:0}); }
     else{ if(vRow<ROWS-1) vRow++; else vCol++; }
     streaks[streakIdx].count++;
-    cells.push({vCol,vRow,side:w,ties:0,streakIdx,depth:streaks[streakIdx].count-1,d7:r.d7,p8:r.p8,pp:r.pp,bp:r.bp});
+    cells.push({vCol,vRow,side:w,ties:0,streakIdx,depth:streaks[streakIdx].count-1,d7:r.d7,p8:r.p8,pp:r.pp,bp:r.bp,nat:r.nat});
   }
   return {streaks,cells};
 }
@@ -2192,195 +2206,205 @@ function getPredictions(res,bigRoadData){
 }
 
 // ═══════════════════════════════════════════════════════════════
-//  ROAD RENDERING (canvas)
+//  ROAD RENDERING (canvas)  — casino-standard rules:
+//  Bead Road : filled circles, winning score inside, pair dots
+//  Big Road  : HOLLOW circles, tie=green corner lines, natural=yellow dot
+//  Derived   : outline circles (BEB/Small) or slashes (Cockroach)
 // ═══════════════════════════════════════════════════════════════
 function makeGrid(ctx,w,h,cell){
-  // Casino-style dark green felt background
-  ctx.fillStyle=GRID_BG; ctx.fillRect(0,0,w,h);
-  // Subtle grid lines
-  ctx.strokeStyle=GRID_LINE; ctx.lineWidth=0.5;
+  ctx.fillStyle=GRID_BG;
+  ctx.fillRect(0,0,w,h);
+  ctx.strokeStyle=GRID_LINE;
+  ctx.lineWidth=0.5;
   const cols=Math.ceil(w/cell);
-  for(let c=0;c<=cols;c++){ctx.beginPath();ctx.moveTo(c*cell+0.5,0);ctx.lineTo(c*cell+0.5,h);ctx.stroke();}
-  for(let r=0;r<=ROWS;r++){ctx.beginPath();ctx.moveTo(0,r*cell+0.5);ctx.lineTo(w,r*cell+0.5);ctx.stroke();}
-}
-
-function circ(ctx,cx,cy,r,fill,stroke,sw){
-  ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);
-  if(fill){ctx.fillStyle=fill;ctx.fill();}
-  if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=sw||1.5;ctx.stroke();}
-}
-
-// Draw tie slash through a circle (standard casino style: green diagonal line)
-function drawTieLine(ctx,cx,cy,r,count){
-  ctx.save();
-  // White outline for contrast over filled circle
-  ctx.strokeStyle='rgba(255,255,255,0.6)'; ctx.lineWidth=3.2; ctx.lineCap='round';
-  ctx.beginPath();ctx.moveTo(cx-r*0.78,cy+r*0.78);ctx.lineTo(cx+r*0.78,cy-r*0.78);ctx.stroke();
-  // Green slash on top
-  ctx.strokeStyle='#00cc44'; ctx.lineWidth=1.8;
-  ctx.beginPath();ctx.moveTo(cx-r*0.78,cy+r*0.78);ctx.lineTo(cx+r*0.78,cy-r*0.78);ctx.stroke();
-  if(count>1){
-    // Small count bubble
-    const bx=cx+r*0.62,by=cy-r*0.62;
-    ctx.beginPath();ctx.arc(bx,by,r*0.38,0,Math.PI*2);
-    ctx.fillStyle='#00cc44';ctx.fill();
-    ctx.fillStyle='#fff';
-    ctx.font=`bold ${Math.round(r*0.58)}px Arial`;
-    ctx.textAlign='center';ctx.textBaseline='middle';
-    ctx.fillText(count,bx,by);
+  for(let c=0;c<=cols;c++){
+    ctx.beginPath();ctx.moveTo(c*cell,0);ctx.lineTo(c*cell,h);ctx.stroke();
   }
+  for(let r=0;r<=ROWS;r++){
+    ctx.beginPath();ctx.moveTo(0,r*cell);ctx.lineTo(w,r*cell);ctx.stroke();
+  }
+}
+
+// Filled or stroked circle
+function circ(ctx,cx,cy,r,fill,stroke,sw){
+  ctx.beginPath();
+  ctx.arc(cx,cy,r,0,Math.PI*2);
+  if(fill){ ctx.fillStyle=fill; ctx.fill(); }
+  if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=sw||1.5; ctx.stroke(); }
+}
+
+// Pair dot: blue=bottom-left (Player), red=bottom-right (Banker)
+function pairDot(ctx,cx,cy,r,color,left){
+  const dx=left?cx-r*0.6:cx+r*0.6, dy=cy+r*0.6, dr=r*0.27;
+  ctx.beginPath(); ctx.arc(dx,dy,dr+1,0,Math.PI*2); ctx.fillStyle='#fff'; ctx.fill();
+  ctx.beginPath(); ctx.arc(dx,dy,dr,0,Math.PI*2); ctx.fillStyle=color; ctx.fill();
+}
+
+// Tie indicator: small green lines at top-right corner of a cell (Big Road style)
+function drawTieCorner(ctx,cellX,cellY,cellSize,count){
+  const x=cellX+cellSize-1, y=cellY+1, len=Math.min(cellSize*0.32,10);
+  ctx.strokeStyle='#00b33c'; ctx.lineWidth=1.6; ctx.lineCap='round';
+  for(let i=0;i<Math.min(count,4);i++){
+    const off=i*(len*0.55+1);
+    ctx.beginPath();
+    ctx.moveTo(x-len-off, y);
+    ctx.lineTo(x-off,     y+len);
+    ctx.stroke();
+  }
+}
+
+// Cockroach slash
+function slash(ctx,cx,cy,size,color,alpha){
+  ctx.save(); ctx.globalAlpha=alpha??1; ctx.strokeStyle=color;
+  ctx.lineWidth=2; ctx.lineCap='round';
+  const h=size*0.35;
+  ctx.beginPath(); ctx.moveTo(cx-h,cy+h); ctx.lineTo(cx+h,cy-h); ctx.stroke();
   ctx.restore();
 }
 
-// Draw pair dot in corner of a circle
-function drawPairDot(ctx,cx,cy,r,side){
-  // Player pair = blue dot bottom-left; Banker pair = red dot bottom-right
-  const dr=r*0.28;
-  if(side==='pp'){
-    const dx=cx-r*0.58,dy=cy+r*0.58;
-    ctx.beginPath();ctx.arc(dx,dy,dr+1.2,0,Math.PI*2);
-    ctx.fillStyle='#fff';ctx.fill();
-    ctx.beginPath();ctx.arc(dx,dy,dr,0,Math.PI*2);
-    ctx.fillStyle=PLAYER_C;ctx.fill();
-  }
-  if(side==='bp'){
-    const dx=cx+r*0.58,dy=cy+r*0.58;
-    ctx.beginPath();ctx.arc(dx,dy,dr+1.2,0,Math.PI*2);
-    ctx.fillStyle='#fff';ctx.fill();
-    ctx.beginPath();ctx.arc(dx,dy,dr,0,Math.PI*2);
-    ctx.fillStyle=BANKER_C;ctx.fill();
-  }
-}
-
-function slash(ctx,cx,cy,size,color,alpha){
-  ctx.save();ctx.globalAlpha=alpha??1;ctx.strokeStyle=color;ctx.lineWidth=2.2;ctx.lineCap='round';
-  const h=size*0.36;
-  ctx.beginPath();ctx.moveTo(cx-h,cy+h);ctx.lineTo(cx+h,cy-h);ctx.stroke();ctx.restore();
-}
-
-// Draw a tiny badge label inside/on a bead circle (for D7/P8)
-function drawBadge(ctx,cx,cy,r,label,bg,fg){
-  const bw=r*1.5,bh=r*0.9,bx=cx-bw/2,by=cy+r*0.05;
-  ctx.fillStyle=bg;
-  ctx.beginPath();
-  const rx=bw/2,ry=bh/2;
-  ctx.moveTo(bx+rx,by);ctx.arcTo(bx+bw,by,bx+bw,by+bh,ry*0.5);
-  ctx.arcTo(bx+bw,by+bh,bx,by+bh,ry*0.5);ctx.arcTo(bx,by+bh,bx,by,ry*0.5);
-  ctx.arcTo(bx,by,bx+bw,by,ry*0.5);ctx.closePath();ctx.fill();
-  ctx.fillStyle=fg;
-  ctx.font=`bold ${Math.round(r*0.68)}px Arial`;
-  ctx.textAlign='center';ctx.textBaseline='middle';
-  ctx.fillText(label,cx,by+bh/2);
-}
-
+// ── BEAD ROAD (filled circles, hand score inside, pair dots in corners)
 function renderBeadRoad(res){
-  const canvas=document.getElementById('beadCanvas'),scroll=document.getElementById('beadScroll'),cell=BIG_CELL;
+  const canvas=document.getElementById('beadCanvas');
+  const scroll=document.getElementById('beadScroll');
+  const cell=BIG_CELL;
   const cells=computeBeadRoad(res);
-  const numCols=Math.max(MIN_BEAD_COLS,Math.ceil(res.length/ROWS)+2);
-  canvas.width=numCols*cell;canvas.height=ROWS*cell;
-  const ctx=canvas.getContext('2d');makeGrid(ctx,canvas.width,canvas.height,cell);
+  const numCols=Math.max(MIN_BEAD_COLS, Math.ceil(res.length/ROWS)+2);
+  canvas.width=numCols*cell; canvas.height=ROWS*cell;
+  const ctx=canvas.getContext('2d');
+  makeGrid(ctx,canvas.width,canvas.height,cell);
+
   cells.forEach(c=>{
-    const cx=c.col*cell+cell/2,cy=c.row*cell+cell/2,r=cell*0.4;
-    const color=c.side==='B'?BANKER_C:c.side==='P'?PLAYER_C:TIE_C;
-    // Filled circle (casino bead style)
+    const cx=c.col*cell+cell/2, cy=c.row*cell+cell/2, r=cell*0.41;
+    const color=c.side==='B'?BANKER_C : c.side==='P'?PLAYER_C : TIE_C;
+
+    // Filled circle
     circ(ctx,cx,cy,r,color,null);
-    // Thin inner highlight arc
-    ctx.save();
-    const grad=ctx.createRadialGradient(cx-r*0.3,cy-r*0.3,r*0.04,cx,cy,r);
-    grad.addColorStop(0,'rgba(255,255,255,0.30)');grad.addColorStop(0.5,'rgba(255,255,255,0.08)');grad.addColorStop(1,'rgba(0,0,0,0.10)');
-    ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fillStyle=grad;ctx.fill();
-    ctx.restore();
-    // Dark ring border (like real casino beads)
-    circ(ctx,cx,cy,r,null,'rgba(0,0,0,0.25)',1.2);
-    // Dragon 7 badge
-    if(c.d7) drawBadge(ctx,cx,cy,r,'D7','#ffd700','#6a0000');
-    // Panda 8 badge
-    if(c.p8) drawBadge(ctx,cx,cy,r,'P8','#f0fff4','#003d00');
-    // Pair dots (small corner circles — standard casino style)
-    if(c.pp) drawPairDot(ctx,cx,cy,r,'pp');
-    if(c.bp) drawPairDot(ctx,cx,cy,r,'bp');
+    // Thin dark ring border
+    circ(ctx,cx,cy,r,null,'rgba(0,0,0,0.30)',1);
+
+    // Score number inside (white text)
+    if(c.score!=null && c.side!=='T'){
+      ctx.fillStyle='#ffffff';
+      ctx.font=`bold ${Math.round(cell*0.36)}px Arial`;
+      ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.fillText(c.score, cx, cy);
+    }
+
+    // Pair dots (Player pair = blue bottom-left, Banker pair = red bottom-right)
+    if(c.pp) pairDot(ctx,cx,cy,r,PLAYER_C,true);
+    if(c.bp) pairDot(ctx,cx,cy,r,BANKER_C,false);
+
+    // D7 / P8 small label on top
+    if(c.d7||c.p8){
+      const lbl=c.d7?'D7':'P8';
+      const lbg=c.d7?'#ffd700':'#ffffff';
+      const lfg=c.d7?'#7a0000':'#005500';
+      const lx=cx, ly=cy-r*0.4;
+      ctx.fillStyle=lbg;
+      ctx.fillRect(lx-r*0.65, ly-r*0.28, r*1.3, r*0.55);
+      ctx.fillStyle=lfg;
+      ctx.font=`bold ${Math.round(cell*0.26)}px Arial`;
+      ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.fillText(lbl, lx, ly);
+    }
   });
+
   scroll.scrollLeft=scroll.scrollWidth;
   document.getElementById('bead-count').textContent=`${res.length} hands`;
 }
 
+// ── BIG ROAD (HOLLOW circles, tie=corner lines, natural=yellow dot)
 function renderBigRoad(br,preds){
   const{streaks,cells}=br;
-  const canvas=document.getElementById('bigCanvas'),scroll=document.getElementById('bigScroll'),cell=BIG_CELL;
+  const canvas=document.getElementById('bigCanvas');
+  const scroll=document.getElementById('bigScroll');
+  const cell=BIG_CELL;
   const maxCol=cells.length>0?Math.max(...cells.map(c=>c.vCol)):0;
-  const numCols=Math.max(MIN_BIG_COLS,maxCol+4);
-  canvas.width=numCols*cell;canvas.height=ROWS*cell;
-  const ctx=canvas.getContext('2d');makeGrid(ctx,canvas.width,canvas.height,cell);
-  // Prediction ghost circles (dashed outline on light bg)
+  const numCols=Math.max(MIN_BIG_COLS, maxCol+4);
+  canvas.width=numCols*cell; canvas.height=ROWS*cell;
+  const ctx=canvas.getContext('2d');
+  makeGrid(ctx,canvas.width,canvas.height,cell);
+
+  // Prediction ghost circles (dashed)
   if(preds){
-    const dp=(pred,sc)=>{
-      if(!pred?.bigCell)return;
-      const{vCol,vRow}=pred.bigCell,cx=vCol*cell+cell/2,cy=vRow*cell+cell/2;
-      ctx.save();ctx.setLineDash([4,3]);ctx.strokeStyle=sc+'99';ctx.lineWidth=2;
-      ctx.beginPath();ctx.arc(cx,cy,cell*0.41,0,Math.PI*2);ctx.stroke();ctx.restore();
-    };
-    dp(preds.B,BANKER_C);dp(preds.P,PLAYER_C);
+    ['B','P'].forEach(side=>{
+      const pred=preds[side]; if(!pred?.bigCell) return;
+      const{vCol,vRow}=pred.bigCell;
+      const cx=vCol*cell+cell/2, cy=vRow*cell+cell/2;
+      const sc=side==='B'?BANKER_C:PLAYER_C;
+      ctx.save();
+      ctx.setLineDash([3,3]);
+      ctx.strokeStyle=sc+'88'; ctx.lineWidth=1.5;
+      ctx.beginPath(); ctx.arc(cx,cy,cell*0.4,0,Math.PI*2); ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.restore();
+    });
   }
-  // Draw circles — filled (matches real Shuffle Master casino display)
+
   cells.forEach(c=>{
-    const cx=c.vCol*cell+cell/2,cy=c.vRow*cell+cell/2,r=cell*0.41;
+    const cx=c.vCol*cell+cell/2, cy=c.vRow*cell+cell/2, r=cell*0.41;
     const color=c.side==='B'?BANKER_C:PLAYER_C;
-    // Filled circle
-    circ(ctx,cx,cy,r,color,null);
-    // Glossy inner highlight
-    ctx.save();
-    const grad=ctx.createRadialGradient(cx-r*0.3,cy-r*0.3,r*0.04,cx,cy,r);
-    grad.addColorStop(0,'rgba(255,255,255,0.28)');grad.addColorStop(0.55,'rgba(255,255,255,0.06)');grad.addColorStop(1,'rgba(0,0,0,0.12)');
-    ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fillStyle=grad;ctx.fill();
-    ctx.restore();
-    // Dark ring border
-    circ(ctx,cx,cy,r,null,'rgba(0,0,0,0.22)',1.2);
-    // Tie slash(es) through the circle
-    if(c.ties>0) drawTieLine(ctx,cx,cy,r,c.ties);
-    // Dragon 7: gold star/crown badge inside circle
-    if(c.d7) drawBadge(ctx,cx,cy,r*0.9,'D7','#ffd700','#6a0000');
+    const cellX=c.vCol*cell, cellY=c.vRow*cell;
+
+    // HOLLOW circle (outline only — standard Big Road style)
+    circ(ctx,cx,cy,r,null,color,2.2);
+
+    // Natural (8 or 9 on 2 cards) → small yellow dot inside
+    if(c.nat){
+      circ(ctx,cx,cy,r*0.22,'#f5c800',null);
+    }
+
+    // Tie lines at top-right corner of the cell
+    if(c.ties>0) drawTieCorner(ctx,cellX,cellY,cell,c.ties);
+
     // Pair dots
-    if(c.pp) drawPairDot(ctx,cx,cy,r,'pp');
-    if(c.bp) drawPairDot(ctx,cx,cy,r,'bp');
+    if(c.pp) pairDot(ctx,cx,cy,r,PLAYER_C,true);
+    if(c.bp) pairDot(ctx,cx,cy,r,BANKER_C,false);
   });
+
   scroll.scrollLeft=scroll.scrollWidth;
   document.getElementById('big-count').textContent=`${streaks.length} streaks`;
 }
 
+// ── DERIVED ROADS (Big Eye Boy, Small Road, Cockroach Pig)
 function renderDerived(canvasId,scrollId,countId,entries,preds,cockroach){
-  const canvas=document.getElementById(canvasId),scroll=document.getElementById(scrollId),cell=SM_CELL;
-  const numCols=Math.max(MIN_SM_COLS,Math.ceil((entries.length+3)/ROWS)+2);
-  canvas.width=numCols*cell;canvas.height=ROWS*cell;
-  const ctx=canvas.getContext('2d');makeGrid(ctx,canvas.width,canvas.height,cell);
+  const canvas=document.getElementById(canvasId);
+  const scroll=document.getElementById(scrollId);
+  const cell=SM_CELL;
+  const numCols=Math.max(MIN_SM_COLS, Math.ceil((entries.length+3)/ROWS)+2);
+  canvas.width=numCols*cell; canvas.height=ROWS*cell;
+  const ctx=canvas.getContext('2d');
+  makeGrid(ctx,canvas.width,canvas.height,cell);
+
+  // Prediction markers
   if(preds){
     const dpe=(pred,label,ox)=>{
-      if(!pred)return;
-      const col=Math.floor(pred.idx/ROWS),row=pred.idx%ROWS;
-      const cx=col*cell+cell/2+ox,cy=row*cell+cell/2;
+      if(!pred) return;
+      const col=Math.floor(pred.idx/ROWS), row=pred.idx%ROWS;
+      const cx=col*cell+cell/2+ox, cy=row*cell+cell/2;
       const color=pred.color==='red'?RED_D:BLUE_D;
-      if(cockroach){slash(ctx,cx,cy,cell,color,0.38);}
-      else{ctx.save();ctx.setLineDash([3,2]);circ(ctx,cx,cy,cell*0.34,null,color+'aa',1.5);ctx.restore();}
-      ctx.fillStyle=color+'bb';ctx.font=`bold ${Math.round(cell*0.28)}px Arial`;
-      ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(label,cx,cy);
+      ctx.save(); ctx.setLineDash([2,2]);
+      if(cockroach) slash(ctx,cx,cy,cell,color,0.4);
+      else circ(ctx,cx,cy,cell*0.32,null,color+'99',1.2);
+      ctx.setLineDash([]);
+      ctx.restore();
     };
     const same=preds.B&&preds.P&&preds.B.idx===preds.P.idx;
-    if(same){dpe(preds.B,'B',-3);dpe(preds.P,'P',+3);}
-    else{dpe(preds.B,'B',0);dpe(preds.P,'P',0);}
+    if(same){ dpe(preds.B,'B',-2); dpe(preds.P,'P',+2); }
+    else { dpe(preds.B,'B',0); dpe(preds.P,'P',0); }
   }
+
   entries.forEach((color,idx)=>{
-    const col=Math.floor(idx/ROWS),row=idx%ROWS;
-    const cx=col*cell+cell/2,cy=row*cell+cell/2;
+    const col=Math.floor(idx/ROWS), row=idx%ROWS;
+    const cx=col*cell+cell/2, cy=row*cell+cell/2;
     const c=color==='red'?RED_D:BLUE_D;
-    if(cockroach){
-      slash(ctx,cx,cy,cell,c,1);
-    } else {
-      // Outline circles for derived roads (standard)
-      circ(ctx,cx,cy,cell*0.34,null,c,1.8);
-    }
+    if(cockroach) slash(ctx,cx,cy,cell,c,1);
+    else circ(ctx,cx,cy,cell*0.33,null,c,1.8);
   });
+
   scroll.scrollLeft=scroll.scrollWidth;
   const ce=document.getElementById(countId);
-  if(ce) ce.textContent=entries.length>0?`${entries.length} entries`:'starts soon';
+  if(ce) ce.textContent=entries.length>0?`${entries.length} entries`:'—';
 }
 
 // ─── Dragon 7 / Panda 8 Celebration Animation ────────────────
@@ -2389,15 +2413,21 @@ function triggerSpecialAnim(type){
   const old=document.getElementById('special-anim-overlay');
   if(old) old.remove();
 
-  const cfg = type==='dragon7'
-    ? { emoji:'🐉', title:'DRAGON 7', sub:'40 TO 1 PAYOUT',
-        bg:'linear-gradient(135deg,#1a0000 0%,#3d0000 40%,#1a0000 100%)',
-        titleGrad:'linear-gradient(90deg,#ffd700,#ff6600,#ffd700)',
-        sub_c:'#ff9933', glow:'rgba(255,80,0,0.6)', ring:'#ff4400' }
-    : { emoji:'🐼', title:'PANDA 8', sub:'25 TO 1 PAYOUT',
-        bg:'linear-gradient(135deg,#001a00 0%,#003d00 40%,#001a00 100%)',
-        titleGrad:'linear-gradient(90deg,#ffffff,#88ffaa,#ffffff)',
-        sub_c:'#aaffcc', glow:'rgba(0,200,80,0.5)', ring:'#00cc44' };
+  const cfgMap = {
+    dragon7:{ emoji:'🐉', title:'DRAGON 7',   sub:'40 TO 1 PAYOUT',
+              bg:'linear-gradient(135deg,#1a0000 0%,#3d0000 40%,#1a0000 100%)',
+              titleGrad:'linear-gradient(90deg,#ffd700,#ff6600,#ffd700)',
+              sub_c:'#ff9933', glow:'rgba(255,80,0,0.6)', ring:'#ff4400' },
+    panda8: { emoji:'🐼', title:'PANDA 8',    sub:'25 TO 1 PAYOUT',
+              bg:'linear-gradient(135deg,#001a00 0%,#003d00 40%,#001a00 100%)',
+              titleGrad:'linear-gradient(90deg,#ffffff,#88ffaa,#ffffff)',
+              sub_c:'#aaffcc', glow:'rgba(0,200,80,0.5)', ring:'#00cc44' },
+    tiger:  { emoji:'🐯', title:'TIGER WIN',  sub:'BIG · SMALL · TIE',
+              bg:'linear-gradient(135deg,#1a1000 0%,#3d2800 40%,#1a1000 100%)',
+              titleGrad:'linear-gradient(90deg,#ffd700,#ff9900,#ffd700)',
+              sub_c:'#ffcc55', glow:'rgba(255,140,0,0.6)', ring:'#ff8800' },
+  };
+  const cfg=cfgMap[type]||cfgMap.dragon7;
 
   const overlay=document.createElement('div');
   overlay.id='special-anim-overlay';
@@ -2602,6 +2632,88 @@ function soundLose(){
   sub.connect(subG); subG.connect(ctx.destination);
   lfo.start(now); osc.start(now); sub.start(now);
   osc.stop(now+dur); sub.stop(now+0.5); lfo.stop(now+dur);
+}
+
+// ── Dragon 7: epic brass fanfare ──
+function soundDragon7(){
+  if(!soundEnabled) return;
+  const ctx=getAudioCtx(), now=ctx.currentTime;
+  // Powerful low brass chord + triumphant fanfare
+  [[98,0],[147,0.05],[196,0.05],[294,0.1],[392,0.2],[523,0.35],[784,0.5]].forEach(([freq,t])=>{
+    const o=ctx.createOscillator(); o.type='sawtooth'; o.frequency.value=freq;
+    const g=ctx.createGain();
+    const filt=ctx.createBiquadFilter(); filt.type='lowpass'; filt.frequency.value=1800;
+    g.gain.setValueAtTime(0,now+t); g.gain.linearRampToValueAtTime(0.18,now+t+0.06);
+    g.gain.exponentialRampToValueAtTime(0.001,now+t+0.7);
+    o.connect(filt); filt.connect(g); g.connect(ctx.destination);
+    o.start(now+t); o.stop(now+t+0.75);
+  });
+  // Reverberant hit
+  const sub=ctx.createOscillator(); sub.type='sine'; sub.frequency.value=55;
+  const sg=ctx.createGain(); sg.gain.setValueAtTime(0.4,now); sg.gain.exponentialRampToValueAtTime(0.001,now+1.2);
+  sub.connect(sg); sg.connect(ctx.destination); sub.start(now); sub.stop(now+1.3);
+  // Victory sparkle
+  setTimeout(()=>{ if(!soundEnabled) return;
+    const ctx2=getAudioCtx(), t=ctx2.currentTime;
+    [1046,1318,1568,2093].forEach((f,i)=>{
+      const o=ctx2.createOscillator(); o.type='triangle'; o.frequency.value=f;
+      const g=ctx2.createGain();
+      g.gain.setValueAtTime(0,t+i*0.07); g.gain.linearRampToValueAtTime(0.2,t+i*0.07+0.04);
+      g.gain.exponentialRampToValueAtTime(0.001,t+i*0.07+0.35);
+      o.connect(g); g.connect(ctx2.destination); o.start(t+i*0.07); o.stop(t+i*0.07+0.4);
+    });
+  }, 550);
+}
+
+// ── Panda 8: gentle mystical chime ──
+function soundPanda8(){
+  if(!soundEnabled) return;
+  const ctx=getAudioCtx(), now=ctx.currentTime;
+  // Delicate pentatonic bell sequence: G4-A4-B4-D5-G5
+  [[392,0],[440,0.13],[494,0.26],[587,0.42],[784,0.62]].forEach(([freq,t])=>{
+    const o=ctx.createOscillator(); o.type='sine'; o.frequency.value=freq;
+    // Add slight harmonics for bell timbre
+    const o2=ctx.createOscillator(); o2.type='triangle'; o2.frequency.value=freq*2.76;
+    const g=ctx.createGain(); const g2=ctx.createGain();
+    g.gain.setValueAtTime(0.22,now+t); g.gain.exponentialRampToValueAtTime(0.001,now+t+0.9);
+    g2.gain.setValueAtTime(0.06,now+t); g2.gain.exponentialRampToValueAtTime(0.001,now+t+0.5);
+    o.connect(g); g.connect(ctx.destination);
+    o2.connect(g2); g2.connect(ctx.destination);
+    o.start(now+t); o.stop(now+t+1); o2.start(now+t); o2.stop(now+t+0.6);
+  });
+  // Soft gong resonance
+  const gong=ctx.createOscillator(); gong.type='sine'; gong.frequency.value=110;
+  const gg=ctx.createGain(); gg.gain.setValueAtTime(0.15,now+0.6); gg.gain.exponentialRampToValueAtTime(0.001,now+2.5);
+  gong.connect(gg); gg.connect(ctx.destination); gong.start(now+0.6); gong.stop(now+2.6);
+}
+
+// ── Tiger: fierce roar + power chord ──
+function soundTiger(){
+  if(!soundEnabled) return;
+  const ctx=getAudioCtx(), now=ctx.currentTime, dur=1.1;
+  // Low growl (filtered noise)
+  const bufLen=Math.floor(ctx.sampleRate*dur);
+  const buf=ctx.createBuffer(1,bufLen,ctx.sampleRate);
+  const d=buf.getChannelData(0);
+  for(let i=0;i<bufLen;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/bufLen,0.3);
+  const ns=ctx.createBufferSource(); ns.buffer=buf;
+  const filt=ctx.createBiquadFilter(); filt.type='bandpass'; filt.Q.value=3;
+  filt.frequency.setValueAtTime(80,now); filt.frequency.exponentialRampToValueAtTime(350,now+0.4);
+  filt.frequency.exponentialRampToValueAtTime(120,now+dur);
+  const ng=ctx.createGain(); ng.gain.setValueAtTime(0.35,now); ng.gain.exponentialRampToValueAtTime(0.001,now+dur);
+  ns.connect(filt); filt.connect(ng); ng.connect(ctx.destination); ns.start(now);
+  // Power fifth: A2+E3
+  [[110,0],[165,0.05],[220,0.1],[330,0.18]].forEach(([freq,t])=>{
+    const o=ctx.createOscillator(); o.type='sawtooth'; o.frequency.value=freq;
+    const g=ctx.createGain();
+    g.gain.setValueAtTime(0.2,now+t); g.gain.linearRampToValueAtTime(0.28,now+t+0.07);
+    g.gain.exponentialRampToValueAtTime(0.001,now+t+0.8);
+    o.connect(g); g.connect(ctx.destination); o.start(now+t); o.stop(now+t+0.85);
+  });
+  // Impact hit
+  const imp=ctx.createOscillator(); imp.type='sine'; imp.frequency.setValueAtTime(180,now); imp.frequency.exponentialRampToValueAtTime(40,now+0.2);
+  const ig=ctx.createGain(); ig.gain.setValueAtTime(0.5,now); ig.gain.exponentialRampToValueAtTime(0.001,now+0.25);
+  imp.connect(ig); ig.connect(ctx.destination); imp.start(now); imp.stop(now+0.28);
 }
 
 // ── FREE TRIAL HELPERS ───────────────────────────────────────────
