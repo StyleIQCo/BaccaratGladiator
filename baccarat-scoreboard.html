@@ -298,30 +298,56 @@ header h1 {
 
 /* ─── MODE BAR ─── */
 .mode-bar {
-  background:#050a05;
-  border-bottom:1px solid rgba(201,168,76,0.2);
-  display:flex; align-items:center; gap:0;
+  background:linear-gradient(180deg,#0a120a 0%,#060d06 100%);
+  border-bottom:2px solid rgba(201,168,76,0.3);
+  display:flex; align-items:stretch; gap:0;
   overflow-x:auto; scrollbar-width:none;
 }
 .mode-bar::-webkit-scrollbar{display:none;}
 .mode-tab {
-  font-family:'Cinzel',serif; font-size:0.65rem; letter-spacing:1.5px;
-  padding:8px 16px; border:none; border-right:1px solid rgba(201,168,76,0.15);
+  font-family:'Cinzel',serif; letter-spacing:1px;
+  border:none; border-right:1px solid rgba(201,168,76,0.12);
   background:transparent; color:rgba(240,230,200,0.45);
-  cursor:pointer; transition:all 0.2s; white-space:nowrap; position:relative;
+  cursor:pointer; transition:all 0.22s; white-space:nowrap;
+  position:relative; display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  padding:10px 20px; gap:2px; min-width:130px;
 }
-.mode-tab:hover { color:var(--gold); background:rgba(201,168,76,0.05); }
-.mode-tab.active { color:#fff; background:rgba(201,168,76,0.12); }
+.mode-tab .tab-num {
+  font-size:0.52rem; letter-spacing:3px; opacity:0.5;
+  color:inherit;
+}
+.mode-tab .tab-name {
+  font-size:0.78rem; letter-spacing:1.5px; font-weight:700;
+}
+.mode-tab .tab-sub {
+  font-size:0.46rem; letter-spacing:1px; opacity:0.5;
+}
+.mode-tab:hover {
+  color:var(--gold-lt); background:rgba(201,168,76,0.07);
+}
+.mode-tab:hover .tab-num,.mode-tab:hover .tab-sub { opacity:0.8; }
+.mode-tab.active {
+  color:#fff; background:rgba(201,168,76,0.13);
+}
+.mode-tab.active .tab-num,.mode-tab.active .tab-sub { opacity:0.75; }
 .mode-tab.active::after {
   content:''; position:absolute; bottom:0; left:0; right:0;
-  height:2px; background:var(--gold);
+  height:3px; background:var(--gold);
+  border-radius:3px 3px 0 0;
 }
-.mode-tab.ez.active::after    { background:var(--ez-col); }
+.mode-tab.ez { color:rgba(240,210,100,0.45); }
+.mode-tab.ez:hover { color:#f0d070; background:rgba(184,134,11,0.08); }
+.mode-tab.ez.active { color:#f0d070; background:rgba(184,134,11,0.12); }
+.mode-tab.ez.active::after { background:var(--ez-col); }
+.mode-tab.tiger { color:rgba(255,160,80,0.45); }
+.mode-tab.tiger:hover { color:#ffaa55; background:rgba(204,102,0,0.08); }
+.mode-tab.tiger.active { color:#ffaa55; background:rgba(204,102,0,0.12); }
 .mode-tab.tiger.active::after { background:var(--tiger-col); }
 .mode-info-btn {
-  margin-left:auto; padding:6px 12px; font-size:0.6rem;
-  color:rgba(240,230,200,0.4); cursor:pointer;
-  white-space:nowrap; border:none; background:transparent;
+  margin-left:auto; padding:8px 14px; font-size:0.6rem;
+  color:rgba(240,230,200,0.35); cursor:pointer; align-self:center;
+  white-space:nowrap; border:none; background:transparent; font-family:'Cinzel',serif;
 }
 .mode-info-btn:hover { color:var(--gold); }
 
@@ -1376,10 +1402,22 @@ header h1 {
 
 <!-- ═══════ MODE BAR ═══════ -->
 <div class="mode-bar">
-  <button class="mode-tab active" id="tab-standard" onclick="setMode('standard')">Standard</button>
-  <button class="mode-tab ez"     id="tab-ez"       onclick="setMode('ez')">🐉🐼 Panda &amp; Dragon</button>
-  <button class="mode-tab tiger"  id="tab-tiger"    onclick="setMode('tiger')">🐯 Tiger Baccarat</button>
-  <button class="mode-info-btn"   onclick="toggleRules()">Rules ▾</button>
+  <button class="mode-tab active" id="tab-standard" onclick="setMode('standard')">
+    <span class="tab-num">① SELECT MODE</span>
+    <span class="tab-name">♠ Standard</span>
+    <span class="tab-sub">5% commission</span>
+  </button>
+  <button class="mode-tab ez" id="tab-ez" onclick="setMode('ez')">
+    <span class="tab-num">②</span>
+    <span class="tab-name">🐉🐼 Panda &amp; Dragon</span>
+    <span class="tab-sub">No commission · Dragon 7 · Panda 8</span>
+  </button>
+  <button class="mode-tab tiger" id="tab-tiger" onclick="setMode('tiger')">
+    <span class="tab-num">③</span>
+    <span class="tab-name">🐯 Tiger Baccarat</span>
+    <span class="tab-sub">No commission · Small/Big Tiger</span>
+  </button>
+  <button class="mode-info-btn" onclick="toggleRules()">Rules ▾</button>
 </div>
 <div class="mode-rules" id="mode-rules-panel"></div>
 
