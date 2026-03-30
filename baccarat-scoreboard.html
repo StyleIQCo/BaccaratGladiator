@@ -383,8 +383,8 @@ header h1 {
    FLIP CARD SYSTEM
 ───────────────────────────────────────────── */
 .card-container {
-  perspective:700px;
-  width:34px; height:50px;
+  perspective:900px;
+  width:58px; height:84px;
   flex-shrink:0;
   cursor:pointer;
   position:relative;
@@ -433,11 +433,11 @@ header h1 {
   transform:rotateY(180deg);
   display:flex; flex-direction:column;
   justify-content:space-between;
-  padding:2px 3px;
-  font-weight:700; font-size:0.58rem;
-  box-shadow:1px 1px 4px rgba(0,0,0,0.5);
+  padding:4px 5px;
+  font-weight:700; font-size:0.82rem;
+  box-shadow:1px 1px 6px rgba(0,0,0,0.5);
 }
-.card-face .suit-big { font-size:0.95rem; text-align:center; }
+.card-face .suit-big { font-size:1.55rem; text-align:center; }
 .card-face.red   { color:#cc2222; }
 .card-face.black { color:#111; }
 
@@ -1508,11 +1508,6 @@ header h1 {
         <div style="font-size:0.46rem;color:rgba(240,230,200,0.35);margin:1px 0;">Winner's 2-card total = 8</div>
         <div class="samt" id="amt-natural8">$0</div>
       </div>
-      <div class="talon-bet-slot" id="slot-perfectPair" onclick="selectSlot('perfectPair')">
-        <div class="sname" style="color:#cc88ff;letter-spacing:1px;">Perfect Pair · 25:1</div>
-        <div style="font-size:0.46rem;color:rgba(240,230,200,0.35);margin:1px 0;">Same rank &amp; suit in either hand</div>
-        <div class="samt" id="amt-perfectPair">$0</div>
-      </div>
     </div>
     <span id="talon-result-note" style="font-size:0.58rem;color:#c9a84c;font-style:italic;display:block;margin-top:4px;min-height:1em;"></span>
   </div>
@@ -1636,7 +1631,6 @@ const MODE_RULES={
       <div class="rule-item"><div class="payout">8:1</div>Tie</div>
       <div class="rule-item"><div class="payout">9:1</div>⚔️ Golden Talon — Natural 9 (winning 2-card 9)</div>
       <div class="rule-item"><div class="payout">6:1</div>⚔️ Golden Talon — Natural 8 (winning 2-card 8)</div>
-      <div class="rule-item"><div class="payout">25:1</div>⚔️ Golden Talon — Perfect Pair (same rank &amp; suit)</div>
     </div>`
   },
   ez:{
@@ -1649,7 +1643,6 @@ const MODE_RULES={
       <div class="rule-item"><div class="payout">25:1</div>🐼 Panda 8 — Player 3-card total of 8</div>
       <div class="rule-item"><div class="payout">9:1</div>⚔️ Golden Talon — Natural 9</div>
       <div class="rule-item"><div class="payout">6:1</div>⚔️ Golden Talon — Natural 8</div>
-      <div class="rule-item"><div class="payout">25:1</div>⚔️ Golden Talon — Perfect Pair</div>
     </div>`
   },
   tiger:{
@@ -1670,7 +1663,7 @@ const MODE_RULES={
 // ── GAME STATE ──────────────────────────────────────────────────
 let gameMode='standard';
 let balance=1000;
-let bets={banker:0,player:0,tie:0,dragon7:0,panda8:0,bigTiger:0,smallTiger:0,tigerTie:0,natural9:0,natural8:0,perfectPair:0};
+let bets={banker:0,player:0,tie:0,dragon7:0,panda8:0,bigTiger:0,smallTiger:0,tigerTie:0,natural9:0,natural8:0};
 // Golden Talon side bets replace Pair bets
 let selSlot='banker';
 let natWins=0;  // count of natural (2-card 8/9) wins this shoe
@@ -1775,7 +1768,7 @@ function addChip(val){
 function clearBets(){
   if(phase!=='betting') return;
   balance+=Object.values(bets).reduce((a,b)=>a+b,0);
-  bets={banker:0,player:0,tie:0,dragon7:0,panda8:0,bigTiger:0,smallTiger:0,tigerTie:0,natural9:0,natural8:0,perfectPair:0};
+  bets={banker:0,player:0,tie:0,dragon7:0,panda8:0,bigTiger:0,smallTiger:0,tigerTie:0,natural9:0,natural8:0};
   refreshUI();
 }
 function totalBet(){ return Object.values(bets).reduce((a,b)=>a+b,0); }
@@ -1907,7 +1900,7 @@ function deal(){
   document.getElementById('banker-val').textContent='?';
   document.getElementById('player-val').textContent='?';
 
-  bets={banker:0,player:0,tie:0,dragon7:0,panda8:0,bigTiger:0,smallTiger:0,tigerTie:0,natural9:0,natural8:0,perfectPair:0};
+  bets={banker:0,player:0,tie:0,dragon7:0,panda8:0,bigTiger:0,smallTiger:0,tigerTie:0,natural9:0,natural8:0};
   refreshUI();
   setMsg('🎴 Click your cards to squeeze! Ask the dealer to reveal banker cards.');
 }
@@ -2108,9 +2101,6 @@ function resolveHand(){
   // ── Golden Talon Side Bets (available in all modes)
   const pIsPair = r.pH[0].rank === r.pH[1].rank;
   const bIsPair = r.bH[0].rank === r.bH[1].rank;
-  const pIsPerfPair = r.pH[0].rank === r.pH[1].rank && r.pH[0].suit === r.pH[1].suit;
-  const bIsPerfPair = r.bH[0].rank === r.bH[1].rank && r.bH[0].suit === r.bH[1].suit;
-  const hasPerfPair = pIsPerfPair || bIsPerfPair;
 
   // isNatural flag for Golden Talon (winning hand 2-card natural)
   const winScore = r.winner==='B'?r.bT : r.winner==='P'?r.pT : r.pT;
@@ -2127,12 +2117,6 @@ function resolveHand(){
   if(b.natural8>0){
     if(isNatural8){ const w=b.natural8*6; balance+=b.natural8+w; netChange+=w; msgs.push(`⚔️ Natural 8! +$${w}`); talonNotes.push(`✓ Natural 8 +$${w}`); }
     else { netChange-=b.natural8; talonNotes.push(`✗ Natural 8 — no win`); }
-  }
-  if(b.perfectPair>0){
-    if(hasPerfPair){
-      const which = pIsPerfPair&&bIsPerfPair?'Both':pIsPerfPair?'Player':'Banker';
-      const w=b.perfectPair*25; balance+=b.perfectPair+w; netChange+=w; msgs.push(`⚔️ Perfect Pair! +$${w}`); talonNotes.push(`✓ ${which} Perfect Pair +$${w}`);
-    } else { netChange-=b.perfectPair; talonNotes.push(`✗ Perfect Pair — no match`); }
   }
   document.getElementById('talon-result-note').textContent=talonNotes.join('  ·  ');
 
@@ -2247,7 +2231,6 @@ function refreshUI(){
   document.getElementById('amt-tigerTie').textContent='$'+bets.tigerTie;
   document.getElementById('amt-natural9').textContent='$'+bets.natural9;
   document.getElementById('amt-natural8').textContent='$'+bets.natural8;
-  document.getElementById('amt-perfectPair').textContent='$'+bets.perfectPair;
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -2913,7 +2896,7 @@ function startAutoPlay(){
   if(totalBet()===0){
     const fallback = lastBet && Object.values(lastBet).reduce((a,b)=>a+b,0)>0
       ? lastBet
-      : {banker:5,player:0,tie:0,dragon7:0,panda8:0,bigTiger:0,smallTiger:0,tigerTie:0,natural9:0,natural8:0,perfectPair:0};
+      : {banker:5,player:0,tie:0,dragon7:0,panda8:0,bigTiger:0,smallTiger:0,tigerTie:0,natural9:0,natural8:0};
     // apply fallback bet
     const cost = Object.values(fallback).reduce((a,b)=>a+b,0);
     if(balance < cost){ setMsg('Not enough balance for auto-play!'); return; }
