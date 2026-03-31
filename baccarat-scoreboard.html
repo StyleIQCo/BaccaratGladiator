@@ -3391,12 +3391,19 @@ function triggerSpecialAnim(type){
 function updateAllRoads(){
   const br=computeBigRoad(results);
   const beb=computeDerived(br.streaks,1),sr=computeDerived(br.streaks,2),cp=computeDerived(br.streaks,3);
-  const preds=results.length>0?getPredictions(results,br):null;
+  // Avoid early-round confusion: only enable prediction ghosts after enough non-tie history.
+  const nonTieCount = results.filter(r=>r.w!=='T').length;
+  const preds = nonTieCount>=4 ? getPredictions(results,br) : null;
+  // Per-board gating so no board shows "orphan" ghost markers before it has history.
+  const bigPreds = (preds && br.cells.length>0) ? preds : null;
+  const bebPreds = (preds && beb.length>0) ? {B:preds.B.beb,P:preds.P.beb} : null;
+  const srPreds  = (preds && sr.length>0)  ? {B:preds.B.sr, P:preds.P.sr } : null;
+  const cpPreds  = (preds && cp.length>0)  ? {B:preds.B.cp, P:preds.P.cp } : null;
   renderBeadRoad(results);
-  renderBigRoad(br,preds);
-  renderDerived('bebCanvas','bebScroll','beb-count',beb,preds?{B:preds.B.beb,P:preds.P.beb}:null,false);
-  renderDerived('srCanvas', 'srScroll', 'sr-count', sr, preds?{B:preds.B.sr, P:preds.P.sr }:null,false);
-  renderDerived('cpCanvas', 'cpScroll', 'cp-count', cp, preds?{B:preds.B.cp, P:preds.P.cp }:null,true);
+  renderBigRoad(br,bigPreds);
+  renderDerived('bebCanvas','bebScroll','beb-count',beb,bebPreds,false);
+  renderDerived('srCanvas', 'srScroll', 'sr-count', sr, srPreds,false);
+  renderDerived('cpCanvas', 'cpScroll', 'cp-count', cp, cpPreds,true);
   updateStats(br.streaks);
 }
 
