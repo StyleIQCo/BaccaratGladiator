@@ -4,18 +4,18 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Baccarat Gladiator | Live Scoreboard Arena</title>
-<meta name="description" content="Step into the Baccarat Gladiator arena with live roadmaps, side bets, and high-stakes action across all major Baccarat variants."/>
+<meta name="description" content="Baccarat Gladiator is a simulated baccarat experience with live roadmaps, side bets, and table strategy visuals. No real-money gambling or cash prizes."/>
 <meta property="og:type" content="website"/>
 <meta property="og:title" content="Baccarat Gladiator | Live Scoreboard Arena"/>
-<meta property="og:description" content="Live Baccarat scoreboard with all major variants, immersive arena visuals, and side-bet action."/>
+<meta property="og:description" content="Simulated baccarat scoreboard with immersive arena visuals, all major variants, and no real-money gambling."/>
 <meta property="og:url" content="/baccarat-scoreboard.html"/>
 <meta property="og:image" content="/baccarat-link-preview.png"/>
 <meta property="og:image:width" content="1200"/>
 <meta property="og:image:height" content="630"/>
-<meta property="og:image:alt" content="Baccarat Gladiator ornate card on casino table"/>
+<meta property="og:image:alt" content="Baccarat Gladiator ornate card artwork"/>
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:title" content="Baccarat Gladiator | Live Scoreboard Arena"/>
-<meta name="twitter:description" content="Live Baccarat scoreboard with all major variants, immersive arena visuals, and side-bet action."/>
+<meta name="twitter:description" content="Simulated baccarat scoreboard with immersive arena visuals and all major variants."/>
 <meta name="twitter:image" content="/baccarat-link-preview.png"/>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Raleway:wght@300;400;600&display=swap');
@@ -369,6 +369,66 @@
 .lb-name { color:#d7eaff; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .lb-score { color:#7dffa4; font-family:'Cinzel',serif; }
 .lb-meta { color:rgba(190,210,230,0.62); font-size:0.54rem; }
+.store-banner{
+  margin:8px 12px;
+  border:1px solid rgba(255,220,130,0.34);
+  background:rgba(40,24,6,0.45);
+  color:rgba(250,228,176,0.92);
+  font-size:0.58rem;
+  padding:7px 9px;
+  border-radius:8px;
+  line-height:1.45;
+}
+.store-footer{
+  margin:10px 12px 14px;
+  border-top:1px solid rgba(255,255,255,0.08);
+  padding-top:10px;
+  display:flex;
+  gap:12px;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  font-size:0.55rem;
+  color:rgba(214,224,240,0.62);
+}
+.store-links{ display:flex; gap:10px; flex-wrap:wrap; }
+.store-links a{
+  color:#9cc7ff;
+  text-decoration:none;
+  border-bottom:1px dotted rgba(156,199,255,0.52);
+}
+.age-overlay{
+  position:fixed; inset:0; z-index:99999;
+  background:rgba(0,0,0,0.78);
+  display:none; align-items:center; justify-content:center;
+  padding:18px;
+}
+.age-overlay.show{ display:flex; }
+.age-box{
+  width:min(560px,95vw);
+  background:linear-gradient(160deg,#0b111d 0%,#101b2f 100%);
+  border:1px solid rgba(150,190,255,0.38);
+  border-radius:12px;
+  padding:16px 14px;
+  color:#dbe9ff;
+  box-shadow:0 22px 56px rgba(0,0,0,0.58);
+}
+.age-title{
+  font-family:'Cinzel',serif; font-size:1rem; color:#b7d6ff; margin-bottom:8px;
+}
+.age-copy{
+  font-size:0.63rem; line-height:1.6; color:rgba(220,234,255,0.88);
+}
+.age-actions{ display:flex; gap:8px; margin-top:12px; }
+.age-btn{
+  border:1px solid rgba(150,190,255,0.4);
+  border-radius:8px; background:rgba(150,190,255,0.12);
+  color:#deecff; padding:8px 10px; cursor:pointer; font-size:0.62rem;
+}
+.age-btn.secondary{
+  border-color:rgba(255,200,160,0.4);
+  background:rgba(120,70,40,0.14);
+  color:#ffd8bf;
+}
 
 /* ─── BOT PERSONA PICKER ─── */
 .persona-overlay {
@@ -1553,7 +1613,21 @@ header h1 {
     <div class="splash-divider"></div>
     <div class="splash-tagline">MASTER THE CARDS &nbsp;·&nbsp; CONQUER THE ARENA</div>
     <button class="splash-enter-btn" onclick="enterArena()">⚔ &nbsp; ENTER THE ARENA &nbsp; ⚔</button>
-    <div class="splash-trial-note">FREE TRIAL · 10 HANDS · NO REGISTRATION REQUIRED</div>
+    <div class="splash-trial-note">SIMULATED PLAY · VIRTUAL CREDITS ONLY · NO CASHOUT</div>
+  </div>
+</div>
+
+<div class="age-overlay" id="age-overlay">
+  <div class="age-box">
+    <div class="age-title">18+ Simulated Casino Experience</div>
+    <div class="age-copy">
+      This app is for adults and uses virtual credits only. No real-money gambling, no cash prizes, and no cashout.
+      Please play responsibly and take breaks.
+    </div>
+    <div class="age-actions">
+      <button class="age-btn" onclick="acceptAgeGate()">I Am 18+ · Continue</button>
+      <button class="age-btn secondary" onclick="declineAgeGate()">Exit</button>
+    </div>
   </div>
 </div>
 
@@ -1571,9 +1645,9 @@ header h1 {
               oninput="setMasterVolume(this.value)" class="vol-slider" title="Master Volume">
     </div>
     <div>
-      <div style="font-family:'Cinzel',serif;color:var(--gold);font-size:0.85rem;font-weight:700;" id="hdr-balance">Balance: $1,000</div>
+      <div style="font-family:'Cinzel',serif;color:var(--gold);font-size:0.85rem;font-weight:700;" id="hdr-balance">Credits: 1,000</div>
       <div style="font-size:0.58rem;color:rgba(240,230,200,0.4);" id="hdr-rounds">Round 0</div>
-      <div id="hdr-trial" class="trial-badge">Free Trial: 10 hands remaining</div>
+      <div id="hdr-trial" class="trial-badge">Session Hands: 10 remaining</div>
       <div style="font-size:0.56rem;color:rgba(140,200,255,0.75);margin-top:2px;">
         <span id="hdr-user">User: Guest</span>
         <button class="hdr-auth-btn" id="hdr-login-btn" onclick="showAuthOverlay()">Login</button>
@@ -1588,29 +1662,18 @@ header h1 {
   </div>
 </header>
 
+<div class="store-banner" id="store-banner">
+  Simulated gameplay only. Virtual credits have no real-world value. Baccarat outcomes are random and prior results do not predict future results.
+</div>
+
 <!-- ═══════ UPGRADE OVERLAY ═══════ -->
 <div class="upgrade-overlay" id="upgrade-overlay">
   <div class="upgrade-box">
     <div class="upgrade-logo">♠ BG ♠</div>
-    <h2>Trial Complete!</h2>
-    <p>You've played your <strong>10 free hands</strong>. Unlock the full <em>Baccarat Gladiator</em> experience — unlimited play, all 3 variants, side bets, and the complete strategy guide.</p>
-    <div class="upgrade-tiers">
-      <div class="upgrade-tier">
-        <div class="tier-name">App Only</div>
-        <div class="tier-price">$9.99</div>
-      </div>
-      <div class="upgrade-tier featured">
-        <div class="tier-badge">BEST VALUE</div>
-        <div class="tier-name">App + Tutorial</div>
-        <div class="tier-price">$19.99</div>
-      </div>
-      <div class="upgrade-tier">
-        <div class="tier-name">Full Bundle</div>
-        <div class="tier-price">$34.99</div>
-      </div>
-    </div>
-    <button class="upgrade-cta" onclick="document.getElementById('upgrade-overlay').classList.remove('show')">▶ Continue Demo (No Bets)</button>
-    <div style="font-size:0.6rem;color:rgba(240,230,200,0.3);margin-top:10px;">Demo mode: watch the game, bets disabled</div>
+    <h2>Time For A Break</h2>
+    <p>You've reached your current session hand limit. Take a short break, then continue with simulated play and virtual credits.</p>
+    <button class="upgrade-cta" onclick="document.getElementById('upgrade-overlay').classList.remove('show')">▶ Continue Simulated Play</button>
+    <div style="font-size:0.6rem;color:rgba(240,230,200,0.3);margin-top:10px;">No real-money gambling, prizes, or cashout.</div>
   </div>
 </div>
 
@@ -1807,8 +1870,8 @@ header h1 {
   <!-- ACTIONS -->
   <div class="action-btns">
     <div class="bal-info">
-      Balance: <span id="bal-display">$1,000</span>
-      &nbsp;Bet: <span id="bet-display">$0</span>
+      Credits: <span id="bal-display">1,000</span>
+      &nbsp;Stake: <span id="bet-display">0</span>
     </div>
     <button class="btn btn-clear"  id="btn-clear"  onclick="clearBets()">Clear</button>
     <button class="btn btn-deal"   id="btn-deal"   onclick="deal()">DEAL</button>
@@ -1817,7 +1880,7 @@ header h1 {
   </div>
   <div class="auto-progress" id="auto-progress"></div>
 
-  <div class="msg-bar" id="msg-bar">Select a mode · place bets · DEAL</div>
+  <div class="msg-bar" id="msg-bar">Select a mode · place virtual chips · DEAL</div>
   <div class="dealer-caption" id="dealer-caption"></div>
 </div>
 
@@ -1910,6 +1973,15 @@ header h1 {
   </div>
 </div>
 
+<div class="store-footer">
+  <div>For entertainment only. If play stops being fun, take a break.</div>
+  <div class="store-links">
+    <a href="#" id="privacy-link">Privacy Policy</a>
+    <a href="#" id="terms-link">Terms of Use</a>
+    <a href="#" id="support-link">Support</a>
+  </div>
+</div>
+
 <!-- ═══════ SCRIPT ═══════ -->
 <script>
 'use strict';
@@ -1979,6 +2051,8 @@ let trialExpired = false;
 let autoPlayRemaining = 0;
 let autoPlayBetsSnapshot = null;
 let lastBet = null;   // remembered from most recent hand
+const STORE_SAFE_MODE = true;
+const AGE_GATE_KEY = 'bg_age_gate_18_v1';
 let authLocked = false;
 let currentUserEmail = '';
 let currentUsername = '';
@@ -2010,6 +2084,27 @@ let pendingHand=null;
 
 function normalizeEmail(v){
   return (v||'').trim().toLowerCase();
+}
+
+function acceptAgeGate(){
+  try{ localStorage.setItem(AGE_GATE_KEY, 'ok'); }catch(e){}
+  const o=document.getElementById('age-overlay');
+  if(o) o.classList.remove('show');
+}
+
+function declineAgeGate(){
+  const o=document.getElementById('age-overlay');
+  if(o) o.classList.remove('show');
+  document.body.innerHTML='<div style="display:flex;align-items:center;justify-content:center;min-height:100vh;background:#07101f;color:#d9e7ff;font-family:Georgia,serif;padding:18px;text-align:center;">This simulated casino app is available for adults 18+ only.</div>';
+}
+
+function maybeShowAgeGate(){
+  if(!STORE_SAFE_MODE) return;
+  let ok='';
+  try{ ok=localStorage.getItem(AGE_GATE_KEY)||''; }catch(e){}
+  if(ok==='ok') return;
+  const o=document.getElementById('age-overlay');
+  if(o) o.classList.add('show');
 }
 
 function setAuthNote(msg, bad){
@@ -2304,7 +2399,12 @@ function setMode(m){
   setMsg('Mode: '+(m==='standard'?'Standard':m==='ez'?'Panda & Dragon Baccarat':'Tiger Baccarat')+' — Place your bets!');
 }
 function toggleRules(){ rulesOpen=!rulesOpen; document.getElementById('mode-rules-panel').classList.toggle('open',rulesOpen); if(rulesOpen) showRules(); }
-function showRules(){ document.getElementById('mode-rules-panel').innerHTML=MODE_RULES[gameMode].html; }
+function showRules(){
+  const safety = STORE_SAFE_MODE
+    ? '<div style="margin-top:8px;font-size:0.56rem;color:rgba(250,232,184,0.82);line-height:1.5;">Simulated gameplay only. Virtual credits only. Outcomes are random and not predictable.</div>'
+    : '';
+  document.getElementById('mode-rules-panel').innerHTML=MODE_RULES[gameMode].html + safety;
+}
 
 // ── BETTING ──────────────────────────────────────────────────────
 function selectSlot(slot){
@@ -2316,7 +2416,7 @@ function selectSlot(slot){
 function addChip(val){
   if(phase!=='betting') return;
   if(checkTrialBlock()) return;
-  if(balance<val){ setMsg('Not enough balance!'); return; }
+  if(balance<val){ setMsg('Not enough credits!'); return; }
   // House rule: cannot bet on both Banker AND Player simultaneously
   if(selSlot==='player' && bets.banker>0){
     setMsg('⚠️ You cannot bet on both Banker and Player. Clear your Banker bet first.');
@@ -2492,7 +2592,7 @@ function dealerLine(key, data){
   const p = data?.pTotal;
   const b = data?.bTotal;
   const core = {
-    place_bets:'Place your bets',
+    place_bets:'Place your chips',
     no_more_bets:'No more bets',
     deal_player:'Player',
     deal_banker:'Banker',
@@ -2516,7 +2616,7 @@ function dealerLine(key, data){
     big_win:'A crushing victory'
   };
   const gladiator = {
-    place_bets:'Place your wagers, challengers',
+    place_bets:'Place your chips, challengers',
     no_more_bets:'No more bets — the fates are sealed',
     deal_player:'Player steps forward',
     deal_banker:'Banker enters the arena',
@@ -2600,9 +2700,9 @@ function getPreRevealCallout(totalWager){
   }
   if(totalWager >= 250){
     return pickOne([
-      '💸 Press it. Let it ride.',
-      '💸 All in energy at this table.',
-      '⚔️ To the death!'
+      '💸 Strong virtual stake on this hand.',
+      '💸 Big table energy right now.',
+      '⚔️ High tension in the arena.'
     ]);
   }
   if(streak && streak.count>=5){
@@ -2769,7 +2869,7 @@ const BOT_PERSONAS = {
     voice: {
       vegas: {
         bet: ['I am stepping in late on this lane.', 'Late money talks. I am in now.', 'Watch this move, right on the tempo.'],
-        win: ['That is how late steam cashes.', 'Called it right on the turn.', 'Larry timed that lane perfect.'],
+        win: ['That is how late steam lands.', 'Called it right on the turn.', 'Larry timed that lane perfect.'],
         lose: ['Fine, table shifted. We reset.', 'Missed the jump, next hand is cleaner.', 'Late read, wrong pulse. Recalibrating.'],
         push: ['No edge there. Tie says run it back.', 'Push. Nobody got clipped that hand.']
       },
@@ -2809,7 +2909,7 @@ const BOT_PERSONAS = {
     voice: {
       vegas: {
         bet: ['Frank is leaning Banker till proven otherwise.', 'Second bank grind, small and steady.', 'Discipline first, chips second.'],
-        win: ['That is textbook Banker grind.', 'Small edge, clean cash.', 'Frank keeps it tidy.'],
+        win: ['That is textbook Banker grind.', 'Small edge, clean result.', 'Frank keeps it tidy.'],
         lose: ['Take the hit, stay disciplined.', 'One hand only, no hero bets.', 'Bankroll protection mode stays on.'],
         push: ['Tie is housekeeping. Carry on.', 'Push hand. No leak.']
       },
@@ -3008,7 +3108,7 @@ function deal(){
     setMsg('Choose your bot persona before the first hand.');
     return;
   }
-  if(totalBet()===0){ setMsg('Place a bet first!'); return; }
+  if(totalBet()===0){ setMsg('Place virtual chips first!'); return; }
   if(checkTrialBlock()) return;
   const playerWager = totalBet();
   postFeedMsg(getPreRevealCallout(playerWager), 'info');
@@ -3452,9 +3552,9 @@ function newRound(){
   // Reset AI current bet display for new round
   aiCurrentBet = { slot: null, amount: 0 };
   updateAIPanel();
-  if(balance<=0){ balance=1000; setMsg('Reloaded $1,000 — Good luck!'); }
-  else if(trialExpired) setMsg('Trial ended — upgrade to keep playing!');
-  else setMsg('Select a bet slot, place chips, then DEAL');
+  if(balance<=0){ balance=1000; setMsg('Credits reloaded to 1,000. Play responsibly.'); }
+  else if(trialExpired) setMsg('Session hand cap reached. Take a break, then continue simulated play.');
+  else setMsg('Select a side, place virtual chips, then DEAL');
   if(!trialExpired) dealerCall('place_bets', {}, {feed:false, caption:true});
   selectSlot('banker');
   refreshUI();
@@ -3463,17 +3563,17 @@ function newRound(){
 function setMsg(t){ document.getElementById('msg-bar').className='msg-bar'; document.getElementById('msg-bar').textContent=t; }
 
 function refreshUI(){
-  document.getElementById('bal-display').textContent='$'+balance.toLocaleString();
-  document.getElementById('hdr-balance').textContent='Balance: $'+balance.toLocaleString();
-  document.getElementById('bet-display').textContent='$'+totalBet().toLocaleString();
-  document.getElementById('amt-banker').textContent='$'+bets.banker;
-  document.getElementById('amt-player').textContent='$'+bets.player;
-  document.getElementById('amt-tie').textContent='$'+bets.tie;
-  document.getElementById('amt-dragon7').textContent='$'+bets.dragon7;
-  document.getElementById('amt-panda8').textContent='$'+bets.panda8;
-  document.getElementById('amt-bigTiger').textContent='$'+bets.bigTiger;
-  document.getElementById('amt-smallTiger').textContent='$'+bets.smallTiger;
-  document.getElementById('amt-tigerTie').textContent='$'+bets.tigerTie;
+  document.getElementById('bal-display').textContent=balance.toLocaleString();
+  document.getElementById('hdr-balance').textContent='Credits: '+balance.toLocaleString();
+  document.getElementById('bet-display').textContent=totalBet().toLocaleString();
+  document.getElementById('amt-banker').textContent=bets.banker.toLocaleString();
+  document.getElementById('amt-player').textContent=bets.player.toLocaleString();
+  document.getElementById('amt-tie').textContent=bets.tie.toLocaleString();
+  document.getElementById('amt-dragon7').textContent=bets.dragon7.toLocaleString();
+  document.getElementById('amt-panda8').textContent=bets.panda8.toLocaleString();
+  document.getElementById('amt-bigTiger').textContent=bets.bigTiger.toLocaleString();
+  document.getElementById('amt-smallTiger').textContent=bets.smallTiger.toLocaleString();
+  document.getElementById('amt-tigerTie').textContent=bets.tigerTie.toLocaleString();
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -3834,6 +3934,18 @@ function updateStats(streaks){
   }
 }
 
+function applyStoreSafeMode(){
+  if(!STORE_SAFE_MODE) return;
+  const sub=document.getElementById('mode-subtitle');
+  if(sub && !sub.textContent.includes('SIMULATED')) sub.textContent = sub.textContent + ' · SIMULATED PLAY';
+  const p=document.getElementById('privacy-link');
+  const t=document.getElementById('terms-link');
+  const s=document.getElementById('support-link');
+  if(p) p.href = '/privacy.html';
+  if(t) t.href = '/terms.html';
+  if(s) s.href = '/support.html';
+}
+
 // ── SOUND STATE ───────────────────────────────────────────────────
 let _audioCtx   = null;
 let _masterGain = null;
@@ -3861,6 +3973,8 @@ selectBotPersona('larry');
 selectBotVoice('vegas');
 applyBotPersonaToUI();
 setDealerStyle('core');
+applyStoreSafeMode();
+maybeShowAgeGate();
 
 // ══════════════════════════════════════════════════════════════════
 //  SOUND ENGINE  (Web Audio API — fully synthesized, no files)
@@ -4315,11 +4429,11 @@ function updateTrialBadge(){
   if(!el) return;
   const rem=Math.max(0, FREE_HAND_LIMIT-freeHandsUsed);
   if(trialExpired){
-    el.textContent='Demo mode — upgrade to play';
+    el.textContent='Session break available';
     el.className='trial-badge critical';
     return;
   }
-  el.textContent=`Free Trial: ${rem} hand${rem===1?'':'s'} remaining`;
+  el.textContent=`Session Hands: ${rem} remaining`;
   if(rem<=2) el.className='trial-badge critical';
   else if(rem<=5) el.className='trial-badge warning';
   else el.className='trial-badge';
@@ -4345,7 +4459,7 @@ function startAutoPlay(){
       : {banker:5,player:0,tie:0,dragon7:0,panda8:0,bigTiger:0,smallTiger:0,tigerTie:0,natural9:0,natural8:0};
     // apply fallback bet
     const cost = Object.values(fallback).reduce((a,b)=>a+b,0);
-    if(balance < cost){ setMsg('Not enough balance for auto-play!'); return; }
+    if(balance < cost){ setMsg('Not enough credits for auto-play!'); return; }
     bets = {...fallback};
     balance -= cost;
     refreshUI();
