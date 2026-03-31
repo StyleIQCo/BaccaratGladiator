@@ -3643,11 +3643,20 @@ function makeGrid(ctx,w,h,cell){
   }
 }
 
-function snapRoadToLatest(scrollEl){
-  // Double-rAF so mobile layout/paint settles before we force to the right edge.
+function snapRoadToLatest(scrollEl, usedCols, cellSize){
+  const colsUsed = Math.max(0, Number(usedCols || 0));
+  const cell = Math.max(1, Number(cellSize || BIG_CELL));
+  // Double-rAF so mobile layout/paint settles before we place viewport.
   requestAnimationFrame(()=>{
     requestAnimationFrame(()=>{
-      scrollEl.scrollLeft = Math.max(0, scrollEl.scrollWidth - scrollEl.clientWidth);
+      const visibleCols = Math.max(1, Math.floor(scrollEl.clientWidth / cell));
+      if(colsUsed <= visibleCols){
+        // Short histories should stay left so existing dots are immediately visible.
+        scrollEl.scrollLeft = 0;
+      } else {
+        // Longer histories should show the latest columns on the right.
+        scrollEl.scrollLeft = Math.max(0, scrollEl.scrollWidth - scrollEl.clientWidth);
+      }
     });
   });
 }
@@ -3736,7 +3745,8 @@ function renderBeadRoad(res){
     }
   });
 
-  snapRoadToLatest(scroll);
+  const usedCols = Math.ceil(res.length/ROWS);
+  snapRoadToLatest(scroll, usedCols, cell);
   document.getElementById('bead-count').textContent=`${res.length} hands`;
 }
 
@@ -3789,7 +3799,8 @@ function renderBigRoad(br,preds){
     if(c.bp) pairDot(ctx,cx,cy,r,BANKER_C,false);
   });
 
-  snapRoadToLatest(scroll);
+  const usedCols = cells.length>0 ? (maxCol + 1) : 0;
+  snapRoadToLatest(scroll, usedCols, cell);
   document.getElementById('big-count').textContent=`${streaks.length} streaks`;
 }
 
@@ -3829,7 +3840,8 @@ function renderDerived(canvasId,scrollId,countId,entries,preds,cockroach){
     else circ(ctx,cx,cy,cell*0.33,null,c,1.8);
   });
 
-  snapRoadToLatest(scroll);
+  const usedCols = Math.ceil(entries.length/ROWS);
+  snapRoadToLatest(scroll, usedCols, cell);
   const ce=document.getElementById(countId);
   if(ce) ce.textContent=entries.length>0?`${entries.length} entries`:'—';
 }
@@ -3975,6 +3987,12 @@ applyBotPersonaToUI();
 setDealerStyle('core');
 applyStoreSafeMode();
 maybeShowAgeGate();
+
+let _roadResizeTimer = null;
+window.addEventListener('resize', function(){
+  if(_roadResizeTimer) clearTimeout(_roadResizeTimer);
+  _roadResizeTimer = setTimeout(function(){ updateAllRoads(); }, 120);
+});
 
 // ══════════════════════════════════════════════════════════════════
 //  SOUND ENGINE  (Web Audio API — fully synthesized, no files)
