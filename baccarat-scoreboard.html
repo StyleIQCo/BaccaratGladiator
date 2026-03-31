@@ -314,6 +314,61 @@
   text-align:center; margin-top:8px; min-height:15px;
   font-size:0.56rem; color:rgba(240,230,200,0.5);
 }
+.auth-row { display:flex; gap:8px; margin-top:8px; }
+.auth-row .auth-btn { margin-top:0; }
+.auth-btn.alt {
+  background:rgba(201,168,76,0.12);
+  color:var(--gold-lt);
+  border:1px solid rgba(201,168,76,0.35);
+}
+.hdr-auth-btn {
+  border:1px solid rgba(120,170,255,0.36);
+  color:#bfe0ff; background:rgba(80,120,220,0.15);
+  font-size:0.5rem; border-radius:9px; padding:2px 7px; cursor:pointer;
+  margin-left:6px;
+}
+.hdr-auth-btn:hover { border-color:#88bbff; color:#e2f2ff; }
+
+/* ─── GLOBAL LEADERBOARD ─── */
+.leaderboard-panel {
+  margin:8px 12px;
+  background:rgba(0,0,0,0.35);
+  border:1px solid rgba(120,170,255,0.25);
+  border-radius:8px;
+  overflow:hidden;
+}
+.leaderboard-header {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:6px 10px;
+  background:rgba(0,8,25,0.45);
+  border-bottom:1px solid rgba(120,170,255,0.2);
+}
+.leaderboard-title {
+  font-size:0.7rem; font-weight:700; letter-spacing:0.08em;
+  color:#9ed1ff;
+}
+.leaderboard-refresh {
+  border:1px solid rgba(120,170,255,0.3); background:transparent;
+  color:rgba(180,220,255,0.8); border-radius:4px;
+  font-size:0.56rem; padding:2px 7px; cursor:pointer;
+}
+.leaderboard-refresh:hover { background:rgba(120,170,255,0.12); }
+.leaderboard-body { max-height:168px; overflow-y:auto; padding:4px 6px; }
+.leaderboard-empty {
+  text-align:center; padding:12px 6px;
+  font-size:0.6rem; color:rgba(200,220,240,0.5); font-style:italic;
+}
+.lb-row {
+  display:grid; grid-template-columns:26px 1fr auto auto;
+  gap:8px; align-items:center;
+  padding:4px 6px;
+  border-bottom:1px solid rgba(255,255,255,0.03);
+  font-size:0.62rem;
+}
+.lb-rank { color:var(--gold-lt); font-family:'Cinzel',serif; text-align:center; }
+.lb-name { color:#d7eaff; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.lb-score { color:#7dffa4; font-family:'Cinzel',serif; }
+.lb-meta { color:rgba(190,210,230,0.62); font-size:0.54rem; }
 
 /* ─── BOT PERSONA PICKER ─── */
 .persona-overlay {
@@ -1519,7 +1574,11 @@ header h1 {
       <div style="font-family:'Cinzel',serif;color:var(--gold);font-size:0.85rem;font-weight:700;" id="hdr-balance">Balance: $1,000</div>
       <div style="font-size:0.58rem;color:rgba(240,230,200,0.4);" id="hdr-rounds">Round 0</div>
       <div id="hdr-trial" class="trial-badge">Free Trial: 10 hands remaining</div>
-      <div style="font-size:0.56rem;color:rgba(140,200,255,0.75);margin-top:2px;" id="hdr-user">User: Guest</div>
+      <div style="font-size:0.56rem;color:rgba(140,200,255,0.75);margin-top:2px;">
+        <span id="hdr-user">User: Guest</span>
+        <button class="hdr-auth-btn" id="hdr-login-btn" onclick="showAuthOverlay()">Login</button>
+        <button class="hdr-auth-btn" id="hdr-logout-btn" onclick="cognitoLogout()" style="display:none;">Logout</button>
+      </div>
       <div class="dealer-ctl">
         <button class="dealer-ctl-btn active" id="dealer-style-core" onclick="setDealerStyle('core')">Dealer Core</button>
         <button class="dealer-ctl-btn" id="dealer-style-glad" onclick="setDealerStyle('gladiator')">Dealer Gladiator</button>
@@ -1558,17 +1617,12 @@ header h1 {
 <!-- ═══════ LOGIN OVERLAY ═══════ -->
 <div class="auth-overlay" id="auth-overlay">
   <div class="auth-box">
-    <div class="auth-title">Arena Login</div>
-    <div class="auth-sub">Login with username + email to keep your historical scoreboard.</div>
-    <div class="auth-field">
-      <label for="auth-username">USERNAME</label>
-      <input id="auth-username" type="text" maxlength="32" placeholder="e.g. GladiatorKing"/>
+    <div class="auth-title">Cognito Login</div>
+    <div class="auth-sub">Sign in across devices and compete on the global leaderboard.</div>
+    <div class="auth-row">
+      <button class="auth-btn" onclick="cognitoStart('login')">SIGN IN</button>
+      <button class="auth-btn alt" onclick="cognitoStart('signup')">CREATE ACCOUNT</button>
     </div>
-    <div class="auth-field">
-      <label for="auth-email">EMAIL</label>
-      <input id="auth-email" type="email" maxlength="120" placeholder="you@example.com"/>
-    </div>
-    <button class="auth-btn" onclick="authLogin()">ENTER ARENA</button>
     <div class="auth-note" id="auth-note"></div>
   </div>
 </div>
@@ -1778,6 +1832,17 @@ header h1 {
   </div>
 </div>
 
+<!-- ═══════ GLOBAL LEADERBOARD ═══════ -->
+<div class="leaderboard-panel">
+  <div class="leaderboard-header">
+    <span class="leaderboard-title">🏆 GLOBAL LEADERBOARD</span>
+    <button class="leaderboard-refresh" onclick="fetchGlobalLeaderboard()">Refresh</button>
+  </div>
+  <div class="leaderboard-body" id="leaderboard-body">
+    <div class="leaderboard-empty" id="leaderboard-empty">Sign in to submit scores. Top players will appear here.</div>
+  </div>
+</div>
+
 <!-- ═══════ SCOREBOARDS ═══════ -->
 <div class="scoreboards">
   <div class="boards-label">SCOREBOARDS — LIVE ROAD TRACKING</div>
@@ -1917,8 +1982,17 @@ let lastBet = null;   // remembered from most recent hand
 let authLocked = false;
 let currentUserEmail = '';
 let currentUsername = '';
-const AUTH_STORE_KEY = 'bg_users_v1';
-const AUTH_LAST_KEY  = 'bg_last_user_email_v1';
+let cognitoIdToken = '';
+let cognitoAccessToken = '';
+
+// ── CLOUD CONFIG (replace with deployed values) ─────────────────
+const CLOUD_CONFIG = {
+  apiBaseUrl: 'https://YOUR_HTTP_API_ID.execute-api.YOUR_REGION.amazonaws.com',
+  cognitoDomain: 'https://YOUR_COGNITO_DOMAIN.auth.YOUR_REGION.amazoncognito.com',
+  userPoolClientId: 'YOUR_USER_POOL_APP_CLIENT_ID',
+  redirectUri: window.location.origin + window.location.pathname
+};
+const AUTH_TOK_KEY = 'bg_cognito_tokens_v1';
 
 // Pending hand state (set during deal, used when all revealed)
 let pendingHand=null;
@@ -1936,13 +2010,6 @@ function normalizeEmail(v){
   return (v||'').trim().toLowerCase();
 }
 
-function authStoreLoad(){
-  try { return JSON.parse(localStorage.getItem(AUTH_STORE_KEY) || '{}') || {}; }
-  catch(e){ return {}; }
-}
-function authStoreSave(store){
-  try { localStorage.setItem(AUTH_STORE_KEY, JSON.stringify(store)); } catch(e){}
-}
 function setAuthNote(msg, bad){
   const n=document.getElementById('auth-note');
   if(!n) return;
@@ -1951,92 +2018,175 @@ function setAuthNote(msg, bad){
 }
 function setHeaderUser(){
   const el=document.getElementById('hdr-user');
+  const loginBtn=document.getElementById('hdr-login-btn');
+  const logoutBtn=document.getElementById('hdr-logout-btn');
   if(!el) return;
   el.textContent = authLocked ? `User: ${currentUsername} (${currentUserEmail})` : 'User: Guest';
-}
-function showAuthOverlay(){
-  const o=document.getElementById('auth-overlay');
-  if(o) o.classList.add('show');
-  let lastEmail='';
-  try { lastEmail=normalizeEmail(localStorage.getItem(AUTH_LAST_KEY)||''); } catch(e){}
-  const emailEl=document.getElementById('auth-email');
-  const userEl=document.getElementById('auth-username');
-  if(emailEl && !emailEl.value && lastEmail) emailEl.value=lastEmail;
-  if(userEl && !userEl.value && lastEmail){
-    const rec=authStoreLoad()[lastEmail];
-    if(rec?.username) userEl.value=rec.username;
-  }
-  setAuthNote('Your historical scoreboard is saved per email.', false);
+  if(loginBtn) loginBtn.style.display = authLocked ? 'none' : 'inline-block';
+  if(logoutBtn) logoutBtn.style.display = authLocked ? 'inline-block' : 'none';
 }
 function hideAuthOverlay(){
   const o=document.getElementById('auth-overlay');
   if(o) o.classList.remove('show');
 }
-function rebuildScoresFromResults(){
-  scores = {B:0,P:0,T:0};
-  natWins = 0;
-  results.forEach(function(r){
-    if(r && r.w && scores[r.w]!==undefined) scores[r.w]++;
-    if(r && r.nat) natWins++;
-  });
-}
-function loadUserHistory(rec){
-  const hist = Array.isArray(rec?.history?.results) ? rec.history.results : [];
-  results = hist.slice(-5000);
-  rebuildScoresFromResults();
-  updateAllRoads();
-}
-function saveUserHistory(){
-  if(!authLocked) return;
-  const email = normalizeEmail(currentUserEmail);
-  if(!email) return;
-  const store = authStoreLoad();
-  const rec = store[email] || {email,username:currentUsername,createdAt:new Date().toISOString(),history:{}};
-  rec.username = currentUsername;
-  rec.history = rec.history || {};
-  rec.history.results = results.slice(-5000);
-  rec.history.updatedAt = new Date().toISOString();
-  rec.lastBalance = balance;
-  store[email] = rec;
-  authStoreSave(store);
-}
-function authLogin(){
-  const uEl=document.getElementById('auth-username');
-  const eEl=document.getElementById('auth-email');
-  const username=(uEl?.value||'').trim();
-  const email=normalizeEmail(eEl?.value||'');
-  if(username.length<2){ setAuthNote('Please enter a username (at least 2 characters).', true); return; }
-  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ setAuthNote('Please enter a valid email address.', true); return; }
 
-  const store = authStoreLoad();
-  const rec = store[email] || {email,createdAt:new Date().toISOString(),history:{}};
-  rec.username = username;
-  store[email] = rec;
-  authStoreSave(store);
-  try { localStorage.setItem(AUTH_LAST_KEY, email); } catch(e){}
+function showAuthOverlay(){
+  const o=document.getElementById('auth-overlay');
+  if(o) o.classList.add('show');
+  setAuthNote('Use Cognito sign-in to sync score history across devices.', false);
+}
 
-  authLocked = true;
-  currentUserEmail = email;
-  currentUsername = username;
+function decodeJwtPayload(tok){
+  try{
+    const p=tok.split('.')[1];
+    const b=p.replace(/-/g,'+').replace(/_/g,'/');
+    const json=decodeURIComponent(atob(b).split('').map(c=>'%'+('00'+c.charCodeAt(0).toString(16)).slice(-2)).join(''));
+    return JSON.parse(json);
+  } catch(e){ return null; }
+}
+
+function persistTokens(){
+  try{
+    localStorage.setItem(AUTH_TOK_KEY, JSON.stringify({
+      idToken:cognitoIdToken, accessToken:cognitoAccessToken
+    }));
+  }catch(e){}
+}
+function clearTokens(){
+  cognitoIdToken=''; cognitoAccessToken='';
+  try{ localStorage.removeItem(AUTH_TOK_KEY); }catch(e){}
+}
+function loadTokens(){
+  try{
+    const p=JSON.parse(localStorage.getItem(AUTH_TOK_KEY)||'{}');
+    cognitoIdToken=p.idToken||'';
+    cognitoAccessToken=p.accessToken||'';
+  }catch(e){ cognitoIdToken=''; cognitoAccessToken=''; }
+}
+
+function applyAuthFromTokens(){
+  if(!cognitoIdToken){ authLocked=false; setHeaderUser(); return false; }
+  const claims=decodeJwtPayload(cognitoIdToken);
+  if(!claims || !claims.exp || (Date.now()/1000)>=claims.exp){
+    clearTokens();
+    authLocked=false;
+    setHeaderUser();
+    return false;
+  }
+  currentUserEmail = normalizeEmail(claims.email || claims['cognito:username'] || 'user@unknown');
+  currentUsername = claims.preferred_username || claims.name || claims['cognito:username'] || 'Player';
+  authLocked=true;
   setHeaderUser();
-  loadUserHistory(rec);
   hideAuthOverlay();
-  setAuthNote('', false);
-  postFeedMsg('👤 Logged in as ' + username + '. Historical scoreboard loaded.', 'info');
-  if(!botPersonaLocked) showBotPersonaPicker();
+  return true;
 }
-function tryAutoLogin(){
-  let email='';
-  try { email=normalizeEmail(localStorage.getItem(AUTH_LAST_KEY)||''); } catch(e){}
-  if(!email) return;
-  const store = authStoreLoad();
-  const rec = store[email];
-  if(!rec || !rec.username) return;
-  authLocked = true;
-  currentUserEmail = email;
-  currentUsername = rec.username;
+
+function cognitoStart(mode){
+  if(!CLOUD_CONFIG.cognitoDomain.includes('YOUR_COGNITO_DOMAIN') || !CLOUD_CONFIG.userPoolClientId.includes('YOUR_USER_POOL_APP_CLIENT_ID')){
+    setAuthNote('Configure CLOUD_CONFIG with your Cognito domain/client ID first.', true);
+    return;
+  }
+  const authMode = mode==='signup' ? 'signup' : 'login';
+  const q = new URLSearchParams({
+    client_id:CLOUD_CONFIG.userPoolClientId,
+    response_type:'token',
+    scope:'openid email profile',
+    redirect_uri:CLOUD_CONFIG.redirectUri
+  });
+  if(authMode==='signup') q.set('screen_hint','signup');
+  window.location.href = CLOUD_CONFIG.cognitoDomain.replace(/\/$/,'') + '/oauth2/authorize?' + q.toString();
+}
+
+function processCognitoCallbackHash(){
+  if(!window.location.hash || window.location.hash.length<2) return;
+  const raw=window.location.hash.slice(1);
+  const p=new URLSearchParams(raw);
+  const idTok=p.get('id_token');
+  const accTok=p.get('access_token');
+  if(idTok && accTok){
+    cognitoIdToken=idTok;
+    cognitoAccessToken=accTok;
+    persistTokens();
+    window.history.replaceState({}, document.title, window.location.pathname + window.location.search);
+  }
+}
+
+function cognitoLogout(){
+  clearTokens();
+  authLocked=false;
+  currentUserEmail='';
+  currentUsername='';
   setHeaderUser();
-  loadUserHistory(rec);
+  setAuthNote('Signed out.', false);
+  showAuthOverlay();
+  if(CLOUD_CONFIG.cognitoDomain.includes('YOUR_COGNITO_DOMAIN')) return;
+  const q = new URLSearchParams({
+    client_id:CLOUD_CONFIG.userPoolClientId,
+    logout_uri:CLOUD_CONFIG.redirectUri
+  });
+  window.location.href = CLOUD_CONFIG.cognitoDomain.replace(/\/$/,'') + '/logout?' + q.toString();
+}
+
+async function apiFetch(path, opts){
+  const url = CLOUD_CONFIG.apiBaseUrl.replace(/\/$/,'') + path;
+  const headers = Object.assign({}, (opts && opts.headers) ? opts.headers : {});
+  if(cognitoAccessToken) headers.Authorization = 'Bearer ' + cognitoAccessToken;
+  if(!headers['Content-Type'] && opts?.body) headers['Content-Type'] = 'application/json';
+  const res = await fetch(url, Object.assign({}, opts || {}, {headers}));
+  if(!res.ok) throw new Error('API ' + res.status);
+  return res.json();
+}
+
+async function submitScoreToCloud(){
+  if(!authLocked) return;
+  if(CLOUD_CONFIG.apiBaseUrl.includes('YOUR_HTTP_API_ID')) return;
+  try{
+    await apiFetch('/score', {
+      method:'POST',
+      body:JSON.stringify({
+        username:currentUsername,
+        email:currentUserEmail,
+        balance,
+        rounds:scores.B+scores.P+scores.T,
+        wins:scores.B+scores.P,
+        ties:scores.T,
+        naturals:natWins
+      })
+    });
+  }catch(e){}
+}
+
+function renderLeaderboardRows(items){
+  const body=document.getElementById('leaderboard-body');
+  const empty=document.getElementById('leaderboard-empty');
+  if(!body) return;
+  body.innerHTML='';
+  if(!items || items.length===0){
+    body.innerHTML='<div class="leaderboard-empty" id="leaderboard-empty">No leaderboard entries yet.</div>';
+    return;
+  }
+  items.forEach(function(it, idx){
+    const row=document.createElement('div');
+    row.className='lb-row';
+    const nm = it.username || it.userName || 'Player';
+    const sc = Number(it.topScore || it.score || 0);
+    const rounds = Number(it.rounds || 0);
+    row.innerHTML = `<div class="lb-rank">#${idx+1}</div><div class="lb-name">${nm}</div><div class="lb-score">$${sc.toLocaleString()}</div><div class="lb-meta">${rounds} rounds</div>`;
+    body.appendChild(row);
+  });
+  if(empty) empty.remove();
+}
+
+async function fetchGlobalLeaderboard(){
+  if(CLOUD_CONFIG.apiBaseUrl.includes('YOUR_HTTP_API_ID')) return;
+  try{
+    const data=await apiFetch('/leaderboard?limit=20', {method:'GET'});
+    const items=Array.isArray(data?.items) ? data.items : (Array.isArray(data) ? data : []);
+    renderLeaderboardRows(items);
+  }catch(e){
+    const body=document.getElementById('leaderboard-body');
+    if(body) body.innerHTML='<div class="leaderboard-empty">Leaderboard unavailable. Check API config.</div>';
+  }
 }
 
 // Reveal tracking: which cards are face-up
@@ -2788,7 +2938,7 @@ function updateAIPanel() {
 function deal(){
   if(!authLocked){
     showAuthOverlay();
-    setMsg('Login required to track your historical scoreboard.');
+    setMsg('Sign in with Cognito to submit cloud scores and compete globally.');
     return;
   }
   if(!botPersonaLocked){
@@ -3185,7 +3335,8 @@ function resolveHand(){
   document.getElementById('btn-clear').disabled=false;
   refreshUI();
   updateAllRoads();
-  saveUserHistory();
+  submitScoreToCloud();
+  if((scores.B+scores.P+scores.T)%2===0) fetchGlobalLeaderboard();
 
   // ── free trial tracking ──
   freeHandsUsed++;
@@ -3639,8 +3790,11 @@ selectSlot('banker');
 refreshUI();
 updateAllRoads();
 updateTrialBadge();    // show correct hands-remaining count on load
+processCognitoCallbackHash();
+loadTokens();
+applyAuthFromTokens();
 setHeaderUser();
-tryAutoLogin();
+fetchGlobalLeaderboard();
 selectBotPersona('larry');
 selectBotVoice('vegas');
 applyBotPersonaToUI();
