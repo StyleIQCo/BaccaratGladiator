@@ -3146,6 +3146,15 @@ function makeGrid(ctx,w,h,cell){
   }
 }
 
+function snapRoadToLatest(scrollEl){
+  // Double-rAF so mobile layout/paint settles before we force to the right edge.
+  requestAnimationFrame(()=>{
+    requestAnimationFrame(()=>{
+      scrollEl.scrollLeft = Math.max(0, scrollEl.scrollWidth - scrollEl.clientWidth);
+    });
+  });
+}
+
 // Filled or stroked circle
 function circ(ctx,cx,cy,r,fill,stroke,sw){
   ctx.beginPath();
@@ -3230,17 +3239,7 @@ function renderBeadRoad(res){
     }
   });
 
-  // Scroll to show latest results — use rAF so browser has laid out the new canvas size
-  const beadScrollEl=scroll;
-  requestAnimationFrame(()=>{
-    if(cells.length>0){
-      const lastCol=cells[cells.length-1].col;
-      const target=Math.max(0,(lastCol+1)*cell - beadScrollEl.clientWidth + cell*0.5);
-      beadScrollEl.scrollLeft=target;
-    } else {
-      beadScrollEl.scrollLeft=0;
-    }
-  });
+  snapRoadToLatest(scroll);
   document.getElementById('bead-count').textContent=`${res.length} hands`;
 }
 
@@ -3293,8 +3292,7 @@ function renderBigRoad(br,preds){
     if(c.bp) pairDot(ctx,cx,cy,r,BANKER_C,false);
   });
 
-  const bigScrollEl=scroll;
-  requestAnimationFrame(()=>{ bigScrollEl.scrollLeft=bigScrollEl.scrollWidth; });
+  snapRoadToLatest(scroll);
   document.getElementById('big-count').textContent=`${streaks.length} streaks`;
 }
 
@@ -3334,8 +3332,7 @@ function renderDerived(canvasId,scrollId,countId,entries,preds,cockroach){
     else circ(ctx,cx,cy,cell*0.33,null,c,1.8);
   });
 
-  const drScrollEl=scroll;
-  requestAnimationFrame(()=>{ drScrollEl.scrollLeft=drScrollEl.scrollWidth; });
+  snapRoadToLatest(scroll);
   const ce=document.getElementById(countId);
   if(ce) ce.textContent=entries.length>0?`${entries.length} entries`:'—';
 }
