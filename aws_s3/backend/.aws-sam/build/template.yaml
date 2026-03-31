@@ -1,7 +1,7 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: Baccarat Gladiator backend (Cognito + validated hand events + global leaderboard)
-
+Description: Baccarat Gladiator backend (Cognito + validated hand events + global
+  leaderboard)
 Parameters:
   CognitoDomainPrefix:
     Type: String
@@ -10,51 +10,50 @@ Parameters:
     Type: String
     Default: https://example.com/baccarat-scoreboard.html
     Description: App URL used for Cognito callback/logout
-
 Globals:
   Function:
     Runtime: python3.12
     Timeout: 10
     MemorySize: 256
-
 Resources:
   LeaderboardTable:
     Type: AWS::DynamoDB::Table
     Properties:
       BillingMode: PAY_PER_REQUEST
       AttributeDefinitions:
-        - AttributeName: userSub
-          AttributeType: S
-        - AttributeName: scope
-          AttributeType: S
-        - AttributeName: topScore
-          AttributeType: N
+      - AttributeName: userSub
+        AttributeType: S
+      - AttributeName: scope
+        AttributeType: S
+      - AttributeName: topScore
+        AttributeType: N
       KeySchema:
-        - AttributeName: userSub
-          KeyType: HASH
+      - AttributeName: userSub
+        KeyType: HASH
       GlobalSecondaryIndexes:
-        - IndexName: GlobalScoreIndex
-          KeySchema:
-            - AttributeName: scope
-              KeyType: HASH
-            - AttributeName: topScore
-              KeyType: RANGE
-          Projection:
-            ProjectionType: ALL
-
+      - IndexName: GlobalScoreIndex
+        KeySchema:
+        - AttributeName: scope
+          KeyType: HASH
+        - AttributeName: topScore
+          KeyType: RANGE
+        Projection:
+          ProjectionType: ALL
   UserPool:
     Type: AWS::Cognito::UserPool
     Properties:
       UserPoolName: BaccaratGladiatorPool
-      AutoVerifiedAttributes: [email]
+      AutoVerifiedAttributes:
+      - email
       Schema:
-        - Name: email
-          AttributeDataType: String
-          Mutable: true
-          Required: true
+      - Name: email
+        AttributeDataType: String
+        Mutable: true
+        Required: true
       UsernameConfiguration:
         CaseSensitive: false
-      AliasAttributes: [email]
+      AliasAttributes:
+      - email
       Policies:
         PasswordPolicy:
           MinimumLength: 8
@@ -62,114 +61,143 @@ Resources:
           RequireUppercase: true
           RequireNumbers: true
           RequireSymbols: false
-
   UserPoolClient:
     Type: AWS::Cognito::UserPoolClient
     Properties:
-      UserPoolId: !Ref UserPool
+      UserPoolId:
+        Ref: UserPool
       ClientName: BaccaratGladiatorWebClient
       GenerateSecret: false
       ExplicitAuthFlows:
-        - ALLOW_USER_SRP_AUTH
-        - ALLOW_REFRESH_TOKEN_AUTH
+      - ALLOW_USER_SRP_AUTH
+      - ALLOW_REFRESH_TOKEN_AUTH
       AllowedOAuthFlowsUserPoolClient: true
-      AllowedOAuthFlows: [implicit]
-      AllowedOAuthScopes: [openid, email, profile]
-      SupportedIdentityProviders: [COGNITO]
-      CallbackURLs: [!Ref RedirectUri]
-      LogoutURLs: [!Ref RedirectUri]
-
+      AllowedOAuthFlows:
+      - implicit
+      AllowedOAuthScopes:
+      - openid
+      - email
+      - profile
+      SupportedIdentityProviders:
+      - COGNITO
+      CallbackURLs:
+      - Ref: RedirectUri
+      LogoutURLs:
+      - Ref: RedirectUri
   UserPoolDomain:
     Type: AWS::Cognito::UserPoolDomain
     Properties:
-      Domain: !Ref CognitoDomainPrefix
-      UserPoolId: !Ref UserPool
-
+      Domain:
+        Ref: CognitoDomainPrefix
+      UserPoolId:
+        Ref: UserPool
   HttpApi:
     Type: AWS::Serverless::HttpApi
     Properties:
       CorsConfiguration:
-        AllowOrigins: ['*']
-        AllowHeaders: ['Authorization', 'Content-Type']
-        AllowMethods: ['GET', 'POST', 'OPTIONS']
+        AllowOrigins:
+        - '*'
+        AllowHeaders:
+        - Authorization
+        - Content-Type
+        AllowMethods:
+        - GET
+        - POST
+        - OPTIONS
       Auth:
         Authorizers:
           CognitoJwtAuthorizer:
-            IdentitySource: "$request.header.Authorization"
+            IdentitySource: $request.header.Authorization
             JwtConfiguration:
-              issuer: !Sub "https://cognito-idp.${AWS::Region}.amazonaws.com/${UserPool}"
+              issuer:
+                Fn::Sub: https://cognito-idp.${AWS::Region}.amazonaws.com/${UserPool}
               audience:
-                - !Ref UserPoolClient
-
+              - Ref: UserPoolClient
   SubmitHandEventFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: lambda/
+      CodeUri: SubmitHandEventFunction
       Handler: submit_hand_event.handler
       Environment:
         Variables:
-          TABLE_NAME: !Ref LeaderboardTable
+          TABLE_NAME:
+            Ref: LeaderboardTable
       Policies:
-        - DynamoDBCrudPolicy:
-            TableName: !Ref LeaderboardTable
+      - DynamoDBCrudPolicy:
+          TableName:
+            Ref: LeaderboardTable
       Events:
         SubmitHandEvent:
           Type: HttpApi
           Properties:
-            ApiId: !Ref HttpApi
+            ApiId:
+              Ref: HttpApi
             Path: /hand-event
             Method: POST
             Auth:
               Authorizer: CognitoJwtAuthorizer
-
+    Metadata:
+      SamResourceId: SubmitHandEventFunction
   GetProfileFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: lambda/
+      CodeUri: GetProfileFunction
       Handler: get_profile.handler
       Environment:
         Variables:
-          TABLE_NAME: !Ref LeaderboardTable
+          TABLE_NAME:
+            Ref: LeaderboardTable
       Policies:
-        - DynamoDBReadPolicy:
-            TableName: !Ref LeaderboardTable
+      - DynamoDBReadPolicy:
+          TableName:
+            Ref: LeaderboardTable
       Events:
         GetProfile:
           Type: HttpApi
           Properties:
-            ApiId: !Ref HttpApi
+            ApiId:
+              Ref: HttpApi
             Path: /profile
             Method: GET
             Auth:
               Authorizer: CognitoJwtAuthorizer
-
+    Metadata:
+      SamResourceId: GetProfileFunction
   GetLeaderboardFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: lambda/
+      CodeUri: GetLeaderboardFunction
       Handler: get_leaderboard.handler
       Environment:
         Variables:
-          TABLE_NAME: !Ref LeaderboardTable
+          TABLE_NAME:
+            Ref: LeaderboardTable
       Policies:
-        - DynamoDBReadPolicy:
-            TableName: !Ref LeaderboardTable
+      - DynamoDBReadPolicy:
+          TableName:
+            Ref: LeaderboardTable
       Events:
         GetLeaderboard:
           Type: HttpApi
           Properties:
-            ApiId: !Ref HttpApi
+            ApiId:
+              Ref: HttpApi
             Path: /leaderboard
             Method: GET
-
+    Metadata:
+      SamResourceId: GetLeaderboardFunction
 Outputs:
   ApiBaseUrl:
     Description: HTTP API base URL
-    Value: !Sub "https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com"
+    Value:
+      Fn::Sub: https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com
   CognitoDomain:
     Description: Cognito Hosted UI domain URL
-    Value: !Sub "https://${CognitoDomainPrefix}.auth.${AWS::Region}.amazoncognito.com"
+    Value:
+      Fn::Sub: https://${CognitoDomainPrefix}.auth.${AWS::Region}.amazoncognito.com
   UserPoolId:
-    Value: !Ref UserPool
+    Value:
+      Ref: UserPool
   UserPoolClientId:
-    Value: !Ref UserPoolClient
+    Value:
+      Ref: UserPoolClient

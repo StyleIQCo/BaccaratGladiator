@@ -2061,10 +2061,10 @@ let cognitoAccessToken = '';
 
 // ── CLOUD CONFIG (replace with deployed values) ─────────────────
 const CLOUD_CONFIG = {
-  apiBaseUrl: 'https://YOUR_HTTP_API_ID.execute-api.YOUR_REGION.amazonaws.com',
-  cognitoDomain: 'https://YOUR_COGNITO_DOMAIN.auth.YOUR_REGION.amazoncognito.com',
-  userPoolClientId: 'YOUR_USER_POOL_APP_CLIENT_ID',
-  redirectUri: window.location.origin + window.location.pathname
+  apiBaseUrl: 'https://xr68waxn2h.execute-api.us-east-1.amazonaws.com',
+  cognitoDomain: 'https://baccaratgladiator-prod-henry-v2.auth.us-east-1.amazoncognito.com',
+  userPoolClientId: '20u4p2s42nr3hi1fsg9uhnlgdk',
+  redirectUri: 'https://www.baccaratgladiator.com/baccarat-scoreboard.html'
 };
 const AUTH_TOK_KEY = 'bg_cognito_tokens_v1';
 let cloudHandSeq = 0;
@@ -2181,19 +2181,20 @@ function applyAuthFromTokens(){
 }
 
 function cognitoStart(mode){
-  if(!CLOUD_CONFIG.cognitoDomain.includes('YOUR_COGNITO_DOMAIN') || !CLOUD_CONFIG.userPoolClientId.includes('YOUR_USER_POOL_APP_CLIENT_ID')){
+  const hasDomain = /^https:\/\/.+\.auth\.[a-z0-9-]+\.amazoncognito\.com$/i.test(String(CLOUD_CONFIG.cognitoDomain||''));
+  const hasClientId = /^[a-z0-9]{10,}$/i.test(String(CLOUD_CONFIG.userPoolClientId||''));
+  if(!hasDomain || !hasClientId){
     setAuthNote('Configure CLOUD_CONFIG with your Cognito domain/client ID first.', true);
     return;
   }
-  const authMode = mode==='signup' ? 'signup' : 'login';
   const q = new URLSearchParams({
     client_id:CLOUD_CONFIG.userPoolClientId,
     response_type:'token',
     scope:'openid email profile',
     redirect_uri:CLOUD_CONFIG.redirectUri
   });
-  if(authMode==='signup') q.set('screen_hint','signup');
-  window.location.href = CLOUD_CONFIG.cognitoDomain.replace(/\/$/,'') + '/oauth2/authorize?' + q.toString();
+  const path = mode==='signup' ? '/signup' : '/login';
+  window.location.href = CLOUD_CONFIG.cognitoDomain.replace(/\/$/,'') + path + '?' + q.toString();
 }
 
 function processCognitoCallbackHash(){
@@ -2218,7 +2219,8 @@ function cognitoLogout(){
   setHeaderUser();
   setAuthNote('Signed out.', false);
   showAuthOverlay();
-  if(CLOUD_CONFIG.cognitoDomain.includes('YOUR_COGNITO_DOMAIN')) return;
+  const hasDomain = /^https:\/\/.+\.auth\.[a-z0-9-]+\.amazoncognito\.com$/i.test(String(CLOUD_CONFIG.cognitoDomain||''));
+  if(!hasDomain) return;
   const q = new URLSearchParams({
     client_id:CLOUD_CONFIG.userPoolClientId,
     logout_uri:CLOUD_CONFIG.redirectUri
