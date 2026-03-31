@@ -268,6 +268,53 @@
 }
 .upgrade-cta:hover { background:var(--gold-lt); }
 
+/* ─── AUTH / LOGIN OVERLAY ─── */
+.auth-overlay {
+  display:none; position:fixed; inset:0; z-index:10030;
+  background:rgba(0,0,0,0.92); align-items:center; justify-content:center;
+  padding:16px;
+}
+.auth-overlay.show { display:flex; }
+.auth-box {
+  width:min(460px,95vw);
+  background:linear-gradient(160deg,#0d1f10 0%,#122818 100%);
+  border:2px solid rgba(201,168,76,0.75);
+  border-radius:12px;
+  box-shadow:0 0 56px rgba(201,168,76,0.2);
+  padding:18px 16px 14px;
+}
+.auth-title {
+  font-family:'Cinzel',serif; color:var(--gold-lt);
+  font-size:1rem; letter-spacing:1px; text-align:center;
+}
+.auth-sub {
+  text-align:center; color:rgba(240,230,200,0.62);
+  font-size:0.64rem; margin-top:3px; margin-bottom:12px;
+}
+.auth-field { margin-bottom:8px; }
+.auth-field label {
+  display:block; font-size:0.56rem; letter-spacing:0.7px;
+  color:rgba(240,230,200,0.55); margin-bottom:3px;
+}
+.auth-field input {
+  width:100%; box-sizing:border-box;
+  background:rgba(0,0,0,0.36); color:#f6ecd1;
+  border:1px solid rgba(201,168,76,0.28); border-radius:7px;
+  padding:9px 10px; font-size:0.78rem;
+}
+.auth-field input:focus { outline:none; border-color:var(--gold); box-shadow:0 0 0 1px rgba(201,168,76,0.25); }
+.auth-btn {
+  margin-top:4px; width:100%;
+  border:none; border-radius:8px; cursor:pointer;
+  background:linear-gradient(135deg,#f0d080,#c9a84c,#977327);
+  color:#000; font-family:'Cinzel',serif; font-weight:700;
+  letter-spacing:1.1px; font-size:0.72rem; padding:10px 14px;
+}
+.auth-note {
+  text-align:center; margin-top:8px; min-height:15px;
+  font-size:0.56rem; color:rgba(240,230,200,0.5);
+}
+
 /* ─── BOT PERSONA PICKER ─── */
 .persona-overlay {
   display:none; position:fixed; inset:0; z-index:10020;
@@ -1472,6 +1519,7 @@ header h1 {
       <div style="font-family:'Cinzel',serif;color:var(--gold);font-size:0.85rem;font-weight:700;" id="hdr-balance">Balance: $1,000</div>
       <div style="font-size:0.58rem;color:rgba(240,230,200,0.4);" id="hdr-rounds">Round 0</div>
       <div id="hdr-trial" class="trial-badge">Free Trial: 10 hands remaining</div>
+      <div style="font-size:0.56rem;color:rgba(140,200,255,0.75);margin-top:2px;" id="hdr-user">User: Guest</div>
       <div class="dealer-ctl">
         <button class="dealer-ctl-btn active" id="dealer-style-core" onclick="setDealerStyle('core')">Dealer Core</button>
         <button class="dealer-ctl-btn" id="dealer-style-glad" onclick="setDealerStyle('gladiator')">Dealer Gladiator</button>
@@ -1504,6 +1552,24 @@ header h1 {
     </div>
     <button class="upgrade-cta" onclick="document.getElementById('upgrade-overlay').classList.remove('show')">▶ Continue Demo (No Bets)</button>
     <div style="font-size:0.6rem;color:rgba(240,230,200,0.3);margin-top:10px;">Demo mode: watch the game, bets disabled</div>
+  </div>
+</div>
+
+<!-- ═══════ LOGIN OVERLAY ═══════ -->
+<div class="auth-overlay" id="auth-overlay">
+  <div class="auth-box">
+    <div class="auth-title">Arena Login</div>
+    <div class="auth-sub">Login with username + email to keep your historical scoreboard.</div>
+    <div class="auth-field">
+      <label for="auth-username">USERNAME</label>
+      <input id="auth-username" type="text" maxlength="32" placeholder="e.g. GladiatorKing"/>
+    </div>
+    <div class="auth-field">
+      <label for="auth-email">EMAIL</label>
+      <input id="auth-email" type="email" maxlength="120" placeholder="you@example.com"/>
+    </div>
+    <button class="auth-btn" onclick="authLogin()">ENTER ARENA</button>
+    <div class="auth-note" id="auth-note"></div>
   </div>
 </div>
 
@@ -1848,6 +1914,11 @@ let trialExpired = false;
 let autoPlayRemaining = 0;
 let autoPlayBetsSnapshot = null;
 let lastBet = null;   // remembered from most recent hand
+let authLocked = false;
+let currentUserEmail = '';
+let currentUsername = '';
+const AUTH_STORE_KEY = 'bg_users_v1';
+const AUTH_LAST_KEY  = 'bg_last_user_email_v1';
 
 // Pending hand state (set during deal, used when all revealed)
 let pendingHand=null;
@@ -1860,6 +1931,113 @@ let pendingHand=null;
     betsSnapshot               // bets frozen at deal time
   }
 */
+
+function normalizeEmail(v){
+  return (v||'').trim().toLowerCase();
+}
+
+function authStoreLoad(){
+  try { return JSON.parse(localStorage.getItem(AUTH_STORE_KEY) || '{}') || {}; }
+  catch(e){ return {}; }
+}
+function authStoreSave(store){
+  try { localStorage.setItem(AUTH_STORE_KEY, JSON.stringify(store)); } catch(e){}
+}
+function setAuthNote(msg, bad){
+  const n=document.getElementById('auth-note');
+  if(!n) return;
+  n.textContent=msg||'';
+  n.style.color = bad ? '#ff8888' : 'rgba(240,230,200,0.55)';
+}
+function setHeaderUser(){
+  const el=document.getElementById('hdr-user');
+  if(!el) return;
+  el.textContent = authLocked ? `User: ${currentUsername} (${currentUserEmail})` : 'User: Guest';
+}
+function showAuthOverlay(){
+  const o=document.getElementById('auth-overlay');
+  if(o) o.classList.add('show');
+  let lastEmail='';
+  try { lastEmail=normalizeEmail(localStorage.getItem(AUTH_LAST_KEY)||''); } catch(e){}
+  const emailEl=document.getElementById('auth-email');
+  const userEl=document.getElementById('auth-username');
+  if(emailEl && !emailEl.value && lastEmail) emailEl.value=lastEmail;
+  if(userEl && !userEl.value && lastEmail){
+    const rec=authStoreLoad()[lastEmail];
+    if(rec?.username) userEl.value=rec.username;
+  }
+  setAuthNote('Your historical scoreboard is saved per email.', false);
+}
+function hideAuthOverlay(){
+  const o=document.getElementById('auth-overlay');
+  if(o) o.classList.remove('show');
+}
+function rebuildScoresFromResults(){
+  scores = {B:0,P:0,T:0};
+  natWins = 0;
+  results.forEach(function(r){
+    if(r && r.w && scores[r.w]!==undefined) scores[r.w]++;
+    if(r && r.nat) natWins++;
+  });
+}
+function loadUserHistory(rec){
+  const hist = Array.isArray(rec?.history?.results) ? rec.history.results : [];
+  results = hist.slice(-5000);
+  rebuildScoresFromResults();
+  updateAllRoads();
+}
+function saveUserHistory(){
+  if(!authLocked) return;
+  const email = normalizeEmail(currentUserEmail);
+  if(!email) return;
+  const store = authStoreLoad();
+  const rec = store[email] || {email,username:currentUsername,createdAt:new Date().toISOString(),history:{}};
+  rec.username = currentUsername;
+  rec.history = rec.history || {};
+  rec.history.results = results.slice(-5000);
+  rec.history.updatedAt = new Date().toISOString();
+  rec.lastBalance = balance;
+  store[email] = rec;
+  authStoreSave(store);
+}
+function authLogin(){
+  const uEl=document.getElementById('auth-username');
+  const eEl=document.getElementById('auth-email');
+  const username=(uEl?.value||'').trim();
+  const email=normalizeEmail(eEl?.value||'');
+  if(username.length<2){ setAuthNote('Please enter a username (at least 2 characters).', true); return; }
+  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ setAuthNote('Please enter a valid email address.', true); return; }
+
+  const store = authStoreLoad();
+  const rec = store[email] || {email,createdAt:new Date().toISOString(),history:{}};
+  rec.username = username;
+  store[email] = rec;
+  authStoreSave(store);
+  try { localStorage.setItem(AUTH_LAST_KEY, email); } catch(e){}
+
+  authLocked = true;
+  currentUserEmail = email;
+  currentUsername = username;
+  setHeaderUser();
+  loadUserHistory(rec);
+  hideAuthOverlay();
+  setAuthNote('', false);
+  postFeedMsg('👤 Logged in as ' + username + '. Historical scoreboard loaded.', 'info');
+  if(!botPersonaLocked) showBotPersonaPicker();
+}
+function tryAutoLogin(){
+  let email='';
+  try { email=normalizeEmail(localStorage.getItem(AUTH_LAST_KEY)||''); } catch(e){}
+  if(!email) return;
+  const store = authStoreLoad();
+  const rec = store[email];
+  if(!rec || !rec.username) return;
+  authLocked = true;
+  currentUserEmail = email;
+  currentUsername = rec.username;
+  setHeaderUser();
+  loadUserHistory(rec);
+}
 
 // Reveal tracking: which cards are face-up
 // 'initial' = first 4 cards; 'third' = third cards
@@ -2608,6 +2786,11 @@ function updateAIPanel() {
 
 // ── DEAL ─────────────────────────────────────────────────────────
 function deal(){
+  if(!authLocked){
+    showAuthOverlay();
+    setMsg('Login required to track your historical scoreboard.');
+    return;
+  }
   if(!botPersonaLocked){
     showBotPersonaPicker();
     setMsg('Choose your bot persona before the first hand.');
@@ -3002,6 +3185,7 @@ function resolveHand(){
   document.getElementById('btn-clear').disabled=false;
   refreshUI();
   updateAllRoads();
+  saveUserHistory();
 
   // ── free trial tracking ──
   freeHandsUsed++;
@@ -3455,6 +3639,8 @@ selectSlot('banker');
 refreshUI();
 updateAllRoads();
 updateTrialBadge();    // show correct hands-remaining count on load
+setHeaderUser();
+tryAutoLogin();
 selectBotPersona('larry');
 selectBotVoice('vegas');
 applyBotPersonaToUI();
@@ -4210,7 +4396,10 @@ function enterArena(){
     setTimeout(()=>{ overlay.remove(); flash.remove(); }, 900);
     // Start game audio: crowd ambience + orchestral loop
     setTimeout(()=>{ startCrowdAmbience(); startOrchestral(); }, 500);
-    setTimeout(()=>{ if(!botPersonaLocked) showBotPersonaPicker(); }, 540);
+    setTimeout(()=>{
+      if(!authLocked) showAuthOverlay();
+      else if(!botPersonaLocked) showBotPersonaPicker();
+    }, 540);
   }, 120);
 }
 
