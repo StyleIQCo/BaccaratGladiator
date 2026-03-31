@@ -3,7 +3,20 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Baccarat Gladiator — All Variants</title>
+<title>Baccarat Gladiator | Live Scoreboard Arena</title>
+<meta name="description" content="Step into the Baccarat Gladiator arena with live roadmaps, side bets, and high-stakes action across all major Baccarat variants."/>
+<meta property="og:type" content="website"/>
+<meta property="og:title" content="Baccarat Gladiator | Live Scoreboard Arena"/>
+<meta property="og:description" content="Live Baccarat scoreboard with all major variants, immersive arena visuals, and side-bet action."/>
+<meta property="og:url" content="/baccarat-scoreboard.html"/>
+<meta property="og:image" content="/baccarat-link-preview.png"/>
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+<meta property="og:image:alt" content="Baccarat Gladiator ornate card on casino table"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Baccarat Gladiator | Live Scoreboard Arena"/>
+<meta name="twitter:description" content="Live Baccarat scoreboard with all major variants, immersive arena visuals, and side-bet action."/>
+<meta name="twitter:image" content="/baccarat-link-preview.png"/>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Raleway:wght@300;400;600&display=swap');
 
@@ -255,6 +268,60 @@
 }
 .upgrade-cta:hover { background:var(--gold-lt); }
 
+/* ─── BOT PERSONA PICKER ─── */
+.persona-overlay {
+  display:none; position:fixed; inset:0; z-index:10020;
+  background:rgba(0,0,0,0.9); align-items:center; justify-content:center;
+  padding:18px;
+}
+.persona-overlay.show { display:flex; }
+.persona-box {
+  width:min(760px,96vw);
+  background:linear-gradient(155deg,#0d1d14,#12271b);
+  border:2px solid rgba(201,168,76,0.75);
+  border-radius:12px;
+  box-shadow:0 0 60px rgba(201,168,76,0.18);
+  padding:18px 16px 14px;
+}
+.persona-title {
+  font-family:'Cinzel',serif; color:var(--gold-lt);
+  font-size:1rem; letter-spacing:1px; text-align:center;
+}
+.persona-sub {
+  text-align:center; color:rgba(240,230,200,0.62);
+  font-size:0.66rem; margin-top:4px; margin-bottom:12px; letter-spacing:0.4px;
+}
+.persona-grid {
+  display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:10px;
+}
+.persona-bot-btn {
+  border:1px solid rgba(201,168,76,0.28); border-radius:8px;
+  background:rgba(201,168,76,0.06); color:rgba(240,230,200,0.82);
+  padding:8px 8px; cursor:pointer; text-align:left;
+  transition:all 0.18s;
+}
+.persona-bot-btn:hover { border-color:rgba(201,168,76,0.55); background:rgba(201,168,76,0.12); }
+.persona-bot-btn.active { border-color:var(--gold); background:rgba(201,168,76,0.17); box-shadow:0 0 0 1px rgba(201,168,76,0.35) inset; }
+.persona-bot-name { font-family:'Cinzel',serif; color:var(--gold-lt); font-size:0.69rem; letter-spacing:0.4px; display:block; margin-bottom:2px; }
+.persona-bot-style { font-size:0.56rem; color:rgba(240,230,200,0.55); line-height:1.4; }
+.persona-voice-row {
+  display:flex; gap:8px; margin-top:8px; margin-bottom:11px;
+}
+.persona-voice-btn {
+  flex:1; border:1px solid rgba(120,170,255,0.28); border-radius:7px;
+  background:rgba(80,120,220,0.08); color:rgba(200,220,255,0.84);
+  font-size:0.63rem; letter-spacing:0.3px; padding:8px 10px; cursor:pointer;
+}
+.persona-voice-btn:hover { border-color:rgba(120,170,255,0.5); background:rgba(80,120,220,0.15); }
+.persona-voice-btn.active { border-color:#88bbff; background:rgba(95,145,255,0.21); color:#dcecff; }
+.persona-start-btn {
+  width:100%; border:none; border-radius:8px;
+  background:linear-gradient(135deg,#f0d080,#c9a84c,#977327);
+  color:#000; font-family:'Cinzel',serif; font-weight:700;
+  letter-spacing:1.2px; font-size:0.74rem; padding:10px 14px; cursor:pointer;
+}
+.persona-start-btn:hover { filter:brightness(1.05); }
+
 /* ─── AUTO PLAY BUTTON ─── */
 .btn-auto {
   background:transparent;
@@ -336,6 +403,13 @@ header h1 {
 }
 .audio-btn:hover { background:rgba(201,168,76,0.12); }
 .audio-btn.muted { opacity:0.38; border-color:rgba(201,168,76,0.18); }
+.dealer-ctl { margin-top:4px; display:flex; justify-content:flex-end; gap:5px; }
+.dealer-ctl-btn {
+  background:transparent; border:1px solid rgba(201,168,76,0.24); border-radius:10px;
+  color:rgba(240,230,200,0.5); font-size:0.52rem; letter-spacing:0.4px;
+  padding:2px 8px; cursor:pointer;
+}
+.dealer-ctl-btn.active { border-color:var(--gold); color:var(--gold-lt); background:rgba(201,168,76,0.12); }
 .vol-slider {
   -webkit-appearance:none; appearance:none;
   width:58px; height:4px; border-radius:2px;
@@ -781,6 +855,14 @@ header h1 {
   font-family:'Cinzel',serif; font-size:0.82rem;
   color:var(--gold-lt); min-height:22px; letter-spacing:1px;
 }
+.dealer-caption {
+  grid-column:1/-1; text-align:center;
+  min-height:18px;
+  font-size:0.62rem; letter-spacing:0.35px;
+  color:rgba(227,214,182,0.78);
+  opacity:0; transition:opacity 0.18s ease;
+}
+.dealer-caption.show { opacity:1; }
 .msg-win  { color:#80ff80; }
 .msg-lose { color:#ff8080; }
 .msg-tie  { color:var(--gold); }
@@ -933,6 +1015,12 @@ header h1 {
    MOBILE — ≤ 600px
 ═══════════════════════════════════════════ */
 @media (max-width:600px) {
+  .persona-box { padding:14px 12px 12px; }
+  .persona-grid { grid-template-columns:1fr; gap:7px; }
+  .persona-voice-row { flex-direction:column; }
+  .dealer-ctl { flex-wrap:wrap; gap:4px; }
+  .dealer-ctl-btn { font-size:0.5rem; padding:2px 7px; }
+  .dealer-caption { font-size:0.56rem; min-height:16px; }
 
   /* Game section spacing */
   .game-section { padding:5px 7px; gap:4px; }
@@ -1384,6 +1472,11 @@ header h1 {
       <div style="font-family:'Cinzel',serif;color:var(--gold);font-size:0.85rem;font-weight:700;" id="hdr-balance">Balance: $1,000</div>
       <div style="font-size:0.58rem;color:rgba(240,230,200,0.4);" id="hdr-rounds">Round 0</div>
       <div id="hdr-trial" class="trial-badge">Free Trial: 10 hands remaining</div>
+      <div class="dealer-ctl">
+        <button class="dealer-ctl-btn active" id="dealer-style-core" onclick="setDealerStyle('core')">Dealer Core</button>
+        <button class="dealer-ctl-btn" id="dealer-style-glad" onclick="setDealerStyle('gladiator')">Dealer Gladiator</button>
+        <button class="dealer-ctl-btn active" id="dealer-captions-btn" onclick="toggleDealerCaptions()">Captions ON</button>
+      </div>
     </div>
   </div>
 </header>
@@ -1414,6 +1507,33 @@ header h1 {
   </div>
 </div>
 
+<!-- ═══════ BOT PERSONA PICKER ═══════ -->
+<div class="persona-overlay" id="persona-overlay">
+  <div class="persona-box">
+    <div class="persona-title">Choose Your Table Bot</div>
+    <div class="persona-sub">Pick a bot identity and speaking style before the first hand.</div>
+    <div class="persona-grid">
+      <button class="persona-bot-btn active" id="persona-bot-larry" onclick="selectBotPersona('larry')">
+        <span class="persona-bot-name">Late Bet Larry</span>
+        <span class="persona-bot-style">Aggro momentum chaser. Bets bigger when the table heats up.</span>
+      </button>
+      <button class="persona-bot-btn" id="persona-bot-jay" onclick="selectBotPersona('jay')">
+        <span class="persona-bot-name">Jay Dawg</span>
+        <span class="persona-bot-style">Hype streak rider. Follows runs and keeps the energy loud.</span>
+      </button>
+      <button class="persona-bot-btn" id="persona-bot-frank" onclick="selectBotPersona('frank')">
+        <span class="persona-bot-name">Second Bank Frank</span>
+        <span class="persona-bot-style">Banker grinder. Conservative sizing with old-school discipline.</span>
+      </button>
+    </div>
+    <div class="persona-voice-row">
+      <button class="persona-voice-btn active" id="persona-voice-vegas" onclick="selectBotVoice('vegas')">Vegas Pit Boss</button>
+      <button class="persona-voice-btn" id="persona-voice-macau" onclick="selectBotVoice('macau')">Old-School Macau</button>
+    </div>
+    <button class="persona-start-btn" onclick="confirmBotPersona()">LOCK IN BOT & ENTER TABLE</button>
+  </div>
+</div>
+
 <!-- ═══════ MODE BAR — COMPACT ═══════ -->
 <div class="mode-bar">
   <div class="mode-pills">
@@ -1431,24 +1551,6 @@ header h1 {
   <!-- HANDS -->
   <div class="hands-area">
 
-    <!-- BANKER -->
-    <div class="hand-box">
-      <h4>🏦 BANKER</h4>
-      <div class="cards-row" id="banker-cards"></div>
-      <div class="hand-val" id="banker-val">—</div>
-      <div id="banker-badge"></div>
-      <!-- Dealer reveal controls (visible after deal) -->
-      <div class="hand-controls" id="dealer-controls" style="display:none;">
-        <button class="hctrl-btn" id="btn-dealer-1"   onclick="dealerShow(1)">Show 1 Card</button>
-        <button class="hctrl-btn" id="btn-dealer-all" onclick="dealerShow(99)">Show All</button>
-      </div>
-    </div>
-
-    <div class="vs-box">
-      <div style="font-size:1.1rem;color:var(--gold);">VS</div>
-      <div style="font-size:0.5rem;margin-top:3px;color:rgba(240,230,200,0.35);">AUTO<br>RULES</div>
-    </div>
-
     <!-- PLAYER -->
     <div class="hand-box">
       <h4>🛡 PLAYER</h4>
@@ -1459,6 +1561,24 @@ header h1 {
       <div class="hand-controls" id="player-controls" style="display:none;">
         <button class="hctrl-btn player-style" id="btn-player-1"   onclick="playerShow(1)">Peek 1 Card</button>
         <button class="hctrl-btn player-style" id="btn-player-all" onclick="playerShow(99)">Reveal All</button>
+      </div>
+    </div>
+
+    <div class="vs-box">
+      <div style="font-size:1.1rem;color:var(--gold);">VS</div>
+      <div style="font-size:0.5rem;margin-top:3px;color:rgba(240,230,200,0.35);">AUTO<br>RULES</div>
+    </div>
+
+    <!-- BANKER -->
+    <div class="hand-box">
+      <h4>🏦 BANKER</h4>
+      <div class="cards-row" id="banker-cards"></div>
+      <div class="hand-val" id="banker-val">—</div>
+      <div id="banker-badge"></div>
+      <!-- Dealer reveal controls (visible after deal) -->
+      <div class="hand-controls" id="dealer-controls" style="display:none;">
+        <button class="hctrl-btn" id="btn-dealer-1"   onclick="dealerShow(1)">Show 1 Card</button>
+        <button class="hctrl-btn" id="btn-dealer-all" onclick="dealerShow(99)">Show All</button>
       </div>
     </div>
   </div>
@@ -1474,23 +1594,24 @@ header h1 {
       <div class="cards-row" id="banker-third-cards"></div>
     </div>
   </div>
+  <!-- Note: third-card slots kept in same DOM order; CSS flex handles visual alignment -->
 
   <!-- MAIN BETS -->
   <div class="bet-section">
-    <div class="bet-slot active" id="slot-banker" onclick="selectSlot('banker')">
-      <div class="sname">Banker</div>
-      <div class="sodds" id="banker-odds">0.95:1</div>
-      <div class="samt"  id="amt-banker">$0</div>
+    <div class="bet-slot" id="slot-player" onclick="selectSlot('player')">
+      <div class="sname">Player</div>
+      <div class="sodds">1:1</div>
+      <div class="samt"  id="amt-player">$0</div>
     </div>
     <div class="bet-slot tie-slot" id="slot-tie" onclick="selectSlot('tie')">
       <div class="sname">Tie</div>
       <div class="sodds">8:1</div>
       <div class="samt"  id="amt-tie">$0</div>
     </div>
-    <div class="bet-slot" id="slot-player" onclick="selectSlot('player')">
-      <div class="sname">Player</div>
-      <div class="sodds">1:1</div>
-      <div class="samt"  id="amt-player">$0</div>
+    <div class="bet-slot active" id="slot-banker" onclick="selectSlot('banker')">
+      <div class="sname">Banker</div>
+      <div class="sodds" id="banker-odds">0.95:1</div>
+      <div class="samt"  id="amt-banker">$0</div>
     </div>
   </div>
 
@@ -1536,7 +1657,7 @@ header h1 {
   <!-- AI PLAYER PANEL -->
   <div class="ai-panel" id="ai-panel">
     <div class="ai-panel-header">
-      <span class="ai-name">🤖 GLADIATOR BOT</span>
+      <span class="ai-name" id="ai-name">🤖 GLADIATOR BOT</span>
       <span class="ai-strategy-tag" id="ai-strategy-tag">Trend Tracker</span>
       <span class="ai-balance" id="ai-balance">$1,000</span>
     </div>
@@ -1577,6 +1698,7 @@ header h1 {
   <div class="auto-progress" id="auto-progress"></div>
 
   <div class="msg-bar" id="msg-bar">Select a mode · place bets · DEAL</div>
+  <div class="dealer-caption" id="dealer-caption"></div>
 </div>
 
 <!-- ═══════ LIVE FEED ═══════ -->
@@ -1758,6 +1880,11 @@ function buildShoe(){
     [shoe[i],shoe[j]]=[shoe[j],shoe[i]];
   }
   soundShuffle();
+  if(results.length>0){
+    dealerCall('cut_card', {}, {feed:true, caption:true});
+    dealerCall('shuffle', {}, {feed:true, caption:true});
+    dealerCall('new_shoe', {}, {feed:true, caption:true});
+  }
 }
 function drawCard(){ if(shoe.length<15) buildShoe(); return shoe.pop(); }
 function cardVal(c){ if(c.rank==='A') return 1; if(['10','J','Q','K'].includes(c.rank)) return 0; return parseInt(c.rank); }
@@ -1929,6 +2056,305 @@ function postFeedMsg(text, type) {
   if (all.length > 80) all[0].remove();
   scroll.scrollTop = scroll.scrollHeight;
 }
+
+function pickOne(arr){
+  return arr[Math.floor(Math.random()*arr.length)];
+}
+
+let dealerStyle = 'core';        // 'core' | 'gladiator'
+let dealerCaptionsOn = true;
+let dealerCaptionTimer = null;
+let dealerPhaseAnnounced = false;
+
+function setDealerStyle(style){
+  dealerStyle = (style === 'gladiator') ? 'gladiator' : 'core';
+  const coreBtn = document.getElementById('dealer-style-core');
+  const gladBtn = document.getElementById('dealer-style-glad');
+  if(coreBtn) coreBtn.classList.toggle('active', dealerStyle==='core');
+  if(gladBtn) gladBtn.classList.toggle('active', dealerStyle==='gladiator');
+  showDealerCaption(dealerStyle==='core' ? 'Dealer language: Core.' : 'Dealer language: Gladiator.');
+}
+
+function toggleDealerCaptions(){
+  dealerCaptionsOn = !dealerCaptionsOn;
+  const btn = document.getElementById('dealer-captions-btn');
+  if(btn){
+    btn.textContent = dealerCaptionsOn ? 'Captions ON' : 'Captions OFF';
+    btn.classList.toggle('active', dealerCaptionsOn);
+  }
+  if(!dealerCaptionsOn){
+    const cap = document.getElementById('dealer-caption');
+    if(cap){ cap.classList.remove('show'); cap.textContent=''; }
+  }
+}
+
+function showDealerCaption(text){
+  if(!dealerCaptionsOn) return;
+  const cap = document.getElementById('dealer-caption');
+  if(!cap) return;
+  cap.textContent = text;
+  cap.classList.add('show');
+  if(dealerCaptionTimer) clearTimeout(dealerCaptionTimer);
+  dealerCaptionTimer = setTimeout(()=>{ cap.classList.remove('show'); }, 1600);
+}
+
+function dealerLine(key, data){
+  const p = data?.pTotal;
+  const b = data?.bTotal;
+  const core = {
+    place_bets:'Place your bets',
+    no_more_bets:'No more bets',
+    deal_player:'Player',
+    deal_banker:'Banker',
+    totals:(p,b)=>`Player ${p}, Banker ${b}`,
+    player_draws:'Player draws a third card',
+    player_stands:'Player stands',
+    banker_draws:'Banker draws',
+    banker_stands:'Banker stands',
+    player_wins:'Player wins',
+    banker_wins:'Banker wins',
+    tie:'Tie',
+    paying_player:'Paying Player',
+    paying_banker:'Paying Banker',
+    paying_tie:'Paying Tie',
+    commission_banker:'Commission on Banker',
+    last_hand:'Last hand',
+    cut_card:'Cut card',
+    shuffle:'Shuffle',
+    new_shoe:'New shoe',
+    natural:'A natural',
+    big_win:'A crushing victory'
+  };
+  const gladiator = {
+    place_bets:'Place your wagers, challengers',
+    no_more_bets:'No more bets — the fates are sealed',
+    deal_player:'Player steps forward',
+    deal_banker:'Banker enters the arena',
+    totals:(p,b)=>`Player shows ${p}. Banker reveals ${b}.`,
+    player_draws:'Player draws again',
+    player_stands:'Player stands firm',
+    banker_draws:'Banker calls for another card',
+    banker_stands:'Banker stands firm',
+    player_wins:'Player claims victory!',
+    banker_wins:'Banker triumphs!',
+    tie:'A tie — neither yields!',
+    paying_player:'Reward the victors',
+    paying_banker:'Reward the victors',
+    paying_tie:'Reward the victors',
+    commission_banker:'The house claims its tribute',
+    last_hand:'Last hand in the arena',
+    cut_card:'Cut card. Fate shifts.',
+    shuffle:'Shuffle the steel',
+    new_shoe:'A new shoe enters the arena',
+    natural:'A natural! Divine favor!',
+    big_win:'A crushing victory!'
+  };
+  const dict = dealerStyle==='gladiator' ? gladiator : core;
+  const val = dict[key];
+  if(typeof val==='function') return val(p,b);
+  return val || '';
+}
+
+function dealerCall(key, data, opts){
+  const text = dealerLine(key, data || {});
+  if(!text) return;
+  const o = opts || {};
+  if(o.feed !== false) postFeedMsg('🎴 ' + text, o.type || 'info');
+  if(o.caption !== false) showDealerCaption(text);
+}
+
+function latestNonTieStreakInfo(){
+  let side = null;
+  let count = 0;
+  for(let i=results.length-1; i>=0; i--){
+    const w = results[i].w;
+    if(w === 'T') continue;
+    if(!side){ side = w; count = 1; continue; }
+    if(w === side) count++;
+    else break;
+  }
+  return side ? { side, count } : null;
+}
+
+function hasAlternatingPattern(n){
+  const seq = results.filter(function(r){ return r.w !== 'T'; }).slice(-n).map(function(r){ return r.w; });
+  if(seq.length < n) return false;
+  for(let i=1;i<seq.length;i++){
+    if(seq[i] === seq[i-1]) return false;
+  }
+  return true;
+}
+
+let cultureDisclaimerShown = false;
+function postCultureDisclaimerOnce(){
+  if(cultureDisclaimerShown) return;
+  cultureDisclaimerShown = true;
+  postFeedMsg('ℹ️ Table sayings are for atmosphere only — outcomes stay random each hand.', 'info');
+}
+
+function getPreRevealCallout(totalWager){
+  const streak = latestNonTieStreakInfo();
+  if(results.length===0){
+    return pickOne([
+      '🎲 First hand banker.',
+      '🏛️ First hand banker — The Emperor favors Banker!',
+      '⚔️ Opening clash. Follow the shoe.'
+    ]);
+  }
+  if(shoe.length <= 26){
+    return pickOne([
+      '🂠 Cut card curse whispers around the table.',
+      '🂠 Last hand switch energy near the cut card.',
+      '🏛️ The end of shoe shifts fate.'
+    ]);
+  }
+  if(totalWager >= 250){
+    return pickOne([
+      '💸 Press it. Let it ride.',
+      '💸 All in energy at this table.',
+      '⚔️ To the death!'
+    ]);
+  }
+  if(streak && streak.count>=5){
+    if(streak.side==='B'){
+      return pickOne([
+        '🐉 Dragon run! Banker is hot.',
+        '🏛️ The Emperor favors Banker!',
+        '📈 Ride the streak.'
+      ]);
+    }
+    return pickOne([
+      '🔵 Player run coming — and now it is here.',
+      '🏛️ The challenger rises!',
+      '📈 Follow the shoe.'
+    ]);
+  }
+  if(hasAlternatingPattern(4)){
+    return pickOne([
+      '🔁 Chop coming.',
+      '🔁 Choppy shoe. Stay sharp.',
+      '⚔️ A clash of equals!'
+    ]);
+  }
+  return pickOne([
+    '🎲 Follow the shoe.',
+    '🎲 Ride the streak.',
+    '🎲 Fate decides.'
+  ]);
+}
+
+function getCultureSayingForHand(r, meta){
+  const isNatural9 = !!meta.isNatural9;
+  const isNatural8 = !!meta.isNatural8;
+  const winScore = meta.winScore;
+  const loseScore = meta.loseScore;
+
+  if(r.isDragon7 && gameMode==='ez'){
+    return pickOne([
+      'Seven never win... unless it is Dragon 7.',
+      'Pit saying flips tonight: seven gets paid.',
+      'Dragon 7 breaks every old rule in the room.'
+    ]);
+  }
+  if(r.isPanda8 && gameMode==='ez'){
+    return pickOne([
+      'Panda 8 walks in and the table gets loud.',
+      'Three-card 8, pure crowd pleaser.',
+      'When Panda lands, side-bet players smile.'
+    ]);
+  }
+  if(r.isBigTiger && gameMode==='tiger'){
+    return pickOne([
+      'Big Tiger means the felt is on fire.',
+      'Tiger room rule: respect the 3-card 6.',
+      'That is a Big Tiger roar.'
+    ]);
+  }
+  if(r.isSmallTiger && gameMode==='tiger'){
+    return pickOne([
+      'Small Tiger scratches, bankroll jumps.',
+      'Two-card 6 from Banker: classic Small Tiger.',
+      'Tiger players wait for exactly that.'
+    ]);
+  }
+  if(r.isTigerTie && gameMode==='tiger'){
+    return pickOne([
+      'Tiger Tie is a rare old-school cheer.',
+      'Both on 6: pure Tiger folklore.',
+      'Tiger Tie lands and the rail wakes up.'
+    ]);
+  }
+  if(isNatural9){
+    return pickOne([
+      'Natural 9, no debate.',
+      'In baccarat culture: natural beats noise.',
+      'Two cards, total 9, lights out.'
+    ]);
+  }
+  if(isNatural8){
+    return pickOne([
+      'Natural 8 keeps it clean and quick.',
+      'No draw, just discipline: natural 8.',
+      'Old pit line: respect the natural.'
+    ]);
+  }
+  if(r.winner==='T'){
+    return pickOne([
+      'New dealer tie.',
+      'Tie is a trap.',
+      'Tie is coming.',
+      'Chasing the tie.',
+      'Back-to-back tie!',
+      'Tie says nobody owns this hand.',
+      'Classic squeeze room moment: tie.',
+      '🏛️ A clash of equals!'
+    ]);
+  }
+  if(meta.zeroHit){
+    return pickOne([
+      'Zero kills.',
+      'Ten-value cards wiped the hand to zero.',
+      'One zero and the whole rhythm changes.'
+    ]);
+  }
+  if(loseScore===7){
+    return pickOne([
+      'Seven never win.',
+      'Old saying checks out: seven never win.',
+      'The rail says it again: seven never win.'
+    ]);
+  }
+  if(winScore===7){
+    return pickOne([
+      'Seven got there this time.',
+      'Against the old line, seven takes it.',
+      'Seven wins this hand, quietly.'
+    ]);
+  }
+  const streak = latestNonTieStreakInfo();
+  if(streak && streak.count>=4){
+    if(streak.side==='B'){
+      return pickOne([
+        'Banker train keeps rolling.',
+        'Banker never dies.',
+        'Banker tax is worth it.',
+        '🏛️ The champion stands undefeated!',
+        'When Banker runs, many just ride it.',
+        'Baccarat rail talk: do not step in front of a Banker streak.'
+      ]);
+    }
+    return pickOne([
+      'Player streak on the board.',
+      'Player is due.',
+      'Player for the comeback.',
+      '🏛️ The challenger rises!',
+      'Player run is live, table is leaning blue.',
+      'When Player gets hot, trend chasers follow.'
+    ]);
+  }
+  return null;
+}
+
 function clearFeed() {
   document.getElementById('feed-scroll').innerHTML =
     '<div class="feed-empty" id="feed-empty">Game events will appear here…</div>';
@@ -1940,16 +2366,158 @@ let aiCurrentBet = { slot: null, amount: 0 };
 let aiWinStreak = 0;
 let aiLossStreak = 0;
 let aiLastResult = null;
+let botPersona = 'larry';
+let botVoice = 'vegas';
+let botPersonaLocked = false;
+
+const BOT_PERSONAS = {
+  larry: {
+    name: 'Late Bet Larry',
+    styleLabel: 'Late Steam',
+    betLadder: [35, 65, 95, 140],
+    lossCap: 55,
+    voice: {
+      vegas: {
+        bet: ['I am stepping in late on this lane.', 'Late money talks. I am in now.', 'Watch this move, right on the tempo.'],
+        win: ['That is how late steam cashes.', 'Called it right on the turn.', 'Larry timed that lane perfect.'],
+        lose: ['Fine, table shifted. We reset.', 'Missed the jump, next hand is cleaner.', 'Late read, wrong pulse. Recalibrating.'],
+        push: ['No edge there. Tie says run it back.', 'Push. Nobody got clipped that hand.']
+      },
+      macau: {
+        bet: ['Late seat, sharp look, I enter now.', 'I wait, then commit.', 'This timing is the edge.'],
+        win: ['Late entry, correct side.', 'Good tempo read.', 'Table paid for patience.'],
+        lose: ['Wrong moment. Stay calm.', 'Read late, miss small, continue.', 'No chase. Next hand.'],
+        push: ['Tie hand. Chips return.', 'Push. We keep shape.']
+      }
+    }
+  },
+  jay: {
+    name: 'Jay Dawg',
+    styleLabel: 'Streak Hype',
+    betLadder: [30, 60, 100, 150],
+    lossCap: 65,
+    voice: {
+      vegas: {
+        bet: ['We ride the hot side, no fear.', 'Momentum is loud, I am with it.', 'Jay Dawg says press the run.'],
+        win: ['Boom, that is fire.', 'Streak still cooking.', 'That side stayed hot.'],
+        lose: ['All good, next beat.', 'Heat cooled off. We reset.', 'No panic. New hand, new lane.'],
+        push: ['Tie hand, nobody eats.', 'Push. Keep it moving.']
+      },
+      macau: {
+        bet: ['Trend is clear, follow the road.', 'Road shows pressure. I stay with it.', 'When line is live, keep with line.'],
+        win: ['Road confirmed.', 'Good follow on streak.', 'Trend paid.'],
+        lose: ['Trend broke. Reduce emotion.', 'Road changed. Adapt.', 'No tilt, continue process.'],
+        push: ['Tie board, no change.', 'Push hand. Continue.']
+      }
+    }
+  },
+  frank: {
+    name: 'Second Bank Frank',
+    styleLabel: 'Banker Grind',
+    betLadder: [20, 35, 55, 80],
+    lossCap: 35,
+    voice: {
+      vegas: {
+        bet: ['Frank is leaning Banker till proven otherwise.', 'Second bank grind, small and steady.', 'Discipline first, chips second.'],
+        win: ['That is textbook Banker grind.', 'Small edge, clean cash.', 'Frank keeps it tidy.'],
+        lose: ['Take the hit, stay disciplined.', 'One hand only, no hero bets.', 'Bankroll protection mode stays on.'],
+        push: ['Tie is housekeeping. Carry on.', 'Push hand. No leak.']
+      },
+      macau: {
+        bet: ['Bank side first. Respect old house rhythm.', 'Small unit, steady pace.', 'Macau rule: survive long, win slow.'],
+        win: ['Simple Bank side collection.', 'Good conservative hand.', 'This is proper pace.'],
+        lose: ['Accept loss, preserve stack.', 'No revenge hand.', 'Protect chip line first.'],
+        push: ['Tie board, nothing lost.', 'Push. Keep discipline.']
+      }
+    }
+  }
+};
+
+function activeBot(){
+  return BOT_PERSONAS[botPersona] || BOT_PERSONAS.larry;
+}
+
+function activeVoiceLabel(){
+  return botVoice === 'macau' ? 'Old-School Macau' : 'Vegas Pit Boss';
+}
+
+function botLine(kind, fallback){
+  const lines = (((activeBot().voice || {})[botVoice] || {})[kind]) || [];
+  if(lines.length) return pickOne(lines);
+  return fallback || '';
+}
+
+function applyBotPersonaToUI(){
+  const bot = activeBot();
+  const n = document.getElementById('ai-name');
+  if(n) n.textContent = '🤖 ' + bot.name;
+  const strat = document.getElementById('ai-strategy-tag');
+  if(strat && aiWinStreak===0 && aiLossStreak===0){
+    strat.textContent = bot.styleLabel + ' · ' + (botVoice === 'macau' ? 'Macau' : 'Vegas');
+  }
+}
+
+function selectBotPersona(key){
+  if(!BOT_PERSONAS[key]) return;
+  botPersona = key;
+  ['larry','jay','frank'].forEach(function(k){
+    const el = document.getElementById('persona-bot-' + k);
+    if(el) el.classList.toggle('active', k===key);
+  });
+  applyBotPersonaToUI();
+}
+
+function selectBotVoice(mode){
+  if(mode!=='vegas' && mode!=='macau') return;
+  botVoice = mode;
+  const v = document.getElementById('persona-voice-vegas');
+  const m = document.getElementById('persona-voice-macau');
+  if(v) v.classList.toggle('active', mode==='vegas');
+  if(m) m.classList.toggle('active', mode==='macau');
+  applyBotPersonaToUI();
+}
+
+function showBotPersonaPicker(){
+  const o = document.getElementById('persona-overlay');
+  if(o) o.classList.add('show');
+}
+
+function hideBotPersonaPicker(){
+  const o = document.getElementById('persona-overlay');
+  if(o) o.classList.remove('show');
+}
+
+function confirmBotPersona(){
+  botPersonaLocked = true;
+  hideBotPersonaPicker();
+  applyBotPersonaToUI();
+  postFeedMsg('🤖 ' + activeBot().name + ' takes the seat (' + activeVoiceLabel() + ').', 'ai');
+  postCultureDisclaimerOnce();
+  setMsg(activeBot().name + ' is live — ' + activeVoiceLabel() + ' voice.');
+}
 
 function aiChooseSlot() {
+  const bot = activeBot();
   const nonTie = results.filter(function(r){ return r.w !== 'T'; });
-  const recent = nonTie.slice(-6);
-  if (recent.length < 2) return 'banker';
+  const recent = nonTie.slice(-7);
+  if (recent.length < 2) return botPersona === 'jay' ? 'player' : 'banker';
   const bCount = recent.filter(function(r){ return r.w === 'B'; }).length;
   const pCount = recent.filter(function(r){ return r.w === 'P'; }).length;
-  if (bCount >= 4) return 'banker';
-  if (pCount >= 4) return 'player';
-  return recent[recent.length - 1].w === 'B' ? 'banker' : 'player';
+  const last = recent[recent.length - 1].w;
+  const prev = recent.length>1 ? recent[recent.length - 2].w : last;
+
+  if(botPersona === 'frank'){
+    if(pCount >= 5) return 'player';
+    if(last === 'P' && prev === 'P') return 'player';
+    return 'banker';
+  }
+  if(botPersona === 'jay'){
+    if(bCount === pCount) return last === 'B' ? 'banker' : 'player';
+    return bCount > pCount ? 'banker' : 'player';
+  }
+  // Larry: late-entry momentum. If two in a row, jump in. Otherwise lean table majority.
+  if(last === prev) return last === 'B' ? 'banker' : 'player';
+  return bCount >= pCount ? 'banker' : 'player';
 }
 
 function aiBetForHand() {
@@ -1959,10 +2527,10 @@ function aiBetForHand() {
     aiWinStreak = 0; aiLossStreak = 0;
   }
   const slot = aiChooseSlot();
-  let amount;
-  if (aiWinStreak >= 3) { amount = Math.min(100, aiBalance); }
-  else if (aiWinStreak === 2) { amount = Math.min(50, aiBalance); }
-  else { amount = Math.min(25, aiBalance); }
+  const bot = activeBot();
+  const ladderIdx = aiWinStreak >= 3 ? 3 : aiWinStreak >= 2 ? 2 : aiWinStreak >= 1 ? 1 : 0;
+  let amount = Math.min(bot.betLadder[ladderIdx], aiBalance);
+  if(aiLossStreak >= 2) amount = Math.min(amount, bot.lossCap);
 
   aiCurrentBet = { slot: slot, amount: amount };
   updateAIPanel();
@@ -1970,7 +2538,8 @@ function aiBetForHand() {
   const slotLabel = slot === 'banker' ? '🔴 Banker' : '🔵 Player';
   const strategy = aiWinStreak >= 2 ? 'riding the streak' :
                    aiLossStreak >= 2 ? 'playing it safe' : 'following the trend';
-  postFeedMsg('🤖 Bot bets $' + amount + ' on ' + slotLabel + ' (' + strategy + ')', 'ai');
+  const betSay = botLine('bet', slot === 'banker' ? 'Banker side looks right.' : 'Player side looks right.');
+  postFeedMsg('🤖 Bot bets $' + amount + ' on ' + slotLabel + ' (' + strategy + ') — ' + betSay, 'ai');
 }
 
 function aiResolve(winner, specialNote) {
@@ -2003,11 +2572,11 @@ function aiResolve(winner, specialNote) {
   const winQuips = ['Gladiator Bot triumphs!', 'The trend holds!', 'Perfect read!', 'Victory for the Bot!'];
   const loseQuips = ['Adjusting strategy…', 'Trend reversed on the Bot.', 'The Bot recalibrates.', 'Stayed disciplined.'];
   if (resultType === 'win') {
-    postFeedMsg('🤖 Bot WON +$' + net + ' on ' + slotLabel + ' — ' + winQuips[Math.floor(Math.random()*winQuips.length)], 'ai');
+    postFeedMsg('🤖 Bot WON +$' + net + ' on ' + slotLabel + ' — ' + botLine('win', winQuips[Math.floor(Math.random()*winQuips.length)]), 'ai');
   } else if (resultType === 'lose') {
-    postFeedMsg('🤖 Bot lost -$' + Math.abs(net) + ' on ' + slotLabel + ' — ' + loseQuips[Math.floor(Math.random()*loseQuips.length)], 'ai');
+    postFeedMsg('🤖 Bot lost -$' + Math.abs(net) + ' on ' + slotLabel + ' — ' + botLine('lose', loseQuips[Math.floor(Math.random()*loseQuips.length)]), 'ai');
   } else {
-    postFeedMsg('🤖 Bot push on ' + slotLabel + ' (Tie — stake returned)', 'ai');
+    postFeedMsg('🤖 Bot push on ' + slotLabel + ' (Tie — stake returned) — ' + botLine('push', 'New dealer tie.'), 'ai');
   }
   if (specialNote) postFeedMsg('🤖 ' + specialNote, 'ai');
 }
@@ -2034,13 +2603,22 @@ function updateAIPanel() {
   const strat = document.getElementById('ai-strategy-tag');
   if (aiWinStreak >= 3) strat.textContent = '🔥 Hot Streak';
   else if (aiLossStreak >= 3) strat.textContent = '🛡 Conservative';
-  else strat.textContent = 'Trend Tracker';
+  else strat.textContent = activeBot().styleLabel + ' · ' + (botVoice === 'macau' ? 'Macau' : 'Vegas');
 }
 
 // ── DEAL ─────────────────────────────────────────────────────────
 function deal(){
+  if(!botPersonaLocked){
+    showBotPersonaPicker();
+    setMsg('Choose your bot persona before the first hand.');
+    return;
+  }
   if(totalBet()===0){ setMsg('Place a bet first!'); return; }
   if(checkTrialBlock()) return;
+  const playerWager = totalBet();
+  postFeedMsg(getPreRevealCallout(playerWager), 'info');
+  dealerCall('no_more_bets', {}, {feed:true, caption:true});
+  if(shoe.length<=26) dealerCall('last_hand', {}, {feed:false, caption:true});
   phase='revealing';
   soundDrum();   // drum roll before cards are revealed
   aiBetForHand();
@@ -2100,6 +2678,7 @@ function deal(){
 
   bets={banker:0,player:0,tie:0,dragon7:0,panda8:0,bigTiger:0,smallTiger:0,tigerTie:0};
   refreshUI();
+  dealerPhaseAnnounced = false;
   setMsg('🎴 Click your cards to squeeze! Ask the dealer to reveal banker cards.');
 }
 
@@ -2118,6 +2697,8 @@ function renderInitialCards(){
 
   // Staggered deal sounds: banker 1, player 1, banker 2, player 2
   [0, 0.13, 0.26, 0.39].forEach(d => soundDeal(d));
+  setTimeout(()=>dealerCall('deal_player', {}, {feed:false, caption:true}), 40);
+  setTimeout(()=>dealerCall('deal_banker', {}, {feed:false, caption:true}), 320);
 }
 
 function renderThirdCards(){
@@ -2179,6 +2760,15 @@ function checkRevealProgress(){
   updatePartialTotals();
 
   if(!allInitial) return;
+
+  if(!dealerPhaseAnnounced){
+    const p2 = total([pH[0],pH[1]]);
+    const b2 = total([bH[0],bH[1]]);
+    dealerCall('totals', {pTotal:p2, bTotal:b2}, {feed:true, caption:true});
+    dealerCall(pThird ? 'player_draws' : 'player_stands', {}, {feed:false, caption:true});
+    dealerCall(bThird ? 'banker_draws' : 'banker_stands', {}, {feed:false, caption:true});
+    dealerPhaseAnnounced = true;
+  }
 
   // All initial revealed — if third cards exist, show them
   if(!revealState.thirdDealt&&(pThird||bThird)){
@@ -2255,6 +2845,7 @@ function resolveHand(){
   const b=r.betsSnapshot;
   let netChange=0;
   let msgs=[];
+  dealerCall(r.winner==='P'?'player_wins':r.winner==='B'?'banker_wins':'tie', {}, {feed:true, caption:true});
 
   scores[r.winner]++;
 
@@ -2299,9 +2890,13 @@ function resolveHand(){
   // ── Natural detection (for animation/feed only)
   const winScore = r.winner==='B'?r.bT : r.winner==='P'?r.pT : r.pT;
   const winCards = r.winner==='B'?r.bH : r.winner==='P'?r.pH : null;
+  const loseScore = r.winner==='B' ? r.pT : r.winner==='P' ? r.bT : null;
+  const hasZeroCard = function(arr){ return arr.some(function(c){ return ['10','J','Q','K'].includes(c.rank); }); };
+  const zeroHit = (hasZeroCard(r.pH) && r.pT===0) || (hasZeroCard(r.bH) && r.bT===0);
   const isNatural9 = winCards && winCards.length===2 && winScore===9;
   const isNatural8 = winCards && winCards.length===2 && winScore===8;
   const isNatural  = isNatural9 || isNatural8;
+  if(isNatural) dealerCall('natural', {}, {feed:true, caption:true});
 
   // ── Badges
   const bBadge=r.winner==='B'?(r.isDragon7&&gameMode==='ez'?'push':'win'):r.winner==='T'?'tie':'lose';
@@ -2341,6 +2936,29 @@ function resolveHand(){
   else if(r.isBigTiger||r.isSmallTiger||r.isTigerTie){ triggerSpecialAnim('tiger'); soundTiger(); }
   else if(isNatural){ triggerSpecialAnim(isNatural9?'natural9':'natural8'); soundNatural(); }
 
+  // ── Centralized haptic feedback — unique pattern per outcome ──────
+  // Priority: biggest bonus first, then naturals, then regular win/tie/loss
+  if(r.isDragon7 && gameMode==='ez')
+    haptic([100,35,150,35,200,35,250]);            // 🐉 Dragon 7 (40:1) — powerful 4-pulse escalation
+  else if(r.isBigTiger && gameMode==='tiger')
+    haptic([50,15,50,15,80,15,120,15,160,15,200,15,250]); // 🐯 Big Tiger (50:1) — rapid 7-pulse max
+  else if(r.isTigerTie && gameMode==='tiger')
+    haptic([70,25,100,25,140,25,200]);             // 🐯 Tiger Tie (35:1) — 4-step strong build
+  else if(r.isPanda8 && gameMode==='ez')
+    haptic([80,35,120,35,170,35,220]);             // 🐼 Panda 8 (25:1) — rolling swell
+  else if(r.isSmallTiger && gameMode==='tiger')
+    haptic([50,20,80,20,120,20,160]);              // 🐯 Small Tiger (22:1) — 4-step staccato
+  else if(isNatural9)
+    haptic([80,25,110,25,150,25,190]);             // ⚔️ Natural 9 — escalating triple
+  else if(isNatural8)
+    haptic([70,30,70,30,70,30,150]);               // ⚔️ Natural 8 — triple equal pulses
+  else if(netChange > 0)
+    haptic([40,30,120]);                           // ✅ Regular win — quick then strong
+  else if(r.winner === 'T')
+    haptic([80,55,80]);                            // 🟢 Tie / push — two even pulses
+  else
+    haptic([180]);                                 // ❌ Loss — single heavy thud
+
   // ── Post to live feed
   const feedWinner = r.winner==='B'?'🔴 BANKER WINS':r.winner==='P'?'🔵 PLAYER WINS':'🟢 TIE';
   let feedSpecial = '';
@@ -2360,6 +2978,19 @@ function resolveHand(){
   else if(r.isTigerTie&&gameMode==='tiger') postFeedMsg('🐯 Tiger Tie! Both sides score 6 — 35:1 side bet pays!', 'tiger');
   if(isNatural9) postFeedMsg('⚔️ Natural 9! Two-card natural — the Gladiator strikes!', 'natural');
   else if(isNatural8) postFeedMsg('🗡️ Natural 8! Two-card natural — the arena erupts!', 'natural');
+  const cultureLine = getCultureSayingForHand(r, { isNatural9, isNatural8, winScore, loseScore, zeroHit });
+  if(cultureLine) postFeedMsg('🎲 ' + cultureLine, 'info');
+  const streakNow = latestNonTieStreakInfo();
+  if(streakNow && streakNow.count>=5){
+    if(streakNow.side==='B') postFeedMsg('📣 Ban-ker! Ban-ker!', 'banker');
+    else postFeedMsg('📣 Play-er! Play-er!', 'player');
+  }
+
+  if(r.winner==='P' && b.player>0) dealerCall('paying_player', {}, {feed:true, caption:true});
+  if(r.winner==='B' && b.banker>0) dealerCall('paying_banker', {}, {feed:true, caption:true});
+  if(r.winner==='T' && b.tie>0) dealerCall('paying_tie', {}, {feed:true, caption:true});
+  if(r.winner==='B' && gameMode==='standard' && b.banker>0) dealerCall('commission_banker', {}, {feed:true, caption:true});
+  if(netChange>=200) dealerCall('big_win', {}, {feed:false, caption:true});
 
   // ── AI player resolution
   let aiSpecialNote = feedSpecial.trim() || null;
@@ -2402,6 +3033,7 @@ function setBadge(id,type,text){
 // ── NEW ROUND ─────────────────────────────────────────────────────
 function newRound(){
   phase='betting';
+  dealerPhaseAnnounced = false;
   pendingHand=null;
   revealState={bankerInitial:[false,false],playerInitial:[false,false],bankerThird:false,playerThird:false,thirdDealt:false};
   ['player-cards','banker-cards','player-third-cards','banker-third-cards'].forEach(id=>document.getElementById(id).innerHTML='');
@@ -2426,6 +3058,7 @@ function newRound(){
   if(balance<=0){ balance=1000; setMsg('Reloaded $1,000 — Good luck!'); }
   else if(trialExpired) setMsg('Trial ended — upgrade to keep playing!');
   else setMsg('Select a bet slot, place chips, then DEAL');
+  if(!trialExpired) dealerCall('place_bets', {}, {feed:false, caption:true});
   selectSlot('banker');
   refreshUI();
 }
@@ -2818,6 +3451,10 @@ selectSlot('banker');
 refreshUI();
 updateAllRoads();
 updateTrialBadge();    // show correct hands-remaining count on load
+selectBotPersona('larry');
+selectBotVoice('vegas');
+applyBotPersonaToUI();
+setDealerStyle('core');
 
 // ══════════════════════════════════════════════════════════════════
 //  SOUND ENGINE  (Web Audio API — fully synthesized, no files)
@@ -3104,7 +3741,7 @@ function soundWin(){
   }, 500);
   // crowd cheer on win
   setTimeout(()=>soundCrowdCheer(0.8), 300);
-  haptic([50,30,80]);
+  // haptic handled centrally in resolveHand
 }
 
 // ── Lose: descending groan ──
@@ -3169,7 +3806,7 @@ function soundDragon7(){
     });
   }, 550);
   setTimeout(()=>{ soundCrowdCheer(1.4); soundMetalClash(); }, 200);
-  haptic([80,40,80,40,120]);
+  // haptic handled centrally in resolveHand
 }
 
 // ── Panda 8: gentle mystical chime ──
@@ -3193,7 +3830,7 @@ function soundPanda8(){
   const gg=ctx.createGain(); gg.gain.setValueAtTime(0.15,now+0.6); gg.gain.exponentialRampToValueAtTime(0.001,now+2.5);
   gong.connect(gg); gg.connect(getMasterOut()); gong.start(now+0.6); gong.stop(now+2.6);
   setTimeout(()=>{ soundCrowdCheer(1.2); soundMetalClash(); }, 400);
-  haptic([60,30,60,30,100]);
+  // haptic handled centrally in resolveHand
 }
 
 // ── Tiger: fierce roar + power chord ──
@@ -3224,7 +3861,7 @@ function soundTiger(){
   const ig=ctx.createGain(); ig.gain.setValueAtTime(0.5,now); ig.gain.exponentialRampToValueAtTime(0.001,now+0.25);
   imp.connect(ig); ig.connect(getMasterOut()); imp.start(now); imp.stop(now+0.28);
   setTimeout(()=>{ soundCrowdCheer(1.5); soundMetalClash(); }, 150);
-  haptic([100,30,50,30,100,30,150]);
+  // haptic handled centrally in resolveHand
 }
 
 // ── Natural 8/9: Gladiator sword-clash + crowd roar ──
@@ -3263,7 +3900,7 @@ function soundNatural(){
   });
   // Natural is a massive moment — extra crowd cheer
   setTimeout(()=>soundCrowdCheer(1.6), 600);
-  haptic([80,25,80,25,80,25,200]);
+  // haptic handled centrally in resolveHand
 }
 
 // ── FREE TRIAL HELPERS ───────────────────────────────────────────
@@ -3339,6 +3976,7 @@ function updateAutoProgress(){
 function dealAuto(){
   if(totalBet()===0) return;
   phase='revealing';
+  dealerCall('no_more_bets', {}, {feed:false, caption:true});
   soundDrum();  // drum roll for auto-deal
   aiBetForHand();
   document.getElementById('btn-deal').style.display='none';
@@ -3568,6 +4206,7 @@ function enterArena(){
     setTimeout(()=>{ overlay.remove(); flash.remove(); }, 900);
     // Start game audio: crowd ambience + orchestral loop
     setTimeout(()=>{ startCrowdAmbience(); startOrchestral(); }, 500);
+    setTimeout(()=>{ if(!botPersonaLocked) showBotPersonaPicker(); }, 540);
   }, 120);
 }
 
