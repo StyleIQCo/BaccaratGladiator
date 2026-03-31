@@ -4,18 +4,18 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Baccarat Gladiator | Live Scoreboard Arena</title>
-<meta name="description" content="Step into the Baccarat Gladiator arena with live roadmaps, side bets, and high-stakes action across all major Baccarat variants."/>
+<meta name="description" content="Baccarat Gladiator is a simulated baccarat experience with live roadmaps, side bets, and table strategy visuals. No real-money gambling or cash prizes."/>
 <meta property="og:type" content="website"/>
 <meta property="og:title" content="Baccarat Gladiator | Live Scoreboard Arena"/>
-<meta property="og:description" content="Live Baccarat scoreboard with all major variants, immersive arena visuals, and side-bet action."/>
+<meta property="og:description" content="Simulated baccarat scoreboard with immersive arena visuals, all major variants, and no real-money gambling."/>
 <meta property="og:url" content="/baccarat-scoreboard.html"/>
 <meta property="og:image" content="/baccarat-link-preview.png"/>
 <meta property="og:image:width" content="1200"/>
 <meta property="og:image:height" content="630"/>
-<meta property="og:image:alt" content="Baccarat Gladiator ornate card on casino table"/>
+<meta property="og:image:alt" content="Baccarat Gladiator ornate card artwork"/>
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:title" content="Baccarat Gladiator | Live Scoreboard Arena"/>
-<meta name="twitter:description" content="Live Baccarat scoreboard with all major variants, immersive arena visuals, and side-bet action."/>
+<meta name="twitter:description" content="Simulated baccarat scoreboard with immersive arena visuals and all major variants."/>
 <meta name="twitter:image" content="/baccarat-link-preview.png"/>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Raleway:wght@300;400;600&display=swap');
@@ -369,6 +369,157 @@
 .lb-name { color:#d7eaff; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .lb-score { color:#7dffa4; font-family:'Cinzel',serif; }
 .lb-meta { color:rgba(190,210,230,0.62); font-size:0.54rem; }
+.economy-panel{
+  margin:8px 12px 6px;
+  border:1px solid rgba(201,168,76,0.3);
+  border-radius:8px;
+  background:rgba(0,0,0,0.28);
+  padding:8px;
+}
+.eco-top{
+  display:flex;
+  gap:8px;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  margin-bottom:6px;
+}
+.eco-stat{
+  font-size:0.58rem;
+  color:rgba(230,220,195,0.85);
+}
+.eco-stat strong{
+  color:var(--gold-lt);
+  font-family:'Cinzel',serif;
+}
+.eco-actions{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+}
+.eco-btn{
+  border:1px solid rgba(201,168,76,0.35);
+  border-radius:6px;
+  background:rgba(201,168,76,0.1);
+  color:#f3e2b8;
+  font-size:0.56rem;
+  padding:4px 8px;
+  cursor:pointer;
+}
+.eco-btn.secondary{
+  border-color:rgba(130,170,240,0.35);
+  background:rgba(80,120,220,0.12);
+  color:#cde0ff;
+}
+.eco-venue-row{
+  display:flex;
+  gap:8px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+.eco-venue-row label{
+  font-size:0.55rem;
+  color:rgba(210,195,160,0.75);
+  letter-spacing:0.06em;
+}
+.eco-venue{
+  background:rgba(0,0,0,0.25);
+  border:1px solid rgba(201,168,76,0.3);
+  border-radius:6px;
+  color:#f0e8c8;
+  padding:4px 6px;
+  font-size:0.58rem;
+}
+.economy-friction{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.75);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:9800;
+  padding:16px;
+}
+.economy-friction.show{ display:flex; }
+.eco-friction-card{
+  width:min(420px,96vw);
+  border:1px solid rgba(201,168,76,0.42);
+  border-radius:10px;
+  background:linear-gradient(160deg,#101728 0%,#18233c 100%);
+  padding:12px;
+}
+.eco-friction-title{
+  font-family:'Cinzel',serif;
+  color:var(--gold-lt);
+  font-size:0.82rem;
+  margin-bottom:4px;
+}
+.eco-friction-msg{
+  color:rgba(231,235,245,0.86);
+  font-size:0.62rem;
+  margin-bottom:10px;
+  line-height:1.45;
+}
+.store-banner{
+  margin:8px 12px;
+  border:1px solid rgba(255,220,130,0.34);
+  background:rgba(40,24,6,0.45);
+  color:rgba(250,228,176,0.92);
+  font-size:0.58rem;
+  padding:7px 9px;
+  border-radius:8px;
+  line-height:1.45;
+}
+.store-footer{
+  margin:10px 12px 14px;
+  border-top:1px solid rgba(255,255,255,0.08);
+  padding-top:10px;
+  display:flex;
+  gap:12px;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  font-size:0.55rem;
+  color:rgba(214,224,240,0.62);
+}
+.store-links{ display:flex; gap:10px; flex-wrap:wrap; }
+.store-links a{
+  color:#9cc7ff;
+  text-decoration:none;
+  border-bottom:1px dotted rgba(156,199,255,0.52);
+}
+.age-overlay{
+  position:fixed; inset:0; z-index:99999;
+  background:rgba(0,0,0,0.78);
+  display:none; align-items:center; justify-content:center;
+  padding:18px;
+}
+.age-overlay.show{ display:flex; }
+.age-box{
+  width:min(560px,95vw);
+  background:linear-gradient(160deg,#0b111d 0%,#101b2f 100%);
+  border:1px solid rgba(150,190,255,0.38);
+  border-radius:12px;
+  padding:16px 14px;
+  color:#dbe9ff;
+  box-shadow:0 22px 56px rgba(0,0,0,0.58);
+}
+.age-title{
+  font-family:'Cinzel',serif; font-size:1rem; color:#b7d6ff; margin-bottom:8px;
+}
+.age-copy{
+  font-size:0.63rem; line-height:1.6; color:rgba(220,234,255,0.88);
+}
+.age-actions{ display:flex; gap:8px; margin-top:12px; }
+.age-btn{
+  border:1px solid rgba(150,190,255,0.4);
+  border-radius:8px; background:rgba(150,190,255,0.12);
+  color:#deecff; padding:8px 10px; cursor:pointer; font-size:0.62rem;
+}
+.age-btn.secondary{
+  border-color:rgba(255,200,160,0.4);
+  background:rgba(120,70,40,0.14);
+  color:#ffd8bf;
+}
 
 /* ─── BOT PERSONA PICKER ─── */
 .persona-overlay {
@@ -1553,7 +1704,21 @@ header h1 {
     <div class="splash-divider"></div>
     <div class="splash-tagline">MASTER THE CARDS &nbsp;·&nbsp; CONQUER THE ARENA</div>
     <button class="splash-enter-btn" onclick="enterArena()">⚔ &nbsp; ENTER THE ARENA &nbsp; ⚔</button>
-    <div class="splash-trial-note">FREE TRIAL · 10 HANDS · NO REGISTRATION REQUIRED</div>
+    <div class="splash-trial-note">SIMULATED PLAY · VIRTUAL CREDITS ONLY · NO CASHOUT</div>
+  </div>
+</div>
+
+<div class="age-overlay" id="age-overlay">
+  <div class="age-box">
+    <div class="age-title">18+ Simulated Casino Experience</div>
+    <div class="age-copy">
+      This app is for adults and uses virtual credits only. No real-money gambling, no cash prizes, and no cashout.
+      Please play responsibly and take breaks.
+    </div>
+    <div class="age-actions">
+      <button class="age-btn" onclick="acceptAgeGate()">I Am 18+ · Continue</button>
+      <button class="age-btn secondary" onclick="declineAgeGate()">Exit</button>
+    </div>
   </div>
 </div>
 
@@ -1571,9 +1736,10 @@ header h1 {
               oninput="setMasterVolume(this.value)" class="vol-slider" title="Master Volume">
     </div>
     <div>
-      <div style="font-family:'Cinzel',serif;color:var(--gold);font-size:0.85rem;font-weight:700;" id="hdr-balance">Balance: $1,000</div>
+      <div style="font-family:'Cinzel',serif;color:var(--gold);font-size:0.85rem;font-weight:700;" id="hdr-balance">Credits: 1,000</div>
       <div style="font-size:0.58rem;color:rgba(240,230,200,0.4);" id="hdr-rounds">Round 0</div>
-      <div id="hdr-trial" class="trial-badge">Free Trial: 10 hands remaining</div>
+      <div style="font-size:0.56rem;color:rgba(140,220,255,0.82);" id="hdr-premium">Gems: 50 · LVL 1 Recruit</div>
+      <div id="hdr-trial" class="trial-badge">Session Hands: 10 remaining</div>
       <div style="font-size:0.56rem;color:rgba(140,200,255,0.75);margin-top:2px;">
         <span id="hdr-user">User: Guest</span>
         <button class="hdr-auth-btn" id="hdr-login-btn" onclick="showAuthOverlay()">Login</button>
@@ -1588,29 +1754,18 @@ header h1 {
   </div>
 </header>
 
+<div class="store-banner" id="store-banner">
+  Simulated gameplay only. Virtual credits have no real-world value. Baccarat outcomes are random and prior results do not predict future results.
+</div>
+
 <!-- ═══════ UPGRADE OVERLAY ═══════ -->
 <div class="upgrade-overlay" id="upgrade-overlay">
   <div class="upgrade-box">
     <div class="upgrade-logo">♠ BG ♠</div>
-    <h2>Trial Complete!</h2>
-    <p>You've played your <strong>10 free hands</strong>. Unlock the full <em>Baccarat Gladiator</em> experience — unlimited play, all 3 variants, side bets, and the complete strategy guide.</p>
-    <div class="upgrade-tiers">
-      <div class="upgrade-tier">
-        <div class="tier-name">App Only</div>
-        <div class="tier-price">$9.99</div>
-      </div>
-      <div class="upgrade-tier featured">
-        <div class="tier-badge">BEST VALUE</div>
-        <div class="tier-name">App + Tutorial</div>
-        <div class="tier-price">$19.99</div>
-      </div>
-      <div class="upgrade-tier">
-        <div class="tier-name">Full Bundle</div>
-        <div class="tier-price">$34.99</div>
-      </div>
-    </div>
-    <button class="upgrade-cta" onclick="document.getElementById('upgrade-overlay').classList.remove('show')">▶ Continue Demo (No Bets)</button>
-    <div style="font-size:0.6rem;color:rgba(240,230,200,0.3);margin-top:10px;">Demo mode: watch the game, bets disabled</div>
+    <h2>Time For A Break</h2>
+    <p>You've reached your current session hand limit. Take a short break, then continue with simulated play and virtual credits.</p>
+    <button class="upgrade-cta" onclick="document.getElementById('upgrade-overlay').classList.remove('show')">▶ Continue Simulated Play</button>
+    <div style="font-size:0.6rem;color:rgba(240,230,200,0.3);margin-top:10px;">No real-money gambling, prizes, or cashout.</div>
   </div>
 </div>
 
@@ -1664,6 +1819,23 @@ header h1 {
   <button class="mode-info-btn" onclick="toggleRules()">Rules ▾</button>
 </div>
 <div class="mode-rules" id="mode-rules-panel"></div>
+
+<div class="economy-panel">
+  <div class="eco-top">
+    <div class="eco-stat"><strong id="eco-chips">1,000</strong> Chips · <strong id="eco-gems">50</strong> Gems</div>
+    <div class="eco-stat">Lvl <strong id="eco-level">1</strong> <span id="eco-title">Recruit</span> · XP <strong id="eco-xp">0</strong></div>
+  </div>
+  <div class="eco-actions">
+    <button class="eco-btn" id="btn-daily-claim" onclick="claimDailyReward()">Claim Daily</button>
+    <button class="eco-btn secondary" onclick="watchAdForChips()">Watch Ad +5,000</button>
+    <button class="eco-btn" onclick="exchangeGemsForChips(5, 25000)">5 Gems → 25,000 Chips</button>
+  </div>
+  <div class="eco-venue-row" style="margin-top:7px;">
+    <label for="eco-venue">Venue</label>
+    <select id="eco-venue" class="eco-venue" onchange="selectVenue(this.value)"></select>
+    <span class="eco-stat" id="eco-streak">Daily Streak: 0</span>
+  </div>
+</div>
 
 <!-- ═══════ GAME SECTION ═══════ -->
 <div class="game-section">
@@ -1807,8 +1979,8 @@ header h1 {
   <!-- ACTIONS -->
   <div class="action-btns">
     <div class="bal-info">
-      Balance: <span id="bal-display">$1,000</span>
-      &nbsp;Bet: <span id="bet-display">$0</span>
+      Credits: <span id="bal-display">1,000</span>
+      &nbsp;Stake: <span id="bet-display">0</span>
     </div>
     <button class="btn btn-clear"  id="btn-clear"  onclick="clearBets()">Clear</button>
     <button class="btn btn-deal"   id="btn-deal"   onclick="deal()">DEAL</button>
@@ -1817,8 +1989,21 @@ header h1 {
   </div>
   <div class="auto-progress" id="auto-progress"></div>
 
-  <div class="msg-bar" id="msg-bar">Select a mode · place bets · DEAL</div>
+  <div class="msg-bar" id="msg-bar">Select a mode · place virtual chips · DEAL</div>
   <div class="dealer-caption" id="dealer-caption"></div>
+</div>
+
+<div class="economy-friction" id="economy-friction">
+  <div class="eco-friction-card">
+    <div class="eco-friction-title">Low Chips</div>
+    <div class="eco-friction-msg" id="eco-friction-msg">You are running low on chips. Choose how to continue.</div>
+    <div class="eco-actions">
+      <button class="eco-btn" onclick="claimDailyReward(); hideEconomyFriction();">Claim Daily</button>
+      <button class="eco-btn secondary" onclick="watchAdForChips(); hideEconomyFriction();">Watch Ad +5,000</button>
+      <button class="eco-btn" onclick="exchangeGemsForChips(5, 25000); hideEconomyFriction();">Use 5 Gems</button>
+      <button class="eco-btn secondary" onclick="hideEconomyFriction()">Close</button>
+    </div>
+  </div>
 </div>
 
 <!-- ═══════ LIVE FEED ═══════ -->
@@ -1910,6 +2095,15 @@ header h1 {
   </div>
 </div>
 
+<div class="store-footer">
+  <div>For entertainment only. If play stops being fun, take a break.</div>
+  <div class="store-links">
+    <a href="#" id="privacy-link">Privacy Policy</a>
+    <a href="#" id="terms-link">Terms of Use</a>
+    <a href="#" id="support-link">Support</a>
+  </div>
+</div>
+
 <!-- ═══════ SCRIPT ═══════ -->
 <script>
 'use strict';
@@ -1963,12 +2157,28 @@ const MODE_RULES={
 // ── GAME STATE ──────────────────────────────────────────────────
 let gameMode='ez';
 let balance=1000;
+let hardGems=50;
+let playerXp=0;
+let playerLevel=1;
+let playerTitle='Recruit';
+let dailyStreak=0;
+let lastDailyClaim='';
+let currentVenue='vegas';
 let bets={banker:0,player:0,tie:0,dragon7:0,panda8:0,bigTiger:0,smallTiger:0,tigerTie:0};
 let selSlot='banker';
 let natWins=0;  // count of natural (2-card 8/9) wins this shoe
 let phase='betting';   // 'betting' | 'revealing' | 'dealt'
 let results=[], shoe=[], scores={B:0,P:0,T:0};
 let rulesOpen=false;
+const ECONOMY_KEY='bg_economy_v1';
+const DAILY_REWARDS=[10000,20000,50000,75000,100000,150000,300000];
+const TITLES=['Recruit','Gladiator','Centurion','Champion','Warlord','Emperor'];
+const VENUES=[
+  {id:'vegas', name:'Las Vegas', minChips:0},
+  {id:'atlantic', name:'Atlantic City', minChips:50000},
+  {id:'macau', name:'Macau', minChips:200000},
+  {id:'montecarlo', name:'Monte Carlo', minChips:500000}
+];
 
 // ── FREE TRIAL ────────────────────────────────────────────────────
 const FREE_HAND_LIMIT = 40;
@@ -1979,6 +2189,8 @@ let trialExpired = false;
 let autoPlayRemaining = 0;
 let autoPlayBetsSnapshot = null;
 let lastBet = null;   // remembered from most recent hand
+const STORE_SAFE_MODE = true;
+const AGE_GATE_KEY = 'bg_age_gate_18_v1';
 let authLocked = false;
 let currentUserEmail = '';
 let currentUsername = '';
@@ -1993,6 +2205,8 @@ const CLOUD_CONFIG = {
   redirectUri: 'https://www.baccaratgladiator.com/baccarat-scoreboard.html'
 };
 const AUTH_TOK_KEY = 'bg_cognito_tokens_v1';
+let cloudHandSeq = 0;
+let cloudScore = 1000;
 
 // Pending hand state (set during deal, used when all revealed)
 let pendingHand=null;
@@ -2008,6 +2222,175 @@ let pendingHand=null;
 
 function normalizeEmail(v){
   return (v||'').trim().toLowerCase();
+}
+
+function todayKey(){
+  const d=new Date();
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+
+function dayDiff(a,b){
+  if(!a||!b) return 0;
+  const da=new Date(a+'T00:00:00');
+  const db=new Date(b+'T00:00:00');
+  return Math.round((da-db)/86400000);
+}
+
+function levelFromXp(xp){
+  return Math.min(60, 1 + Math.floor(Math.sqrt(Math.max(0, xp)/180)));
+}
+
+function titleFromLevel(level){
+  if(level>=40) return TITLES[5];
+  if(level>=30) return TITLES[4];
+  if(level>=20) return TITLES[3];
+  if(level>=10) return TITLES[2];
+  if(level>=5) return TITLES[1];
+  return TITLES[0];
+}
+
+function loadEconomy(){
+  try{
+    const p=JSON.parse(localStorage.getItem(ECONOMY_KEY)||'{}');
+    if(Number.isFinite(Number(p.balance))) balance=Math.max(0, Number(p.balance));
+    if(Number.isFinite(Number(p.hardGems))) hardGems=Math.max(0, Number(p.hardGems));
+    if(Number.isFinite(Number(p.playerXp))) playerXp=Math.max(0, Number(p.playerXp));
+    if(Number.isFinite(Number(p.dailyStreak))) dailyStreak=Math.max(0, Number(p.dailyStreak));
+    if(typeof p.lastDailyClaim==='string') lastDailyClaim=p.lastDailyClaim;
+    if(typeof p.currentVenue==='string') currentVenue=p.currentVenue;
+  }catch(e){}
+  playerLevel=levelFromXp(playerXp);
+  playerTitle=titleFromLevel(playerLevel);
+}
+
+function saveEconomy(){
+  try{
+    localStorage.setItem(ECONOMY_KEY, JSON.stringify({
+      balance, hardGems, playerXp, dailyStreak, lastDailyClaim, currentVenue
+    }));
+  }catch(e){}
+}
+
+function canClaimDaily(){
+  const t=todayKey();
+  return lastDailyClaim!==t;
+}
+
+function claimDailyReward(){
+  const t=todayKey();
+  if(lastDailyClaim===t){
+    setMsg('Daily reward already claimed today. Come back tomorrow.');
+    return;
+  }
+  const gap=lastDailyClaim?dayDiff(t,lastDailyClaim):1;
+  dailyStreak = (gap===1) ? (dailyStreak+1) : 1;
+  if(dailyStreak>7) dailyStreak=1;
+  const reward=DAILY_REWARDS[dailyStreak-1];
+  balance += reward;
+  if(dailyStreak===7) hardGems += 5;
+  lastDailyClaim=t;
+  setMsg('Daily reward claimed: +' + reward.toLocaleString() + ' chips' + (dailyStreak===7?' and +5 gems!':''));
+  postFeedMsg('🎁 Daily reward Day ' + dailyStreak + ' claimed: +' + reward.toLocaleString() + ' chips.', 'info');
+  refreshUI();
+  saveEconomy();
+}
+
+function watchAdForChips(){
+  const reward=5000;
+  balance += reward;
+  setMsg('Ad reward: +' + reward.toLocaleString() + ' chips.');
+  postFeedMsg('📺 Ad reward granted: +' + reward.toLocaleString() + ' chips.', 'info');
+  refreshUI();
+  saveEconomy();
+}
+
+function exchangeGemsForChips(gemsCost, chipsReward){
+  if(hardGems<gemsCost){
+    setMsg('Not enough gems for exchange.');
+    showEconomyFriction('You need more gems to exchange for chips.');
+    return;
+  }
+  hardGems -= gemsCost;
+  balance += chipsReward;
+  setMsg('Exchange complete: -' + gemsCost + ' gems, +' + chipsReward.toLocaleString() + ' chips.');
+  refreshUI();
+  saveEconomy();
+}
+
+function addXp(amount){
+  const gain=Math.max(1, Math.floor(Number(amount||0)));
+  const oldLevel=playerLevel;
+  playerXp += gain;
+  playerLevel=levelFromXp(playerXp);
+  playerTitle=titleFromLevel(playerLevel);
+  if(playerLevel>oldLevel){
+    const gemBonus=(playerLevel-oldLevel)*2;
+    hardGems += gemBonus;
+    postFeedMsg('🏆 Level up! Level ' + playerLevel + ' ' + playerTitle + ' (+' + gemBonus + ' gems).', 'info');
+  }
+}
+
+function populateVenueOptions(){
+  const sel=document.getElementById('eco-venue');
+  if(!sel) return;
+  sel.innerHTML='';
+  VENUES.forEach(function(v){
+    const opt=document.createElement('option');
+    opt.value=v.id;
+    opt.textContent=v.name + (v.minChips>0 ? (' · ' + v.minChips.toLocaleString() + '+') : ' · Open');
+    sel.appendChild(opt);
+  });
+  sel.value=currentVenue;
+}
+
+function selectVenue(id){
+  const next=VENUES.find(v=>v.id===id);
+  if(!next) return;
+  if(balance<next.minChips){
+    setMsg('Need ' + next.minChips.toLocaleString() + ' chips to enter ' + next.name + '.');
+    showEconomyFriction('You need more chips to enter ' + next.name + '.');
+    const sel=document.getElementById('eco-venue');
+    if(sel) sel.value=currentVenue;
+    return;
+  }
+  currentVenue=id;
+  setMsg('Venue selected: ' + next.name + '.');
+  postFeedMsg('🏛️ Entered venue: ' + next.name + '.', 'info');
+  saveEconomy();
+  refreshUI();
+}
+
+function showEconomyFriction(msg){
+  const o=document.getElementById('economy-friction');
+  const m=document.getElementById('eco-friction-msg');
+  if(m && msg) m.textContent=msg;
+  if(o) o.classList.add('show');
+}
+
+function hideEconomyFriction(){
+  const o=document.getElementById('economy-friction');
+  if(o) o.classList.remove('show');
+}
+
+function acceptAgeGate(){
+  try{ localStorage.setItem(AGE_GATE_KEY, 'ok'); }catch(e){}
+  const o=document.getElementById('age-overlay');
+  if(o) o.classList.remove('show');
+}
+
+function declineAgeGate(){
+  const o=document.getElementById('age-overlay');
+  if(o) o.classList.remove('show');
+  document.body.innerHTML='<div style="display:flex;align-items:center;justify-content:center;min-height:100vh;background:#07101f;color:#d9e7ff;font-family:Georgia,serif;padding:18px;text-align:center;">This simulated casino app is available for adults 18+ only.</div>';
+}
+
+function maybeShowAgeGate(){
+  if(!STORE_SAFE_MODE) return;
+  let ok='';
+  try{ ok=localStorage.getItem(AGE_GATE_KEY)||''; }catch(e){}
+  if(ok==='ok') return;
+  const o=document.getElementById('age-overlay');
+  if(o) o.classList.add('show');
 }
 
 function setAuthNote(msg, bad){
@@ -2054,6 +2437,8 @@ function persistTokens(){
 }
 function clearTokens(){
   cognitoIdToken=''; cognitoAccessToken='';
+  cloudHandSeq = 0;
+  cloudScore = 1000;
   try{ localStorage.removeItem(AUTH_TOK_KEY); }catch(e){}
 }
 function loadTokens(){
@@ -2135,27 +2520,85 @@ async function apiFetch(path, opts){
   if(cognitoAccessToken) headers.Authorization = 'Bearer ' + cognitoAccessToken;
   if(!headers['Content-Type'] && opts?.body) headers['Content-Type'] = 'application/json';
   const res = await fetch(url, Object.assign({}, opts || {}, {headers}));
-  if(!res.ok) throw new Error('API ' + res.status);
-  return res.json();
+  const text = await res.text();
+  let data = {};
+  if(text){
+    try{ data = JSON.parse(text); }catch(e){ data = {raw:text}; }
+  }
+  if(!res.ok){
+    const err = new Error('API ' + res.status);
+    err.status = res.status;
+    err.data = data;
+    throw err;
+  }
+  return data;
 }
 
-async function submitScoreToCloud(){
+async function fetchCloudProfile(){
   if(!authLocked) return;
   if(CLOUD_CONFIG.apiBaseUrl.includes('YOUR_HTTP_API_ID')) return;
   try{
-    await apiFetch('/score', {
-      method:'POST',
-      body:JSON.stringify({
-        username:currentUsername,
-        email:currentUserEmail,
-        balance,
-        rounds:scores.B+scores.P+scores.T,
-        wins:scores.B+scores.P,
-        ties:scores.T,
-        naturals:natWins
-      })
-    });
+    const data = await apiFetch('/profile', {method:'GET'});
+    const seq = Number(data?.handCount ?? 0);
+    const scoreVal = Number(data?.score ?? 1000);
+    if(Number.isFinite(seq) && seq >= 0) cloudHandSeq = seq;
+    if(Number.isFinite(scoreVal)) cloudScore = scoreVal;
   }catch(e){}
+}
+
+function toApiCard(c){
+  return {rank:String(c.rank||''), suit:String(c.suit||'')};
+}
+
+function makeHandEventPayload(r, b){
+  const playerCards = [...r.pH, ...(r.pThird ? [r.pThird] : [])].map(toApiCard);
+  const bankerCards = [...r.bH, ...(r.bThird ? [r.bThird] : [])].map(toApiCard);
+  return {
+    seq: cloudHandSeq + 1,
+    gameMode,
+    username: currentUsername,
+    email: currentUserEmail,
+    bets: {
+      banker: Number(b.banker || 0),
+      player: Number(b.player || 0),
+      tie: Number(b.tie || 0),
+      dragon7: Number(b.dragon7 || 0),
+      panda8: Number(b.panda8 || 0),
+      bigTiger: Number(b.bigTiger || 0),
+      smallTiger: Number(b.smallTiger || 0),
+      tigerTie: Number(b.tigerTie || 0)
+    },
+    playerCards,
+    bankerCards
+  };
+}
+
+async function submitHandEventToCloud(r, b, retry){
+  if(!authLocked) return;
+  if(CLOUD_CONFIG.apiBaseUrl.includes('YOUR_HTTP_API_ID')) return;
+  const attemptRetry = !!retry;
+  try{
+    const data = await apiFetch('/hand-event', {
+      method:'POST',
+      body:JSON.stringify(makeHandEventPayload(r, b))
+    });
+    const nextSeq = Number(data?.seq);
+    const nextScore = Number(data?.score);
+    if(Number.isFinite(nextSeq) && nextSeq > 0) cloudHandSeq = nextSeq;
+    else cloudHandSeq += 1;
+    if(Number.isFinite(nextScore)) cloudScore = nextScore;
+    return;
+  }catch(e){
+    if(!attemptRetry && e && Number(e.status) === 409){
+      const expectedSeq = Number(e?.data?.expectedSeq);
+      if(Number.isFinite(expectedSeq) && expectedSeq > 0){
+        cloudHandSeq = expectedSeq - 1;
+        return submitHandEventToCloud(r, b, true);
+      }
+      await fetchCloudProfile();
+      return submitHandEventToCloud(r, b, true);
+    }
+  }
 }
 
 function renderLeaderboardRows(items){
@@ -2244,7 +2687,12 @@ function setMode(m){
   setMsg('Mode: '+(m==='standard'?'Standard':m==='ez'?'Panda & Dragon Baccarat':'Tiger Baccarat')+' — Place your bets!');
 }
 function toggleRules(){ rulesOpen=!rulesOpen; document.getElementById('mode-rules-panel').classList.toggle('open',rulesOpen); if(rulesOpen) showRules(); }
-function showRules(){ document.getElementById('mode-rules-panel').innerHTML=MODE_RULES[gameMode].html; }
+function showRules(){
+  const safety = STORE_SAFE_MODE
+    ? '<div style="margin-top:8px;font-size:0.56rem;color:rgba(250,232,184,0.82);line-height:1.5;">Simulated gameplay only. Virtual credits only. Outcomes are random and not predictable.</div>'
+    : '';
+  document.getElementById('mode-rules-panel').innerHTML=MODE_RULES[gameMode].html + safety;
+}
 
 // ── BETTING ──────────────────────────────────────────────────────
 function selectSlot(slot){
@@ -2256,7 +2704,7 @@ function selectSlot(slot){
 function addChip(val){
   if(phase!=='betting') return;
   if(checkTrialBlock()) return;
-  if(balance<val){ setMsg('Not enough balance!'); return; }
+  if(balance<val){ setMsg('Not enough credits!'); showEconomyFriction('Not enough chips for that stake.'); return; }
   // House rule: cannot bet on both Banker AND Player simultaneously
   if(selSlot==='player' && bets.banker>0){
     setMsg('⚠️ You cannot bet on both Banker and Player. Clear your Banker bet first.');
@@ -2432,7 +2880,7 @@ function dealerLine(key, data){
   const p = data?.pTotal;
   const b = data?.bTotal;
   const core = {
-    place_bets:'Place your bets',
+    place_bets:'Place your chips',
     no_more_bets:'No more bets',
     deal_player:'Player',
     deal_banker:'Banker',
@@ -2456,7 +2904,7 @@ function dealerLine(key, data){
     big_win:'A crushing victory'
   };
   const gladiator = {
-    place_bets:'Place your wagers, challengers',
+    place_bets:'Place your chips, challengers',
     no_more_bets:'No more bets — the fates are sealed',
     deal_player:'Player steps forward',
     deal_banker:'Banker enters the arena',
@@ -2540,9 +2988,9 @@ function getPreRevealCallout(totalWager){
   }
   if(totalWager >= 250){
     return pickOne([
-      '💸 Press it. Let it ride.',
-      '💸 All in energy at this table.',
-      '⚔️ To the death!'
+      '💸 Strong virtual stake on this hand.',
+      '💸 Big table energy right now.',
+      '⚔️ High tension in the arena.'
     ]);
   }
   if(streak && streak.count>=5){
@@ -2709,7 +3157,7 @@ const BOT_PERSONAS = {
     voice: {
       vegas: {
         bet: ['I am stepping in late on this lane.', 'Late money talks. I am in now.', 'Watch this move, right on the tempo.'],
-        win: ['That is how late steam cashes.', 'Called it right on the turn.', 'Larry timed that lane perfect.'],
+        win: ['That is how late steam lands.', 'Called it right on the turn.', 'Larry timed that lane perfect.'],
         lose: ['Fine, table shifted. We reset.', 'Missed the jump, next hand is cleaner.', 'Late read, wrong pulse. Recalibrating.'],
         push: ['No edge there. Tie says run it back.', 'Push. Nobody got clipped that hand.']
       },
@@ -2749,7 +3197,7 @@ const BOT_PERSONAS = {
     voice: {
       vegas: {
         bet: ['Frank is leaning Banker till proven otherwise.', 'Second bank grind, small and steady.', 'Discipline first, chips second.'],
-        win: ['That is textbook Banker grind.', 'Small edge, clean cash.', 'Frank keeps it tidy.'],
+        win: ['That is textbook Banker grind.', 'Small edge, clean result.', 'Frank keeps it tidy.'],
         lose: ['Take the hit, stay disciplined.', 'One hand only, no hero bets.', 'Bankroll protection mode stays on.'],
         push: ['Tie is housekeeping. Carry on.', 'Push hand. No leak.']
       },
@@ -2948,7 +3396,7 @@ function deal(){
     setMsg('Choose your bot persona before the first hand.');
     return;
   }
-  if(totalBet()===0){ setMsg('Place a bet first!'); return; }
+  if(totalBet()===0){ setMsg('Place virtual chips first!'); return; }
   if(checkTrialBlock()) return;
   const playerWager = totalBet();
   postFeedMsg(getPreRevealCallout(playerWager), 'info');
@@ -3178,6 +3626,7 @@ function resolveHand(){
 
   const r=pendingHand;
   const b=r.betsSnapshot;
+  const handWager=Object.values(b).reduce((s,v)=>s+Number(v||0),0);
   let netChange=0;
   let msgs=[];
   dealerCall(r.winner==='P'?'player_wins':r.winner==='B'?'banker_wins':'tie', {}, {feed:true, caption:true});
@@ -3334,10 +3783,11 @@ function resolveHand(){
 
   // remember this bet for auto-play re-use
   lastBet = {...r.betsSnapshot};
+  addXp(Math.max(1, Math.floor(handWager/2)));
   document.getElementById('btn-clear').disabled=false;
   refreshUI();
   updateAllRoads();
-  submitScoreToCloud();
+  submitHandEventToCloud(r, b, false);
   if((scores.B+scores.P+scores.T)%2===0) fetchGlobalLeaderboard();
 
   // ── free trial tracking ──
@@ -3392,9 +3842,9 @@ function newRound(){
   // Reset AI current bet display for new round
   aiCurrentBet = { slot: null, amount: 0 };
   updateAIPanel();
-  if(balance<=0){ balance=1000; setMsg('Reloaded $1,000 — Good luck!'); }
-  else if(trialExpired) setMsg('Trial ended — upgrade to keep playing!');
-  else setMsg('Select a bet slot, place chips, then DEAL');
+  if(balance<=0){ balance=1000; setMsg('Credits reloaded to 1,000. Play responsibly.'); }
+  else if(trialExpired) setMsg('Session hand cap reached. Take a break, then continue simulated play.');
+  else setMsg('Select a side, place virtual chips, then DEAL');
   if(!trialExpired) dealerCall('place_bets', {}, {feed:false, caption:true});
   selectSlot('banker');
   refreshUI();
@@ -3403,17 +3853,31 @@ function newRound(){
 function setMsg(t){ document.getElementById('msg-bar').className='msg-bar'; document.getElementById('msg-bar').textContent=t; }
 
 function refreshUI(){
-  document.getElementById('bal-display').textContent='$'+balance.toLocaleString();
-  document.getElementById('hdr-balance').textContent='Balance: $'+balance.toLocaleString();
-  document.getElementById('bet-display').textContent='$'+totalBet().toLocaleString();
-  document.getElementById('amt-banker').textContent='$'+bets.banker;
-  document.getElementById('amt-player').textContent='$'+bets.player;
-  document.getElementById('amt-tie').textContent='$'+bets.tie;
-  document.getElementById('amt-dragon7').textContent='$'+bets.dragon7;
-  document.getElementById('amt-panda8').textContent='$'+bets.panda8;
-  document.getElementById('amt-bigTiger').textContent='$'+bets.bigTiger;
-  document.getElementById('amt-smallTiger').textContent='$'+bets.smallTiger;
-  document.getElementById('amt-tigerTie').textContent='$'+bets.tigerTie;
+  document.getElementById('bal-display').textContent=balance.toLocaleString();
+  document.getElementById('hdr-balance').textContent='Credits: '+balance.toLocaleString();
+  const hp=document.getElementById('hdr-premium');
+  if(hp) hp.textContent='Gems: '+hardGems.toLocaleString()+' · LVL '+playerLevel+' '+playerTitle;
+  document.getElementById('bet-display').textContent=totalBet().toLocaleString();
+  document.getElementById('amt-banker').textContent=bets.banker.toLocaleString();
+  document.getElementById('amt-player').textContent=bets.player.toLocaleString();
+  document.getElementById('amt-tie').textContent=bets.tie.toLocaleString();
+  document.getElementById('amt-dragon7').textContent=bets.dragon7.toLocaleString();
+  document.getElementById('amt-panda8').textContent=bets.panda8.toLocaleString();
+  document.getElementById('amt-bigTiger').textContent=bets.bigTiger.toLocaleString();
+  document.getElementById('amt-smallTiger').textContent=bets.smallTiger.toLocaleString();
+  document.getElementById('amt-tigerTie').textContent=bets.tigerTie.toLocaleString();
+  const ec=document.getElementById('eco-chips'); if(ec) ec.textContent=balance.toLocaleString();
+  const eg=document.getElementById('eco-gems'); if(eg) eg.textContent=hardGems.toLocaleString();
+  const el=document.getElementById('eco-level'); if(el) el.textContent=String(playerLevel);
+  const et=document.getElementById('eco-title'); if(et) et.textContent=playerTitle;
+  const ex=document.getElementById('eco-xp'); if(ex) ex.textContent=playerXp.toLocaleString();
+  const ds=document.getElementById('eco-streak'); if(ds) ds.textContent='Daily Streak: '+dailyStreak;
+  const dailyBtn=document.getElementById('btn-daily-claim');
+  if(dailyBtn){
+    dailyBtn.disabled=!canClaimDaily();
+    dailyBtn.textContent=canClaimDaily()?'Claim Daily':'Daily Claimed';
+  }
+  saveEconomy();
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -3486,7 +3950,7 @@ function makeGrid(ctx,w,h,cell){
 function snapRoadToLatest(scrollEl, usedCols, cellSize){
   const colsUsed = Math.max(0, Number(usedCols || 0));
   const cell = Math.max(1, Number(cellSize || BIG_CELL));
-  // Double-rAF so layout/paint settles before we place viewport.
+  // Double-rAF so mobile layout/paint settles before we place viewport.
   requestAnimationFrame(()=>{
     requestAnimationFrame(()=>{
       const visibleCols = Math.max(1, Math.floor(scrollEl.clientWidth / cell));
@@ -3786,6 +4250,18 @@ function updateStats(streaks){
   }
 }
 
+function applyStoreSafeMode(){
+  if(!STORE_SAFE_MODE) return;
+  const sub=document.getElementById('mode-subtitle');
+  if(sub && !sub.textContent.includes('SIMULATED')) sub.textContent = sub.textContent + ' · SIMULATED PLAY';
+  const p=document.getElementById('privacy-link');
+  const t=document.getElementById('terms-link');
+  const s=document.getElementById('support-link');
+  if(p) p.href = '/privacy.html';
+  if(t) t.href = '/terms.html';
+  if(s) s.href = '/support.html';
+}
+
 // ── SOUND STATE ───────────────────────────────────────────────────
 let _audioCtx   = null;
 let _masterGain = null;
@@ -3798,6 +4274,11 @@ let musicEnabled  = true;
 let masterVolume  = 0.8;
 
 // ── INIT ──────────────────────────────────────────────────────────
+loadEconomy();
+if(!VENUES.some(v=>v.id===currentVenue)) currentVenue='vegas';
+const currentVenueDef=VENUES.find(v=>v.id===currentVenue);
+if(currentVenueDef && balance<currentVenueDef.minChips) currentVenue='vegas';
+populateVenueOptions();
 buildShoe();
 setMode('ez');   // default to Panda & Dragon mode on load
 selectSlot('banker');
@@ -3806,13 +4287,15 @@ updateAllRoads();
 updateTrialBadge();    // show correct hands-remaining count on load
 processCognitoCallbackHash();
 loadTokens();
-applyAuthFromTokens();
+if(applyAuthFromTokens()) fetchCloudProfile();
 setHeaderUser();
 fetchGlobalLeaderboard();
 selectBotPersona('larry');
 selectBotVoice('vegas');
 applyBotPersonaToUI();
 setDealerStyle('core');
+applyStoreSafeMode();
+maybeShowAgeGate();
 
 let _roadResizeTimer = null;
 window.addEventListener('resize', function(){
@@ -4273,11 +4756,11 @@ function updateTrialBadge(){
   if(!el) return;
   const rem=Math.max(0, FREE_HAND_LIMIT-freeHandsUsed);
   if(trialExpired){
-    el.textContent='Demo mode — upgrade to play';
+    el.textContent='Session break available';
     el.className='trial-badge critical';
     return;
   }
-  el.textContent=`Free Trial: ${rem} hand${rem===1?'':'s'} remaining`;
+  el.textContent=`Session Hands: ${rem} remaining`;
   if(rem<=2) el.className='trial-badge critical';
   else if(rem<=5) el.className='trial-badge warning';
   else el.className='trial-badge';
@@ -4303,7 +4786,7 @@ function startAutoPlay(){
       : {banker:5,player:0,tie:0,dragon7:0,panda8:0,bigTiger:0,smallTiger:0,tigerTie:0,natural9:0,natural8:0};
     // apply fallback bet
     const cost = Object.values(fallback).reduce((a,b)=>a+b,0);
-    if(balance < cost){ setMsg('Not enough balance for auto-play!'); return; }
+    if(balance < cost){ setMsg('Not enough credits for auto-play!'); showEconomyFriction('You need more chips for auto-play.'); return; }
     bets = {...fallback};
     balance -= cost;
     refreshUI();

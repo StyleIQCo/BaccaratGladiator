@@ -369,6 +369,97 @@
 .lb-name { color:#d7eaff; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .lb-score { color:#7dffa4; font-family:'Cinzel',serif; }
 .lb-meta { color:rgba(190,210,230,0.62); font-size:0.54rem; }
+.economy-panel{
+  margin:8px 12px 6px;
+  border:1px solid rgba(201,168,76,0.3);
+  border-radius:8px;
+  background:rgba(0,0,0,0.28);
+  padding:8px;
+}
+.eco-top{
+  display:flex;
+  gap:8px;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  margin-bottom:6px;
+}
+.eco-stat{
+  font-size:0.58rem;
+  color:rgba(230,220,195,0.85);
+}
+.eco-stat strong{
+  color:var(--gold-lt);
+  font-family:'Cinzel',serif;
+}
+.eco-actions{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+}
+.eco-btn{
+  border:1px solid rgba(201,168,76,0.35);
+  border-radius:6px;
+  background:rgba(201,168,76,0.1);
+  color:#f3e2b8;
+  font-size:0.56rem;
+  padding:4px 8px;
+  cursor:pointer;
+}
+.eco-btn.secondary{
+  border-color:rgba(130,170,240,0.35);
+  background:rgba(80,120,220,0.12);
+  color:#cde0ff;
+}
+.eco-venue-row{
+  display:flex;
+  gap:8px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+.eco-venue-row label{
+  font-size:0.55rem;
+  color:rgba(210,195,160,0.75);
+  letter-spacing:0.06em;
+}
+.eco-venue{
+  background:rgba(0,0,0,0.25);
+  border:1px solid rgba(201,168,76,0.3);
+  border-radius:6px;
+  color:#f0e8c8;
+  padding:4px 6px;
+  font-size:0.58rem;
+}
+.economy-friction{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.75);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:9800;
+  padding:16px;
+}
+.economy-friction.show{ display:flex; }
+.eco-friction-card{
+  width:min(420px,96vw);
+  border:1px solid rgba(201,168,76,0.42);
+  border-radius:10px;
+  background:linear-gradient(160deg,#101728 0%,#18233c 100%);
+  padding:12px;
+}
+.eco-friction-title{
+  font-family:'Cinzel',serif;
+  color:var(--gold-lt);
+  font-size:0.82rem;
+  margin-bottom:4px;
+}
+.eco-friction-msg{
+  color:rgba(231,235,245,0.86);
+  font-size:0.62rem;
+  margin-bottom:10px;
+  line-height:1.45;
+}
 .store-banner{
   margin:8px 12px;
   border:1px solid rgba(255,220,130,0.34);
@@ -1647,6 +1738,7 @@ header h1 {
     <div>
       <div style="font-family:'Cinzel',serif;color:var(--gold);font-size:0.85rem;font-weight:700;" id="hdr-balance">Credits: 1,000</div>
       <div style="font-size:0.58rem;color:rgba(240,230,200,0.4);" id="hdr-rounds">Round 0</div>
+      <div style="font-size:0.56rem;color:rgba(140,220,255,0.82);" id="hdr-premium">Gems: 50 · LVL 1 Recruit</div>
       <div id="hdr-trial" class="trial-badge">Session Hands: 10 remaining</div>
       <div style="font-size:0.56rem;color:rgba(140,200,255,0.75);margin-top:2px;">
         <span id="hdr-user">User: Guest</span>
@@ -1727,6 +1819,23 @@ header h1 {
   <button class="mode-info-btn" onclick="toggleRules()">Rules ▾</button>
 </div>
 <div class="mode-rules" id="mode-rules-panel"></div>
+
+<div class="economy-panel">
+  <div class="eco-top">
+    <div class="eco-stat"><strong id="eco-chips">1,000</strong> Chips · <strong id="eco-gems">50</strong> Gems</div>
+    <div class="eco-stat">Lvl <strong id="eco-level">1</strong> <span id="eco-title">Recruit</span> · XP <strong id="eco-xp">0</strong></div>
+  </div>
+  <div class="eco-actions">
+    <button class="eco-btn" id="btn-daily-claim" onclick="claimDailyReward()">Claim Daily</button>
+    <button class="eco-btn secondary" onclick="watchAdForChips()">Watch Ad +5,000</button>
+    <button class="eco-btn" onclick="exchangeGemsForChips(5, 25000)">5 Gems → 25,000 Chips</button>
+  </div>
+  <div class="eco-venue-row" style="margin-top:7px;">
+    <label for="eco-venue">Venue</label>
+    <select id="eco-venue" class="eco-venue" onchange="selectVenue(this.value)"></select>
+    <span class="eco-stat" id="eco-streak">Daily Streak: 0</span>
+  </div>
+</div>
 
 <!-- ═══════ GAME SECTION ═══════ -->
 <div class="game-section">
@@ -1884,6 +1993,19 @@ header h1 {
   <div class="dealer-caption" id="dealer-caption"></div>
 </div>
 
+<div class="economy-friction" id="economy-friction">
+  <div class="eco-friction-card">
+    <div class="eco-friction-title">Low Chips</div>
+    <div class="eco-friction-msg" id="eco-friction-msg">You are running low on chips. Choose how to continue.</div>
+    <div class="eco-actions">
+      <button class="eco-btn" onclick="claimDailyReward(); hideEconomyFriction();">Claim Daily</button>
+      <button class="eco-btn secondary" onclick="watchAdForChips(); hideEconomyFriction();">Watch Ad +5,000</button>
+      <button class="eco-btn" onclick="exchangeGemsForChips(5, 25000); hideEconomyFriction();">Use 5 Gems</button>
+      <button class="eco-btn secondary" onclick="hideEconomyFriction()">Close</button>
+    </div>
+  </div>
+</div>
+
 <!-- ═══════ LIVE FEED ═══════ -->
 <div class="feed-panel" id="feed-panel">
   <div class="feed-header">
@@ -2035,12 +2157,28 @@ const MODE_RULES={
 // ── GAME STATE ──────────────────────────────────────────────────
 let gameMode='ez';
 let balance=1000;
+let hardGems=50;
+let playerXp=0;
+let playerLevel=1;
+let playerTitle='Recruit';
+let dailyStreak=0;
+let lastDailyClaim='';
+let currentVenue='vegas';
 let bets={banker:0,player:0,tie:0,dragon7:0,panda8:0,bigTiger:0,smallTiger:0,tigerTie:0};
 let selSlot='banker';
 let natWins=0;  // count of natural (2-card 8/9) wins this shoe
 let phase='betting';   // 'betting' | 'revealing' | 'dealt'
 let results=[], shoe=[], scores={B:0,P:0,T:0};
 let rulesOpen=false;
+const ECONOMY_KEY='bg_economy_v1';
+const DAILY_REWARDS=[10000,20000,50000,75000,100000,150000,300000];
+const TITLES=['Recruit','Gladiator','Centurion','Champion','Warlord','Emperor'];
+const VENUES=[
+  {id:'vegas', name:'Las Vegas', minChips:0},
+  {id:'atlantic', name:'Atlantic City', minChips:50000},
+  {id:'macau', name:'Macau', minChips:200000},
+  {id:'montecarlo', name:'Monte Carlo', minChips:500000}
+];
 
 // ── FREE TRIAL ────────────────────────────────────────────────────
 const FREE_HAND_LIMIT = 40;
@@ -2084,6 +2222,154 @@ let pendingHand=null;
 
 function normalizeEmail(v){
   return (v||'').trim().toLowerCase();
+}
+
+function todayKey(){
+  const d=new Date();
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+
+function dayDiff(a,b){
+  if(!a||!b) return 0;
+  const da=new Date(a+'T00:00:00');
+  const db=new Date(b+'T00:00:00');
+  return Math.round((da-db)/86400000);
+}
+
+function levelFromXp(xp){
+  return Math.min(60, 1 + Math.floor(Math.sqrt(Math.max(0, xp)/180)));
+}
+
+function titleFromLevel(level){
+  if(level>=40) return TITLES[5];
+  if(level>=30) return TITLES[4];
+  if(level>=20) return TITLES[3];
+  if(level>=10) return TITLES[2];
+  if(level>=5) return TITLES[1];
+  return TITLES[0];
+}
+
+function loadEconomy(){
+  try{
+    const p=JSON.parse(localStorage.getItem(ECONOMY_KEY)||'{}');
+    if(Number.isFinite(Number(p.balance))) balance=Math.max(0, Number(p.balance));
+    if(Number.isFinite(Number(p.hardGems))) hardGems=Math.max(0, Number(p.hardGems));
+    if(Number.isFinite(Number(p.playerXp))) playerXp=Math.max(0, Number(p.playerXp));
+    if(Number.isFinite(Number(p.dailyStreak))) dailyStreak=Math.max(0, Number(p.dailyStreak));
+    if(typeof p.lastDailyClaim==='string') lastDailyClaim=p.lastDailyClaim;
+    if(typeof p.currentVenue==='string') currentVenue=p.currentVenue;
+  }catch(e){}
+  playerLevel=levelFromXp(playerXp);
+  playerTitle=titleFromLevel(playerLevel);
+}
+
+function saveEconomy(){
+  try{
+    localStorage.setItem(ECONOMY_KEY, JSON.stringify({
+      balance, hardGems, playerXp, dailyStreak, lastDailyClaim, currentVenue
+    }));
+  }catch(e){}
+}
+
+function canClaimDaily(){
+  const t=todayKey();
+  return lastDailyClaim!==t;
+}
+
+function claimDailyReward(){
+  const t=todayKey();
+  if(lastDailyClaim===t){
+    setMsg('Daily reward already claimed today. Come back tomorrow.');
+    return;
+  }
+  const gap=lastDailyClaim?dayDiff(t,lastDailyClaim):1;
+  dailyStreak = (gap===1) ? (dailyStreak+1) : 1;
+  if(dailyStreak>7) dailyStreak=1;
+  const reward=DAILY_REWARDS[dailyStreak-1];
+  balance += reward;
+  if(dailyStreak===7) hardGems += 5;
+  lastDailyClaim=t;
+  setMsg('Daily reward claimed: +' + reward.toLocaleString() + ' chips' + (dailyStreak===7?' and +5 gems!':''));
+  postFeedMsg('🎁 Daily reward Day ' + dailyStreak + ' claimed: +' + reward.toLocaleString() + ' chips.', 'info');
+  refreshUI();
+  saveEconomy();
+}
+
+function watchAdForChips(){
+  const reward=5000;
+  balance += reward;
+  setMsg('Ad reward: +' + reward.toLocaleString() + ' chips.');
+  postFeedMsg('📺 Ad reward granted: +' + reward.toLocaleString() + ' chips.', 'info');
+  refreshUI();
+  saveEconomy();
+}
+
+function exchangeGemsForChips(gemsCost, chipsReward){
+  if(hardGems<gemsCost){
+    setMsg('Not enough gems for exchange.');
+    showEconomyFriction('You need more gems to exchange for chips.');
+    return;
+  }
+  hardGems -= gemsCost;
+  balance += chipsReward;
+  setMsg('Exchange complete: -' + gemsCost + ' gems, +' + chipsReward.toLocaleString() + ' chips.');
+  refreshUI();
+  saveEconomy();
+}
+
+function addXp(amount){
+  const gain=Math.max(1, Math.floor(Number(amount||0)));
+  const oldLevel=playerLevel;
+  playerXp += gain;
+  playerLevel=levelFromXp(playerXp);
+  playerTitle=titleFromLevel(playerLevel);
+  if(playerLevel>oldLevel){
+    const gemBonus=(playerLevel-oldLevel)*2;
+    hardGems += gemBonus;
+    postFeedMsg('🏆 Level up! Level ' + playerLevel + ' ' + playerTitle + ' (+' + gemBonus + ' gems).', 'info');
+  }
+}
+
+function populateVenueOptions(){
+  const sel=document.getElementById('eco-venue');
+  if(!sel) return;
+  sel.innerHTML='';
+  VENUES.forEach(function(v){
+    const opt=document.createElement('option');
+    opt.value=v.id;
+    opt.textContent=v.name + (v.minChips>0 ? (' · ' + v.minChips.toLocaleString() + '+') : ' · Open');
+    sel.appendChild(opt);
+  });
+  sel.value=currentVenue;
+}
+
+function selectVenue(id){
+  const next=VENUES.find(v=>v.id===id);
+  if(!next) return;
+  if(balance<next.minChips){
+    setMsg('Need ' + next.minChips.toLocaleString() + ' chips to enter ' + next.name + '.');
+    showEconomyFriction('You need more chips to enter ' + next.name + '.');
+    const sel=document.getElementById('eco-venue');
+    if(sel) sel.value=currentVenue;
+    return;
+  }
+  currentVenue=id;
+  setMsg('Venue selected: ' + next.name + '.');
+  postFeedMsg('🏛️ Entered venue: ' + next.name + '.', 'info');
+  saveEconomy();
+  refreshUI();
+}
+
+function showEconomyFriction(msg){
+  const o=document.getElementById('economy-friction');
+  const m=document.getElementById('eco-friction-msg');
+  if(m && msg) m.textContent=msg;
+  if(o) o.classList.add('show');
+}
+
+function hideEconomyFriction(){
+  const o=document.getElementById('economy-friction');
+  if(o) o.classList.remove('show');
 }
 
 function acceptAgeGate(){
@@ -2418,7 +2704,7 @@ function selectSlot(slot){
 function addChip(val){
   if(phase!=='betting') return;
   if(checkTrialBlock()) return;
-  if(balance<val){ setMsg('Not enough credits!'); return; }
+  if(balance<val){ setMsg('Not enough credits!'); showEconomyFriction('Not enough chips for that stake.'); return; }
   // House rule: cannot bet on both Banker AND Player simultaneously
   if(selSlot==='player' && bets.banker>0){
     setMsg('⚠️ You cannot bet on both Banker and Player. Clear your Banker bet first.');
@@ -3340,6 +3626,7 @@ function resolveHand(){
 
   const r=pendingHand;
   const b=r.betsSnapshot;
+  const handWager=Object.values(b).reduce((s,v)=>s+Number(v||0),0);
   let netChange=0;
   let msgs=[];
   dealerCall(r.winner==='P'?'player_wins':r.winner==='B'?'banker_wins':'tie', {}, {feed:true, caption:true});
@@ -3496,6 +3783,7 @@ function resolveHand(){
 
   // remember this bet for auto-play re-use
   lastBet = {...r.betsSnapshot};
+  addXp(Math.max(1, Math.floor(handWager/2)));
   document.getElementById('btn-clear').disabled=false;
   refreshUI();
   updateAllRoads();
@@ -3567,6 +3855,8 @@ function setMsg(t){ document.getElementById('msg-bar').className='msg-bar'; docu
 function refreshUI(){
   document.getElementById('bal-display').textContent=balance.toLocaleString();
   document.getElementById('hdr-balance').textContent='Credits: '+balance.toLocaleString();
+  const hp=document.getElementById('hdr-premium');
+  if(hp) hp.textContent='Gems: '+hardGems.toLocaleString()+' · LVL '+playerLevel+' '+playerTitle;
   document.getElementById('bet-display').textContent=totalBet().toLocaleString();
   document.getElementById('amt-banker').textContent=bets.banker.toLocaleString();
   document.getElementById('amt-player').textContent=bets.player.toLocaleString();
@@ -3576,6 +3866,18 @@ function refreshUI(){
   document.getElementById('amt-bigTiger').textContent=bets.bigTiger.toLocaleString();
   document.getElementById('amt-smallTiger').textContent=bets.smallTiger.toLocaleString();
   document.getElementById('amt-tigerTie').textContent=bets.tigerTie.toLocaleString();
+  const ec=document.getElementById('eco-chips'); if(ec) ec.textContent=balance.toLocaleString();
+  const eg=document.getElementById('eco-gems'); if(eg) eg.textContent=hardGems.toLocaleString();
+  const el=document.getElementById('eco-level'); if(el) el.textContent=String(playerLevel);
+  const et=document.getElementById('eco-title'); if(et) et.textContent=playerTitle;
+  const ex=document.getElementById('eco-xp'); if(ex) ex.textContent=playerXp.toLocaleString();
+  const ds=document.getElementById('eco-streak'); if(ds) ds.textContent='Daily Streak: '+dailyStreak;
+  const dailyBtn=document.getElementById('btn-daily-claim');
+  if(dailyBtn){
+    dailyBtn.disabled=!canClaimDaily();
+    dailyBtn.textContent=canClaimDaily()?'Claim Daily':'Daily Claimed';
+  }
+  saveEconomy();
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -3972,6 +4274,11 @@ let musicEnabled  = true;
 let masterVolume  = 0.8;
 
 // ── INIT ──────────────────────────────────────────────────────────
+loadEconomy();
+if(!VENUES.some(v=>v.id===currentVenue)) currentVenue='vegas';
+const currentVenueDef=VENUES.find(v=>v.id===currentVenue);
+if(currentVenueDef && balance<currentVenueDef.minChips) currentVenue='vegas';
+populateVenueOptions();
 buildShoe();
 setMode('ez');   // default to Panda & Dragon mode on load
 selectSlot('banker');
@@ -4479,7 +4786,7 @@ function startAutoPlay(){
       : {banker:5,player:0,tie:0,dragon7:0,panda8:0,bigTiger:0,smallTiger:0,tigerTie:0,natural9:0,natural8:0};
     // apply fallback bet
     const cost = Object.values(fallback).reduce((a,b)=>a+b,0);
-    if(balance < cost){ setMsg('Not enough credits for auto-play!'); return; }
+    if(balance < cost){ setMsg('Not enough credits for auto-play!'); showEconomyFriction('You need more chips for auto-play.'); return; }
     bets = {...fallback};
     balance -= cost;
     refreshUI();
