@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Download Baccarat Gladiator</title>
+  <meta name="description" content="Get Baccarat Gladiator on iPhone and Android."/>
+  <style>
+    :root{--bg:#081022;--card:#111c33;--text:#e8f0ff;--muted:#b6c7e9;--gold:#e3c27a;--line:rgba(255,255,255,.16)}
+    *{box-sizing:border-box}
+    body{margin:0;background:radial-gradient(80% 60% at 50% 0%,#16294d 0%,var(--bg) 60%);color:var(--text);font-family:Georgia,serif;min-height:100vh;display:grid;place-items:center;padding:16px}
+    .card{width:min(760px,96vw);background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 16px;box-shadow:0 20px 60px rgba(0,0,0,.45)}
+    h1{margin:0 0 8px;font-family:'Times New Roman',serif;color:var(--gold)}
+    p{margin:0 0 10px;color:var(--muted);line-height:1.6}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}
+    .btn{border:1px solid rgba(227,194,122,.45);background:rgba(227,194,122,.12);color:#f7e4bb;text-decoration:none;padding:10px 14px;border-radius:9px;font-weight:700;font-size:.95rem}
+    .btn.alt{border-color:rgba(160,198,255,.45);background:rgba(112,154,230,.16);color:#dceaff}
+    .small{font-size:.86rem;color:#99afd8}
+    code{background:rgba(0,0,0,.2);padding:2px 6px;border-radius:6px}
+  </style>
+</head>
+<body>
+  <main class="card">
+    <h1>Baccarat Gladiator</h1>
+    <p>Downloading your best version now...</p>
+    <div class="actions">
+      <a class="btn" id="ios-btn" href="#" rel="noopener">Download on App Store</a>
+      <a class="btn alt" id="android-btn" href="#" rel="noopener">Get it on Google Play</a>
+      <a class="btn alt" id="web-btn" href="/baccarat-scoreboard.html" rel="noopener">Open Web Version</a>
+    </div>
+    <p class="small">If auto-redirect doesn't start, tap a button above.</p>
+    <p class="small">Simulated gameplay only. Virtual credits only. No real-money gambling.</p>
+    <p class="small">Configure your real store URLs in this file:<br/><code>IOS_APP_URL</code> and <code>ANDROID_APP_URL</code>.</p>
+  </main>
+
+  <script>
+    const IOS_APP_URL = 'https://apps.apple.com/us/app/id1234567890';
+    const ANDROID_APP_URL = 'https://play.google.com/store/apps/details?id=app.baccaratgladiator';
+
+    const iosBtn = document.getElementById('ios-btn');
+    const androidBtn = document.getElementById('android-btn');
+    if (iosBtn) iosBtn.href = IOS_APP_URL;
+    if (androidBtn) androidBtn.href = ANDROID_APP_URL;
+
+    function isIOS(){
+      return /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+        (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    }
+    function isAndroid(){
+      return /Android/.test(navigator.userAgent);
+    }
+
+    const params = new URLSearchParams(window.location.search);
+    const force = (params.get('platform') || '').toLowerCase();
+
+    function go(url){
+      setTimeout(function(){ window.location.replace(url); }, 500);
+    }
+
+    if (force === 'ios') go(IOS_APP_URL);
+    else if (force === 'android') go(ANDROID_APP_URL);
+    else if (isIOS()) go(IOS_APP_URL);
+    else if (isAndroid()) go(ANDROID_APP_URL);
+  </script>
+</body>
+</html>
