@@ -151,8 +151,8 @@
   animation:splashFadeUp 0.6s ease 0.1s both;
 }
 .splash-card {
-  width:clamp(122px,20vw,178px);
-  height:clamp(186px,31vw,272px);
+  width:clamp(130px,22vw,190px);
+  height:clamp(182px,31vw,266px);
   position:relative; transform-style:preserve-3d;
   animation: cardFlipIn 1.1s cubic-bezier(0.34,1.4,0.64,1) 0.2s both,
              cardFloat 4s ease-in-out 1.8s infinite;
@@ -163,11 +163,10 @@
   backface-visibility:hidden;
 }
 .splash-card-back { transform:rotateY(180deg); }
-.splash-card-face { box-shadow:inset 0 0 0 1px rgba(88,50,12,0.25), inset 0 8px 18px rgba(255,248,230,0.3), inset 0 -10px 18px rgba(96,55,14,0.2); }
 /* Shine sweep on face after flip */
 .splash-card-face::after {
   content:''; position:absolute; inset:0; border-radius:inherit;
-  background:linear-gradient(120deg,transparent 34%,rgba(255,252,238,0.1) 52%,transparent 72%);
+  background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,0.18) 50%,transparent 70%);
   animation:cardShine 3s ease-in-out 1.4s infinite;
 }
 @keyframes cardFlipIn {
@@ -297,57 +296,60 @@ header h1 {
 }
 .header-sub { font-size:0.65rem; color:rgba(240,230,200,0.5); letter-spacing:2px; }
 
-/* ─── MODE BAR — COMPACT PILLS ─── */
+/* ─── MODE BAR ─── */
 .mode-bar {
   background:linear-gradient(180deg,#0a120a 0%,#060d06 100%);
   border-bottom:2px solid rgba(201,168,76,0.3);
-  display:flex; align-items:center; gap:6px; padding:5px 10px;
+  display:flex; align-items:stretch; gap:0;
+  overflow-x:auto; scrollbar-width:none;
 }
-.mode-pills { display:flex; gap:4px; flex:1; }
-.mode-pill {
-  font-family:'Cinzel',serif; font-size:0.68rem; font-weight:700;
-  letter-spacing:0.5px; border:1px solid rgba(201,168,76,0.22);
-  background:rgba(255,255,255,0.03); color:rgba(240,230,200,0.45);
-  padding:5px 0; border-radius:20px; cursor:pointer;
-  transition:all 0.2s; white-space:nowrap; flex:1; text-align:center;
+.mode-bar::-webkit-scrollbar{display:none;}
+.mode-tab {
+  font-family:'Cinzel',serif; letter-spacing:1px;
+  border:none; border-right:1px solid rgba(201,168,76,0.12);
+  background:transparent; color:rgba(240,230,200,0.45);
+  cursor:pointer; transition:all 0.22s; white-space:nowrap;
+  position:relative; display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  padding:10px 20px; gap:2px; min-width:130px;
 }
-.mode-pill:hover { color:var(--gold-lt); background:rgba(201,168,76,0.1); border-color:rgba(201,168,76,0.5); }
-.mode-pill.active { background:rgba(201,168,76,0.16); border-color:var(--gold); color:#fff; box-shadow:0 0 8px rgba(201,168,76,0.2); }
-.mode-pill.ez { border-color:rgba(184,134,11,0.25); color:rgba(240,210,100,0.45); }
-.mode-pill.ez:hover { color:#f0d070; background:rgba(184,134,11,0.1); }
-.mode-pill.ez.active { background:rgba(184,134,11,0.18); border-color:var(--ez-col); color:#f0d070; }
-.mode-pill.tiger { border-color:rgba(204,102,0,0.25); color:rgba(255,160,80,0.45); }
-.mode-pill.tiger:hover { color:#ffaa55; background:rgba(204,102,0,0.1); }
-.mode-pill.tiger.active { background:rgba(204,102,0,0.18); border-color:var(--tiger-col); color:#ffaa55; }
+.mode-tab .tab-num {
+  font-size:0.52rem; letter-spacing:3px; opacity:0.5;
+  color:inherit;
+}
+.mode-tab .tab-name {
+  font-size:0.78rem; letter-spacing:1.5px; font-weight:700;
+}
+.mode-tab .tab-sub {
+  font-size:0.46rem; letter-spacing:1px; opacity:0.5;
+}
+.mode-tab:hover {
+  color:var(--gold-lt); background:rgba(201,168,76,0.07);
+}
+.mode-tab:hover .tab-num,.mode-tab:hover .tab-sub { opacity:0.8; }
+.mode-tab.active {
+  color:#fff; background:rgba(201,168,76,0.13);
+}
+.mode-tab.active .tab-num,.mode-tab.active .tab-sub { opacity:0.75; }
+.mode-tab.active::after {
+  content:''; position:absolute; bottom:0; left:0; right:0;
+  height:3px; background:var(--gold);
+  border-radius:3px 3px 0 0;
+}
+.mode-tab.ez { color:rgba(240,210,100,0.45); }
+.mode-tab.ez:hover { color:#f0d070; background:rgba(184,134,11,0.08); }
+.mode-tab.ez.active { color:#f0d070; background:rgba(184,134,11,0.12); }
+.mode-tab.ez.active::after { background:var(--ez-col); }
+.mode-tab.tiger { color:rgba(255,160,80,0.45); }
+.mode-tab.tiger:hover { color:#ffaa55; background:rgba(204,102,0,0.08); }
+.mode-tab.tiger.active { color:#ffaa55; background:rgba(204,102,0,0.12); }
+.mode-tab.tiger.active::after { background:var(--tiger-col); }
 .mode-info-btn {
-  padding:5px 9px; font-size:0.6rem;
-  color:rgba(240,230,200,0.35); cursor:pointer; white-space:nowrap;
-  border:1px solid rgba(201,168,76,0.18); background:transparent;
-  font-family:'Cinzel',serif; border-radius:10px;
+  margin-left:auto; padding:8px 14px; font-size:0.6rem;
+  color:rgba(240,230,200,0.35); cursor:pointer; align-self:center;
+  white-space:nowrap; border:none; background:transparent; font-family:'Cinzel',serif;
 }
-.mode-info-btn:hover { color:var(--gold); border-color:rgba(201,168,76,0.4); }
-
-/* ─── AUDIO CONTROLS ─── */
-.audio-ctl { display:flex; align-items:center; gap:5px; }
-.audio-btn {
-  background:none; border:1px solid rgba(201,168,76,0.35); border-radius:5px;
-  color:var(--gold); font-size:0.82rem; padding:3px 6px;
-  cursor:pointer; line-height:1; transition:background 0.15s;
-}
-.audio-btn:hover { background:rgba(201,168,76,0.12); }
-.audio-btn.muted { opacity:0.38; border-color:rgba(201,168,76,0.18); }
-.vol-slider {
-  -webkit-appearance:none; appearance:none;
-  width:58px; height:4px; border-radius:2px;
-  background:rgba(201,168,76,0.25); outline:none; cursor:pointer;
-}
-.vol-slider::-webkit-slider-thumb {
-  -webkit-appearance:none; width:14px; height:14px;
-  border-radius:50%; background:var(--gold); cursor:pointer;
-}
-.vol-slider::-moz-range-thumb {
-  width:14px; height:14px; border-radius:50%; background:var(--gold); border:none;
-}
+.mode-info-btn:hover { color:var(--gold); }
 
 /* ─── MODE RULES ─── */
 .mode-rules {
@@ -728,6 +730,37 @@ header h1 {
   color:rgba(200,175,110,0.75); text-align:right;
 }
 
+/* ─── TALON ─── */
+.talon-wrap {
+  grid-column:1/-1;
+  border:1px solid rgba(120,80,200,0.3);
+  border-radius:6px; padding:6px 8px;
+  background:rgba(60,30,100,0.15);
+}
+.talon-top { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:5px; }
+.talon-title { font-family:'Cinzel',serif; font-size:0.58rem; letter-spacing:2px; color:#b090e0; }
+.talon-hint  { font-size:0.52rem; color:rgba(240,230,200,0.35); flex:1; }
+.talon-options { display:flex; gap:4px; flex-wrap:wrap; }
+.talon-opt {
+  font-size:0.58rem; font-family:'Cinzel',serif;
+  padding:4px 8px; border-radius:4px;
+  border:1px solid rgba(180,130,255,0.3);
+  background:transparent; color:rgba(240,230,200,0.5);
+  cursor:pointer; transition:all 0.2s; white-space:nowrap;
+}
+.talon-opt:hover { border-color:#b090e0; color:#fff; }
+.talon-opt.selected { border-color:#b090e0; background:rgba(180,130,255,0.18); color:#e0c8ff; }
+.talon-bet-row { display:flex; align-items:center; gap:8px; margin-top:5px; }
+.talon-bet-slot {
+  flex:1; border:1px dashed rgba(180,130,255,0.3);
+  border-radius:5px; padding:4px 8px; text-align:center;
+  cursor:pointer; transition:all 0.2s;
+}
+.talon-bet-slot:hover { border-color:#b090e0; }
+.talon-bet-slot.active { border-color:#b090e0; border-style:solid; background:rgba(180,130,255,0.08); }
+.talon-bet-slot .sname { font-size:0.56rem; color:#b090e0; letter-spacing:1px; }
+.talon-bet-slot .samt  { font-family:'Cinzel',serif; font-size:0.9rem; }
+#talon-result-note { font-size:0.58rem; color:#b090e0; font-style:italic; }
 
 /* ─── CHIPS ─── */
 .chips-btns {
@@ -929,134 +962,11 @@ header h1 {
 .badge-push { background:#225522; color:var(--gold); border:1px solid var(--gold); }
 .badge-tie  { background:#114411; color:var(--gold); border:1px solid var(--gold); }
 
-/* ═══════════════════════════════════════════
-   MOBILE — ≤ 600px
-═══════════════════════════════════════════ */
 @media (max-width:600px) {
-
-  /* Game section spacing */
-  .game-section { padding:5px 7px; gap:4px; }
-
-  /* Hands area */
-  .hands-area { gap:4px; }
-  .hand-box   { padding:5px 6px; min-height:75px; }
-  .hand-box h4{ font-size:0.55rem; margin-bottom:3px; }
-  .cards-row  { gap:3px; min-height:36px; }
-  .hand-val   { font-size:1rem; }
-  .vs-box     { font-size:0.65rem; padding-top:5px; }
-
-  /* Smaller cards on phones */
-  .card-container { width:66px; height:96px; }
-  .cc-tl { top:3px; left:4px; }
-  .cc-br  { bottom:3px; right:4px; }
-  .cc-rk  { font-size:0.85rem; }
-  .cc-rk10{ font-size:0.68rem; }
-  .cc-si  { font-size:0.64rem; }
-  .cc-ace { font-size:2.6rem; }
-  .cc-num { font-size:1.9rem; }
-  .cc-face{ font-size:2.3rem; }
-  .cc-face-lbl { font-size:0.42rem; bottom:14px; }
-  .cc-strip-l { left:10px; }
-  .cc-strip-r { right:10px; }
-  .cc-strip-l,.cc-strip-r { top:14px; bottom:14px; width:4px; }
-
-  /* Bet slots — keep 3-col layout, just tighten */
-  .bet-slot .sname { font-size:0.55rem; }
-  .bet-slot .sodds { font-size:0.46rem; }
-  .bet-slot .samt  { font-size:0.95rem; }
-  .bet-slot        { padding:4px 4px; }
-
-  /* Side bets */
-  .side-bets-row .bet-slot { min-width:70px; }
-
-  /* Chips — tighter on mobile */
-  .chip { width:48px; height:48px; font-size:0.72rem; border-width:2px; }
-  .chips-btns { gap:5px; }
-
-  /* Action buttons */
-  .btn  { font-size:0.65rem; padding:7px 12px; }
-  .bal-info { font-size:0.7rem; padding:5px 10px; gap:8px; }
-  .bal-info span { font-size:1rem; }
-  .msg-bar { font-size:0.72rem; }
-
-  /* Third card zone */
-  .third-card-zone.visible { grid-template-columns:1fr 1fr; }
-
-  /* Roads */
-  .roads-row1 { grid-template-columns:1fr 1fr; }
-  .roads-row2 { grid-template-columns:1fr 1fr; }
-
-  /* Mode rules */
-  .mode-rules .rules-grid { grid-template-columns:1fr; }
-  .mode-tab { padding:8px 12px; min-width:110px; }
-  .mode-tab .tab-name { font-size:0.7rem; }
-  .mode-tab .tab-sub  { font-size:0.42rem; }
-
-  /* Stats bar */
-  .stats-bar { gap:8px; }
-  .stat-item .sv { font-size:0.82rem; }
-
-  /* Feed panel */
-  .feed-scroll { height:72px; }
-
-  /* AI panel */
-  .ai-panel-body { gap:8px; padding:5px 8px; flex-wrap:wrap; }
-  .ai-streak-info { margin-left:0; }
-
-  /* Waitress — full-width bottom sheet on mobile */
-  #waitress-overlay {
-    padding:0 0 0 0;
-    align-items:flex-end;
-    justify-content:center;
-  }
-  .waitress-card {
-    min-width:unset; width:100%; max-width:100%;
-    border-radius:16px 16px 0 0;
-    border-bottom:none;
-  }
-  .waitress-tail { display:none; }
-  .waitress-drinks { grid-template-columns:repeat(3,1fr); }
-}
-
-/* ═══════════════════════════════════════════
-   SMALL PHONES — ≤ 400px
-═══════════════════════════════════════════ */
-@media (max-width:400px) {
-
-  /* Even smaller cards */
-  .card-container { width:56px; height:82px; }
-  .cc-tl { top:2px; left:3px; }
-  .cc-br  { bottom:2px; right:3px; }
-  .cc-rk  { font-size:0.72rem; }
-  .cc-rk10{ font-size:0.58rem; }
-  .cc-si  { font-size:0.56rem; }
-  .cc-ace { font-size:2.1rem; }
-  .cc-num { font-size:1.55rem; }
-  .cc-face{ font-size:1.95rem; }
-  .cc-face-lbl { font-size:0.36rem; bottom:11px; }
-  .cc-strip-l { left:8px; }
-  .cc-strip-r { right:8px; }
-  .cc-strip-l,.cc-strip-r { top:12px; bottom:12px; }
-
-  /* Tighter chips */
-  .chip { width:43px; height:43px; font-size:0.65rem; }
-
-  /* Tighter mode tabs */
-  .mode-tab { padding:7px 9px; min-width:95px; }
-  .mode-tab .tab-name { font-size:0.62rem; }
-
-  /* Roads stack on smallest screens */
   .roads-row1 { grid-template-columns:1fr; }
   .roads-row2 { grid-template-columns:1fr 1fr; }
-
-  /* Header */
-  .header-sub { display:none; }
-
-  /* Waitress drinks — 2 cols on tiny screens */
-  .waitress-drinks { grid-template-columns:1fr 1fr; }
-
-  /* Bet amounts bigger tap targets */
-  .bet-slot { padding:6px 4px; }
+  .bet-section { grid-template-columns:1fr; }
+  .third-card-zone.visible { grid-template-columns:1fr; }
 }
 </style>
 </head>
@@ -1327,29 +1237,223 @@ header h1 {
         <div class="splash-card-face">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 190 266" width="100%" height="100%">
             <defs>
-              <clipPath id="faceClip">
-                <rect x="2" y="2" width="186" height="262" rx="10"/>
-              </clipPath>
-              <linearGradient id="edgeShade" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="rgba(20,8,4,0.14)"/>
-                <stop offset="100%" stop-color="rgba(20,8,4,0.24)"/>
+              <!-- Warm ivory/parchment card background -->
+              <radialGradient id="cf" cx="45%" cy="35%" r="75%">
+                <stop offset="0%"   stop-color="#fefaf2"/>
+                <stop offset="60%"  stop-color="#f8f0e0"/>
+                <stop offset="100%" stop-color="#f0e4cc"/>
+              </radialGradient>
+              <!-- Gold helmet body -->
+              <linearGradient id="hg" x1="0.2" y1="0" x2="0.8" y2="1">
+                <stop offset="0%"   stop-color="#f0d060"/>
+                <stop offset="25%"  stop-color="#d4a820"/>
+                <stop offset="60%"  stop-color="#b88810"/>
+                <stop offset="100%" stop-color="#7a5506"/>
+              </linearGradient>
+              <!-- Helmet highlight -->
+              <linearGradient id="hh" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%"  stop-color="rgba(255,248,180,0.7)"/>
+                <stop offset="100%" stop-color="rgba(255,248,180,0)"/>
+              </linearGradient>
+              <!-- Cheek/neck shadow -->
+              <linearGradient id="hs" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%"   stop-color="#c49010"/>
+                <stop offset="100%" stop-color="#6b4406"/>
+              </linearGradient>
+              <!-- Plume red -->
+              <linearGradient id="pr" x1="0" y1="0" x2="0.3" y2="1">
+                <stop offset="0%"   stop-color="#ff5555"/>
+                <stop offset="40%"  stop-color="#cc1111"/>
+                <stop offset="100%" stop-color="#880606"/>
+              </linearGradient>
+              <!-- Laurel leaf -->
+              <linearGradient id="ll" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%"  stop-color="#5a8a20"/>
+                <stop offset="100%" stop-color="#3a5c10"/>
               </linearGradient>
             </defs>
 
-            <!-- Use the actual source image for true color/lighting -->
-            <image
-              href="Gemini_Generated_Image_g3mnibg3mnibg3mn_PhotoGrid.png"
-              x="-165" y="0" width="520" height="266"
-              preserveAspectRatio="xMidYMid slice"
-              clip-path="url(#faceClip)"
-            />
-            <!-- Gentle edge darkening so the crop sits naturally inside card bounds -->
-            <rect x="2" y="2" width="186" height="262" rx="10" fill="url(#edgeShade)" opacity="0.23"/>
+            <!-- Card base -->
+            <rect width="190" height="266" rx="11" fill="url(#cf)"/>
 
-            <!-- Thin frame overlay to keep premium card feel -->
-            <rect x="2.5" y="2.5" width="185" height="261" rx="10.5" fill="none" stroke="rgba(76,41,24,0.6)" stroke-width="2.5"/>
-            <rect x="6.5" y="6.5" width="177" height="253" rx="8.5" fill="none" stroke="rgba(170,142,97,0.75)" stroke-width="1.35"/>
-            <rect x="10.5" y="10.5" width="169" height="245" rx="6.8" fill="none" stroke="rgba(86,55,30,0.5)" stroke-width="0.8"/>
+            <!-- ── BORDER SYSTEM (3 layers matching the image) ── -->
+            <!-- Outermost dark red border -->
+            <rect x="3"  y="3"  width="184" height="260" rx="10" fill="none" stroke="#7a1010" stroke-width="3.5"/>
+            <!-- Gold mid border -->
+            <rect x="7"  y="7"  width="176" height="252" rx="8"  fill="none" stroke="#c9a84c" stroke-width="1.8"/>
+            <!-- Inner dark red hairline -->
+            <rect x="10" y="10" width="170" height="246" rx="6"  fill="none" stroke="#7a1010" stroke-width="0.7"/>
+
+            <!-- ── ORNATE CORNER SCROLLWORK ── -->
+            <!-- Top-left corner scroll -->
+            <path d="M 10 38 Q 10 12 36 12" fill="none" stroke="#c9a84c" stroke-width="1.5"/>
+            <path d="M 10 44 Q 12 18 38 14" fill="none" stroke="#7a1010" stroke-width="0.8"/>
+            <circle cx="13" cy="40" r="3" fill="#c9a84c"/>
+            <!-- Top-right -->
+            <path d="M 180 38 Q 180 12 154 12" fill="none" stroke="#c9a84c" stroke-width="1.5"/>
+            <path d="M 180 44 Q 178 18 152 14" fill="none" stroke="#7a1010" stroke-width="0.8"/>
+            <circle cx="177" cy="40" r="3" fill="#c9a84c"/>
+            <!-- Bottom-left -->
+            <path d="M 10 228 Q 10 254 36 254" fill="none" stroke="#c9a84c" stroke-width="1.5"/>
+            <circle cx="13" cy="226" r="3" fill="#c9a84c"/>
+            <!-- Bottom-right -->
+            <path d="M 180 228 Q 180 254 154 254" fill="none" stroke="#c9a84c" stroke-width="1.5"/>
+            <circle cx="177" cy="226" r="3" fill="#c9a84c"/>
+
+            <!-- ── LION HEAD MEDALLIONS (sides) ── -->
+            <!-- Left lion -->
+            <circle cx="9" cy="133" r="9" fill="#c9a84c"/>
+            <circle cx="9" cy="133" r="6" fill="#a07828"/>
+            <text x="9" y="137" font-family="serif" font-size="9" fill="#7a1010" text-anchor="middle">♦</text>
+            <!-- Right lion -->
+            <circle cx="181" cy="133" r="9" fill="#c9a84c"/>
+            <circle cx="181" cy="133" r="6" fill="#a07828"/>
+            <text x="181" y="137" font-family="serif" font-size="9" fill="#7a1010" text-anchor="middle">♦</text>
+
+            <!-- ── EAGLE TOP CENTER ── -->
+            <path d="M 82 10 Q 95 6 108 10 Q 101 16 95 13 Q 89 16 82 10 Z" fill="#c9a84c"/>
+            <text x="95" y="14" font-family="serif" font-size="7" fill="#7a1010" text-anchor="middle">✦</text>
+
+            <!-- ── CORNER INDICES ── -->
+            <!-- Top-left: B ♠ -->
+            <text x="17" y="27"  font-family="'Georgia',serif" font-size="15" font-weight="bold" fill="#8b1010" letter-spacing="-0.5">B</text>
+            <text x="18" y="40"  font-family="serif" font-size="13" fill="#111">♠</text>
+            <!-- Bottom-right: G ♠ (rotated 180) -->
+            <g transform="rotate(180,95,133)">
+              <text x="17" y="27"  font-family="'Georgia',serif" font-size="15" font-weight="bold" fill="#8b1010">G</text>
+              <text x="18" y="40"  font-family="serif" font-size="13" fill="#111">♠</text>
+            </g>
+
+            <!-- ── BACCARAT TITLE ── -->
+            <!-- Decorative rule above -->
+            <line x1="28" y1="52" x2="162" y2="52" stroke="#c9a84c" stroke-width="0.8"/>
+            <line x1="32" y1="55" x2="158" y2="55" stroke="#7a1010" stroke-width="0.4"/>
+            <!-- Title text -->
+            <text x="95" y="68" font-family="'Georgia',serif" font-size="14" font-weight="bold"
+                  fill="#8b1010" text-anchor="middle" letter-spacing="3">BACCARAT</text>
+            <!-- Decorative rule below -->
+            <line x1="28" y1="73" x2="162" y2="73" stroke="#7a1010" stroke-width="0.4"/>
+            <line x1="32" y1="76" x2="158" y2="76" stroke="#c9a84c" stroke-width="0.8"/>
+            <!-- Ornamental center diamond -->
+            <path d="M 91 74 L 95 70 L 99 74 L 95 78 Z" fill="#c9a84c"/>
+
+            <!-- ── FAINT COLOSSEUM SILHOUETTE (behind helmet) ── -->
+            <!-- Colosseum body -->
+            <path d="M 28 182 L 28 165 Q 28 152 48 152 L 48 145 Q 55 138 65 142 L 65 137 Q 95 130 125 137 L 125 142 Q 135 138 142 145 L 142 152 Q 162 152 162 165 L 162 182 Z"
+                  fill="rgba(139,60,20,0.06)"/>
+            <!-- Colosseum tier 2 -->
+            <path d="M 38 182 L 38 162 Q 38 155 55 155 L 55 148 Q 62 144 70 147 L 70 142 Q 95 135 120 142 L 120 147 Q 128 144 135 148 L 135 155 Q 152 155 152 162 L 152 182"
+                  fill="none" stroke="rgba(139,60,20,0.05)" stroke-width="1.5"/>
+            <!-- Colosseum arches row 1 -->
+            <path d="M 35 182 L 35 170 Q 37 165 40 170 L 40 182" fill="rgba(139,60,20,0.05)"/>
+            <path d="M 45 182 L 45 168 Q 48 163 51 168 L 51 182" fill="rgba(139,60,20,0.05)"/>
+            <path d="M 56 182 L 56 167 Q 59 162 62 167 L 62 182" fill="rgba(139,60,20,0.05)"/>
+            <path d="M 128 182 L 128 167 Q 131 162 134 167 L 134 182" fill="rgba(139,60,20,0.05)"/>
+            <path d="M 139 182 L 139 168 Q 142 163 145 168 L 145 182" fill="rgba(139,60,20,0.05)"/>
+            <path d="M 150 182 L 150 170 Q 153 165 156 170 L 156 182" fill="rgba(139,60,20,0.05)"/>
+
+            <!-- ── GLADIATOR HELMET (detailed Corinthian style) ── -->
+            <!-- Plume mounting ridge on skull -->
+            <ellipse cx="95" cy="86" rx="8" ry="5" fill="#8b1010"/>
+            <ellipse cx="95" cy="86" rx="6" ry="3.5" fill="#aa1515"/>
+
+            <!-- Red feathered plume — wide fan shape like in the image -->
+            <!-- Main plume body -->
+            <path d="M 78 86 Q 74 72 76 60 Q 80 48 88 44 Q 92 42 95 44 Q 98 42 102 44 Q 110 48 114 60 Q 116 72 112 86 Z"
+                  fill="url(#pr)"/>
+            <!-- Plume feather texture lines -->
+            <path d="M 87 84 Q 84 72 86 60 Q 88 50 92 46" fill="none" stroke="rgba(180,40,40,0.5)" stroke-width="0.7"/>
+            <path d="M 91 85 Q 89 73 90 61 Q 92 50 95 46" fill="none" stroke="rgba(220,80,80,0.4)" stroke-width="0.7"/>
+            <path d="M 95 86 Q 95 74 95 62 Q 95 51 95 47" fill="none" stroke="rgba(255,120,100,0.3)" stroke-width="0.8"/>
+            <path d="M 99 85 Q 101 73 100 61 Q 98 50 95 46" fill="none" stroke="rgba(220,80,80,0.4)" stroke-width="0.7"/>
+            <path d="M 103 84 Q 106 72 104 60 Q 102 50 98 46" fill="none" stroke="rgba(180,40,40,0.5)" stroke-width="0.7"/>
+            <!-- Plume highlight -->
+            <path d="M 86 80 Q 83 68 85 56" fill="none" stroke="rgba(255,180,160,0.45)" stroke-width="1.5"/>
+
+            <!-- Helmet main skull (dome) -->
+            <path d="M 58 125 Q 57 100 63 90 Q 70 78 95 77 Q 120 78 127 90 Q 133 100 132 125 Q 130 135 120 140 Q 108 145 95 146 Q 82 145 70 140 Q 60 135 58 125 Z"
+                  fill="url(#hg)"/>
+            <!-- Highlight on dome -->
+            <path d="M 70 88 Q 66 100 67 115" fill="none" stroke="url(#hh)" stroke-width="3"/>
+            <path d="M 80 80 Q 76 92 76 108" fill="none" stroke="rgba(255,248,180,0.45)" stroke-width="2"/>
+            <path d="M 88 78 Q 85 90 85 105" fill="none" stroke="rgba(255,248,180,0.3)" stroke-width="1.5"/>
+            <!-- Helmet center ridge (sagittal) -->
+            <path d="M 95 77 L 95 86" stroke="rgba(255,240,160,0.5)" stroke-width="2.5"/>
+
+            <!-- ── FACE OPENING — dark interior ── -->
+            <path d="M 70 102 Q 70 92 78 88 L 95 87 L 112 88 Q 120 92 120 102 L 119 122 Q 117 135 95 136 Q 73 135 71 122 Z"
+                  fill="#120d06"/>
+            <!-- Shadow inside face -->
+            <path d="M 74 104 Q 74 94 80 91 L 95 90 L 110 91 Q 116 94 116 104 L 115 120 Q 113 130 95 131 Q 77 130 75 120 Z"
+                  fill="#1a1206"/>
+
+            <!-- ── NASAL BAR + BROW BAR (T-bar visor) ── -->
+            <!-- Brow bar (horizontal) -->
+            <rect x="68" y="101" width="54" height="6" rx="3" fill="url(#hg)"/>
+            <rect x="68" y="101" width="54" height="2" rx="1" fill="rgba(255,248,180,0.4)"/>
+            <!-- Nasal bar (vertical) -->
+            <rect x="92" y="107" width="6" height="26" rx="3" fill="url(#hg)"/>
+            <line x1="95" y1="108" x2="95" y2="132" stroke="rgba(255,248,180,0.3)" stroke-width="1"/>
+            <!-- Eye slit left -->
+            <rect x="71" y="104" width="18" height="3" rx="1.5" fill="#0a0806"/>
+            <!-- Eye slit right -->
+            <rect x="101" y="104" width="18" height="3" rx="1.5" fill="#0a0806"/>
+
+            <!-- ── CHEEK GUARDS ── -->
+            <path d="M 58 125 L 54 148 Q 53 158 60 162 L 70 163 Q 63 152 64 135 Z" fill="url(#hs)"/>
+            <path d="M 132 125 L 136 148 Q 137 158 130 162 L 120 163 Q 127 152 126 135 Z" fill="url(#hs)"/>
+            <!-- Cheek rivets -->
+            <circle cx="61" cy="132" r="2" fill="rgba(201,168,76,0.7)"/>
+            <circle cx="61" cy="142" r="2" fill="rgba(201,168,76,0.7)"/>
+            <circle cx="129" cy="132" r="2" fill="rgba(201,168,76,0.7)"/>
+            <circle cx="129" cy="142" r="2" fill="rgba(201,168,76,0.7)"/>
+
+            <!-- ── NECK GUARD (nape) ── -->
+            <path d="M 68 163 Q 68 173 78 176 L 95 178 L 112 176 Q 122 173 122 163 L 112 162 Q 95 165 78 162 Z"
+                  fill="url(#hs)"/>
+            <!-- Nape scale lines -->
+            <line x1="75" y1="164" x2="115" y2="164" stroke="rgba(201,168,76,0.4)" stroke-width="0.7"/>
+            <line x1="72" y1="169" x2="118" y2="169" stroke="rgba(201,168,76,0.35)" stroke-width="0.7"/>
+
+            <!-- ── LAUREL WREATH (encircling helmet base) ── -->
+            <!-- Left branch -->
+            <path d="M 48 155 Q 42 148 46 138 Q 50 130 56 126" fill="none" stroke="url(#ll)" stroke-width="1.8"/>
+            <ellipse cx="47" cy="148" rx="7" ry="4" fill="url(#ll)" transform="rotate(-30,47,148)"/>
+            <ellipse cx="50" cy="138" rx="7" ry="4" fill="url(#ll)" transform="rotate(-20,50,138)"/>
+            <ellipse cx="55" cy="130" rx="6" ry="3.5" fill="url(#ll)" transform="rotate(-10,55,130)"/>
+            <!-- Right branch -->
+            <path d="M 142 155 Q 148 148 144 138 Q 140 130 134 126" fill="none" stroke="url(#ll)" stroke-width="1.8"/>
+            <ellipse cx="143" cy="148" rx="7" ry="4" fill="url(#ll)" transform="rotate(30,143,148)"/>
+            <ellipse cx="140" cy="138" rx="7" ry="4" fill="url(#ll)" transform="rotate(20,140,138)"/>
+            <ellipse cx="135" cy="130" rx="6" ry="3.5" fill="url(#ll)" transform="rotate(10,135,130)"/>
+            <!-- Wreath knot at bottom -->
+            <circle cx="95" cy="178" r="4" fill="#c9a84c"/>
+            <circle cx="95" cy="178" r="2.5" fill="#8b6810"/>
+
+            <!-- ── GLADIATOR TEXT ── -->
+            <!-- Rule above -->
+            <line x1="28" y1="190" x2="162" y2="190" stroke="#c9a84c" stroke-width="0.8"/>
+            <line x1="32" y1="193" x2="158" y2="193" stroke="#7a1010" stroke-width="0.4"/>
+            <path d="M 91 191 L 95 187 L 99 191 L 95 195 Z" fill="#c9a84c"/>
+            <!-- Text -->
+            <text x="95" y="206" font-family="'Georgia',serif" font-size="14" font-weight="bold"
+                  fill="#1a1a1a" text-anchor="middle" letter-spacing="3">GLADIATOR</text>
+            <!-- Rule below -->
+            <line x1="28" y1="211" x2="162" y2="211" stroke="#7a1010" stroke-width="0.4"/>
+            <line x1="32" y1="214" x2="158" y2="214" stroke="#c9a84c" stroke-width="0.8"/>
+
+            <!-- ── BOTTOM SHIELD / CREST ── -->
+            <!-- Shield shape -->
+            <path d="M 82 222 L 108 222 L 108 234 Q 108 242 95 248 Q 82 242 82 234 Z"
+                  fill="#8b1010" stroke="#c9a84c" stroke-width="1"/>
+            <!-- Crossed swords on shield -->
+            <line x1="87" y1="226" x2="103" y2="242" stroke="#c9a84c" stroke-width="1.2"/>
+            <line x1="103" y1="226" x2="87" y2="242" stroke="#c9a84c" stroke-width="1.2"/>
+            <!-- Shield boss -->
+            <circle cx="95" cy="234" r="3.5" fill="#c9a84c"/>
+
+            <!-- ── SPQR FOOTNOTE ── -->
+            <text x="95" y="260" font-family="'Georgia',serif" font-size="7" fill="rgba(122,16,16,0.5)" text-anchor="middle" letter-spacing="3">✦ SPQR ✦</text>
           </svg>
         </div>
 
@@ -1373,13 +1477,10 @@ header h1 {
     <h1>♠ BACCARAT GLADIATOR ♠</h1>
     <div class="header-sub" id="mode-subtitle">STANDARD · 5% COMMISSION · ALL 5 ROADS</div>
   </div>
-  <div style="text-align:right;display:flex;align-items:center;gap:8px;">
-    <div class="audio-ctl">
-      <button id="btn-sound"  onclick="toggleSFX()"   title="Toggle SFX" class="audio-btn">🔊</button>
-      <button id="btn-music"  onclick="toggleMusic()"  title="Toggle Music" class="audio-btn">🎵</button>
-      <input  id="vol-slider" type="range" min="0" max="1" step="0.05" value="0.8"
-              oninput="setMasterVolume(this.value)" class="vol-slider" title="Master Volume">
-    </div>
+  <div style="text-align:right;display:flex;align-items:center;gap:10px;">
+    <button id="btn-sound" onclick="toggleSound()" title="Toggle sound"
+      style="background:none;border:1px solid rgba(201,168,76,0.35);border-radius:5px;
+             color:var(--gold);font-size:0.85rem;padding:3px 7px;cursor:pointer;line-height:1;">🔊</button>
     <div>
       <div style="font-family:'Cinzel',serif;color:var(--gold);font-size:0.85rem;font-weight:700;" id="hdr-balance">Balance: $1,000</div>
       <div style="font-size:0.58rem;color:rgba(240,230,200,0.4);" id="hdr-rounds">Round 0</div>
@@ -1414,13 +1515,23 @@ header h1 {
   </div>
 </div>
 
-<!-- ═══════ MODE BAR — COMPACT ═══════ -->
+<!-- ═══════ MODE BAR ═══════ -->
 <div class="mode-bar">
-  <div class="mode-pills">
-    <button class="mode-pill" id="tab-standard" onclick="setMode('standard')">♠ Std</button>
-    <button class="mode-pill ez active" id="tab-ez" onclick="setMode('ez')">🐉🐼 EZ</button>
-    <button class="mode-pill tiger" id="tab-tiger" onclick="setMode('tiger')">🐯 Tiger</button>
-  </div>
+  <button class="mode-tab active" id="tab-standard" onclick="setMode('standard')">
+    <span class="tab-num">① SELECT MODE</span>
+    <span class="tab-name">♠ Standard</span>
+    <span class="tab-sub">5% commission</span>
+  </button>
+  <button class="mode-tab ez" id="tab-ez" onclick="setMode('ez')">
+    <span class="tab-num">②</span>
+    <span class="tab-name">🐉🐼 Panda &amp; Dragon</span>
+    <span class="tab-sub">No commission · Dragon 7 · Panda 8</span>
+  </button>
+  <button class="mode-tab tiger" id="tab-tiger" onclick="setMode('tiger')">
+    <span class="tab-num">③</span>
+    <span class="tab-name">🐯 Tiger Baccarat</span>
+    <span class="tab-sub">No commission · Small/Big Tiger</span>
+  </button>
   <button class="mode-info-btn" onclick="toggleRules()">Rules ▾</button>
 </div>
 <div class="mode-rules" id="mode-rules-panel"></div>
@@ -1531,6 +1642,27 @@ header h1 {
         <div class="samt" id="amt-tigerTie">$0</div>
       </div>
     </div>
+  </div>
+
+  <!-- GOLDEN TALON SIDE BETS -->
+  <div class="talon-wrap">
+    <div class="talon-top">
+      <span class="talon-title">⚔️ GOLDEN TALON</span>
+      <span class="talon-hint">— Exclusive Gladiator side bets · All modes</span>
+    </div>
+    <div class="talon-bet-row" style="gap:5px;">
+      <div class="talon-bet-slot" id="slot-natural9" onclick="selectSlot('natural9')">
+        <div class="sname" style="color:#ffd700;letter-spacing:1px;">Natural 9 · 9:1</div>
+        <div style="font-size:0.46rem;color:rgba(240,230,200,0.35);margin:1px 0;">Winner's 2-card total = 9</div>
+        <div class="samt" id="amt-natural9">$0</div>
+      </div>
+      <div class="talon-bet-slot" id="slot-natural8" onclick="selectSlot('natural8')">
+        <div class="sname" style="color:#ffcc44;letter-spacing:1px;">Natural 8 · 6:1</div>
+        <div style="font-size:0.46rem;color:rgba(240,230,200,0.35);margin:1px 0;">Winner's 2-card total = 8</div>
+        <div class="samt" id="amt-natural8">$0</div>
+      </div>
+    </div>
+    <span id="talon-result-note" style="font-size:0.58rem;color:#c9a84c;font-style:italic;display:block;margin-top:4px;min-height:1em;"></span>
   </div>
 
   <!-- AI PLAYER PANEL -->
@@ -1682,6 +1814,8 @@ const MODE_RULES={
       <div class="rule-item"><div class="payout">0.95:1</div>Banker win (5% commission)</div>
       <div class="rule-item"><div class="payout">1:1</div>Player win</div>
       <div class="rule-item"><div class="payout">8:1</div>Tie</div>
+      <div class="rule-item"><div class="payout">9:1</div>⚔️ Golden Talon — Natural 9 (winning 2-card 9)</div>
+      <div class="rule-item"><div class="payout">6:1</div>⚔️ Golden Talon — Natural 8 (winning 2-card 8)</div>
     </div>`
   },
   ez:{
@@ -1692,6 +1826,8 @@ const MODE_RULES={
       <div class="rule-item"><div class="payout">PUSH</div>Banker wins on 3-card 7 (Dragon 7 triggers)</div>
       <div class="rule-item"><div class="payout">40:1</div>🐉 Dragon 7 — Banker 3-card total of 7</div>
       <div class="rule-item"><div class="payout">25:1</div>🐼 Panda 8 — Player 3-card total of 8</div>
+      <div class="rule-item"><div class="payout">9:1</div>⚔️ Golden Talon — Natural 9</div>
+      <div class="rule-item"><div class="payout">6:1</div>⚔️ Golden Talon — Natural 8</div>
     </div>`
   },
   tiger:{
@@ -1703,14 +1839,17 @@ const MODE_RULES={
       <div class="rule-item"><div class="payout">22:1</div>🐯 Small Tiger — Banker 2-card 6</div>
       <div class="rule-item"><div class="payout">50:1</div>🐯 Big Tiger — Banker 3-card 6</div>
       <div class="rule-item"><div class="payout">35:1</div>🐯 Tiger Tie — Both P &amp; B total 6</div>
+      <div class="rule-item"><div class="payout">9:1</div>⚔️ Golden Talon — Natural 9</div>
+      <div class="rule-item"><div class="payout">6:1</div>⚔️ Golden Talon — Natural 8</div>
     </div>`
   }
 };
 
 // ── GAME STATE ──────────────────────────────────────────────────
-let gameMode='ez';
+let gameMode='standard';
 let balance=1000;
-let bets={banker:0,player:0,tie:0,dragon7:0,panda8:0,bigTiger:0,smallTiger:0,tigerTie:0};
+let bets={banker:0,player:0,tie:0,dragon7:0,panda8:0,bigTiger:0,smallTiger:0,tigerTie:0,natural9:0,natural8:0};
+// Golden Talon side bets replace Pair bets
 let selSlot='banker';
 let natWins=0;  // count of natural (2-card 8/9) wins this shoe
 let phase='betting';   // 'betting' | 'revealing' | 'dealt'
@@ -1792,7 +1931,7 @@ function showRules(){ document.getElementById('mode-rules-panel').innerHTML=MODE
 // ── BETTING ──────────────────────────────────────────────────────
 function selectSlot(slot){
   selSlot=slot;
-  document.querySelectorAll('.bet-slot').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.bet-slot,.talon-bet-slot').forEach(el=>el.classList.remove('active'));
   const el=document.getElementById('slot-'+slot);
   if(el) el.classList.add('active');
 }
@@ -1809,13 +1948,12 @@ function addChip(val){
     setMsg('⚠️ You cannot bet on both Banker and Player. Clear your Player bet first.');
     return;
   }
-  bets[selSlot]=(bets[selSlot]||0)+val; balance-=val;
-  soundChip(); refreshUI();
+  bets[selSlot]=(bets[selSlot]||0)+val; balance-=val; refreshUI();
 }
 function clearBets(){
   if(phase!=='betting') return;
   balance+=Object.values(bets).reduce((a,b)=>a+b,0);
-  bets={banker:0,player:0,tie:0,dragon7:0,panda8:0,bigTiger:0,smallTiger:0,tigerTie:0};
+  bets={banker:0,player:0,tie:0,dragon7:0,panda8:0,bigTiger:0,smallTiger:0,tigerTie:0,natural9:0,natural8:0};
   refreshUI();
 }
 function totalBet(){ return Object.values(bets).reduce((a,b)=>a+b,0); }
@@ -2042,7 +2180,6 @@ function deal(){
   if(totalBet()===0){ setMsg('Place a bet first!'); return; }
   if(checkTrialBlock()) return;
   phase='revealing';
-  soundDrum();   // drum roll before cards are revealed
   aiBetForHand();
 
   document.getElementById('btn-deal').style.display='none';
@@ -2098,7 +2235,7 @@ function deal(){
   document.getElementById('banker-val').textContent='?';
   document.getElementById('player-val').textContent='?';
 
-  bets={banker:0,player:0,tie:0,dragon7:0,panda8:0,bigTiger:0,smallTiger:0,tigerTie:0};
+  bets={banker:0,player:0,tie:0,dragon7:0,panda8:0,bigTiger:0,smallTiger:0,tigerTie:0,natural9:0,natural8:0};
   refreshUI();
   setMsg('🎴 Click your cards to squeeze! Ask the dealer to reveal banker cards.');
 }
@@ -2296,12 +2433,27 @@ function resolveHand(){
     if(b.bigTiger>0)  { if(r.isBigTiger)  { const w=b.bigTiger*50;   balance+=b.bigTiger+w;   netChange+=w; msgs.push(`🐯 Big Tiger! +$${w}`); }   else netChange-=b.bigTiger; }
   }
 
-  // ── Natural detection (for animation/feed only)
+  // ── Golden Talon Side Bets (available in all modes)
+  const pIsPair = r.pH[0].rank === r.pH[1].rank;
+  const bIsPair = r.bH[0].rank === r.bH[1].rank;
+
+  // isNatural flag for Golden Talon (winning hand 2-card natural)
   const winScore = r.winner==='B'?r.bT : r.winner==='P'?r.pT : r.pT;
   const winCards = r.winner==='B'?r.bH : r.winner==='P'?r.pH : null;
   const isNatural9 = winCards && winCards.length===2 && winScore===9;
   const isNatural8 = winCards && winCards.length===2 && winScore===8;
   const isNatural  = isNatural9 || isNatural8;
+
+  const talonNotes=[];
+  if(b.natural9>0){
+    if(isNatural9){ const w=b.natural9*9; balance+=b.natural9+w; netChange+=w; msgs.push(`⚔️ Natural 9! +$${w}`); talonNotes.push(`✓ Natural 9 +$${w}`); }
+    else { netChange-=b.natural9; talonNotes.push(`✗ Natural 9 — no win`); }
+  }
+  if(b.natural8>0){
+    if(isNatural8){ const w=b.natural8*6; balance+=b.natural8+w; netChange+=w; msgs.push(`⚔️ Natural 8! +$${w}`); talonNotes.push(`✓ Natural 8 +$${w}`); }
+    else { netChange-=b.natural8; talonNotes.push(`✗ Natural 8 — no win`); }
+  }
+  document.getElementById('talon-result-note').textContent=talonNotes.join('  ·  ');
 
   // ── Badges
   const bBadge=r.winner==='B'?(r.isDragon7&&gameMode==='ez'?'push':'win'):r.winner==='T'?'tie':'lose';
@@ -2326,10 +2478,6 @@ function resolveHand(){
   // ── play outcome sound ──
   if(netChange>0) soundWin();
   else if(netChange<0) soundLose();
-
-  // Pair detection: first two cards share the same rank
-  const pIsPair = r.pH[0].rank === r.pH[1].rank;
-  const bIsPair = r.bH[0].rank === r.bH[1].rank;
 
   // Store rich result: winner, special flags, pair flags, winning score, natural flag
   // (winScore, isNatural, isNatural9, isNatural8 already computed above in Golden Talon section)
@@ -2420,6 +2568,7 @@ function newRound(){
   document.getElementById('btn-new').style.display='none';
   document.getElementById('btn-clear').disabled=false;
   document.getElementById('msg-bar').className='msg-bar';
+  document.getElementById('talon-result-note').textContent='';
   // Reset AI current bet display for new round
   aiCurrentBet = { slot: null, amount: 0 };
   updateAIPanel();
@@ -2444,6 +2593,8 @@ function refreshUI(){
   document.getElementById('amt-bigTiger').textContent='$'+bets.bigTiger;
   document.getElementById('amt-smallTiger').textContent='$'+bets.smallTiger;
   document.getElementById('amt-tigerTie').textContent='$'+bets.tigerTie;
+  document.getElementById('amt-natural9').textContent='$'+bets.natural9;
+  document.getElementById('amt-natural8').textContent='$'+bets.natural8;
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -2800,20 +2951,13 @@ function updateStats(streaks){
   }
 }
 
-// ── SOUND STATE ───────────────────────────────────────────────────
-let _audioCtx   = null;
-let _masterGain = null;
-let _sfxGain    = null;
-let _musicGain  = null;
-let _crowdNodes = null;
-let _orchNodes  = null;
-let soundEnabled  = true;   // SFX toggle (backward compat)
-let musicEnabled  = true;
-let masterVolume  = 0.8;
+// ── SOUND STATE (must be declared before buildShoe() which calls soundShuffle) ──
+let _audioCtx = null;
+let soundEnabled = true;
 
 // ── INIT ──────────────────────────────────────────────────────────
 buildShoe();
-setMode('ez');   // default to Panda & Dragon mode on load
+setMode('standard');   // enforce standard mode side-bet visibility on load
 selectSlot('banker');
 refreshUI();
 updateAllRoads();
@@ -2824,186 +2968,15 @@ updateTrialBadge();    // show correct hands-remaining count on load
 // ══════════════════════════════════════════════════════════════════
 // Declared here (after buildShoe call site) — functions use them via closure
 function getAudioCtx(){
-  if(!_audioCtx){
-    _audioCtx   = new (window.AudioContext||window.webkitAudioContext)();
-    _masterGain = _audioCtx.createGain(); _masterGain.gain.value = masterVolume; _masterGain.connect(_audioCtx.destination);
-    _sfxGain    = _audioCtx.createGain(); _sfxGain.gain.value    = soundEnabled ? 1 : 0; _sfxGain.connect(_masterGain);
-    _musicGain  = _audioCtx.createGain(); _musicGain.gain.value  = musicEnabled ? 0.22 : 0; _musicGain.connect(_masterGain);
-  }
+  if(!_audioCtx) _audioCtx = new (window.AudioContext||window.webkitAudioContext)();
   if(_audioCtx.state==='suspended') _audioCtx.resume();
   return _audioCtx;
 }
-function getMasterOut(){ getAudioCtx(); return _sfxGain; }
-function getMusicOut()  { getAudioCtx(); return _musicGain; }
 
-// ── Volume / toggle controls ──
-function setMasterVolume(v){
-  masterVolume = parseFloat(v);
-  if(_masterGain) _masterGain.gain.value = masterVolume;
-}
-function toggleSFX(){
+// Master volume (user can mute via button)
+function toggleSound(){
   soundEnabled = !soundEnabled;
-  if(_sfxGain) _sfxGain.gain.value = soundEnabled ? 1 : 0;
-  const btn = document.getElementById('btn-sound');
-  btn.textContent = soundEnabled ? '🔊' : '🔇';
-  btn.classList.toggle('muted', !soundEnabled);
-}
-function toggleMusic(){
-  musicEnabled = !musicEnabled;
-  if(_musicGain) _musicGain.gain.value = musicEnabled ? 0.22 : 0;
-  const btn = document.getElementById('btn-music');
-  btn.textContent = musicEnabled ? '🎵' : '🔕';
-  btn.classList.toggle('muted', !musicEnabled);
-  if(musicEnabled && !_orchNodes) startOrchestral();
-}
-// Legacy alias (splash screen uses toggleSound)
-function toggleSound(){ toggleSFX(); }
-
-// ── Haptic feedback ──
-function haptic(pattern){ try{ if(navigator.vibrate) navigator.vibrate(pattern); }catch(e){} }
-
-// ── Crowd ambience (low looping filtered noise) ──
-function startCrowdAmbience(){
-  if(_crowdNodes) return;
-  const ctx = getAudioCtx();
-  const bufSec=3, bufLen=Math.floor(ctx.sampleRate*bufSec);
-  const buf=ctx.createBuffer(1,bufLen,ctx.sampleRate);
-  const d=buf.getChannelData(0);
-  for(let i=0;i<bufLen;i++) d[i]=Math.random()*2-1;
-  const src=ctx.createBufferSource(); src.buffer=buf; src.loop=true;
-  const bp=ctx.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=320; bp.Q.value=0.5;
-  const hp=ctx.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=180;
-  const g=ctx.createGain(); g.gain.value=0.055;
-  // gentle LFO swell
-  const lfo=ctx.createOscillator(); lfo.frequency.value=0.07;
-  const lfoG=ctx.createGain(); lfoG.gain.value=0.02;
-  lfo.connect(lfoG); lfoG.connect(g.gain);
-  src.connect(hp); hp.connect(bp); bp.connect(g); g.connect(getMusicOut());
-  lfo.start(); src.start();
-  _crowdNodes={src,g,lfo};
-}
-function stopCrowdAmbience(){
-  if(!_crowdNodes) return;
-  try{ _crowdNodes.src.stop(); _crowdNodes.lfo.stop(); }catch(e){}
-  _crowdNodes=null;
-}
-
-// ── Orchestral Roman loop (synthesized) ──
-const ORCH_MELODY=[
-  [392,0.5],[440,0.5],[392,0.5],[349,0.5],
-  [330,0.75],[392,0.25],[440,1.0],
-  [349,0.5],[392,0.5],[330,0.5],[294,0.5],
-  [262,1.5],[262,0.5]
-];
-let _orchTimer=null;
-function startOrchestral(){
-  if(_orchNodes||!musicEnabled) return;
-  _orchNodes=true;
-  function playLoop(){
-    const ctx=getAudioCtx(), now=ctx.currentTime;
-    let t=now;
-    ORCH_MELODY.forEach(([freq,dur])=>{
-      // Brass melody (sawtooth + lowpass)
-      const o=ctx.createOscillator(); o.type='sawtooth'; o.frequency.value=freq*0.5;
-      const lp=ctx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=900;
-      const g=ctx.createGain();
-      g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(0.18,t+0.06);
-      g.gain.setValueAtTime(0.18,t+dur-0.08); g.gain.linearRampToValueAtTime(0,t+dur);
-      o.connect(lp); lp.connect(g); g.connect(getMusicOut());
-      o.start(t); o.stop(t+dur+0.05);
-      // Sub bass hit on beat
-      if(dur>=0.5){
-        const b=ctx.createOscillator(); b.type='sine'; b.frequency.value=freq*0.25;
-        const bg=ctx.createGain();
-        bg.gain.setValueAtTime(0.12,t); bg.gain.exponentialRampToValueAtTime(0.001,t+0.35);
-        b.connect(bg); bg.connect(getMusicOut()); b.start(t); b.stop(t+0.4);
-        // Drum hit (noise burst)
-        const blen=Math.floor(ctx.sampleRate*0.08);
-        const bbuf=ctx.createBuffer(1,blen,ctx.sampleRate);
-        const dd=bbuf.getChannelData(0);
-        for(let i=0;i<blen;i++) dd[i]=(Math.random()*2-1)*(1-i/blen);
-        const bs=ctx.createBufferSource(); bs.buffer=bbuf;
-        const bf=ctx.createBiquadFilter(); bf.type='lowpass'; bf.frequency.value=200;
-        const bdg=ctx.createGain(); bdg.gain.value=0.25;
-        bs.connect(bf); bf.connect(bdg); bdg.connect(getMusicOut()); bs.start(t);
-      }
-      t+=dur;
-    });
-    const totalDur=ORCH_MELODY.reduce((s,[,d])=>s+d,0);
-    _orchTimer=setTimeout(playLoop,(totalDur-0.1)*1000);
-  }
-  playLoop();
-}
-function stopOrchestral(){
-  if(_orchTimer){ clearTimeout(_orchTimer); _orchTimer=null; }
-  _orchNodes=null;
-}
-
-// ── Chip: stone/metallic click ──
-function soundChip(){
-  if(!soundEnabled) return;
-  const ctx=getAudioCtx(), now=ctx.currentTime;
-  // Metallic click: short high transient
-  const o=ctx.createOscillator(); o.type='triangle'; o.frequency.setValueAtTime(1800,now); o.frequency.exponentialRampToValueAtTime(600,now+0.03);
-  const g=ctx.createGain(); g.gain.setValueAtTime(0.3,now); g.gain.exponentialRampToValueAtTime(0.001,now+0.06);
-  o.connect(g); g.connect(getMasterOut()); o.start(now); o.stop(now+0.07);
-  // Stone thud
-  const o2=ctx.createOscillator(); o2.type='sine'; o2.frequency.setValueAtTime(320,now); o2.frequency.exponentialRampToValueAtTime(80,now+0.05);
-  const g2=ctx.createGain(); g2.gain.setValueAtTime(0.25,now); g2.gain.exponentialRampToValueAtTime(0.001,now+0.08);
-  o2.connect(g2); g2.connect(getMasterOut()); o2.start(now); o2.stop(now+0.09);
-  haptic(12);
-}
-
-// ── Drum roll: tension before reveal ──
-function soundDrum(){
-  if(!soundEnabled) return;
-  const ctx=getAudioCtx(), now=ctx.currentTime;
-  [0,0.12,0.22,0.30,0.36,0.40,0.43,0.45].forEach((t,i)=>{
-    const blen=Math.floor(ctx.sampleRate*0.06);
-    const buf=ctx.createBuffer(1,blen,ctx.sampleRate);
-    const d=buf.getChannelData(0);
-    for(let j=0;j<blen;j++) d[j]=(Math.random()*2-1)*(1-j/blen);
-    const src=ctx.createBufferSource(); src.buffer=buf;
-    const lp=ctx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=280+i*20;
-    const g=ctx.createGain(); g.gain.value=0.18+i*0.04;
-    src.connect(lp); lp.connect(g); g.connect(getMasterOut()); src.start(now+t);
-    // Thump tone
-    const tone=ctx.createOscillator(); tone.type='sine'; tone.frequency.setValueAtTime(90+i*5,now+t); tone.frequency.exponentialRampToValueAtTime(40,now+t+0.09);
-    const tg=ctx.createGain(); tg.gain.setValueAtTime(0.22+i*0.03,now+t); tg.gain.exponentialRampToValueAtTime(0.001,now+t+0.12);
-    tone.connect(tg); tg.connect(getMasterOut()); tone.start(now+t); tone.stop(now+t+0.13);
-  });
-  haptic([30,20,30,15,30,10,50]);
-}
-
-// ── Crowd cheer (big win surge) ──
-function soundCrowdCheer(intensity){
-  intensity=intensity||1;
-  const ctx=getAudioCtx(), now=ctx.currentTime, dur=1.8;
-  const blen=Math.floor(ctx.sampleRate*dur);
-  const buf=ctx.createBuffer(1,blen,ctx.sampleRate);
-  const d=buf.getChannelData(0); for(let i=0;i<blen;i++) d[i]=Math.random()*2-1;
-  const src=ctx.createBufferSource(); src.buffer=buf;
-  const bp=ctx.createBiquadFilter(); bp.type='bandpass'; bp.Q.value=0.6;
-  bp.frequency.setValueAtTime(350,now); bp.frequency.linearRampToValueAtTime(1400,now+0.4); bp.frequency.exponentialRampToValueAtTime(600,now+dur);
-  const g=ctx.createGain();
-  g.gain.setValueAtTime(0,now); g.gain.linearRampToValueAtTime(0.35*intensity,now+0.25);
-  g.gain.setValueAtTime(0.32*intensity,now+0.8); g.gain.exponentialRampToValueAtTime(0.001,now+dur);
-  src.connect(bp); bp.connect(g); g.connect(getMasterOut()); src.start(now);
-}
-
-// ── Metal clash (for big wins) ──
-function soundMetalClash(){
-  const ctx=getAudioCtx(), now=ctx.currentTime;
-  [523,659,784,988,1319,1568].forEach((f,i)=>{
-    const o=ctx.createOscillator(); o.type='sawtooth'; o.frequency.value=f;
-    const g=ctx.createGain();
-    g.gain.setValueAtTime(0.15,now+i*0.015); g.gain.exponentialRampToValueAtTime(0.001,now+i*0.015+0.5);
-    o.connect(g); g.connect(getMasterOut()); o.start(now+i*0.015); o.stop(now+i*0.015+0.55);
-  });
-  // Ring out
-  const ring=ctx.createOscillator(); ring.type='sine'; ring.frequency.value=2800;
-  const rg=ctx.createGain(); rg.gain.setValueAtTime(0.12,now); rg.gain.exponentialRampToValueAtTime(0.001,now+0.8);
-  ring.connect(rg); rg.connect(getMasterOut()); ring.start(now); ring.stop(now+0.85);
+  document.getElementById('btn-sound').textContent = soundEnabled ? '🔊' : '🔇';
 }
 
 // ── Shuffle: rushing white-noise swish ──
@@ -3025,7 +2998,7 @@ function soundShuffle(){
   gain.gain.linearRampToValueAtTime(0.28, now+0.06);
   gain.gain.linearRampToValueAtTime(0.22, now+0.28);
   gain.gain.exponentialRampToValueAtTime(0.001, now+dur);
-  src.connect(filt); filt.connect(gain); gain.connect(getMasterOut());
+  src.connect(filt); filt.connect(gain); gain.connect(ctx.destination);
   src.start(now);
 }
 
@@ -3039,7 +3012,7 @@ function soundDeal(delay=0){
   o1.frequency.exponentialRampToValueAtTime(70, now+0.08);
   const g1 = ctx.createGain();
   g1.gain.setValueAtTime(0.5, now); g1.gain.exponentialRampToValueAtTime(0.001, now+0.1);
-  o1.connect(g1); g1.connect(getMasterOut()); o1.start(now); o1.stop(now+0.1);
+  o1.connect(g1); g1.connect(ctx.destination); o1.start(now); o1.stop(now+0.1);
   // high-freq click (paper snap)
   const noiseLen = Math.floor(ctx.sampleRate * 0.025);
   const nbuf = ctx.createBuffer(1, noiseLen, ctx.sampleRate);
@@ -3048,7 +3021,7 @@ function soundDeal(delay=0){
   const ns = ctx.createBufferSource(); ns.buffer = nbuf;
   const nf = ctx.createBiquadFilter(); nf.type='highpass'; nf.frequency.value=3000;
   const ng = ctx.createGain(); ng.gain.value = 0.4;
-  ns.connect(nf); nf.connect(ng); ng.connect(getMasterOut()); ns.start(now);
+  ns.connect(nf); nf.connect(ng); ng.connect(ctx.destination); ns.start(now);
 }
 
 // ── Squeeze: swoosh card-flip ──
@@ -3068,13 +3041,13 @@ function soundSqueeze(){
   gain.gain.setValueAtTime(0.12, now);
   gain.gain.linearRampToValueAtTime(0.22, now+dur*0.4);
   gain.gain.exponentialRampToValueAtTime(0.001, now+dur);
-  src.connect(filt); filt.connect(gain); gain.connect(getMasterOut()); src.start(now);
+  src.connect(filt); filt.connect(gain); gain.connect(ctx.destination); src.start(now);
   // add a little "clack" at the flip midpoint
   setTimeout(()=>{ if(!soundEnabled) return;
     const ctx2=getAudioCtx(), t=ctx2.currentTime;
     const oc=ctx2.createOscillator(); oc.type='square'; oc.frequency.value=1200;
     const gc=ctx2.createGain(); gc.gain.setValueAtTime(0.08,t); gc.gain.exponentialRampToValueAtTime(0.001,t+0.04);
-    oc.connect(gc); gc.connect(getMasterOut()); oc.start(t); oc.stop(t+0.04);
+    oc.connect(gc); gc.connect(ctx2.destination); oc.start(t); oc.stop(t+0.04);
   }, dur*0.5*1000);
 }
 
@@ -3089,7 +3062,7 @@ function soundWin(){
     g.gain.setValueAtTime(0, now+t);
     g.gain.linearRampToValueAtTime(0.28, now+t+0.04);
     g.gain.exponentialRampToValueAtTime(0.001, now+t+0.38);
-    o.connect(g); g.connect(getMasterOut()); o.start(now+t); o.stop(now+t+0.4);
+    o.connect(g); g.connect(ctx.destination); o.start(now+t); o.stop(now+t+0.4);
   });
   // sparkle shimmer
   setTimeout(()=>{ if(!soundEnabled) return;
@@ -3099,12 +3072,9 @@ function soundWin(){
       const g=ctx2.createGain();
       g.gain.setValueAtTime(0,t2+i*0.06); g.gain.linearRampToValueAtTime(0.12,t2+i*0.06+0.03);
       g.gain.exponentialRampToValueAtTime(0.001,t2+i*0.06+0.18);
-      o.connect(g); g.connect(getMasterOut()); o.start(t2+i*0.06); o.stop(t2+i*0.06+0.2);
+      o.connect(g); g.connect(ctx2.destination); o.start(t2+i*0.06); o.stop(t2+i*0.06+0.2);
     });
   }, 500);
-  // crowd cheer on win
-  setTimeout(()=>soundCrowdCheer(0.8), 300);
-  haptic([50,30,80]);
 }
 
 // ── Lose: descending groan ──
@@ -3133,8 +3103,8 @@ function soundLose(){
   const curve = new Float32Array(256);
   for(let i=0;i<256;i++){ const x=i*2/256-1; curve[i]=Math.tanh(2*x); }
   dist.curve = curve;
-  osc.connect(dist); dist.connect(gain); gain.connect(getMasterOut());
-  sub.connect(subG); subG.connect(getMasterOut());
+  osc.connect(dist); dist.connect(gain); gain.connect(ctx.destination);
+  sub.connect(subG); subG.connect(ctx.destination);
   lfo.start(now); osc.start(now); sub.start(now);
   osc.stop(now+dur); sub.stop(now+0.5); lfo.stop(now+dur);
 }
@@ -3150,13 +3120,13 @@ function soundDragon7(){
     const filt=ctx.createBiquadFilter(); filt.type='lowpass'; filt.frequency.value=1800;
     g.gain.setValueAtTime(0,now+t); g.gain.linearRampToValueAtTime(0.18,now+t+0.06);
     g.gain.exponentialRampToValueAtTime(0.001,now+t+0.7);
-    o.connect(filt); filt.connect(g); g.connect(getMasterOut());
+    o.connect(filt); filt.connect(g); g.connect(ctx.destination);
     o.start(now+t); o.stop(now+t+0.75);
   });
   // Reverberant hit
   const sub=ctx.createOscillator(); sub.type='sine'; sub.frequency.value=55;
   const sg=ctx.createGain(); sg.gain.setValueAtTime(0.4,now); sg.gain.exponentialRampToValueAtTime(0.001,now+1.2);
-  sub.connect(sg); sg.connect(getMasterOut()); sub.start(now); sub.stop(now+1.3);
+  sub.connect(sg); sg.connect(ctx.destination); sub.start(now); sub.stop(now+1.3);
   // Victory sparkle
   setTimeout(()=>{ if(!soundEnabled) return;
     const ctx2=getAudioCtx(), t=ctx2.currentTime;
@@ -3165,11 +3135,9 @@ function soundDragon7(){
       const g=ctx2.createGain();
       g.gain.setValueAtTime(0,t+i*0.07); g.gain.linearRampToValueAtTime(0.2,t+i*0.07+0.04);
       g.gain.exponentialRampToValueAtTime(0.001,t+i*0.07+0.35);
-      o.connect(g); g.connect(getMasterOut()); o.start(t+i*0.07); o.stop(t+i*0.07+0.4);
+      o.connect(g); g.connect(ctx2.destination); o.start(t+i*0.07); o.stop(t+i*0.07+0.4);
     });
   }, 550);
-  setTimeout(()=>{ soundCrowdCheer(1.4); soundMetalClash(); }, 200);
-  haptic([80,40,80,40,120]);
 }
 
 // ── Panda 8: gentle mystical chime ──
@@ -3184,16 +3152,14 @@ function soundPanda8(){
     const g=ctx.createGain(); const g2=ctx.createGain();
     g.gain.setValueAtTime(0.22,now+t); g.gain.exponentialRampToValueAtTime(0.001,now+t+0.9);
     g2.gain.setValueAtTime(0.06,now+t); g2.gain.exponentialRampToValueAtTime(0.001,now+t+0.5);
-    o.connect(g); g.connect(getMasterOut());
-    o2.connect(g2); g2.connect(getMasterOut());
+    o.connect(g); g.connect(ctx.destination);
+    o2.connect(g2); g2.connect(ctx.destination);
     o.start(now+t); o.stop(now+t+1); o2.start(now+t); o2.stop(now+t+0.6);
   });
   // Soft gong resonance
   const gong=ctx.createOscillator(); gong.type='sine'; gong.frequency.value=110;
   const gg=ctx.createGain(); gg.gain.setValueAtTime(0.15,now+0.6); gg.gain.exponentialRampToValueAtTime(0.001,now+2.5);
-  gong.connect(gg); gg.connect(getMasterOut()); gong.start(now+0.6); gong.stop(now+2.6);
-  setTimeout(()=>{ soundCrowdCheer(1.2); soundMetalClash(); }, 400);
-  haptic([60,30,60,30,100]);
+  gong.connect(gg); gg.connect(ctx.destination); gong.start(now+0.6); gong.stop(now+2.6);
 }
 
 // ── Tiger: fierce roar + power chord ──
@@ -3210,21 +3176,19 @@ function soundTiger(){
   filt.frequency.setValueAtTime(80,now); filt.frequency.exponentialRampToValueAtTime(350,now+0.4);
   filt.frequency.exponentialRampToValueAtTime(120,now+dur);
   const ng=ctx.createGain(); ng.gain.setValueAtTime(0.35,now); ng.gain.exponentialRampToValueAtTime(0.001,now+dur);
-  ns.connect(filt); filt.connect(ng); ng.connect(getMasterOut()); ns.start(now);
+  ns.connect(filt); filt.connect(ng); ng.connect(ctx.destination); ns.start(now);
   // Power fifth: A2+E3
   [[110,0],[165,0.05],[220,0.1],[330,0.18]].forEach(([freq,t])=>{
     const o=ctx.createOscillator(); o.type='sawtooth'; o.frequency.value=freq;
     const g=ctx.createGain();
     g.gain.setValueAtTime(0.2,now+t); g.gain.linearRampToValueAtTime(0.28,now+t+0.07);
     g.gain.exponentialRampToValueAtTime(0.001,now+t+0.8);
-    o.connect(g); g.connect(getMasterOut()); o.start(now+t); o.stop(now+t+0.85);
+    o.connect(g); g.connect(ctx.destination); o.start(now+t); o.stop(now+t+0.85);
   });
   // Impact hit
   const imp=ctx.createOscillator(); imp.type='sine'; imp.frequency.setValueAtTime(180,now); imp.frequency.exponentialRampToValueAtTime(40,now+0.2);
   const ig=ctx.createGain(); ig.gain.setValueAtTime(0.5,now); ig.gain.exponentialRampToValueAtTime(0.001,now+0.25);
-  imp.connect(ig); ig.connect(getMasterOut()); imp.start(now); imp.stop(now+0.28);
-  setTimeout(()=>{ soundCrowdCheer(1.5); soundMetalClash(); }, 150);
-  haptic([100,30,50,30,100,30,150]);
+  imp.connect(ig); ig.connect(ctx.destination); imp.start(now); imp.stop(now+0.28);
 }
 
 // ── Natural 8/9: Gladiator sword-clash + crowd roar ──
@@ -3237,7 +3201,7 @@ function soundNatural(){
     const g=ctx.createGain();
     g.gain.setValueAtTime(0.18-i*0.02, now+i*0.02);
     g.gain.exponentialRampToValueAtTime(0.001, now+i*0.02+0.6);
-    o.connect(g); g.connect(getMasterOut()); o.start(now+i*0.02); o.stop(now+i*0.02+0.65);
+    o.connect(g); g.connect(ctx.destination); o.start(now+i*0.02); o.stop(now+i*0.02+0.65);
   });
   // Crowd roar: filtered noise swell
   const bufLen=Math.floor(ctx.sampleRate*1.2);
@@ -3251,7 +3215,7 @@ function soundNatural(){
   const ng=ctx.createGain();
   ng.gain.setValueAtTime(0,now); ng.gain.linearRampToValueAtTime(0.22,now+0.3);
   ng.gain.exponentialRampToValueAtTime(0.001,now+1.2);
-  ns.connect(filt); filt.connect(ng); ng.connect(getMasterOut()); ns.start(now);
+  ns.connect(filt); filt.connect(ng); ng.connect(ctx.destination); ns.start(now);
   // Triumphant horn: C5-G5
   [[523,0.1],[784,0.3],[1047,0.55]].forEach(([freq,t])=>{
     const o=ctx.createOscillator(); o.type='sawtooth'; o.frequency.value=freq;
@@ -3259,11 +3223,8 @@ function soundNatural(){
     const g=ctx.createGain();
     g.gain.setValueAtTime(0,now+t); g.gain.linearRampToValueAtTime(0.24,now+t+0.05);
     g.gain.exponentialRampToValueAtTime(0.001,now+t+0.4);
-    o.connect(lp); lp.connect(g); g.connect(getMasterOut()); o.start(now+t); o.stop(now+t+0.45);
+    o.connect(lp); lp.connect(g); g.connect(ctx.destination); o.start(now+t); o.stop(now+t+0.45);
   });
-  // Natural is a massive moment — extra crowd cheer
-  setTimeout(()=>soundCrowdCheer(1.6), 600);
-  haptic([80,25,80,25,80,25,200]);
 }
 
 // ── FREE TRIAL HELPERS ───────────────────────────────────────────
@@ -3339,7 +3300,6 @@ function updateAutoProgress(){
 function dealAuto(){
   if(totalBet()===0) return;
   phase='revealing';
-  soundDrum();  // drum roll for auto-deal
   aiBetForHand();
   document.getElementById('btn-deal').style.display='none';
   document.getElementById('btn-new').style.display='none';
@@ -3566,241 +3526,8 @@ function enterArena(){
     const overlay=document.getElementById('splash-overlay');
     overlay.classList.add('hide');
     setTimeout(()=>{ overlay.remove(); flash.remove(); }, 900);
-    // Start game audio: crowd ambience + orchestral loop
-    setTimeout(()=>{ startCrowdAmbience(); startOrchestral(); }, 500);
   }, 120);
 }
-
-// ── Mobile audio unlock: resume AudioContext on first touch ──
-(function(){
-  let _unlocked=false;
-  function _unlock(){
-    if(_unlocked) return; _unlocked=true;
-    const ac=getAudioCtx();
-    if(ac.state==='suspended') ac.resume();
-  }
-  document.addEventListener('touchstart', _unlock, {passive:true});
-  document.addEventListener('touchend',   _unlock, {passive:true});
-  document.addEventListener('click',      _unlock);
-})();
-
-// ── Page Visibility API: pause/resume background music ──
-document.addEventListener('visibilitychange', ()=>{
-  if(!_audioCtx) return;
-  if(document.hidden){ _audioCtx.suspend(); }
-  else { if(_audioCtx.state==='suspended') _audioCtx.resume(); }
-});
-
-// ══════════════════════════════════════════════════════════════════
-//  WAITRESS — British beverage service every 15 minutes
-// ══════════════════════════════════════════════════════════════════
-const WAITRESS_INTERVAL = 15 * 60 * 1000; // 15 minutes
-
-const waitressGreetings = [
-  "Pardon me, luv! Fancy somethin' to drink?",
-  "'Ello there, darling! Can I fetch you a beverage?",
-  "Terribly sorry to interrupt — but would you care for a tipple?",
-  "Right then! You look like you could do with a refreshment!",
-  "Excuse me, dear — shall I bring you somethin' lovely to drink?",
-  "Cheerio! Don't mind me — just checkin' if you need a drink!",
-  "Beg your pardon! A little bird told me you might be thirsty.",
-  "'Ow about a cheeky little drink, eh love?"
-];
-
-const waitressDrinks = [
-  { emoji:'☕', name:'Cuppa Tea',       response:"Splendid choice! Milk and two sugars, yeah?" },
-  { emoji:'🍸', name:'Gin & Tonic',     response:"Ooh, very classy! Coming right up, darling!" },
-  { emoji:'🍺', name:'Pint of Lager',   response:"Lovely! I'll have that pulled fresh for you!" },
-  { emoji:'🥂', name:'Champagne',       response:"Oooh, we are feeling fancy tonight, aren't we!" },
-  { emoji:'🥃', name:'Whisky, Neat',    response:"Proper! A no-nonsense choice if I ever saw one!" },
-  { emoji:'💧', name:'Sparkling Water', response:"Very sensible, dear. I'll bring it right away!" }
-];
-
-const waitressAnimations = [
-  'waitress-slide-left',
-  'waitress-bounce-up',
-  'waitress-drop-in',
-  'waitress-spin-in'
-];
-
-const waitressFigures = ['👩‍🦰','👩','👩‍🦱','👩‍🦳'];
-
-let waitressTimer = null;
-
-function scheduleWaitress() {
-  if (waitressTimer) clearTimeout(waitressTimer);
-  waitressTimer = setTimeout(showWaitress, WAITRESS_INTERVAL);
-}
-
-function showWaitress() {
-  const greeting   = waitressGreetings[Math.floor(Math.random() * waitressGreetings.length)];
-  const anim       = waitressAnimations[Math.floor(Math.random() * waitressAnimations.length)];
-  const figure     = waitressFigures[Math.floor(Math.random() * waitressFigures.length)];
-  const overlay    = document.getElementById('waitress-overlay');
-  const bubble     = document.getElementById('waitress-bubble');
-  const card       = document.getElementById('waitress-card');
-  const figEl      = document.getElementById('waitress-figure');
-  const drinksEl   = document.getElementById('waitress-drinks');
-  const greetEl    = document.getElementById('waitress-greeting');
-
-  figEl.textContent    = figure;
-  greetEl.textContent  = greeting;
-
-  // Build drink buttons
-  drinksEl.innerHTML = '';
-  waitressDrinks.forEach(function(d) {
-    const btn = document.createElement('button');
-    btn.className = 'waitress-drink-btn';
-    btn.innerHTML = d.emoji + '<span>' + d.name + '</span>';
-    btn.onclick = function() { waitressOrder(d); };
-    drinksEl.appendChild(btn);
-  });
-
-  // Reset animation class
-  card.className = 'waitress-card ' + anim;
-  overlay.style.display = 'flex';
-  // force reflow for animation restart
-  void card.offsetWidth;
-  card.classList.add('waitress-show');
-
-  // Speak with British accent via Web Speech API
-  waitressSpeak(greeting);
-
-  // Re-schedule next visit
-  scheduleWaitress();
-}
-
-function waitressOrder(drink) {
-  const greetEl  = document.getElementById('waitress-greeting');
-  const drinksEl = document.getElementById('waitress-drinks');
-  const figEl    = document.getElementById('waitress-figure');
-
-  greetEl.textContent  = drink.response;
-  drinksEl.innerHTML   = '<div class="waitress-thankyou">✨ Right away!</div>';
-  figEl.textContent    = '🫡';
-
-  waitressSpeak(drink.response);
-  postFeedMsg('🍽️ Waitress: ' + drink.emoji + ' ' + drink.name + ' ordered — ' + drink.response, 'info');
-
-  setTimeout(dismissWaitress, 2800);
-}
-
-function dismissWaitress() {
-  const overlay = document.getElementById('waitress-overlay');
-  const card    = document.getElementById('waitress-card');
-  card.classList.add('waitress-exit');
-  setTimeout(function() {
-    overlay.style.display = 'none';
-    card.classList.remove('waitress-show','waitress-exit');
-  }, 500);
-  if (window.speechSynthesis) window.speechSynthesis.cancel();
-}
-
-function waitressSpeak(text) {
-  if (!window.speechSynthesis) return;
-  window.speechSynthesis.cancel();
-  const utter = new SpeechSynthesisUtterance(text);
-  // Try to find a British voice
-  const voices = window.speechSynthesis.getVoices();
-  const british = voices.find(function(v){
-    return v.lang === 'en-GB' || v.name.toLowerCase().includes('british') ||
-           v.name.toLowerCase().includes('uk') || v.name.includes('Daniel') || v.name.includes('Kate');
-  });
-  if (british) utter.voice = british;
-  utter.lang  = 'en-GB';
-  utter.pitch = 1.15;
-  utter.rate  = 0.95;
-  window.speechSynthesis.speak(utter);
-}
-
-// Kick off the waitress timer once the page loads
-setTimeout(scheduleWaitress, 500);
 </script>
-
-<!-- ═══════ WAITRESS OVERLAY ═══════ -->
-<div id="waitress-overlay" style="display:none; position:fixed; inset:0; z-index:9000;
-     background:rgba(0,0,0,0.45); align-items:flex-end; justify-content:flex-start;
-     padding:0 0 40px 30px; pointer-events:none;">
-  <div id="waitress-card" class="waitress-card" style="pointer-events:all;">
-    <div class="waitress-inner">
-      <div class="waitress-top">
-        <span id="waitress-figure" class="waitress-figure">👩</span>
-        <div class="waitress-speech">
-          <div class="waitress-name">Victoria · Your Server</div>
-          <div id="waitress-greeting" class="waitress-greeting">Hello!</div>
-        </div>
-      </div>
-      <div class="waitress-divider"></div>
-      <div id="waitress-drinks" class="waitress-drinks"></div>
-      <div class="waitress-footer">
-        <button class="waitress-dismiss" onclick="dismissWaitress()">Maybe later, luv ✕</button>
-      </div>
-    </div>
-    <div class="waitress-tail"></div>
-  </div>
-</div>
-
-<style>
-/* ── WAITRESS ─────────────────────────────────────── */
-.waitress-card {
-  background:linear-gradient(145deg,#1a0a2e,#2d1055);
-  border:2px solid rgba(201,168,76,0.7);
-  border-radius:16px; padding:0;
-  min-width:280px; max-width:320px;
-  box-shadow:0 8px 40px rgba(0,0,0,0.7), 0 0 20px rgba(201,168,76,0.2);
-  opacity:0; transform:translateY(60px) scale(0.85);
-  transition:opacity 0.45s ease, transform 0.45s ease;
-  position:relative;
-}
-.waitress-card.waitress-show { opacity:1; transform:translateY(0) scale(1); }
-.waitress-card.waitress-exit { opacity:0; transform:translateY(40px) scale(0.9); }
-
-/* Entry animations */
-@keyframes wSlideLeft  { from { transform:translateX(-120%) scale(0.8); opacity:0; } to { transform:translateX(0) scale(1); opacity:1; } }
-@keyframes wBounceUp   { 0%{transform:translateY(100%) scale(0.7);opacity:0} 60%{transform:translateY(-12px) scale(1.04)} 80%{transform:translateY(5px)} 100%{transform:translateY(0) scale(1);opacity:1} }
-@keyframes wDropIn     { from{transform:translateY(-200%) rotate(-8deg);opacity:0} to{transform:translateY(0) rotate(0);opacity:1} }
-@keyframes wSpinIn     { from{transform:rotate(-180deg) scale(0.3);opacity:0} to{transform:rotate(0) scale(1);opacity:1} }
-
-.waitress-card.waitress-slide-left.waitress-show  { animation:wSlideLeft 0.55s cubic-bezier(.22,.68,0,1.2) forwards; }
-.waitress-card.waitress-bounce-up.waitress-show   { animation:wBounceUp  0.65s cubic-bezier(.22,.68,0,1.2) forwards; }
-.waitress-card.waitress-drop-in.waitress-show     { animation:wDropIn    0.5s cubic-bezier(.22,.68,0,1.2) forwards; }
-.waitress-card.waitress-spin-in.waitress-show     { animation:wSpinIn    0.6s cubic-bezier(.22,.68,0,1.2) forwards; }
-
-.waitress-inner { padding:16px 16px 12px; }
-.waitress-top   { display:flex; align-items:flex-start; gap:12px; margin-bottom:10px; }
-.waitress-figure { font-size:3rem; line-height:1; filter:drop-shadow(0 2px 6px rgba(201,168,76,0.5)); }
-.waitress-speech { flex:1; }
-.waitress-name  { font-size:0.58rem; color:rgba(201,168,76,0.7); font-weight:700;
-                  letter-spacing:0.1em; text-transform:uppercase; margin-bottom:3px; }
-.waitress-greeting { font-size:0.82rem; color:#f0e8c8; line-height:1.4; font-style:italic; }
-.waitress-divider { height:1px; background:rgba(201,168,76,0.25); margin:10px 0; }
-.waitress-drinks { display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:10px; }
-.waitress-drink-btn {
-  background:rgba(255,255,255,0.06); border:1px solid rgba(201,168,76,0.3);
-  border-radius:8px; padding:7px 6px; cursor:pointer; color:#f0e8c8;
-  font-size:0.7rem; display:flex; flex-direction:column; align-items:center; gap:2px;
-  transition:background 0.15s, transform 0.15s;
-}
-.waitress-drink-btn:hover { background:rgba(201,168,76,0.18); transform:scale(1.04); }
-.waitress-drink-btn span  { font-size:0.62rem; opacity:0.85; }
-.waitress-thankyou { grid-column:1/-1; text-align:center; font-size:1rem;
-                     color:#ffd700; padding:8px; animation:pulse 0.6s ease infinite alternate; }
-@keyframes pulse { from{opacity:0.7;transform:scale(0.97)} to{opacity:1;transform:scale(1.03)} }
-.waitress-footer  { text-align:center; }
-.waitress-dismiss {
-  background:transparent; border:1px solid rgba(240,232,200,0.2);
-  color:rgba(240,232,200,0.45); font-size:0.6rem; border-radius:20px;
-  padding:4px 14px; cursor:pointer;
-}
-.waitress-dismiss:hover { background:rgba(255,255,255,0.06); color:rgba(240,232,200,0.7); }
-.waitress-tail {
-  position:absolute; bottom:-12px; left:32px;
-  width:0; height:0;
-  border-left:12px solid transparent;
-  border-right:12px solid transparent;
-  border-top:12px solid rgba(201,168,76,0.7);
-}
-</style>
-
 </body>
 </html>
