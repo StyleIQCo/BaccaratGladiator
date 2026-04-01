@@ -73,7 +73,7 @@ Resources:
         - ALLOW_USER_SRP_AUTH
         - ALLOW_REFRESH_TOKEN_AUTH
       AllowedOAuthFlowsUserPoolClient: true
-      AllowedOAuthFlows: [implicit]
+      AllowedOAuthFlows: [implicit, code]
       AllowedOAuthScopes: [openid, email, profile]
       SupportedIdentityProviders: [COGNITO]
       CallbackURLs: [!Ref RedirectUri]

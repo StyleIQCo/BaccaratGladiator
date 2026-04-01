@@ -33,6 +33,11 @@
   --blue-d:  #3355ee;
   --ez-col:  #b8860b;
   --tiger-col:#cc6600;
+  --venue-bg1:#0b1326;
+  --venue-bg2:#060b16;
+  --venue-glow:rgba(70,120,220,0.22);
+  --venue-line:rgba(120,170,255,0.18);
+  --venue-city:'Las Vegas';
 }
 
 /* ─── SPLASH SCREEN OVERLAY ─── */
@@ -42,6 +47,12 @@
   align-items:center; justify-content:center;
   overflow:hidden;
   transition:opacity 0.8s ease;
+}
+html[data-skip-splash='1'] #splash-overlay,
+html[data-skip-splash='1'] #splash-flash{
+  display:none !important;
+  opacity:0 !important;
+  pointer-events:none !important;
 }
 #splash-overlay.hide { opacity:0; pointer-events:none; }
 #splash-bg-img {
@@ -166,7 +177,7 @@
 .splash-card {
   width:clamp(122px,20vw,178px);
   height:clamp(186px,31vw,272px);
-  position:relative; transform-style:preserve-3d;
+  position:relative; transform-style:preserve-3d; cursor:pointer;
   animation: cardFlipIn 1.1s cubic-bezier(0.34,1.4,0.64,1) 0.2s both,
              cardFloat 4s ease-in-out 1.8s infinite;
   filter:drop-shadow(0 8px 32px rgba(0,0,0,0.7)) drop-shadow(0 0 20px rgba(201,168,76,0.35));
@@ -595,11 +606,213 @@
 
 * { box-sizing:border-box; margin:0; padding:0; }
 body {
-  background:#0a0e0a;
+  background:radial-gradient(120% 85% at 50% 0%, var(--venue-bg1) 0%, var(--venue-bg2) 65%);
   font-family:'Raleway',sans-serif;
   color:#f0e6c8;
   min-height:100vh;
   overflow-x:hidden;
+  position:relative;
+}
+body::before{
+  content:'';
+  position:fixed; inset:0;
+  pointer-events:none; z-index:-2;
+  background:
+    radial-gradient(55% 35% at 15% 0%, var(--venue-glow), transparent 70%),
+    radial-gradient(50% 30% at 85% 8%, var(--venue-glow), transparent 72%);
+}
+body::after{
+  content:var(--venue-city);
+  position:fixed; left:0; right:0; bottom:8px;
+  text-align:center;
+  font-family:'Cinzel',serif;
+  font-size:0.62rem;
+  letter-spacing:0.32em;
+  color:var(--venue-line);
+  text-transform:uppercase;
+  pointer-events:none; z-index:-1;
+}
+body[data-venue='vegas']{
+  --venue-bg1:#10264a;
+  --venue-bg2:#080f1f;
+  --venue-glow:rgba(70,130,255,0.28);
+  --venue-line:rgba(130,190,255,0.22);
+  --venue-city:'Las Vegas Neon';
+}
+body[data-venue='atlantic']{
+  --venue-bg1:#0f2e3a;
+  --venue-bg2:#07121a;
+  --venue-glow:rgba(70,220,255,0.2);
+  --venue-line:rgba(110,210,230,0.24);
+  --venue-city:'Atlantic City Boardwalk';
+}
+body[data-venue='macau']{
+  --venue-bg1:#2b1626;
+  --venue-bg2:#130a14;
+  --venue-glow:rgba(220,80,180,0.18);
+  --venue-line:rgba(230,130,210,0.2);
+  --venue-city:'Macau Cotai';
+}
+body[data-venue='buenosaires']{
+  --venue-bg1:#1d2848;
+  --venue-bg2:#0a1227;
+  --venue-glow:rgba(104,166,255,0.22);
+  --venue-line:rgba(152,203,255,0.24);
+  --venue-city:'Buenos Aires Palermo';
+}
+body[data-venue='morocco']{
+  --venue-bg1:#3a2318;
+  --venue-bg2:#1a100c;
+  --venue-glow:rgba(236,154,86,0.18);
+  --venue-line:rgba(246,180,118,0.24);
+  --venue-city:'Morocco Marrakesh';
+}
+body[data-venue='montecarlo']{
+  --venue-bg1:#463114;
+  --venue-bg2:#1b1208;
+  --venue-glow:rgba(247,212,136,0.3);
+  --venue-line:rgba(250,224,162,0.34);
+  --venue-city:'Monte Carlo Riviera';
+}
+
+/* Venue table skins */
+body[data-venue='vegas'] header{
+  background:linear-gradient(90deg,#102f64 0%,#1a4f9a 50%,#0f2d5d 100%);
+}
+body[data-venue='vegas'] .mode-bar{
+  background:linear-gradient(180deg,#091a3a 0%,#071129 100%);
+}
+body[data-venue='vegas'] .game-section{
+  background:linear-gradient(180deg,#091528 0%,#07111f 100%);
+}
+body[data-venue='vegas'] .hand-box{
+  background:rgba(38,88,180,0.17);
+}
+body[data-venue='atlantic'] header{
+  background:linear-gradient(90deg,#0f3b47 0%,#1d6f82 50%,#0f3b47 100%);
+}
+body[data-venue='atlantic'] .mode-bar{
+  background:linear-gradient(180deg,#0a2228 0%,#07161a 100%);
+}
+body[data-venue='atlantic'] .game-section{
+  background:linear-gradient(180deg,#0a1d22 0%,#071418 100%);
+}
+body[data-venue='atlantic'] .hand-box{
+  background:rgba(36,126,144,0.16);
+}
+body[data-venue='macau'] header{
+  background:linear-gradient(90deg,#351734 0%,#5f2b5d 50%,#2d122d 100%);
+}
+body[data-venue='macau'] .mode-bar{
+  background:linear-gradient(180deg,#241025 0%,#140a15 100%);
+}
+body[data-venue='macau'] .game-section{
+  background:linear-gradient(180deg,#221224 0%,#130a14 100%);
+}
+body[data-venue='macau'] .hand-box{
+  background:rgba(126,52,126,0.18);
+}
+body[data-venue='buenosaires'] header{
+  background:linear-gradient(90deg,#1e315f 0%,#3b5f9f 50%,#16264d 100%);
+}
+body[data-venue='buenosaires'] .mode-bar{
+  background:linear-gradient(180deg,#121f40 0%,#0a1530 100%);
+}
+body[data-venue='buenosaires'] .game-section{
+  background:linear-gradient(180deg,#0f1a35 0%,#0a132a 100%);
+}
+body[data-venue='buenosaires'] .hand-box{
+  background:rgba(68,110,186,0.18);
+}
+body[data-venue='morocco'] header{
+  background:linear-gradient(90deg,#4b2e1a 0%,#805333 50%,#3a2414 100%);
+}
+body[data-venue='morocco'] .mode-bar{
+  background:linear-gradient(180deg,#2f1d12 0%,#1a100a 100%);
+}
+body[data-venue='morocco'] .game-section{
+  background:linear-gradient(180deg,#27180f 0%,#170f0a 100%);
+}
+body[data-venue='morocco'] .hand-box{
+  background:rgba(140,86,52,0.18);
+}
+body[data-venue='montecarlo'] header{
+  background:linear-gradient(90deg,#4a3516 0%,#9a7639 48%,#c9a14d 52%,#4a3516 100%);
+  border-bottom-color:rgba(255,227,163,0.78);
+}
+body[data-venue='montecarlo'] .mode-bar{
+  background:linear-gradient(180deg,#362511 0%,#1d1309 100%);
+  border-bottom-color:rgba(242,203,120,0.46);
+}
+body[data-venue='montecarlo'] .game-section{
+  background:linear-gradient(180deg,#2f210f 0%,#181006 100%);
+  border-bottom-color:rgba(242,203,120,0.34);
+}
+body[data-venue='montecarlo'] .hand-box{
+  background:linear-gradient(180deg,rgba(184,145,66,0.22) 0%,rgba(92,69,30,0.2) 100%);
+  border-color:rgba(250,217,143,0.52);
+  box-shadow:inset 0 0 28px rgba(255,227,164,0.09), 0 0 14px rgba(228,172,78,0.14);
+}
+body[data-venue] .bet-slot{
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,0.03);
+}
+body[data-venue='vegas'] .chip{ box-shadow:0 0 16px rgba(90,160,255,0.28); }
+body[data-venue='atlantic'] .chip{ box-shadow:0 0 14px rgba(100,220,220,0.22); }
+body[data-venue='macau'] .chip{ box-shadow:0 0 14px rgba(220,120,200,0.2); }
+body[data-venue='buenosaires'] .chip{ box-shadow:0 0 14px rgba(134,182,255,0.22); }
+body[data-venue='morocco'] .chip{ box-shadow:0 0 14px rgba(230,154,98,0.22); }
+body[data-venue='montecarlo'] .chip{ box-shadow:0 0 18px rgba(255,226,148,0.4); }
+body[data-venue='montecarlo'] .bet-slot{
+  border-color:rgba(248,216,138,0.46);
+  background:linear-gradient(180deg,rgba(113,82,37,0.22) 0%,rgba(57,41,18,0.2) 100%);
+  box-shadow:inset 0 0 0 1px rgba(255,242,205,0.08);
+}
+body[data-venue='montecarlo'] .bet-slot .sname{
+  color:#ffe5b0;
+}
+body[data-venue='montecarlo'] .bet-slot .sodds{
+  color:rgba(255,236,191,0.8);
+}
+body[data-venue='montecarlo'] .card-back-face{
+  background:linear-gradient(160deg,#3e2b12 0%,#221608 52%,#4b3516 100%);
+  border:2px solid rgba(247,216,140,0.9);
+  box-shadow:0 0 0 1px rgba(255,241,205,0.14) inset, 2px 2px 10px rgba(0,0,0,0.72);
+}
+body[data-venue='montecarlo'] .card-back-face::before{
+  border-color:rgba(255,229,168,0.65);
+  background-image:
+    repeating-linear-gradient(45deg,
+      transparent, transparent 4px,
+      rgba(255,220,156,0.09) 4px, rgba(255,220,156,0.09) 5px),
+    repeating-linear-gradient(-45deg,
+      transparent, transparent 4px,
+      rgba(255,220,156,0.09) 4px, rgba(255,220,156,0.09) 5px);
+}
+body[data-venue='montecarlo'] .card-back-face::after{
+  color:rgba(255,226,156,0.58);
+  filter:drop-shadow(0 0 8px rgba(255,215,132,0.46));
+}
+body[data-venue='montecarlo'] .card-container.pending .card-back-face{
+  background:linear-gradient(160deg,#2a1b0d 0%,#170f07 100%);
+  border-color:rgba(176,132,64,0.72);
+}
+body[data-venue='montecarlo'] .scoreboards{
+  background:linear-gradient(180deg,#35240f 0%,#211509 100%);
+  border-top-color:rgba(248,214,134,0.5);
+}
+body[data-venue='montecarlo'] .road-panel{
+  border-color:rgba(214,165,72,0.72);
+  box-shadow:0 2px 10px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,236,186,0.2);
+}
+body[data-venue='montecarlo'] .road-hdr{
+  background:linear-gradient(90deg,#2f1d0b,#513618,#2f1d0b);
+  border-bottom-color:rgba(224,181,86,0.62);
+}
+body[data-venue='montecarlo'] .road-hdr .road-name{
+  color:#f2c864;
+}
+body[data-venue='montecarlo'] .road-hdr .road-count{
+  color:rgba(245,214,145,0.72);
 }
 
 /* ─── HEADER ─── */
@@ -1402,6 +1615,29 @@ header h1 {
 </style>
 </head>
 <body>
+<script>
+(function(){
+  // Pre-boot splash bypass for Cognito return / existing signed-in sessions.
+  // Keep ES5 syntax for broad Safari compatibility.
+  function hasAuthMarkers(){
+    var h = window.location.hash || '';
+    if(h.indexOf('id_token=')!==-1 || h.indexOf('access_token=')!==-1) return true;
+    var q = window.location.search || '';
+    if(q.indexOf('code=')!==-1) return true;
+    // Only check pending redirect flag (set right before navigating to Cognito).
+    // Do NOT check bg_skip_splash_once here — it can linger from an aborted login.
+    try{
+      if(sessionStorage.getItem('bg_auth_redirect_pending')==='1') return true;
+    }catch(e){}
+    return false;
+  }
+  if(hasAuthMarkers()){
+    document.documentElement.setAttribute('data-skip-splash','1');
+    window.__bgSkipSplashPreboot = true;
+  }
+
+})();
+</script>
 
 <!-- ═══════ SPLASH FLASH ═══════ -->
 <div id="splash-flash"></div>
@@ -1633,7 +1869,7 @@ header h1 {
 
     <!-- ── ANIMATED GLADIATOR CARD (faithful recreation) ── -->
     <div class="splash-card-wrap">
-      <div class="splash-card">
+      <div class="splash-card" id="splash-start-card" role="button" tabindex="0" aria-label="Enter the arena" onclick="enterArena()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();enterArena();}">
 
         <!-- CARD BACK -->
         <div class="splash-card-back">
@@ -1703,7 +1939,7 @@ header h1 {
     <div class="splash-title">BACCARAT<br><span>GLADIATOR</span></div>
     <div class="splash-divider"></div>
     <div class="splash-tagline">MASTER THE CARDS &nbsp;·&nbsp; CONQUER THE ARENA</div>
-    <button class="splash-enter-btn" onclick="enterArena()">⚔ &nbsp; ENTER THE ARENA &nbsp; ⚔</button>
+    <button class="splash-enter-btn" id="splash-enter-btn" onclick="enterArena()">⚔ &nbsp; ENTER THE ARENA &nbsp; ⚔</button>
     <div class="splash-trial-note">SIMULATED PLAY · VIRTUAL CREDITS ONLY · NO CASHOUT</div>
   </div>
 </div>
@@ -1773,10 +2009,13 @@ header h1 {
 <div class="auth-overlay" id="auth-overlay">
   <div class="auth-box">
     <div class="auth-title">Cognito Login</div>
-    <div class="auth-sub">Sign in across devices and compete on the global leaderboard.</div>
+    <div class="auth-sub">Sign in across devices, or start with a free 10-hand guest trial.</div>
     <div class="auth-row">
       <button class="auth-btn" onclick="cognitoStart('login')">SIGN IN</button>
       <button class="auth-btn alt" onclick="cognitoStart('signup')">CREATE ACCOUNT</button>
+    </div>
+    <div class="auth-row">
+      <button class="auth-btn alt" id="auth-trial-btn" onclick="startGuestTrial()">PLAY 10-HAND TRIAL</button>
     </div>
     <div class="auth-note" id="auth-note"></div>
   </div>
@@ -1834,6 +2073,7 @@ header h1 {
     <label for="eco-venue">Venue</label>
     <select id="eco-venue" class="eco-venue" onchange="selectVenue(this.value)"></select>
     <span class="eco-stat" id="eco-streak">Daily Streak: 0</span>
+    <span class="eco-stat" id="eco-venue-theme">City: Las Vegas Neon</span>
   </div>
 </div>
 
@@ -2115,7 +2355,15 @@ const MIN_BEAD_COLS=10, MIN_BIG_COLS=22, MIN_SM_COLS=12;
 const BANKER_C='#cc1111', PLAYER_C='#1540cc', TIE_C='#0f8f2e';
 const RED_D='#cc1111', BLUE_D='#1540cc';
 // Light cream background matching real casino displays
-const GRID_BG='#f0e8c8', GRID_LINE='rgba(100,80,30,0.22)';
+let GRID_BG='#f0e8c8', GRID_LINE='rgba(100,80,30,0.22)';
+const VENUE_ROAD_THEME={
+  vegas:{bg:'#f0e8c8', line:'rgba(100,80,30,0.22)'},
+  atlantic:{bg:'#dfe8de', line:'rgba(48,92,88,0.26)'},
+  macau:{bg:'#efe2ea', line:'rgba(96,56,92,0.24)'},
+  buenosaires:{bg:'#e3eaf8', line:'rgba(62,88,132,0.24)'},
+  morocco:{bg:'#f2e2cf', line:'rgba(120,78,44,0.25)'},
+  montecarlo:{bg:'#f3e6c4', line:'rgba(176,128,50,0.36)'}
+};
 const RANKS=['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
 const SUITS=['♠','♥','♦','♣'];
 const RED_S=new Set(['♥','♦']);
@@ -2174,16 +2422,55 @@ const ECONOMY_KEY='bg_economy_v1';
 const DAILY_REWARDS=[10000,20000,50000,75000,100000,150000,300000];
 const TITLES=['Recruit','Gladiator','Centurion','Champion','Warlord','Emperor'];
 const VENUES=[
-  {id:'vegas', name:'Las Vegas', minChips:0},
-  {id:'atlantic', name:'Atlantic City', minChips:50000},
-  {id:'macau', name:'Macau', minChips:200000},
-  {id:'montecarlo', name:'Monte Carlo', minChips:500000}
+  {id:'vegas', name:'Las Vegas', city:'Las Vegas Neon', requiredTitle:'Recruit', rank:5},
+  {id:'atlantic', name:'Atlantic City', city:'Atlantic City Boardwalk', requiredTitle:'Gladiator', rank:6},
+  {id:'morocco', name:'Morocco', city:'Morocco Marrakesh', requiredTitle:'Centurion', rank:4},
+  {id:'buenosaires', name:'Buenos Aires', city:'Buenos Aires Palermo', requiredTitle:'Champion', rank:3},
+  {id:'macau', name:'Macau', city:'Macau Cotai', requiredTitle:'Warlord', rank:2},
+  {id:'montecarlo', name:'Monte Carlo', city:'Monte Carlo Riviera', requiredTitle:'Emperor', rank:1}
 ];
+const VENUE_AUDIO={
+  vegas:{
+    musicGain:0.24, crowdGain:0.06, crowdBand:420, crowdHighpass:190, brassType:'sawtooth', brassCutoff:1050,
+    melody:[[392,0.5],[440,0.5],[392,0.5],[349,0.5],[330,0.75],[392,0.25],[440,1.0],[349,0.5],[392,0.5],[330,0.5],[294,0.5],[262,1.5],[262,0.5]]
+  },
+  atlantic:{
+    musicGain:0.2, crowdGain:0.045, crowdBand:300, crowdHighpass:160, brassType:'triangle', brassCutoff:820,
+    melody:[[330,0.6],[294,0.4],[330,0.6],[392,0.5],[440,0.8],[392,0.4],[330,0.6],[294,0.6],[262,1.0],[294,0.5],[330,0.9]]
+  },
+  macau:{
+    musicGain:0.23, crowdGain:0.04, crowdBand:520, crowdHighpass:220, brassType:'square', brassCutoff:1150,
+    melody:[[523,0.35],[494,0.35],[440,0.45],[392,0.5],[440,0.4],[494,0.35],[523,0.6],[659,0.5],[587,0.5],[523,0.8]]
+  },
+  buenosaires:{
+    musicGain:0.21, crowdGain:0.04, crowdBand:360, crowdHighpass:170, brassType:'triangle', brassCutoff:960,
+    melody:[[330,0.45],[392,0.45],[440,0.7],[392,0.35],[349,0.5],[330,0.65],[294,0.45],[330,0.45],[392,0.8]]
+  },
+  morocco:{
+    musicGain:0.22, crowdGain:0.05, crowdBand:310, crowdHighpass:150, brassType:'square', brassCutoff:900,
+    melody:[[294,0.4],[330,0.4],[349,0.55],[392,0.35],[349,0.5],[330,0.45],[294,0.7],[262,0.45],[294,0.8]]
+  },
+  montecarlo:{
+    musicGain:0.22, crowdGain:0.02, crowdBand:210, crowdHighpass:120,
+    brassType:'triangle', brassCutoff:980, leadGain:0.22, bassGain:0.08, drumGain:0.09,
+    padType:'sine', padCutoff:520, padGain:0.075, padHzRatio:0.5,
+    melody:[[262,0.9],[330,0.65],[392,0.65],[523,0.9],[659,0.58],[523,0.65],[587,0.52],[494,0.52],[440,0.82],[392,0.95],[330,0.86],[294,0.78]]
+  }
+};
 
 // ── FREE TRIAL ────────────────────────────────────────────────────
-const FREE_HAND_LIMIT = 40;
+const FREE_HAND_LIMIT = 10;
 let freeHandsUsed = 0;
 let trialExpired = false;
+let guestTrialStarted = false;
+
+function guestHandsRemaining(){
+  return Math.max(0, FREE_HAND_LIMIT - freeHandsUsed);
+}
+
+function guestTrialExpired(){
+  return !authLocked && freeHandsUsed >= FREE_HAND_LIMIT;
+}
 
 // ── AUTO-PLAY ─────────────────────────────────────────────────────
 let autoPlayRemaining = 0;
@@ -2205,8 +2492,11 @@ const CLOUD_CONFIG = {
   redirectUri: 'https://www.baccaratgladiator.com/baccarat-scoreboard.html'
 };
 const AUTH_TOK_KEY = 'bg_cognito_tokens_v1';
+const AUTH_PROFILE_KEY = 'bg_auth_profile_v1';
 let cloudHandSeq = 0;
 let cloudScore = 1000;
+let authRecoveryInFlight = false;
+let oauthCodeExchangeInFlight = false;
 
 // Pending hand state (set during deal, used when all revealed)
 let pendingHand=null;
@@ -2247,6 +2537,48 @@ function titleFromLevel(level){
   if(level>=10) return TITLES[2];
   if(level>=5) return TITLES[1];
   return TITLES[0];
+}
+
+function getTitleIndex(title){
+  const idx=TITLES.indexOf(title);
+  return idx>=0 ? idx : 0;
+}
+
+function getVenueById(id){
+  return VENUES.find(v=>v.id===id) || VENUES[0];
+}
+
+function venueUnlocked(venue){
+  return getTitleIndex(playerTitle) >= getTitleIndex(venue.requiredTitle || 'Recruit');
+}
+
+function venueRequirementText(venue){
+  return 'Requires ' + (venue.requiredTitle || 'Recruit');
+}
+
+function venueRankText(venue){
+  const rank=Number((venue && venue.rank) || 0);
+  if(!rank) return '';
+  return rank===1 ? 'Best' : ('Rank #' + rank);
+}
+
+function applyVenueTheme(){
+  const v=getVenueById(currentVenue);
+  document.body.setAttribute('data-venue', v.id);
+  const roadTheme=VENUE_ROAD_THEME[v.id] || VENUE_ROAD_THEME.vegas;
+  GRID_BG=roadTheme.bg;
+  GRID_LINE=roadTheme.line;
+  const tag=document.getElementById('eco-venue-theme');
+  if(tag) tag.textContent='City: ' + (v.city || v.name);
+  const rank=venueRankText(v);
+  const sub=document.getElementById('mode-subtitle');
+  if(sub && !String(sub.textContent||'').includes('· Venue:')){
+    sub.textContent = String(sub.textContent||'') + ' · Venue: ' + v.name + (rank ? (' (' + rank + ')') : '');
+  } else if(sub){
+    sub.textContent = String(sub.textContent||'').replace(/ · Venue: .+$/, '') + ' · Venue: ' + v.name + (rank ? (' (' + rank + ')') : '');
+  }
+  updateAllRoads();
+  applyVenueAudioTheme();
 }
 
 function loadEconomy(){
@@ -2320,6 +2652,7 @@ function exchangeGemsForChips(gemsCost, chipsReward){
 function addXp(amount){
   const gain=Math.max(1, Math.floor(Number(amount||0)));
   const oldLevel=playerLevel;
+  const oldTitle=playerTitle;
   playerXp += gain;
   playerLevel=levelFromXp(playerXp);
   playerTitle=titleFromLevel(playerLevel);
@@ -2327,6 +2660,13 @@ function addXp(amount){
     const gemBonus=(playerLevel-oldLevel)*2;
     hardGems += gemBonus;
     postFeedMsg('🏆 Level up! Level ' + playerLevel + ' ' + playerTitle + ' (+' + gemBonus + ' gems).', 'info');
+  }
+  if(getTitleIndex(playerTitle)>getTitleIndex(oldTitle)){
+    VENUES.forEach(function(v){
+      if(v.requiredTitle===playerTitle){
+        postFeedMsg('🏛️ New venue unlocked: ' + v.name + ' (' + playerTitle + ').', 'info');
+      }
+    });
   }
 }
 
@@ -2337,25 +2677,35 @@ function populateVenueOptions(){
   VENUES.forEach(function(v){
     const opt=document.createElement('option');
     opt.value=v.id;
-    opt.textContent=v.name + (v.minChips>0 ? (' · ' + v.minChips.toLocaleString() + '+') : ' · Open');
+    const open=venueUnlocked(v);
+    const rank=venueRankText(v);
+    const rankTag=rank ? (' · ' + rank) : '';
+    opt.textContent=open
+      ? (v.name + rankTag + ' · Open')
+      : (v.name + rankTag + ' · ' + venueRequirementText(v));
+    opt.disabled=!open;
     sel.appendChild(opt);
   });
+  if(!venueUnlocked(getVenueById(currentVenue))) currentVenue='vegas';
   sel.value=currentVenue;
 }
 
 function selectVenue(id){
   const next=VENUES.find(v=>v.id===id);
   if(!next) return;
-  if(balance<next.minChips){
-    setMsg('Need ' + next.minChips.toLocaleString() + ' chips to enter ' + next.name + '.');
-    showEconomyFriction('You need more chips to enter ' + next.name + '.');
+  if(!venueUnlocked(next)){
+    const req=venueRequirementText(next);
+    setMsg(req + ' to enter ' + next.name + '.');
+    showEconomyFriction(req + '. Keep leveling up to unlock this city.');
     const sel=document.getElementById('eco-venue');
     if(sel) sel.value=currentVenue;
     return;
   }
   currentVenue=id;
-  setMsg('Venue selected: ' + next.name + '.');
+  const rank=venueRankText(next);
+  setMsg('Venue selected: ' + next.name + (rank ? (' (' + rank + ')') : '') + '.');
   postFeedMsg('🏛️ Entered venue: ' + next.name + '.', 'info');
+  applyVenueTheme();
   saveEconomy();
   refreshUI();
 }
@@ -2404,7 +2754,18 @@ function setHeaderUser(){
   const loginBtn=document.getElementById('hdr-login-btn');
   const logoutBtn=document.getElementById('hdr-logout-btn');
   if(!el) return;
-  el.textContent = authLocked ? `User: ${currentUsername} (${currentUserEmail})` : 'User: Guest';
+  if(authLocked){
+    const u=(currentUsername||'Player').trim();
+    const e=(currentUserEmail||'').trim();
+    const showEmail = e && e!=='user@unknown' && e!==u;
+    el.textContent = showEmail ? ('User: ' + u + ' (' + e + ')') : ('User: ' + u);
+  } else if(oauthCodeExchangeInFlight || authRecoveryInFlight){
+    el.textContent = 'User: Signing in...';
+  } else if(cognitoIdToken || cognitoAccessToken){
+    el.textContent = 'User: Restoring session...';
+  } else {
+    el.textContent = 'User: Guest';
+  }
   if(loginBtn) loginBtn.style.display = authLocked ? 'none' : 'inline-block';
   if(logoutBtn) logoutBtn.style.display = authLocked ? 'inline-block' : 'none';
 }
@@ -2413,26 +2774,74 @@ function hideAuthOverlay(){
   if(o) o.classList.remove('show');
 }
 
-function showAuthOverlay(){
+function showAuthOverlay(mode){
+  const m=mode||'entry';
   const o=document.getElementById('auth-overlay');
   if(o) o.classList.add('show');
-  setAuthNote('Use Cognito sign-in to sync score history across devices.', false);
+  const tb=document.getElementById('auth-trial-btn');
+  if(tb){
+    const locked = guestTrialExpired();
+    tb.disabled = locked;
+    tb.textContent = locked ? 'TRIAL COMPLETE' : 'PLAY 10-HAND TRIAL';
+    tb.style.opacity = locked ? '0.5' : '1';
+    tb.style.cursor = locked ? 'not-allowed' : 'pointer';
+  }
+  if(m==='trial-limit'){
+    setAuthNote('Guest trial complete. Sign in or create account to continue.', false);
+  } else {
+    setAuthNote('Choose an option to continue.', false);
+  }
+}
+
+function startGuestTrial(){
+  if(guestTrialExpired()){
+    setAuthNote('Guest trial complete. Sign in or create account to continue.', false);
+    return;
+  }
+  guestTrialStarted=true;
+  hideAuthOverlay();
+  setMsg('Guest trial active. You have ' + guestHandsRemaining() + ' hands.');
+  if(!botPersonaLocked) showBotPersonaPicker();
 }
 
 function decodeJwtPayload(tok){
   try{
-    const p=tok.split('.')[1];
-    const b=p.replace(/-/g,'+').replace(/_/g,'/');
-    const json=decodeURIComponent(atob(b).split('').map(c=>'%'+('00'+c.charCodeAt(0).toString(16)).slice(-2)).join(''));
-    return JSON.parse(json);
+    const parts=String(tok||'').split('.');
+    if(parts.length<2) return null;
+    let b=parts[1].replace(/-/g,'+').replace(/_/g,'/');
+    while(b.length%4!==0) b += '=';
+    const raw=atob(b);
+    try{
+      return JSON.parse(raw);
+    }catch(_){
+      const json=decodeURIComponent(raw.split('').map(c=>'%'+('00'+c.charCodeAt(0).toString(16)).slice(-2)).join(''));
+      return JSON.parse(json);
+    }
   } catch(e){ return null; }
 }
 
+function persistAuthProfile(username, email){
+  const payload=JSON.stringify({username:username||'', email:email||''});
+  try{ localStorage.setItem(AUTH_PROFILE_KEY, payload); }catch(e){}
+  try{ sessionStorage.setItem(AUTH_PROFILE_KEY, payload); }catch(e){}
+}
+
+function loadAuthProfile(){
+  let p={};
+  try{ p=JSON.parse(localStorage.getItem(AUTH_PROFILE_KEY)||'{}'); }catch(e){ p={}; }
+  if(!p || (!p.username && !p.email)){
+    try{ p=JSON.parse(sessionStorage.getItem(AUTH_PROFILE_KEY)||'{}'); }catch(e){ p={}; }
+  }
+  return p||{};
+}
+
 function persistTokens(){
+  const payload=JSON.stringify({ idToken:cognitoIdToken, accessToken:cognitoAccessToken });
   try{
-    localStorage.setItem(AUTH_TOK_KEY, JSON.stringify({
-      idToken:cognitoIdToken, accessToken:cognitoAccessToken
-    }));
+    localStorage.setItem(AUTH_TOK_KEY, payload);
+  }catch(e){}
+  try{
+    sessionStorage.setItem(AUTH_TOK_KEY, payload);
   }catch(e){}
 }
 function clearTokens(){
@@ -2440,60 +2849,246 @@ function clearTokens(){
   cloudHandSeq = 0;
   cloudScore = 1000;
   try{ localStorage.removeItem(AUTH_TOK_KEY); }catch(e){}
+  try{ sessionStorage.removeItem(AUTH_TOK_KEY); }catch(e){}
+  try{ localStorage.removeItem(AUTH_PROFILE_KEY); }catch(e){}
+  try{ sessionStorage.removeItem(AUTH_PROFILE_KEY); }catch(e){}
+  try{ localStorage.removeItem('bg_pkce_verifier'); }catch(e){}
 }
 function loadTokens(){
+  let curId=cognitoIdToken||'';
+  let curAccess=cognitoAccessToken||'';
+  let p={};
   try{
-    const p=JSON.parse(localStorage.getItem(AUTH_TOK_KEY)||'{}');
-    cognitoIdToken=p.idToken||'';
-    cognitoAccessToken=p.accessToken||'';
-  }catch(e){ cognitoIdToken=''; cognitoAccessToken=''; }
+    p=JSON.parse(localStorage.getItem(AUTH_TOK_KEY)||'{}');
+  }catch(e){ p={}; }
+  if(!p || (!p.idToken && !p.accessToken)){
+    try{ p=JSON.parse(sessionStorage.getItem(AUTH_TOK_KEY)||'{}'); }catch(e){ p={}; }
+  }
+  cognitoIdToken = curId || p.idToken || '';
+  cognitoAccessToken = curAccess || p.accessToken || '';
 }
 
 function applyAuthFromTokens(){
-  if(!cognitoIdToken){ authLocked=false; setHeaderUser(); return false; }
-  const claims=decodeJwtPayload(cognitoIdToken);
-  if(!claims || !claims.exp || (Date.now()/1000)>=claims.exp){
+  if(!cognitoIdToken && !cognitoAccessToken){ authLocked=false; setHeaderUser(); return false; }
+  const idClaims=decodeJwtPayload(cognitoIdToken);
+  const accClaims=decodeJwtPayload(cognitoAccessToken);
+  const exp = Number((idClaims && idClaims.exp) || (accClaims && accClaims.exp) || 0);
+  const nowSec=Math.floor(Date.now()/1000);
+  if(exp && nowSec>(exp+600)){ // allow 10-minute skew/grace for mobile clocks
     clearTokens();
     authLocked=false;
     setHeaderUser();
     return false;
   }
-  currentUserEmail = normalizeEmail(claims.email || claims['cognito:username'] || 'user@unknown');
-  currentUsername = claims.preferred_username || claims.name || claims['cognito:username'] || 'Player';
+  const uname = (idClaims && (idClaims.preferred_username || idClaims.name || idClaims['cognito:username']))
+    || (accClaims && (accClaims.username || accClaims['cognito:username'] || accClaims.client_username))
+    || 'Player';
+  const uemail = (idClaims && idClaims.email) || (accClaims && accClaims.email) || '';
+  let finalUsername=String(uname || 'Player');
+  let finalEmail=normalizeEmail(uemail || finalUsername || 'user@unknown');
+  if((!idClaims && !accClaims) || !finalUsername || finalUsername==='Player'){
+    const prof=loadAuthProfile();
+    if(prof && prof.username) finalUsername=String(prof.username);
+    if(prof && prof.email) finalEmail=normalizeEmail(prof.email);
+  }
+  currentUsername = finalUsername || 'Player';
+  currentUserEmail = finalEmail || normalizeEmail(currentUsername || 'user@unknown');
+  persistAuthProfile(currentUsername, currentUserEmail);
   authLocked=true;
   setHeaderUser();
   hideAuthOverlay();
   return true;
 }
 
-function cognitoStart(mode){
+async function cognitoStart(mode){
   const hasDomain = /^https:\/\/.+\.auth\.[a-z0-9-]+\.amazoncognito\.com$/i.test(String(CLOUD_CONFIG.cognitoDomain||''));
   const hasClientId = /^[a-z0-9]{10,}$/i.test(String(CLOUD_CONFIG.userPoolClientId||''));
   if(!hasDomain || !hasClientId){
     setAuthNote('Configure CLOUD_CONFIG with your Cognito domain/client ID first.', true);
     return;
   }
-  const q = new URLSearchParams({
-    client_id:CLOUD_CONFIG.userPoolClientId,
-    response_type:'token',
-    scope:'openid email profile',
-    redirect_uri:CLOUD_CONFIG.redirectUri
-  });
   const path = mode==='signup' ? '/signup' : '/login';
-  window.location.href = CLOUD_CONFIG.cognitoDomain.replace(/\/$/,'') + path + '?' + q.toString();
+  try{ sessionStorage.setItem('bg_auth_redirect_pending','1'); }catch(e){}
+  // PKCE with localStorage (survives cross-origin navigation unlike sessionStorage).
+  // Cognito requires PKCE for public clients (no client secret).
+  try{
+    const arr = crypto.getRandomValues(new Uint8Array(32));
+    const verifier = Array.from(arr, b => ('0'+b.toString(16)).slice(-2)).join('');
+    try{ localStorage.setItem('bg_pkce_verifier', verifier); }catch(e){}
+    const enc = new TextEncoder();
+    const hBuf = await crypto.subtle.digest('SHA-256', enc.encode(verifier));
+    const challenge = btoa(String.fromCharCode(...new Uint8Array(hBuf)))
+      .replace(/\+/g,'-').replace(/\//g,'_').replace(/=/g,'');
+    const q = new URLSearchParams({
+      client_id: CLOUD_CONFIG.userPoolClientId,
+      response_type: 'code',
+      scope: 'openid email profile',
+      redirect_uri: CLOUD_CONFIG.redirectUri,
+      code_challenge: challenge,
+      code_challenge_method: 'S256'
+    });
+    window.location.href = CLOUD_CONFIG.cognitoDomain.replace(/\/$/,'') + path + '?' + q.toString();
+  }catch(e){
+    // SubtleCrypto unavailable (non-HTTPS?) — fall back to implicit flow
+    const q = new URLSearchParams({
+      client_id: CLOUD_CONFIG.userPoolClientId,
+      response_type: 'token',
+      scope: 'openid email profile',
+      redirect_uri: CLOUD_CONFIG.redirectUri
+    });
+    window.location.href = CLOUD_CONFIG.cognitoDomain.replace(/\/$/,'') + path + '?' + q.toString();
+  }
 }
 
 function processCognitoCallbackHash(){
-  if(!window.location.hash || window.location.hash.length<2) return;
-  const raw=window.location.hash.slice(1);
-  const p=new URLSearchParams(raw);
-  const idTok=p.get('id_token');
-  const accTok=p.get('access_token');
-  if(idTok && accTok){
-    cognitoIdToken=idTok;
-    cognitoAccessToken=accTok;
+  let idTok='';
+  let accTok='';
+  let fromHash=false;
+  try{
+    const h=window.location.hash||'';
+    if(h && h.length>1){
+      const ph=new URLSearchParams(h.slice(1));
+      idTok=ph.get('id_token')||'';
+      accTok=ph.get('access_token')||'';
+      fromHash=!!(idTok||accTok);
+    }
+  }catch(e){}
+  if(!idTok && !accTok){
+    try{
+      const qs=new URLSearchParams(window.location.search||'');
+      idTok=qs.get('id_token')||'';
+      accTok=qs.get('access_token')||'';
+    }catch(e){}
+  }
+  if(!idTok && !accTok){
+    const href=String(window.location.href||'');
+    const mId=href.match(/(?:[#&?])id_token=([^&]+)/);
+    const mAc=href.match(/(?:[#&?])access_token=([^&]+)/);
+    if(mId && mId[1]) idTok=decodeURIComponent(mId[1]);
+    if(mAc && mAc[1]) accTok=decodeURIComponent(mAc[1]);
+  }
+  if(idTok || accTok){
+    if(idTok) cognitoIdToken=idTok;
+    if(accTok) cognitoAccessToken=accTok;
     persistTokens();
-    window.history.replaceState({}, document.title, window.location.pathname + window.location.search);
+    applyAuthFromTokens();
+    if(fromHash){
+      window.history.replaceState({}, document.title, window.location.pathname + window.location.search);
+    }
+    try{ sessionStorage.removeItem('bg_auth_redirect_pending'); }catch(e){}
+    try{ sessionStorage.removeItem('bg_skip_splash_once'); }catch(e){}
+    return true;
+  }
+  return false;
+}
+
+function hasPendingAuthRedirect(){
+  try{ return sessionStorage.getItem('bg_auth_redirect_pending')==='1'; }catch(e){ return false; }
+}
+
+function shouldSkipSplashOnce(){
+  try{ return sessionStorage.getItem('bg_skip_splash_once')==='1'; }catch(e){ return false; }
+}
+
+function clearOAuthCallbackQueryParams(){
+  try{
+    const u = new URL(window.location.href);
+    const keys=['code','state','error','error_description'];
+    let changed=false;
+    for(const k of keys){
+      if(u.searchParams.has(k)){
+        u.searchParams.delete(k);
+        changed=true;
+      }
+    }
+    if(changed){
+      const q=u.searchParams.toString();
+      const next=u.pathname + (q?('?'+q):'');
+      window.history.replaceState({}, document.title, next + (u.hash||''));
+    }
+  }catch(e){}
+}
+
+function _authDebug(msg){ console.warn('[BG Auth]', msg); }
+
+async function processCognitoCallbackCode(){
+  let code='';
+  let oauthErr='';
+  try{
+    const qs = new URLSearchParams(window.location.search || '');
+    code = (qs.get('code') || '').trim();
+    oauthErr = (qs.get('error') || '').trim();
+  }catch(e){}
+  if(oauthErr){
+    _authDebug('Cognito returned error: ' + oauthErr);
+    clearOAuthCallbackQueryParams();
+    return false;
+  }
+  if(!code){
+    _authDebug('No ?code= found in URL: ' + window.location.href.slice(0,120));
+    return false;
+  }
+  if(oauthCodeExchangeInFlight) return false;
+
+  const hasDomain = /^https:\/\/.+\.auth\.[a-z0-9-]+\.amazoncognito\.com$/i.test(String(CLOUD_CONFIG.cognitoDomain||''));
+  const hasClientId = /^[a-z0-9]{10,}$/i.test(String(CLOUD_CONFIG.userPoolClientId||''));
+  if(!hasDomain || !hasClientId){ _authDebug('Bad domain/clientId config'); return false; }
+
+  oauthCodeExchangeInFlight = true;
+  _authDebug('Exchanging code for tokens...');
+  try{
+    const tokenUrl = CLOUD_CONFIG.cognitoDomain.replace(/\/$/,'') + '/oauth2/token';
+    let verifier = '';
+    try{ verifier = localStorage.getItem('bg_pkce_verifier') || ''; }catch(e){}
+    try{ localStorage.removeItem('bg_pkce_verifier'); }catch(e){}
+    _authDebug('Exchanging code (verifier ' + (verifier?'present':'MISSING') + ')...');
+    const bodyParams = {
+      grant_type:'authorization_code',
+      client_id:CLOUD_CONFIG.userPoolClientId,
+      code,
+      redirect_uri:CLOUD_CONFIG.redirectUri
+    };
+    if(verifier) bodyParams.code_verifier = verifier;
+    const body = new URLSearchParams(bodyParams);
+    const res = await fetch(tokenUrl, {
+      method:'POST',
+      headers:{'Content-Type':'application/x-www-form-urlencoded'},
+      body:body.toString()
+    });
+    const raw = await res.text();
+    _authDebug('Token response HTTP ' + res.status + ': ' + raw.slice(0,200));
+    let data={};
+    try{ data=JSON.parse(raw||'{}'); }catch(e){ data={}; }
+    if(!res.ok || (!data.id_token && !data.access_token)){
+      const detail = String((data && (data.error_description || data.error)) || ('HTTP ' + res.status));
+      throw new Error(detail);
+    }
+    cognitoIdToken = String(data.id_token || '');
+    cognitoAccessToken = String(data.access_token || '');
+    persistTokens();
+    const ok = applyAuthFromTokens();
+    _authDebug('applyAuthFromTokens=' + ok + ' username=' + currentUsername);
+    if(ok){
+      guestTrialStarted=false;
+      try{ sessionStorage.removeItem('bg_auth_redirect_pending'); }catch(e){}
+      try{ sessionStorage.removeItem('bg_skip_splash_once'); }catch(e){}
+      hideAuthOverlay();
+      updateTrialBadge();
+      refreshUI();
+      fetchCloudProfile();
+      _authDebug('SUCCESS — authLocked=' + authLocked + ' user=' + currentUsername);
+      const dbg = document.getElementById('bg-auth-debug');
+      if(dbg) dbg.style.borderColor = '#0f0';
+    }
+    clearOAuthCallbackQueryParams();
+    return ok;
+  }catch(e){
+    const reason = (e && e.message) ? e.message : String(e);
+    _authDebug('Token exchange FAILED: ' + reason);
+    clearOAuthCallbackQueryParams();
+    return false;
+  }finally{
+    oauthCodeExchangeInFlight = false;
   }
 }
 
@@ -2502,6 +3097,9 @@ function cognitoLogout(){
   authLocked=false;
   currentUserEmail='';
   currentUsername='';
+  guestTrialStarted=false;
+  try{ sessionStorage.removeItem('bg_auth_redirect_pending'); }catch(e){}
+  try{ sessionStorage.removeItem('bg_skip_splash_once'); }catch(e){}
   setHeaderUser();
   setAuthNote('Signed out.', false);
   showAuthOverlay();
@@ -2517,8 +3115,9 @@ function cognitoLogout(){
 async function apiFetch(path, opts){
   const url = CLOUD_CONFIG.apiBaseUrl.replace(/\/$/,'') + path;
   const headers = Object.assign({}, (opts && opts.headers) ? opts.headers : {});
-  if(cognitoAccessToken) headers.Authorization = 'Bearer ' + cognitoAccessToken;
-  if(!headers['Content-Type'] && opts?.body) headers['Content-Type'] = 'application/json';
+  const _bearer = cognitoIdToken || cognitoAccessToken;
+  if(_bearer) headers.Authorization = 'Bearer ' + _bearer;
+  if(!headers['Content-Type'] && opts && opts.body) headers['Content-Type'] = 'application/json';
   const res = await fetch(url, Object.assign({}, opts || {}, {headers}));
   const text = await res.text();
   let data = {};
@@ -2539,11 +3138,43 @@ async function fetchCloudProfile(){
   if(CLOUD_CONFIG.apiBaseUrl.includes('YOUR_HTTP_API_ID')) return;
   try{
     const data = await apiFetch('/profile', {method:'GET'});
-    const seq = Number(data?.handCount ?? 0);
-    const scoreVal = Number(data?.score ?? 1000);
+    if(data && (data.username || data.email)){
+      const uname=String(data.username || currentUsername || 'Player');
+      const mail=normalizeEmail(data.email || currentUserEmail || uname || 'user@unknown');
+      currentUsername=uname;
+      currentUserEmail=mail;
+      persistAuthProfile(currentUsername, currentUserEmail);
+      setHeaderUser();
+    }
+    const seq = Number((data && data.handCount != null) ? data.handCount : 0);
+    const scoreVal = Number((data && data.score != null) ? data.score : 1000);
     if(Number.isFinite(seq) && seq >= 0) cloudHandSeq = seq;
     if(Number.isFinite(scoreVal)) cloudScore = scoreVal;
   }catch(e){}
+}
+
+async function recoverAuthFromApi(){
+  if(authLocked) return true;
+  if(!cognitoIdToken && !cognitoAccessToken) return false;
+  if(CLOUD_CONFIG.apiBaseUrl.includes('YOUR_HTTP_API_ID')) return false;
+  if(authRecoveryInFlight) return false;
+  authRecoveryInFlight = true;
+  try{
+    const data = await apiFetch('/profile', {method:'GET'});
+    const uname=String((data && data.username) || currentUsername || 'Player');
+    const mail=normalizeEmail((data && data.email) || currentUserEmail || uname || 'user@unknown');
+    currentUsername=uname;
+    currentUserEmail=mail;
+    authLocked=true;
+    persistAuthProfile(currentUsername, currentUserEmail);
+    setHeaderUser();
+    hideAuthOverlay();
+    return true;
+  }catch(e){
+    return false;
+  } finally {
+    authRecoveryInFlight = false;
+  }
 }
 
 function toApiCard(c){
@@ -2582,15 +3213,15 @@ async function submitHandEventToCloud(r, b, retry){
       method:'POST',
       body:JSON.stringify(makeHandEventPayload(r, b))
     });
-    const nextSeq = Number(data?.seq);
-    const nextScore = Number(data?.score);
+    const nextSeq = Number(data && data.seq);
+    const nextScore = Number(data && data.score);
     if(Number.isFinite(nextSeq) && nextSeq > 0) cloudHandSeq = nextSeq;
     else cloudHandSeq += 1;
     if(Number.isFinite(nextScore)) cloudScore = nextScore;
     return;
   }catch(e){
     if(!attemptRetry && e && Number(e.status) === 409){
-      const expectedSeq = Number(e?.data?.expectedSeq);
+      const expectedSeq = Number(e && e.data && e.data.expectedSeq);
       if(Number.isFinite(expectedSeq) && expectedSeq > 0){
         cloudHandSeq = expectedSeq - 1;
         return submitHandEventToCloud(r, b, true);
@@ -2626,7 +3257,7 @@ async function fetchGlobalLeaderboard(){
   if(CLOUD_CONFIG.apiBaseUrl.includes('YOUR_HTTP_API_ID')) return;
   try{
     const data=await apiFetch('/leaderboard?limit=20', {method:'GET'});
-    const items=Array.isArray(data?.items) ? data.items : (Array.isArray(data) ? data : []);
+    const items=Array.isArray(data && data.items) ? data.items : (Array.isArray(data) ? data : []);
     renderLeaderboardRows(items);
   }catch(e){
     const body=document.getElementById('leaderboard-body');
@@ -2682,6 +3313,7 @@ function setMode(m){
   document.getElementById('tiger-side-panel').classList.toggle('visible',m==='tiger');
   document.getElementById('banker-odds').textContent=m==='standard'?'0.95:1':m==='tiger'?'1:1 (½ on 6)':'1:1';
   document.getElementById('mode-subtitle').textContent=MODE_RULES[m].sub;
+  applyVenueTheme();
   if(rulesOpen) showRules();
   clearBets();
   setMsg('Mode: '+(m==='standard'?'Standard':m==='ez'?'Panda & Dragon Baccarat':'Tiger Baccarat')+' — Place your bets!');
@@ -2877,8 +3509,8 @@ function showDealerCaption(text){
 }
 
 function dealerLine(key, data){
-  const p = data?.pTotal;
-  const b = data?.bTotal;
+  const p = data && data.pTotal;
+  const b = data && data.bTotal;
   const core = {
     place_bets:'Place your chips',
     no_more_bets:'No more bets',
@@ -3386,14 +4018,27 @@ function updateAIPanel() {
 
 // ── DEAL ─────────────────────────────────────────────────────────
 function deal(){
-  if(!authLocked){
-    showAuthOverlay();
-    setMsg('Sign in with Cognito to submit cloud scores and compete globally.');
+  if(oauthCodeExchangeInFlight){
+    setMsg('Finalizing sign-in...');
     return;
   }
   if(!botPersonaLocked){
     showBotPersonaPicker();
     setMsg('Choose your bot persona before the first hand.');
+    return;
+  }
+  if(!authLocked && cognitoAccessToken){
+    setMsg('Restoring signed-in session...');
+    recoverAuthFromApi().then(function(ok){
+      refreshUI();
+      updateTrialBadge();
+      if(ok){
+        deal();
+      } else {
+        showAuthOverlay('entry');
+        setAuthNote('Session restore failed. Please sign in again.', true);
+      }
+    });
     return;
   }
   if(totalBet()===0){ setMsg('Place virtual chips first!'); return; }
@@ -3602,9 +4247,9 @@ function playerShow(n){
 
 function updateRevealButtons(){
   const bPending = (!revealState.bankerInitial[0]?1:0)+(!revealState.bankerInitial[1]?1:0)
-                 +(revealState.thirdDealt&&pendingHand?.bThird&&!revealState.bankerThird?1:0);
+                 +(revealState.thirdDealt&&pendingHand&&pendingHand.bThird&&!revealState.bankerThird?1:0);
   const pPending = (!revealState.playerInitial[0]?1:0)+(!revealState.playerInitial[1]?1:0)
-                 +(revealState.thirdDealt&&pendingHand?.pThird&&!revealState.playerThird?1:0);
+                 +(revealState.thirdDealt&&pendingHand&&pendingHand.pThird&&!revealState.playerThird?1:0);
 
   const b1  = document.getElementById('btn-dealer-1');
   const ball= document.getElementById('btn-dealer-all');
@@ -3790,12 +4435,17 @@ function resolveHand(){
   submitHandEventToCloud(r, b, false);
   if((scores.B+scores.P+scores.T)%2===0) fetchGlobalLeaderboard();
 
-  // ── free trial tracking ──
-  freeHandsUsed++;
-  updateTrialBadge();
-  if(freeHandsUsed>=FREE_HAND_LIMIT && !trialExpired){
-    trialExpired=true;
-    setTimeout(()=>{ document.getElementById('upgrade-overlay').classList.add('show'); }, 900);
+  // ── free guest trial tracking ──
+  if(!authLocked){
+    freeHandsUsed++;
+    trialExpired = guestTrialExpired();
+    updateTrialBadge();
+    if(trialExpired){
+      setTimeout(function(){
+        showAuthOverlay();
+        setAuthNote('Guest trial complete. Sign in or create account to continue.', false);
+      }, 700);
+    }
   }
 
   // ── auto-play continuation ──
@@ -3834,7 +4484,7 @@ function newRound(){
   // only show Deal btn when not in auto-play mode
   if(autoPlayRemaining<=0){
     document.getElementById('btn-deal').style.display='inline-block';
-    document.getElementById('btn-auto').disabled=trialExpired;
+    document.getElementById('btn-auto').disabled=guestTrialExpired();
   }
   document.getElementById('btn-new').style.display='none';
   document.getElementById('btn-clear').disabled=false;
@@ -3843,9 +4493,9 @@ function newRound(){
   aiCurrentBet = { slot: null, amount: 0 };
   updateAIPanel();
   if(balance<=0){ balance=1000; setMsg('Credits reloaded to 1,000. Play responsibly.'); }
-  else if(trialExpired) setMsg('Session hand cap reached. Take a break, then continue simulated play.');
+  else if(guestTrialExpired()) setMsg('Guest trial complete. Sign in to continue.');
   else setMsg('Select a side, place virtual chips, then DEAL');
-  if(!trialExpired) dealerCall('place_bets', {}, {feed:false, caption:true});
+  if(!guestTrialExpired()) dealerCall('place_bets', {}, {feed:false, caption:true});
   selectSlot('banker');
   refreshUI();
 }
@@ -3872,6 +4522,8 @@ function refreshUI(){
   const et=document.getElementById('eco-title'); if(et) et.textContent=playerTitle;
   const ex=document.getElementById('eco-xp'); if(ex) ex.textContent=playerXp.toLocaleString();
   const ds=document.getElementById('eco-streak'); if(ds) ds.textContent='Daily Streak: '+dailyStreak;
+  populateVenueOptions();
+  applyVenueTheme();
   const dailyBtn=document.getElementById('btn-daily-claim');
   if(dailyBtn){
     dailyBtn.disabled=!canClaimDaily();
@@ -3965,6 +4617,10 @@ function snapRoadToLatest(scrollEl, usedCols, cellSize){
   });
 }
 
+function isMonteCarloRoadStyle(){
+  return currentVenue==='montecarlo';
+}
+
 // Filled or stroked circle
 function circ(ctx,cx,cy,r,fill,stroke,sw){
   ctx.beginPath();
@@ -3981,11 +4637,22 @@ function pairDot(ctx,cx,cy,r,color,left){
 }
 
 // Tie indicator: small green lines at top-right corner of a cell (Big Road style)
-function drawTieCorner(ctx,cellX,cellY,cellSize,count){
+function drawTieCorner(ctx,cellX,cellY,cellSize,count,opts){
   const x=cellX+cellSize-1, y=cellY+1, len=Math.min(cellSize*0.32,10);
-  ctx.strokeStyle='#00b33c'; ctx.lineWidth=1.6; ctx.lineCap='round';
+  const engraved=!!(opts&&opts.engraved);
+  ctx.lineCap='round';
   for(let i=0;i<Math.min(count,4);i++){
     const off=i*(len*0.55+1);
+    if(engraved){
+      ctx.strokeStyle='rgba(225,170,76,0.95)';
+      ctx.lineWidth=2.4;
+      ctx.beginPath();
+      ctx.moveTo(x-len-off, y);
+      ctx.lineTo(x-off,     y+len);
+      ctx.stroke();
+    }
+    ctx.strokeStyle='#00b33c';
+    ctx.lineWidth=engraved ? 1.35 : 1.6;
     ctx.beginPath();
     ctx.moveTo(x-len-off, y);
     ctx.lineTo(x-off,     y+len);
@@ -3995,7 +4662,7 @@ function drawTieCorner(ctx,cellX,cellY,cellSize,count){
 
 // Cockroach slash
 function slash(ctx,cx,cy,size,color,alpha){
-  ctx.save(); ctx.globalAlpha=alpha??1; ctx.strokeStyle=color;
+  ctx.save(); ctx.globalAlpha=(alpha==null?1:alpha); ctx.strokeStyle=color;
   ctx.lineWidth=2; ctx.lineCap='round';
   const h=size*0.35;
   ctx.beginPath(); ctx.moveTo(cx-h,cy+h); ctx.lineTo(cx+h,cy-h); ctx.stroke();
@@ -4057,6 +4724,7 @@ function renderBeadRoad(res){
 // ── BIG ROAD (HOLLOW circles, tie=corner lines, natural=yellow dot)
 function renderBigRoad(br,preds){
   const{streaks,cells}=br;
+  const monteStyle=isMonteCarloRoadStyle();
   const canvas=document.getElementById('bigCanvas');
   const scroll=document.getElementById('bigScroll');
   const cell=BIG_CELL;
@@ -4069,12 +4737,17 @@ function renderBigRoad(br,preds){
   // Prediction ghost circles (dashed)
   if(preds){
     ['B','P'].forEach(side=>{
-      const pred=preds[side]; if(!pred?.bigCell) return;
+      const pred=preds[side]; if(!(pred && pred.bigCell)) return;
       const{vCol,vRow}=pred.bigCell;
       const cx=vCol*cell+cell/2, cy=vRow*cell+cell/2;
       const sc=side==='B'?BANKER_C:PLAYER_C;
       ctx.save();
       ctx.setLineDash([3,3]);
+      if(monteStyle){
+        ctx.strokeStyle='rgba(219,171,82,0.75)';
+        ctx.lineWidth=2.1;
+        ctx.beginPath(); ctx.arc(cx,cy,cell*0.4,0,Math.PI*2); ctx.stroke();
+      }
       ctx.strokeStyle=sc+'88'; ctx.lineWidth=1.5;
       ctx.beginPath(); ctx.arc(cx,cy,cell*0.4,0,Math.PI*2); ctx.stroke();
       ctx.setLineDash([]);
@@ -4088,7 +4761,12 @@ function renderBigRoad(br,preds){
     const cellX=c.vCol*cell, cellY=c.vRow*cell;
 
     // HOLLOW circle (outline only — standard Big Road style)
-    circ(ctx,cx,cy,r,null,color,2.2);
+    if(monteStyle){
+      circ(ctx,cx,cy,r,null,'rgba(224,176,84,0.95)',3.1);
+      circ(ctx,cx,cy,r,null,color,2.45);
+    } else {
+      circ(ctx,cx,cy,r,null,color,2.2);
+    }
 
     // Natural (8 or 9 on 2 cards) → small yellow dot inside
     if(c.nat){
@@ -4096,7 +4774,7 @@ function renderBigRoad(br,preds){
     }
 
     // Tie lines at top-right corner of the cell
-    if(c.ties>0) drawTieCorner(ctx,cellX,cellY,cell,c.ties);
+    if(c.ties>0) drawTieCorner(ctx,cellX,cellY,cell,c.ties,{engraved:monteStyle});
 
     // Pair dots
     if(c.pp) pairDot(ctx,cx,cy,r,PLAYER_C,true);
@@ -4110,6 +4788,7 @@ function renderBigRoad(br,preds){
 
 // ── DERIVED ROADS (Big Eye Boy, Small Road, Cockroach Pig)
 function renderDerived(canvasId,scrollId,countId,entries,preds,cockroach){
+  const monteStyle=isMonteCarloRoadStyle();
   const canvas=document.getElementById(canvasId);
   const scroll=document.getElementById(scrollId);
   const cell=SM_CELL;
@@ -4127,7 +4806,10 @@ function renderDerived(canvasId,scrollId,countId,entries,preds,cockroach){
       const color=pred.color==='red'?RED_D:BLUE_D;
       ctx.save(); ctx.setLineDash([2,2]);
       if(cockroach) slash(ctx,cx,cy,cell,color,0.4);
-      else circ(ctx,cx,cy,cell*0.32,null,color+'99',1.2);
+      else{
+        if(monteStyle) circ(ctx,cx,cy,cell*0.32,null,'rgba(219,171,82,0.65)',1.8);
+        circ(ctx,cx,cy,cell*0.32,null,color+'99',monteStyle?1.35:1.2);
+      }
       ctx.setLineDash([]);
       ctx.restore();
     };
@@ -4141,7 +4823,10 @@ function renderDerived(canvasId,scrollId,countId,entries,preds,cockroach){
     const cx=col*cell+cell/2, cy=row*cell+cell/2;
     const c=color==='red'?RED_D:BLUE_D;
     if(cockroach) slash(ctx,cx,cy,cell,c,1);
-    else circ(ctx,cx,cy,cell*0.33,null,c,1.8);
+    else{
+      if(monteStyle) circ(ctx,cx,cy,cell*0.33,null,'rgba(224,176,84,0.9)',2.35);
+      circ(ctx,cx,cy,cell*0.33,null,c,monteStyle?2.05:1.8);
+    }
   });
 
   const usedCols = Math.ceil(entries.length/ROWS);
@@ -4269,33 +4954,94 @@ let _sfxGain    = null;
 let _musicGain  = null;
 let _crowdNodes = null;
 let _orchNodes  = null;
+let _orchTimer  = null;
+let _activeVenueAudio = '';
 let soundEnabled  = true;   // SFX toggle (backward compat)
 let musicEnabled  = true;
 let masterVolume  = 0.8;
 
+function getVenueAudioProfile(){
+  return VENUE_AUDIO[currentVenue] || VENUE_AUDIO.vegas;
+}
+
+function applyVenueAudioTheme(){
+  const profile=getVenueAudioProfile();
+  if(_musicGain){
+    _musicGain.gain.value = musicEnabled ? profile.musicGain : 0;
+  }
+  if(_crowdNodes){
+    if(_crowdNodes.g) _crowdNodes.g.gain.value = profile.crowdGain;
+    if(_crowdNodes.bp) _crowdNodes.bp.frequency.value = profile.crowdBand;
+    if(_crowdNodes.hp) _crowdNodes.hp.frequency.value = profile.crowdHighpass;
+  }
+  const changed = _activeVenueAudio !== currentVenue;
+  _activeVenueAudio = currentVenue;
+  if(changed && musicEnabled){
+    stopOrchestral();
+    startOrchestral();
+  }
+}
+
 // ── INIT ──────────────────────────────────────────────────────────
 loadEconomy();
 if(!VENUES.some(v=>v.id===currentVenue)) currentVenue='vegas';
-const currentVenueDef=VENUES.find(v=>v.id===currentVenue);
-if(currentVenueDef && balance<currentVenueDef.minChips) currentVenue='vegas';
+const currentVenueDef=getVenueById(currentVenue);
+if(currentVenueDef && !venueUnlocked(currentVenueDef)) currentVenue='vegas';
 populateVenueOptions();
 buildShoe();
 setMode('ez');   // default to Panda & Dragon mode on load
 selectSlot('banker');
 refreshUI();
 updateAllRoads();
-updateTrialBadge();    // show correct hands-remaining count on load
-processCognitoCallbackHash();
-loadTokens();
-if(applyAuthFromTokens()) fetchCloudProfile();
-setHeaderUser();
-fetchGlobalLeaderboard();
+const pendingAuthRedirect = hasPendingAuthRedirect();
+const skipSplashOnce = shouldSkipSplashOnce();
+const prebootSkipSplash = !!window.__bgSkipSplashPreboot;
+const qsAuth = new URLSearchParams(window.location.search || '');
+const hasOauthCodeReturn = !!qsAuth.get('code');
+const authHashHandled = processCognitoCallbackHash();
+if(hasOauthCodeReturn && !authHashHandled){
+  // Show "Signing in..." immediately — do NOT run synchronous loadTokens/applyAuthFromTokens
+  // here since tokens aren't stored yet, which would overwrite the header back to Guest.
+  const _hdrEl = document.getElementById('hdr-user');
+  if(_hdrEl) _hdrEl.textContent = 'User: Signing in...';
+  processCognitoCallbackCode().then(function(ok){
+    if(ok){
+      setHeaderUser();
+      updateTrialBadge();
+      fetchGlobalLeaderboard();
+    } else {
+      const el = document.getElementById('hdr-user');
+      if(el && !authLocked) el.textContent = 'Sign-in failed — try again';
+      loadTokens();
+      applyAuthFromTokens();
+      setHeaderUser();
+      updateTrialBadge();
+    }
+  });
+} else {
+  loadTokens();
+  const hasValidAuthSession = applyAuthFromTokens();
+  if(hasValidAuthSession) fetchCloudProfile();
+  else if(cognitoIdToken || cognitoAccessToken) recoverAuthFromApi().then(function(ok){ if(ok) fetchCloudProfile(); });
+  setHeaderUser();
+  updateTrialBadge();    // show correct guest/signed-in state after auth restore
+  fetchGlobalLeaderboard();
+}
 selectBotPersona('larry');
 selectBotVoice('vegas');
 applyBotPersonaToUI();
 setDealerStyle('core');
 applyStoreSafeMode();
 maybeShowAgeGate();
+// Only skip the splash when Cognito actually returned with tokens/code on this load.
+// Do NOT skip on prebootSkipSplash alone — that flag can linger in sessionStorage
+// from a previous login attempt and incorrectly suppress the splash on fresh visits.
+const hasRealAuthReturn = authHashHandled || hasOauthCodeReturn;
+if(hasRealAuthReturn || pendingAuthRedirect || skipSplashOnce){
+  try{ sessionStorage.removeItem('bg_auth_redirect_pending'); }catch(e){}
+  try{ sessionStorage.removeItem('bg_skip_splash_once'); }catch(e){}
+  setTimeout(function(){ forceDismissSplash(); }, 30);
+}
 
 let _roadResizeTimer = null;
 window.addEventListener('resize', function(){
@@ -4309,10 +5055,11 @@ window.addEventListener('resize', function(){
 // Declared here (after buildShoe call site) — functions use them via closure
 function getAudioCtx(){
   if(!_audioCtx){
+    const profile=getVenueAudioProfile();
     _audioCtx   = new (window.AudioContext||window.webkitAudioContext)();
     _masterGain = _audioCtx.createGain(); _masterGain.gain.value = masterVolume; _masterGain.connect(_audioCtx.destination);
     _sfxGain    = _audioCtx.createGain(); _sfxGain.gain.value    = soundEnabled ? 1 : 0; _sfxGain.connect(_masterGain);
-    _musicGain  = _audioCtx.createGain(); _musicGain.gain.value  = musicEnabled ? 0.22 : 0; _musicGain.connect(_masterGain);
+    _musicGain  = _audioCtx.createGain(); _musicGain.gain.value  = musicEnabled ? profile.musicGain : 0; _musicGain.connect(_masterGain);
   }
   if(_audioCtx.state==='suspended') _audioCtx.resume();
   return _audioCtx;
@@ -4334,11 +5081,15 @@ function toggleSFX(){
 }
 function toggleMusic(){
   musicEnabled = !musicEnabled;
-  if(_musicGain) _musicGain.gain.value = musicEnabled ? 0.22 : 0;
+  const profile=getVenueAudioProfile();
+  if(_musicGain) _musicGain.gain.value = musicEnabled ? profile.musicGain : 0;
   const btn = document.getElementById('btn-music');
   btn.textContent = musicEnabled ? '🎵' : '🔕';
   btn.classList.toggle('muted', !musicEnabled);
-  if(musicEnabled && !_orchNodes) startOrchestral();
+  if(musicEnabled){
+    applyVenueAudioTheme();
+    if(!_orchNodes) startOrchestral();
+  }
 }
 // Legacy alias (splash screen uses toggleSound)
 function toggleSound(){ toggleSFX(); }
@@ -4349,22 +5100,23 @@ function haptic(pattern){ try{ if(navigator.vibrate) navigator.vibrate(pattern);
 // ── Crowd ambience (low looping filtered noise) ──
 function startCrowdAmbience(){
   if(_crowdNodes) return;
+  const profile=getVenueAudioProfile();
   const ctx = getAudioCtx();
   const bufSec=3, bufLen=Math.floor(ctx.sampleRate*bufSec);
   const buf=ctx.createBuffer(1,bufLen,ctx.sampleRate);
   const d=buf.getChannelData(0);
   for(let i=0;i<bufLen;i++) d[i]=Math.random()*2-1;
   const src=ctx.createBufferSource(); src.buffer=buf; src.loop=true;
-  const bp=ctx.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=320; bp.Q.value=0.5;
-  const hp=ctx.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=180;
-  const g=ctx.createGain(); g.gain.value=0.055;
+  const bp=ctx.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=profile.crowdBand; bp.Q.value=0.5;
+  const hp=ctx.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=profile.crowdHighpass;
+  const g=ctx.createGain(); g.gain.value=profile.crowdGain;
   // gentle LFO swell
   const lfo=ctx.createOscillator(); lfo.frequency.value=0.07;
   const lfoG=ctx.createGain(); lfoG.gain.value=0.02;
   lfo.connect(lfoG); lfoG.connect(g.gain);
   src.connect(hp); hp.connect(bp); bp.connect(g); g.connect(getMusicOut());
   lfo.start(); src.start();
-  _crowdNodes={src,g,lfo};
+  _crowdNodes={src,g,lfo,bp,hp};
 }
 function stopCrowdAmbience(){
   if(!_crowdNodes) return;
@@ -4372,34 +5124,43 @@ function stopCrowdAmbience(){
   _crowdNodes=null;
 }
 
-// ── Orchestral Roman loop (synthesized) ──
-const ORCH_MELODY=[
-  [392,0.5],[440,0.5],[392,0.5],[349,0.5],
-  [330,0.75],[392,0.25],[440,1.0],
-  [349,0.5],[392,0.5],[330,0.5],[294,0.5],
-  [262,1.5],[262,0.5]
-];
-let _orchTimer=null;
+// ── Venue loop (synthesized; profile-driven) ──
 function startOrchestral(){
   if(_orchNodes||!musicEnabled) return;
   _orchNodes=true;
   function playLoop(){
+    const profile=getVenueAudioProfile();
+    const melody=profile.melody || VENUE_AUDIO.vegas.melody;
+    const leadGain=Number.isFinite(profile.leadGain) ? profile.leadGain : 0.18;
+    const bassGain=Number.isFinite(profile.bassGain) ? profile.bassGain : 0.12;
+    const drumGain=Number.isFinite(profile.drumGain) ? profile.drumGain : 0.25;
+    const padGain=Number.isFinite(profile.padGain) ? profile.padGain : 0;
+    const padHzRatio=Number.isFinite(profile.padHzRatio) ? profile.padHzRatio : 0.5;
     const ctx=getAudioCtx(), now=ctx.currentTime;
     let t=now;
-    ORCH_MELODY.forEach(([freq,dur])=>{
+    melody.forEach(([freq,dur])=>{
       // Brass melody (sawtooth + lowpass)
-      const o=ctx.createOscillator(); o.type='sawtooth'; o.frequency.value=freq*0.5;
-      const lp=ctx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=900;
+      const o=ctx.createOscillator(); o.type=profile.brassType || 'sawtooth'; o.frequency.value=freq*0.5;
+      const lp=ctx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=profile.brassCutoff || 900;
       const g=ctx.createGain();
-      g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(0.18,t+0.06);
-      g.gain.setValueAtTime(0.18,t+dur-0.08); g.gain.linearRampToValueAtTime(0,t+dur);
+      g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(leadGain,t+0.06);
+      g.gain.setValueAtTime(leadGain,t+dur-0.08); g.gain.linearRampToValueAtTime(0,t+dur);
       o.connect(lp); lp.connect(g); g.connect(getMusicOut());
       o.start(t); o.stop(t+dur+0.05);
+      if(padGain>0 && dur>=0.55){
+        const p=ctx.createOscillator(); p.type=profile.padType || 'sine'; p.frequency.value=freq*padHzRatio;
+        const plp=ctx.createBiquadFilter(); plp.type='lowpass'; plp.frequency.value=profile.padCutoff || 550;
+        const pg=ctx.createGain();
+        pg.gain.setValueAtTime(0,t); pg.gain.linearRampToValueAtTime(padGain,t+0.22);
+        pg.gain.setValueAtTime(padGain,t+Math.max(0.25,dur-0.15)); pg.gain.linearRampToValueAtTime(0,t+dur);
+        p.connect(plp); plp.connect(pg); pg.connect(getMusicOut());
+        p.start(t); p.stop(t+dur+0.06);
+      }
       // Sub bass hit on beat
       if(dur>=0.5){
         const b=ctx.createOscillator(); b.type='sine'; b.frequency.value=freq*0.25;
         const bg=ctx.createGain();
-        bg.gain.setValueAtTime(0.12,t); bg.gain.exponentialRampToValueAtTime(0.001,t+0.35);
+        bg.gain.setValueAtTime(bassGain,t); bg.gain.exponentialRampToValueAtTime(0.001,t+0.35);
         b.connect(bg); bg.connect(getMusicOut()); b.start(t); b.stop(t+0.4);
         // Drum hit (noise burst)
         const blen=Math.floor(ctx.sampleRate*0.08);
@@ -4408,12 +5169,12 @@ function startOrchestral(){
         for(let i=0;i<blen;i++) dd[i]=(Math.random()*2-1)*(1-i/blen);
         const bs=ctx.createBufferSource(); bs.buffer=bbuf;
         const bf=ctx.createBiquadFilter(); bf.type='lowpass'; bf.frequency.value=200;
-        const bdg=ctx.createGain(); bdg.gain.value=0.25;
+        const bdg=ctx.createGain(); bdg.gain.value=drumGain;
         bs.connect(bf); bf.connect(bdg); bdg.connect(getMusicOut()); bs.start(t);
       }
       t+=dur;
     });
-    const totalDur=ORCH_MELODY.reduce((s,[,d])=>s+d,0);
+    const totalDur=melody.reduce((s,[,d])=>s+d,0);
     _orchTimer=setTimeout(playLoop,(totalDur-0.1)*1000);
   }
   playLoop();
@@ -4754,13 +5515,18 @@ function soundNatural(){
 function updateTrialBadge(){
   const el=document.getElementById('hdr-trial');
   if(!el) return;
-  const rem=Math.max(0, FREE_HAND_LIMIT-freeHandsUsed);
-  if(trialExpired){
-    el.textContent='Session break available';
+  if(authLocked){
+    el.textContent='Signed In · Unlimited Hands';
+    el.className='trial-badge';
+    return;
+  }
+  const rem=guestHandsRemaining();
+  if(guestTrialExpired()){
+    el.textContent='Guest Trial Complete · Sign In to Continue';
     el.className='trial-badge critical';
     return;
   }
-  el.textContent=`Session Hands: ${rem} remaining`;
+  el.textContent=`Guest Trial: ${rem} hand${rem===1?'':'s'} left`;
   if(rem<=2) el.className='trial-badge critical';
   else if(rem<=5) el.className='trial-badge warning';
   else el.className='trial-badge';
@@ -4768,8 +5534,10 @@ function updateTrialBadge(){
 
 // Block chips/deal when trial expired (called from addChip + deal)
 function checkTrialBlock(){
+  trialExpired = guestTrialExpired();
   if(trialExpired){
-    document.getElementById('upgrade-overlay').classList.add('show');
+    showAuthOverlay('trial-limit');
+    setMsg('Free guest trial complete. Sign in to continue playing.');
     return true;
   }
   return false;
@@ -4901,10 +5669,11 @@ function makeFaceUpCardEl(card,id){
 // ══════════════════════════════════════════════════════════════════
 //  SPLASH SCREEN — theme music + enter transition
 // ══════════════════════════════════════════════════════════════════
-let splashAudioCtx = null;
-let splashThemeNodes = [];
-let splashSndOn = true;
-let splashThemeStarted = false;
+var splashAudioCtx = null;
+var splashThemeNodes = [];
+var splashSndOn = true;
+var splashThemeStarted = false;
+var splashEntered = false;
 
 function getSplashCtx(){
   if(!splashAudioCtx) splashAudioCtx=new (window.AudioContext||window.webkitAudioContext)();
@@ -5028,37 +5797,133 @@ document.addEventListener('click',  ()=>{ if(!splashThemeStarted&&document.getEl
 document.addEventListener('touchstart',()=>{ if(!splashThemeStarted&&document.getElementById('splash-overlay')&&!document.getElementById('splash-overlay').classList.contains('hide')) startSplashTheme(); },{once:true});
 
 function enterArena(){
-  if(!splashThemeStarted) startSplashTheme();
-  // sword clash sound
-  const ctx=getSplashCtx(), now=ctx.currentTime;
-  [880,1320,1760,2200].forEach((f,i)=>{
-    const o=ctx.createOscillator(); o.type='triangle'; o.frequency.value=f;
-    const g=ctx.createGain(); g.gain.setValueAtTime(0.14-i*0.02,now); g.gain.exponentialRampToValueAtTime(0.001,now+0.55);
-    o.connect(g); g.connect(ctx.destination); o.start(now); o.stop(now+0.6);
-  });
-  const bufLen=Math.floor(ctx.sampleRate*0.07);
-  const buf=ctx.createBuffer(1,bufLen,ctx.sampleRate); const d=buf.getChannelData(0);
-  for(let i=0;i<bufLen;i++) d[i]=(Math.random()*2-1)*(1-i/bufLen)*0.7;
-  const s=ctx.createBufferSource(); s.buffer=buf;
-  const g=ctx.createGain(); g.gain.value=0.45; s.connect(g); g.connect(ctx.destination); s.start(now);
+  if(splashEntered) return;
+  const initialOverlay=document.getElementById('splash-overlay');
+  if(!initialOverlay || initialOverlay.classList.contains('hide')) return;
+  splashEntered=true;
 
-  // Flash + fade out overlay
+  // Best-effort splash SFX only; never block leaving splash.
+  try{
+    if(!splashThemeStarted) startSplashTheme();
+    const ctx=getSplashCtx(), now=ctx.currentTime;
+    [880,1320,1760,2200].forEach((f,i)=>{
+      const o=ctx.createOscillator(); o.type='triangle'; o.frequency.value=f;
+      const g=ctx.createGain(); g.gain.setValueAtTime(0.14-i*0.02,now); g.gain.exponentialRampToValueAtTime(0.001,now+0.55);
+      o.connect(g); g.connect(ctx.destination); o.start(now); o.stop(now+0.6);
+    });
+    const bufLen=Math.floor(ctx.sampleRate*0.07);
+    const buf=ctx.createBuffer(1,bufLen,ctx.sampleRate); const d=buf.getChannelData(0);
+    for(let i=0;i<bufLen;i++) d[i]=(Math.random()*2-1)*(1-i/bufLen)*0.7;
+    const s=ctx.createBufferSource(); s.buffer=buf;
+    const g=ctx.createGain(); g.gain.value=0.45; s.connect(g); g.connect(ctx.destination); s.start(now);
+  }catch(e){}
+
   const flash=document.getElementById('splash-flash');
-  flash.classList.add('on');
+  if(flash) flash.classList.add('on');
+  // Immediate fallback for browsers that can fail CSS transition callbacks.
+  initialOverlay.classList.add('hide');
+  initialOverlay.style.pointerEvents='none';
+  initialOverlay.style.opacity='0';
   setTimeout(()=>{
-    flash.classList.remove('on');   // ← clear flash so it doesn't grey out the game
-    stopSplashTheme();
+    if(flash) flash.classList.remove('on');
+    try{ stopSplashTheme(); }catch(e){}
     const overlay=document.getElementById('splash-overlay');
-    overlay.classList.add('hide');
-    setTimeout(()=>{ overlay.remove(); flash.remove(); }, 900);
-    // Start game audio: crowd ambience + orchestral loop
-    setTimeout(()=>{ startCrowdAmbience(); startOrchestral(); }, 500);
+    if(overlay){
+      overlay.classList.add('hide');
+      overlay.style.pointerEvents='none';
+      overlay.style.opacity='0';
+    }
     setTimeout(()=>{
-      if(!authLocked) showAuthOverlay();
-      else if(!botPersonaLocked) showBotPersonaPicker();
+      if(overlay){
+        overlay.style.display='none';
+        overlay.remove();
+      }
+      if(flash) flash.remove();
+    }, 900);
+    // Start game audio: crowd ambience + orchestral loop
+    setTimeout(()=>{
+      try{ startCrowdAmbience(); startOrchestral(); }catch(e){}
+    }, 500);
+    setTimeout(()=>{
+      if(oauthCodeExchangeInFlight){
+        setMsg('Finalizing sign-in...');
+      } else if(!authLocked && !guestTrialStarted){
+        showAuthOverlay('entry');
+      } else if(!botPersonaLocked){
+        showBotPersonaPicker();
+      }
     }, 540);
   }, 120);
 }
+
+function forceDismissSplash(){
+  splashEntered=true;
+  try{ stopSplashTheme(); }catch(e){}
+  const overlay=document.getElementById('splash-overlay');
+  const flash=document.getElementById('splash-flash');
+  if(overlay){
+    overlay.classList.add('hide');
+    overlay.style.pointerEvents='none';
+    overlay.style.opacity='0';
+    overlay.style.display='none';
+    if(overlay.parentNode) overlay.parentNode.removeChild(overlay);
+  }
+  if(flash && flash.parentNode) flash.parentNode.removeChild(flash);
+  setTimeout(function(){
+    try{ startCrowdAmbience(); startOrchestral(); }catch(e){}
+  }, 80);
+}
+
+function bindSplashStartTriggers(){
+  const card=document.getElementById('splash-start-card');
+  const btn=document.getElementById('splash-enter-btn');
+  const overlay=document.getElementById('splash-overlay');
+  [card,btn].forEach(function(el){
+    if(!el || el.dataset.boundStart==='1') return;
+    el.dataset.boundStart='1';
+    el.addEventListener('click', function(e){
+      if(e) e.preventDefault();
+      enterArena();
+    }, {passive:false});
+    el.addEventListener('touchend', function(e){
+      if(e) e.preventDefault();
+      enterArena();
+    }, {passive:false});
+  });
+  if(overlay && overlay.dataset.boundStart!=='1'){
+    overlay.dataset.boundStart='1';
+    const delegatedStart=function(e){
+      const t=e && e.target;
+      if(!t || !t.closest) return;
+      if(t.closest('#splash-start-card') || t.closest('#splash-enter-btn')) enterArena();
+    };
+    overlay.addEventListener('pointerup', delegatedStart, true);
+    overlay.addEventListener('touchend', delegatedStart, true);
+    overlay.addEventListener('click', delegatedStart, true);
+  }
+}
+bindSplashStartTriggers();
+
+function bindGlobalSplashEnterFallback(){
+  if(window.__bgSplashGlobalBound) return;
+  window.__bgSplashGlobalBound=true;
+  const handler=function(e){
+    const overlay=document.getElementById('splash-overlay');
+    if(!overlay || overlay.classList.contains('hide')) return;
+    const t=e&&e.target;
+    if(t && t.closest && t.closest('#splash-snd-btn')) return;
+    enterArena();
+  };
+  document.addEventListener('pointerup', handler, true);
+  document.addEventListener('touchend',  handler, true);
+  document.addEventListener('click',     handler, true);
+}
+bindGlobalSplashEnterFallback();
+window.enterArena = enterArena;
+setTimeout(function(){
+  var ov=document.getElementById('splash-overlay');
+  if(ov && !ov.classList.contains('hide')) enterArena();
+}, 4000);
 
 // ── Mobile audio unlock: resume AudioContext on first touch ──
 (function(){
