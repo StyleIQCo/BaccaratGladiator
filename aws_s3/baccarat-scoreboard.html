@@ -213,6 +213,11 @@ html[data-skip-splash='1'] #splash-flash{
   from{opacity:0;transform:translateY(22px);} to{opacity:1;transform:translateY(0);}
 }
 @keyframes splashFade { from{opacity:0;} to{opacity:1;} }
+@keyframes shuffleCard {
+  0%   { transform:translate(-50%,-50%) translateX(var(--tx,0px)) rotate(var(--r,0deg)) translateY(0px); }
+  50%  { transform:translate(-50%,-50%) translateX(var(--tx,0px)) rotate(var(--r,0deg)) translateY(-18px) scale(1.06); }
+  100% { transform:translate(-50%,-50%) translateX(var(--tx,0px)) rotate(var(--r,0deg)) translateY(0px); }
+}
 
 /* ─── TRIAL BADGE ─── */
 .trial-badge {
@@ -774,23 +779,18 @@ body[data-venue='montecarlo'] .bet-slot .sodds{
   color:rgba(255,236,191,0.8);
 }
 body[data-venue='montecarlo'] .card-back-face{
-  background:linear-gradient(160deg,#3e2b12 0%,#221608 52%,#4b3516 100%);
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Cpath d='M8 1 L15 8 L8 15 L1 8 Z' fill='none' stroke='rgba(255,220,156,0.22)' stroke-width='0.8'/%3E%3C/svg%3E"),
+    linear-gradient(160deg,#3e2b12 0%,#221608 52%,#4b3516 100%);
   border:2px solid rgba(247,216,140,0.9);
   box-shadow:0 0 0 1px rgba(255,241,205,0.14) inset, 2px 2px 10px rgba(0,0,0,0.72);
 }
 body[data-venue='montecarlo'] .card-back-face::before{
   border-color:rgba(255,229,168,0.65);
-  background-image:
-    repeating-linear-gradient(45deg,
-      transparent, transparent 4px,
-      rgba(255,220,156,0.09) 4px, rgba(255,220,156,0.09) 5px),
-    repeating-linear-gradient(-45deg,
-      transparent, transparent 4px,
-      rgba(255,220,156,0.09) 4px, rgba(255,220,156,0.09) 5px);
 }
 body[data-venue='montecarlo'] .card-back-face::after{
-  color:rgba(255,226,156,0.58);
-  filter:drop-shadow(0 0 8px rgba(255,215,132,0.46));
+  color:rgba(255,226,156,0.65);
+  text-shadow:0 0 8px rgba(255,215,132,0.5);
 }
 body[data-venue='montecarlo'] .card-container.pending .card-back-face{
   background:linear-gradient(160deg,#2a1b0d 0%,#170f07 100%);
@@ -1037,30 +1037,30 @@ header h1 {
 
 /* Card BACK — casino deep navy with gold frame & sword emblem */
 .card-back-face {
-  background:linear-gradient(160deg,#0c1d58 0%,#06113a 50%,#0c1d58 100%);
   border:2px solid rgba(201,168,76,0.7);
   overflow:hidden;
   box-shadow:2px 2px 8px rgba(0,0,0,0.7);
+  background:
+    /* diamond trellis */
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Cpath d='M8 1 L15 8 L8 15 L1 8 Z' fill='none' stroke='rgba(201,168,76,0.2)' stroke-width='0.8'/%3E%3C/svg%3E"),
+    linear-gradient(160deg,#0e1f3d 0%,#060e22 100%);
 }
 .card-back-face::before {
   content:'';
-  position:absolute; inset:5px;
-  border:1.5px solid rgba(201,168,76,0.45);
-  border-radius:2px;
-  background-image:
-    repeating-linear-gradient(45deg,
-      transparent, transparent 4px,
-      rgba(80,120,220,0.08) 4px, rgba(80,120,220,0.08) 5px),
-    repeating-linear-gradient(-45deg,
-      transparent, transparent 4px,
-      rgba(80,120,220,0.08) 4px, rgba(80,120,220,0.08) 5px);
+  position:absolute; inset:4px;
+  border-radius:3px;
+  border:1.5px solid rgba(201,168,76,0.5);
+  box-shadow:inset 0 0 0 3px rgba(201,168,76,0.18);
+  pointer-events:none;
 }
 .card-back-face::after {
-  content:'⚔';
+  content:'BG';
   position:absolute; top:50%; left:50%;
-  transform:translate(-50%,-50%);
-  font-size:2.6rem; color:rgba(201,168,76,0.42);
-  filter:drop-shadow(0 0 6px rgba(201,168,76,0.35));
+  transform:translate(-50%,-54%);
+  font-family:serif; font-size:1.15rem; font-weight:bold;
+  color:rgba(201,168,76,0.65);
+  text-shadow:0 0 8px rgba(201,168,76,0.4);
+  letter-spacing:0.05em;
 }
 
 /* ─────────────────────────────────────────────
@@ -1944,6 +1944,12 @@ header h1 {
   </div>
 </div>
 
+<div id="shuffle-overlay" style="display:none;position:fixed;inset:0;z-index:8888;background:rgba(4,10,28,0.93);display:none;align-items:center;justify-content:center;flex-direction:column;gap:18px;">
+  <div id="shuffle-cards" style="position:relative;width:220px;height:140px;"></div>
+  <div style="font-family:'Cinzel',serif;font-size:1.5rem;color:#c9a84c;letter-spacing:0.18em;text-shadow:0 0 18px rgba(201,168,76,0.6);">RESHUFFLING</div>
+  <div style="font-size:0.78rem;color:rgba(201,168,76,0.5);letter-spacing:0.2em;">8-DECK SHOE · NEW HAND SOON</div>
+</div>
+
 <div class="age-overlay" id="age-overlay">
   <div class="age-box">
     <div class="age-title">18+ Simulated Casino Experience</div>
@@ -2302,7 +2308,7 @@ header h1 {
     <div class="stat-item"><span class="sv" id="stat-nat" style="color:#ffd700;">0</span><span class="sl">Naturals</span></div>
     <div class="stat-item"><span class="sv" id="stat-rounds">0</span><span class="sl">Rounds</span></div>
     <div class="stat-item"><span class="sv" id="stat-streak">—</span><span class="sl">Streak</span></div>
-    <div class="stat-item"><span class="sv" id="stat-shoe">312</span><span class="sl">Shoe left</span></div>
+    <div class="stat-item"><span class="sv" id="stat-shoe">408 / 408</span><span class="sl">Shoe left</span></div>
   </div>
   <!-- B/P/T PERCENTAGE DISTRIBUTION CHART -->
   <div class="pct-chart" id="pct-chart" style="display:none;">
@@ -2417,6 +2423,9 @@ let selSlot='banker';
 let natWins=0;  // count of natural (2-card 8/9) wins this shoe
 let phase='betting';   // 'betting' | 'revealing' | 'dealt'
 let results=[], shoe=[], scores={B:0,P:0,T:0};
+let cardsDealtThisShoe=0;   // resets each buildShoe(); dealing blocked at >= 408
+let shuffleInProgress=false;
+const SHOE_CUT_CARD=408;    // max cards dealt before forced reshuffle (8-deck = 416)
 let rulesOpen=false;
 const ECONOMY_KEY='bg_economy_v1';
 const DAILY_REWARDS=[10000,20000,50000,75000,100000,150000,300000];
@@ -3253,12 +3262,27 @@ function renderLeaderboardRows(items){
   if(empty) empty.remove();
 }
 
+const LEADERBOARD_SEEDS = [
+  {username:'Late Bet Larry',  topScore:487250, rounds:1843},
+  {username:'Even Steven',     topScore:312800, rounds:1204},
+  {username:'Jay Dawg',        topScore:198600, rounds:871},
+  {username:'2ndBankFrank',    topScore:134400, rounds:632},
+  {username:'DragonSlayer',    topScore:87900,  rounds:415},
+];
+
 async function fetchGlobalLeaderboard(){
   if(CLOUD_CONFIG.apiBaseUrl.includes('YOUR_HTTP_API_ID')) return;
   try{
     const data=await apiFetch('/leaderboard?limit=20', {method:'GET'});
     const items=Array.isArray(data && data.items) ? data.items : (Array.isArray(data) ? data : []);
-    renderLeaderboardRows(items);
+    // Pad with seeds for any positions real players haven't claimed yet
+    const merged = [...items];
+    for(const seed of LEADERBOARD_SEEDS){
+      const alreadyBeaten = merged.some(it => Number(it.topScore||it.score||0) >= seed.topScore);
+      if(!alreadyBeaten && merged.length < 20) merged.push({...seed, _seed:true});
+    }
+    merged.sort((a,b)=>Number(b.topScore||b.score||0)-Number(a.topScore||a.score||0));
+    renderLeaderboardRows(merged);
   }catch(e){
     const body=document.getElementById('leaderboard-body');
     if(body) body.innerHTML='<div class="leaderboard-empty">Leaderboard unavailable. Check API config.</div>';
@@ -3278,11 +3302,12 @@ let revealState={
 // ── SHOE ────────────────────────────────────────────────────────
 function buildShoe(){
   shoe=[];
-  for(let d=0;d<6;d++) for(const s of SUITS) for(const r of RANKS) shoe.push({rank:r,suit:s});
+  for(let d=0;d<8;d++) for(const s of SUITS) for(const r of RANKS) shoe.push({rank:r,suit:s});
   for(let i=shoe.length-1;i>0;i--){
     const j=Math.floor(Math.random()*(i+1));
     [shoe[i],shoe[j]]=[shoe[j],shoe[i]];
   }
+  cardsDealtThisShoe=0;
   soundShuffle();
   if(results.length>0){
     dealerCall('cut_card', {}, {feed:true, caption:true});
@@ -3290,7 +3315,17 @@ function buildShoe(){
     dealerCall('new_shoe', {}, {feed:true, caption:true});
   }
 }
-function drawCard(){ if(shoe.length<15) buildShoe(); return shoe.pop(); }
+function drawCard(){ if(shoe.length<6) buildShoe(); cardsDealtThisShoe++; return shoe.pop(); }
+
+// Trigger reshuffle with animation, save scores first, then call cb when ready to deal
+function triggerEndOfShoe(cb){
+  if(authLocked){ fetchCloudProfile(); fetchGlobalLeaderboard(); }
+  postFeedMsg('🔀 Cut card reached — reshuffling 8-deck shoe…', 'info');
+  showShuffleOverlay(function(){
+    buildShoe();
+    if(cb) cb();
+  });
+}
 function cardVal(c){ if(c.rank==='A') return 1; if(['10','J','Q','K'].includes(c.rank)) return 0; return parseInt(c.rank); }
 function total(cards){ return cards.reduce((s,c)=>(s+cardVal(c))%10,0); }
 function bankerDraws(bT,pThird){
@@ -3375,9 +3410,16 @@ function makeCardEl(card, id, clickable, pending){
   const inner=document.createElement('div');
   inner.className='card-inner';
 
-  // — Back face
+  // — Back face (SVG matches the splash screen card back design)
   const back=document.createElement('div');
   back.className='card-back-face';
+  back.innerHTML=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 63 88" width="100%" height="100%" style="position:absolute;inset:0;pointer-events:none;">
+    <circle cx="31.5" cy="44" r="12" fill="none" stroke="rgba(201,168,76,0.3)" stroke-width="0.7"/>
+    <circle cx="31.5" cy="44" r="9.5" fill="rgba(201,168,76,0.06)" stroke="rgba(201,168,76,0.22)" stroke-width="0.5"/>
+    <text x="31.5" y="47.5" font-family="serif" font-size="7" fill="rgba(201,168,76,0.45)" text-anchor="middle" letter-spacing="2">♠ ♠ ♠</text>
+    <text x="5" y="10" font-family="serif" font-size="6" fill="rgba(201,168,76,0.5)">♠</text>
+    <text x="58" y="83" font-family="serif" font-size="6" fill="rgba(201,168,76,0.5)" text-anchor="end" transform="rotate(180,31.5,44)">♠</text>
+  </svg>`;
   inner.appendChild(back);
 
   // — Front face (card content)
@@ -4039,6 +4081,13 @@ function deal(){
         setAuthNote('Session restore failed. Please sign in again.', true);
       }
     });
+    return;
+  }
+  if(shuffleInProgress){ setMsg('Reshuffling — please wait…'); return; }
+  if(cardsDealtThisShoe >= SHOE_CUT_CARD){
+    shuffleInProgress=true;
+    setMsg('Cut card reached — reshuffling…');
+    triggerEndOfShoe(function(){ shuffleInProgress=false; });
     return;
   }
   if(totalBet()===0){ setMsg('Place virtual chips first!'); return; }
@@ -4914,7 +4963,7 @@ function updateStats(streaks){
   document.getElementById('stat-nat').textContent=natWins;
   document.getElementById('stat-rounds').textContent=tot;
   document.getElementById('hdr-rounds').textContent=`Round ${tot}`;
-  document.getElementById('stat-shoe').textContent=shoe.length;
+  document.getElementById('stat-shoe').textContent=(SHOE_CUT_CARD - cardsDealtThisShoe) + ' / ' + SHOE_CUT_CARD;
   if(streaks&&streaks.length>0){
     const last=streaks[streaks.length-1];
     document.getElementById('stat-streak').textContent=`${last.side==='B'?'Bnk':'Plr'} ×${last.count}`;
@@ -5254,24 +5303,59 @@ function soundMetalClash(){
 // ── Shuffle: rushing white-noise swish ──
 function soundShuffle(){
   if(!soundEnabled) return;
-  const ctx = getAudioCtx(), now = ctx.currentTime, dur = 0.45;
-  const bufLen = Math.floor(ctx.sampleRate * dur);
-  const buf = ctx.createBuffer(1, bufLen, ctx.sampleRate);
-  const d = buf.getChannelData(0);
-  for(let i=0;i<bufLen;i++) d[i] = Math.random()*2-1;
-  const src = ctx.createBufferSource(); src.buffer = buf;
-  const filt = ctx.createBiquadFilter();
-  filt.type = 'bandpass'; filt.Q.value = 1.5;
-  filt.frequency.setValueAtTime(600, now);
-  filt.frequency.linearRampToValueAtTime(2400, now+0.18);
-  filt.frequency.linearRampToValueAtTime(800, now+dur);
-  const gain = ctx.createGain();
-  gain.gain.setValueAtTime(0, now);
-  gain.gain.linearRampToValueAtTime(0.28, now+0.06);
-  gain.gain.linearRampToValueAtTime(0.22, now+0.28);
-  gain.gain.exponentialRampToValueAtTime(0.001, now+dur);
-  src.connect(filt); filt.connect(gain); gain.connect(getMasterOut());
-  src.start(now);
+  // Play 4 riffle passes staggered 380ms apart for a realistic shuffle sound
+  const ctx = getAudioCtx();
+  [0, 0.38, 0.76, 1.14].forEach(function(offset){
+    const now = ctx.currentTime + offset;
+    const dur = 0.42;
+    const bufLen = Math.floor(ctx.sampleRate * dur);
+    const buf = ctx.createBuffer(1, bufLen, ctx.sampleRate);
+    const d = buf.getChannelData(0);
+    for(let i=0;i<bufLen;i++) d[i] = Math.random()*2-1;
+    const src = ctx.createBufferSource(); src.buffer = buf;
+    const filt = ctx.createBiquadFilter();
+    filt.type = 'bandpass'; filt.Q.value = 1.8;
+    filt.frequency.setValueAtTime(500, now);
+    filt.frequency.linearRampToValueAtTime(2800, now+0.15);
+    filt.frequency.linearRampToValueAtTime(700, now+dur);
+    const gain = ctx.createGain();
+    gain.gain.setValueAtTime(0, now);
+    gain.gain.linearRampToValueAtTime(0.32, now+0.05);
+    gain.gain.linearRampToValueAtTime(0.26, now+0.25);
+    gain.gain.exponentialRampToValueAtTime(0.001, now+dur);
+    src.connect(filt); filt.connect(gain); gain.connect(getMasterOut());
+    src.start(now);
+  });
+}
+
+// ── Shuffle overlay animation ──
+function showShuffleOverlay(cb){
+  const ov = document.getElementById('shuffle-overlay');
+  const container = document.getElementById('shuffle-cards');
+  if(!ov){ if(cb) cb(); return; }
+  // Build animated card elements
+  container.innerHTML='';
+  const TOTAL=12;
+  for(let i=0;i<TOTAL;i++){
+    const card=document.createElement('div');
+    const angle=-30+i*(60/(TOTAL-1));
+    const tx=-40+i*(80/(TOTAL-1));
+    card.style.cssText=`position:absolute;left:50%;top:50%;width:42px;height:60px;
+      background:linear-gradient(160deg,#0e1f3d,#060e22);
+      border:1.5px solid rgba(201,168,76,0.7);border-radius:4px;
+      transform:translate(-50%,-50%) translateX(${tx}px) rotate(${angle}deg);
+      box-shadow:1px 2px 6px rgba(0,0,0,0.7);
+      animation:shuffleCard 1.6s ease-in-out ${i*0.06}s infinite alternate;`;
+    container.appendChild(card);
+  }
+  ov.style.display='flex';
+  soundShuffle();
+  // After 2s hide overlay and call back
+  setTimeout(function(){
+    ov.style.display='none';
+    container.innerHTML='';
+    if(cb) cb();
+  }, 2000);
 }
 
 // ── Deal: crisp card-slap on felt ──
