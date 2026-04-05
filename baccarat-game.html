@@ -619,6 +619,162 @@
   .felt-table.theme-emerald { background: radial-gradient(ellipse at center, #0a3a1a 0%, #041208 100%); border-color: #44cc88; }
   .felt-table.theme-gold { background: radial-gradient(ellipse at center, #3a2800 0%, #150f00 100%); border-color: #f0d080; }
 
+  /* ─── NEON BACKDROP (Las Vegas) ─── */
+  #neon-backdrop {
+    display: none;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(180deg, #0a0010 0%, #100018 100%);
+    border-radius: 12px;
+    padding: 12px 16px 8px;
+    margin-bottom: 10px;
+    border: 1px solid rgba(255,30,120,0.2);
+  }
+  .neon-signs-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+  }
+  .neon-sign {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(0.9rem, 2.5vw, 1.5rem);
+    letter-spacing: 4px;
+    user-select: none;
+  }
+  .neon-red  { color: #ff2255; text-shadow: 0 0 6px #ff2255, 0 0 14px #ff2255, 0 0 30px #ff0040, 0 0 60px #ff0040; animation: nflicker-a 4s infinite; }
+  .neon-blue { color: #00e5ff; text-shadow: 0 0 6px #00e5ff, 0 0 14px #00e5ff, 0 0 30px #0088ff, 0 0 60px #0055ff; animation: nflicker-b 5s infinite; }
+  .neon-gold { color: #ffe100; text-shadow: 0 0 6px #ffe100, 0 0 14px #ffe100, 0 0 30px #ffaa00, 0 0 60px #ff8800; animation: nflicker-c 3.5s infinite; }
+  .neon-pink { color: #ff55ee; text-shadow: 0 0 6px #ff55ee, 0 0 14px #ff55ee, 0 0 30px #cc00cc; animation: nflicker-a 6s infinite reverse; }
+  @keyframes nflicker-a {
+    0%,18%,20%,22%,52%,54%,64%,66%,100% { opacity:1; }
+    19%,21%,53%,65% { opacity:0.3; }
+  }
+  @keyframes nflicker-b {
+    0%,10%,12%,40%,42%,60%,62%,100% { opacity:1; }
+    11%,41%,61% { opacity:0.2; }
+  }
+  @keyframes nflicker-c {
+    0%,30%,32%,35%,75%,77%,100% { opacity:1; }
+    31%,33%,76% { opacity:0.4; }
+  }
+  .neon-bulbs-row {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    flex-wrap: nowrap;
+    overflow: hidden;
+  }
+  .neon-bulb {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: currentColor;
+    flex-shrink: 0;
+  }
+  .neon-bulb.b-red   { color: #ff2255; animation: bulb-chase 1.2s ease-in-out infinite; }
+  .neon-bulb.b-blue  { color: #00e5ff; animation: bulb-chase 1.2s ease-in-out infinite; }
+  .neon-bulb.b-gold  { color: #ffe100; animation: bulb-chase 1.2s ease-in-out infinite; }
+  .neon-bulb.b-pink  { color: #ff55ee; animation: bulb-chase 1.2s ease-in-out infinite; }
+  @keyframes bulb-chase {
+    0%,100% { opacity:0.15; box-shadow: 0 0 2px currentColor; }
+    50%     { opacity:1;    box-shadow: 0 0 8px currentColor, 0 0 18px currentColor; }
+  }
+  .neon-sweep-strip {
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 60px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
+    animation: sweep-across 5s linear infinite;
+    pointer-events: none;
+  }
+  @keyframes sweep-across {
+    from { left: -80px; }
+    to   { left: calc(100% + 80px); }
+  }
+  /* Vegas felt glow */
+  .felt-table.vegas-active {
+    animation: vegas-border-pulse 3s ease-in-out infinite alternate;
+  }
+  @keyframes vegas-border-pulse {
+    from { box-shadow: 0 0 40px rgba(0,0,0,0.8), inset 0 0 60px rgba(0,0,0,0.3), 0 0 25px rgba(255,30,100,0.25); }
+    to   { box-shadow: 0 0 40px rgba(0,0,0,0.8), inset 0 0 60px rgba(0,0,0,0.3), 0 0 35px rgba(0,200,255,0.25); }
+  }
+
+  /* ─── AVATARS ─── */
+  .avatar-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 0 8px;
+    margin-bottom: 14px;
+    position: relative;
+  }
+  .avatar-slot {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    position: relative;
+  }
+  .avatar-slot svg { filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5)); }
+  .avatar-name {
+    font-family: 'Cinzel', serif;
+    font-size: 0.55rem;
+    letter-spacing: 2px;
+    color: var(--gold);
+    text-align: center;
+  }
+  /* Speech bubble */
+  .speech-bubble {
+    position: absolute;
+    top: -10px;
+    left: 72px;
+    background: rgba(10,10,20,0.95);
+    border: 1px solid var(--gold);
+    border-radius: 10px;
+    padding: 7px 12px;
+    min-width: 140px;
+    max-width: 200px;
+    z-index: 20;
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 0.4s, transform 0.4s;
+    pointer-events: none;
+  }
+  .speech-bubble::before {
+    content: '';
+    position: absolute;
+    left: -8px; top: 16px;
+    border: 6px solid transparent;
+    border-right-color: var(--gold);
+  }
+  .speech-bubble::after {
+    content: '';
+    position: absolute;
+    left: -6px; top: 17px;
+    border: 5px solid transparent;
+    border-right-color: rgba(10,10,20,0.95);
+  }
+  .speech-bubble.show { opacity: 1; transform: translateY(0); }
+  .speech-lang { font-family: 'Cinzel', serif; font-size: 0.55rem; color: var(--gold); letter-spacing: 2px; margin-bottom: 3px; }
+  .speech-text { font-size: 0.85rem; color: #fff; font-weight: 600; }
+  .speech-romanized { font-size: 0.6rem; color: rgba(240,230,200,0.5); font-style: italic; margin-top: 2px; }
+  /* Sound toggle */
+  .sound-toggle {
+    font-size: 1.1rem;
+    background: transparent;
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 6px;
+    padding: 6px 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    line-height: 1;
+  }
+  .sound-toggle:hover { border-color: var(--gold); background: rgba(201,168,76,0.1); }
+
   /* ─── RESPONSIVE ─── */
   @media (max-width: 540px) {
     .table-sections, .bet-slots { grid-template-columns: 1fr; }
@@ -662,13 +818,112 @@
     🏰 TAP TO SELECT YOUR CASINO
   </div>
 
+  <!-- NEON BACKDROP (Las Vegas casinos only) -->
+  <div id="neon-backdrop">
+    <div class="neon-sweep-strip"></div>
+    <div class="neon-signs-row">
+      <span class="neon-sign neon-red" id="neon-sign-l">♠ BACCARAT ♠</span>
+      <span class="neon-sign neon-blue" id="neon-sign-c">LAS VEGAS</span>
+      <span class="neon-sign neon-gold" id="neon-sign-r">♦ LUCKY ♦</span>
+    </div>
+    <div class="neon-bulbs-row" id="neon-bulbs"></div>
+  </div>
+
   <!-- FELT TABLE -->
   <div class="felt-table" id="felt-table">
+
+    <!-- AVATARS -->
+    <div class="avatar-row">
+      <!-- Dealer (left) -->
+      <div class="avatar-slot">
+        <div class="speech-bubble" id="dealer-speech">
+          <div class="speech-lang" id="speech-lang">English</div>
+          <div class="speech-text" id="speech-text">Good luck!</div>
+          <div class="speech-romanized" id="speech-romanized"></div>
+        </div>
+        <svg id="avatar-dealer" viewBox="0 0 60 80" width="58" height="78" xmlns="http://www.w3.org/2000/svg">
+          <rect x="8" y="5" width="44" height="15" rx="7" fill="#1a7a1a"/>
+          <rect x="4" y="17" width="52" height="5" rx="2.5" fill="#0d5c0d"/>
+          <rect x="10" y="7" width="40" height="6" rx="3" fill="rgba(255,255,255,0.18)"/>
+          <ellipse cx="30" cy="43" rx="19" ry="20" fill="#f5d0a0"/>
+          <ellipse cx="11" cy="43" rx="4" ry="5" fill="#f0c898"/>
+          <ellipse cx="49" cy="43" rx="4" ry="5" fill="#f0c898"/>
+          <ellipse cx="22" cy="40" rx="3.2" ry="3.5" fill="#1a1a4a"/>
+          <ellipse cx="38" cy="40" rx="3.2" ry="3.5" fill="#1a1a4a"/>
+          <circle cx="23.5" cy="38.5" r="1.2" fill="white"/>
+          <circle cx="39.5" cy="38.5" r="1.2" fill="white"/>
+          <ellipse cx="30" cy="47" rx="2" ry="1.4" fill="#e0b890"/>
+          <path d="M 21 53 Q 30 59 39 53" stroke="#c07850" stroke-width="2" fill="rgba(255,255,255,0.6)" stroke-linecap="round"/>
+          <rect x="26" y="61" width="8" height="8" fill="#f5d0a0"/>
+          <polygon points="12,69 30,76 28,62" fill="white"/>
+          <polygon points="48,69 30,76 32,62" fill="white"/>
+          <rect x="8" y="74" width="44" height="6" rx="2" fill="white"/>
+          <polygon points="24,65 28,69 24,73" fill="#cc1111"/>
+          <polygon points="36,65 32,69 36,73" fill="#cc1111"/>
+          <ellipse cx="30" cy="69" rx="3.5" ry="2.8" fill="#aa0000"/>
+        </svg>
+        <div class="avatar-name">DEALER</div>
+      </div>
+
+      <!-- VS divider -->
+      <div style="font-family:'Cinzel',serif;font-size:0.7rem;color:rgba(201,168,76,0.4);letter-spacing:2px;padding-top:20px">VS</div>
+
+      <!-- Banker bot (right) -->
+      <div class="avatar-slot">
+        <svg id="avatar-banker" viewBox="0 0 60 80" width="58" height="78" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="30" cy="26" rx="19" ry="13" fill="#111"/>
+          <ellipse cx="30" cy="39" rx="19" ry="20" fill="#e8c8a0"/>
+          <path d="M 11 32 Q 30 15 49 32 Q 49 23 30 19 Q 11 23 11 32Z" fill="#111"/>
+          <ellipse cx="11" cy="39" rx="4" ry="5" fill="#e0c098"/>
+          <ellipse cx="49" cy="39" rx="4" ry="5" fill="#e0c098"/>
+          <ellipse cx="22" cy="37" rx="3.5" ry="3" fill="#0a0a2a"/>
+          <ellipse cx="38" cy="37" rx="3.5" ry="3" fill="#0a0a2a"/>
+          <circle cx="23" cy="36" r="1" fill="rgba(255,255,255,0.55)"/>
+          <circle cx="39" cy="36" r="1" fill="rgba(255,255,255,0.55)"/>
+          <path d="M 17 30 L 27 33" stroke="#333" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M 33 33 L 43 30" stroke="#333" stroke-width="2.5" stroke-linecap="round"/>
+          <ellipse cx="30" cy="44" rx="2" ry="1.4" fill="#d0a880"/>
+          <path d="M 23 50 L 37 50" stroke="#a07050" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+          <path d="M 23 50 Q 21 51.5 22 52.5" stroke="#a07050" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+          <path d="M 37 50 Q 39 51.5 38 52.5" stroke="#a07050" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+          <rect x="26" y="57" width="8" height="10" fill="#e8c8a0"/>
+          <path d="M 6 67 L 30 75 L 54 67 L 54 80 L 6 80 Z" fill="#0a0a1a"/>
+          <polygon points="22,67 30,75 26,59" fill="white"/>
+          <polygon points="38,67 30,75 34,59" fill="white"/>
+          <polygon points="28,67 32,67 31,75 29,75" fill="#1a1a4a"/>
+          <polygon points="29,75 31,75 30,78" fill="#1a1a4a"/>
+        </svg>
+        <div class="avatar-name">BANKER</div>
+      </div>
+    </div>
 
     <!-- HANDS -->
     <div class="table-sections">
       <div class="hand-section">
-        <h3>⚔ BANKER</h3>
+        <!-- Player avatar inside hand section -->
+        <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:6px">
+          <svg id="avatar-player" viewBox="0 0 60 80" width="44" height="58" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="30" cy="24" rx="19" ry="11" fill="#2a1800"/>
+            <ellipse cx="30" cy="37" rx="19" ry="20" fill="#f5d0a0"/>
+            <path d="M 11 30 Q 30 15 49 30" fill="#2a1800"/>
+            <ellipse cx="11" cy="37" rx="4" ry="5" fill="#f0c898"/>
+            <ellipse cx="49" cy="37" rx="4" ry="5" fill="#f0c898"/>
+            <rect x="14" y="31" width="14" height="9" rx="4" fill="#111"/>
+            <rect x="32" y="31" width="14" height="9" rx="4" fill="#111"/>
+            <rect x="28" y="34" width="4" height="2" rx="1" fill="#333"/>
+            <ellipse cx="20" cy="34" rx="3" ry="2" fill="rgba(30,120,220,0.3)"/>
+            <ellipse cx="38" cy="34" rx="3" ry="2" fill="rgba(30,120,220,0.3)"/>
+            <ellipse cx="30" cy="44" rx="2" ry="1.4" fill="#e0b890"/>
+            <path d="M 23 50 Q 32 55 38 51" stroke="#c07850" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <rect x="26" y="55" width="8" height="10" fill="#f5d0a0"/>
+            <path d="M 8 65 L 30 73 L 52 65 L 52 80 L 8 80 Z" fill="#1a1a3a"/>
+            <polygon points="24,65 30,73 26,57" fill="white"/>
+            <polygon points="36,65 30,73 34,57" fill="white"/>
+            <polygon points="28,65 32,65 31,73 29,73" fill="#c9a84c"/>
+            <polygon points="29,73 31,73 30,76" fill="#c9a84c"/>
+          </svg>
+          <h3 style="margin:0">⚔ BANKER</h3>
+        </div>
         <div class="cards-row" id="banker-cards"></div>
         <div class="hand-value" id="banker-value">—</div>
         <div id="banker-badge"></div>
@@ -727,6 +982,7 @@
       <div class="action-btns">
         <button class="btn btn-deal" id="btn-deal" onclick="deal()">DEAL</button>
         <button class="btn btn-new"  id="btn-new"  onclick="newRound()" style="display:none">NEW ROUND</button>
+        <button class="sound-toggle" id="sound-toggle" onclick="toggleSound()" title="Toggle sounds">🔊</button>
       </div>
     </div>
 
@@ -956,6 +1212,7 @@ function totalBet() {
 function deal() {
   if (totalBet() === 0) { setMsg('Place a bet first!'); return; }
   gamePhase = 'dealt';
+  playSlotClick();
   document.getElementById('btn-deal').style.display = 'none';
   document.getElementById('btn-new').style.display  = 'inline-block';
 
@@ -1056,10 +1313,11 @@ function deal() {
   if (history.length > 60) history.shift();
   renderHistory();
 
-  // Award XP
+  // Award XP + sounds
   const betWon = (winner === 'banker' && bets.banker > 0) ||
                  (winner === 'player' && bets.player > 0) ||
                  (winner === 'tie'    && bets.tie    > 0);
+  if (betWon) playWinJingle(); else playCoinDrop();
   earnXP(10 + (betWon ? 15 : 0));
 
   // Reset bets
@@ -1135,6 +1393,7 @@ function newRound() {
   } else {
     setMsg('Place your bet and press DEAL');
   }
+  showDealerGreeting();
   updateUI();
 }
 
@@ -1156,6 +1415,190 @@ function updateScores() {
 
 function setMsg(text) {
   document.getElementById('message').textContent = text;
+}
+
+// ═══════════════════════════════════════════
+//  DEALER GREETINGS
+// ═══════════════════════════════════════════
+
+const DEALER_GREETINGS = [
+  { lang:'English',    text:'Good luck!',                 rom:null },
+  { lang:'Singlish',   text:'Good luck lah!',             rom:null },
+  { lang:'Cantonese',  text:'祝你好運！',                   rom:'Juk nei hou wan!' },
+  { lang:'Mandarin',   text:'祝你好运！',                   rom:'Zhù nǐ hǎo yùn!' },
+  { lang:'Japanese',   text:'幸運を！',                     rom:'Kōun o!' },
+  { lang:'Korean',     text:'행운을 빌어요！',               rom:'Haengul bil-eoyo!' },
+  { lang:'Cambodian',  text:'សំណាងល្អ！',                   rom:'Samnang l\'or!' },
+  { lang:'Lao',        text:'ໂຊກດີ！',                      rom:'Chok di!' },
+  { lang:'Thai',       text:'โชคดีนะ！',                    rom:'Chok dee na!' },
+  { lang:'Filipino',   text:'Mapalad ka!',                rom:null },
+  { lang:'Vietnamese', text:'Chúc may mắn!',              rom:null },
+  { lang:'Spanish',    text:'¡Buena suerte!',             rom:null },
+  { lang:'French',     text:'Bonne chance!',              rom:null },
+  { lang:'Italian',    text:'In bocca al lupo!',          rom:null },
+  { lang:'Portuguese', text:'Boa sorte!',                 rom:null },
+  { lang:'German',     text:'Viel Glück!',                rom:null },
+  { lang:'Russian',    text:'Удачи!',                      rom:'Udachi!' },
+  { lang:'Arabic',     text:'حظاً موفقاً！',               rom:'Hazzan muwaffaqan!' },
+  { lang:'Hindi',      text:'शुभकामनाएं！',                 rom:'Shubhkamnaayen!' },
+  { lang:'Malay',      text:'Semoga berjaya lah!',        rom:null },
+  { lang:'Swahili',    text:'Bahati njema!',              rom:null },
+  { lang:'Indonesian', text:'Semoga beruntung!',          rom:null },
+  { lang:'Greek',      text:'Καλή τύχη!',                  rom:'Kalí týchi!' },
+];
+
+let lastGreetingIdx = -1;
+let greetingTimer   = null;
+
+function showDealerGreeting() {
+  let idx;
+  do { idx = Math.floor(Math.random() * DEALER_GREETINGS.length); } while (idx === lastGreetingIdx);
+  lastGreetingIdx = idx;
+  const g = DEALER_GREETINGS[idx];
+  document.getElementById('speech-lang').textContent      = g.lang.toUpperCase();
+  document.getElementById('speech-text').textContent      = g.text;
+  document.getElementById('speech-romanized').textContent = g.rom || '';
+  const bubble = document.getElementById('dealer-speech');
+  bubble.classList.add('show');
+  clearTimeout(greetingTimer);
+  greetingTimer = setTimeout(() => bubble.classList.remove('show'), 4500);
+}
+
+// ═══════════════════════════════════════════
+//  NEON LIGHTS
+// ═══════════════════════════════════════════
+
+const LAS_VEGAS_IDS = new Set(['bellagio','mgm','caesars','cosmopolitan','venetian_lv','resorts_world_lv']);
+
+const NEON_CONFIGS = {
+  bellagio:        { l:'⛲ BELLAGIO ⛲',   c:'ITALIAN RIVIERA',  r:'♠ LUXURY ♠',   lc:'neon-blue',  cc:'neon-gold', rc:'neon-red'  },
+  mgm:             { l:'🦁 MGM GRAND 🦁',  c:'LAS VEGAS',        r:'♦ GLORY ♦',    lc:'neon-gold',  cc:'neon-red',  rc:'neon-blue' },
+  caesars:         { l:'🏛️ CAESARS 🏛️',   c:'PALACE OF ROME',   r:'♣ FORTUNE ♣',  lc:'neon-gold',  cc:'neon-pink', rc:'neon-gold' },
+  cosmopolitan:    { l:'🍸 COSMO 🍸',       c:'LAS VEGAS',        r:'♠ STYLE ♠',    lc:'neon-pink',  cc:'neon-blue', rc:'neon-pink' },
+  venetian_lv:     { l:'🚣 VENETIAN 🚣',   c:'VENICE ON THE STRIP', r:'♦ GRANDEUR ♦', lc:'neon-blue', cc:'neon-gold', rc:'neon-blue' },
+  resorts_world_lv:{ l:'🌐 RESORTS WORLD', c:'LAS VEGAS',        r:'♣ NEW ERA ♣',  lc:'neon-red',   cc:'neon-blue', rc:'neon-gold' },
+};
+
+const BULB_CLASSES = ['b-red','b-blue','b-gold','b-pink'];
+
+function buildNeonBulbs() {
+  const row  = document.getElementById('neon-bulbs');
+  if (!row) return;
+  row.innerHTML = '';
+  const count = 48;
+  for (let i = 0; i < count; i++) {
+    const b = document.createElement('div');
+    b.className = 'neon-bulb ' + BULB_CLASSES[i % BULB_CLASSES.length];
+    b.style.animationDelay = (i * 0.025) + 's';
+    row.appendChild(b);
+  }
+}
+
+function updateNeonSigns(id) {
+  const cfg = NEON_CONFIGS[id] || NEON_CONFIGS.bellagio;
+  const sl  = document.getElementById('neon-sign-l');
+  const sc  = document.getElementById('neon-sign-c');
+  const sr  = document.getElementById('neon-sign-r');
+  if (sl) { sl.textContent = cfg.l; sl.className = 'neon-sign ' + cfg.lc; }
+  if (sc) { sc.textContent = cfg.c; sc.className = 'neon-sign ' + cfg.cc; }
+  if (sr) { sr.textContent = cfg.r; sr.className = 'neon-sign ' + cfg.rc; }
+}
+
+function applyNeonState(casinoId) {
+  const backdrop = document.getElementById('neon-backdrop');
+  const table    = document.getElementById('felt-table');
+  if (!backdrop || !table) return;
+  if (LAS_VEGAS_IDS.has(casinoId)) {
+    backdrop.style.display = 'block';
+    table.classList.add('vegas-active');
+    updateNeonSigns(casinoId);
+    buildNeonBulbs();
+    if (soundEnabled) startVegasAmbience();
+  } else {
+    backdrop.style.display = 'none';
+    table.classList.remove('vegas-active');
+    stopVegasAmbience();
+  }
+}
+
+// ═══════════════════════════════════════════
+//  WEB AUDIO — SLOT MACHINE SOUNDS
+// ═══════════════════════════════════════════
+
+let audioCtx       = null;
+let soundEnabled   = true;
+let vegasAmbiTimer = null;
+
+function getAudio() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
+}
+
+function playTone(freq, duration, gain, type = 'sine', delay = 0) {
+  try {
+    const ctx  = getAudio();
+    const osc  = ctx.createOscillator();
+    const gn   = ctx.createGain();
+    osc.connect(gn);
+    gn.connect(ctx.destination);
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, ctx.currentTime + delay);
+    gn.gain.setValueAtTime(0, ctx.currentTime + delay);
+    gn.gain.linearRampToValueAtTime(gain, ctx.currentTime + delay + 0.01);
+    gn.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + delay + duration);
+    osc.start(ctx.currentTime + delay);
+    osc.stop(ctx.currentTime + delay + duration + 0.02);
+  } catch(e) {}
+}
+
+function playCoinDrop() {
+  if (!soundEnabled) return;
+  const notes = [880, 1046, 1318, 1567, 1760];
+  notes.forEach((f, i) => playTone(f, 0.12, 0.06, 'triangle', i * 0.08));
+}
+
+function playSlotClick() {
+  if (!soundEnabled) return;
+  for (let i = 0; i < 6; i++) {
+    playTone(300 + Math.random() * 500, 0.04, 0.04, 'square', i * 0.05);
+  }
+}
+
+function playWinJingle() {
+  if (!soundEnabled) return;
+  const melody = [523,659,784,1047];
+  melody.forEach((f, i) => playTone(f, 0.18, 0.07, 'triangle', i * 0.12));
+}
+
+let ambieceRunning = false;
+
+function startVegasAmbience() {
+  if (ambieceRunning) return;
+  ambieceRunning = true;
+  scheduleNextAmbient();
+}
+
+function stopVegasAmbience() {
+  ambieceRunning = false;
+  clearTimeout(vegasAmbiTimer);
+}
+
+function scheduleNextAmbient() {
+  if (!ambieceRunning || !soundEnabled) return;
+  const delay = 6000 + Math.random() * 10000;
+  vegasAmbiTimer = setTimeout(() => {
+    if (ambieceRunning && soundEnabled) {
+      Math.random() > 0.5 ? playSlotClick() : playCoinDrop();
+      scheduleNextAmbient();
+    }
+  }, delay);
+}
+
+function toggleSound() {
+  soundEnabled = !soundEnabled;
+  document.getElementById('sound-toggle').textContent = soundEnabled ? '🔊' : '🔇';
+  if (soundEnabled && LAS_VEGAS_IDS.has(selectedCasino)) startVegasAmbience();
+  else stopVegasAmbience();
 }
 
 // ═══════════════════════════════════════════
@@ -1295,8 +1738,10 @@ function selectCasino(id) {
   selectedCasino = id;
   localStorage.setItem('baccaratCasino', id);
   applyCasinoTheme();
+  applyNeonState(id);
   updateActiveCasinoBanner();
   renderCasinoGrid();
+  showDealerGreeting();
   showTab('game');
 }
 
@@ -1322,7 +1767,9 @@ updateUI();
 updateScores();
 updateXPDisplay();
 applyCasinoTheme();
+applyNeonState(selectedCasino);
 updateActiveCasinoBanner();
+setTimeout(showDealerGreeting, 800);
 </script>
 </body>
 </html>
