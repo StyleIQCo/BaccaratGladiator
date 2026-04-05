@@ -775,6 +775,37 @@
   }
   .sound-toggle:hover { border-color: var(--gold); background: rgba(201,168,76,0.1); }
 
+  /* ─── RE-BET ─── */
+  .btn-rebet {
+    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+    color: #000;
+    font-weight: 900;
+    letter-spacing: 2px;
+    animation: rebet-pulse 1.8s ease-in-out infinite;
+    border: none;
+  }
+  .btn-rebet:hover:not(:disabled) {
+    animation: none;
+    background: var(--gold-light);
+    box-shadow: 0 0 28px rgba(201,168,76,0.75);
+  }
+  @keyframes rebet-pulse {
+    0%,100% { box-shadow: 0 0 6px rgba(201,168,76,0.3); }
+    50%      { box-shadow: 0 0 22px rgba(201,168,76,0.85), 0 0 44px rgba(201,168,76,0.25); }
+  }
+
+  /* ─── FREE HAND ─── */
+  .btn-freehand {
+    background: transparent;
+    color: #66bbff;
+    border: 1px solid rgba(100,180,255,0.45);
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+  }
+  .btn-freehand:hover:not(:disabled) { background: rgba(100,180,255,0.1); border-color: #66bbff; }
+  .btn-freehand:disabled { opacity: 0.28; cursor: not-allowed; }
+  .freehand-count { font-size: 0.62rem; opacity: 0.7; }
+
   /* ─── RESPONSIVE ─── */
   @media (max-width: 540px) {
     .table-sections, .bet-slots { grid-template-columns: 1fr; }
@@ -980,9 +1011,11 @@
       </div>
 
       <div class="action-btns">
-        <button class="btn btn-deal" id="btn-deal" onclick="deal()">DEAL</button>
-        <button class="btn btn-new"  id="btn-new"  onclick="newRound()" style="display:none">NEW ROUND</button>
-        <button class="sound-toggle" id="sound-toggle" onclick="toggleSound()" title="Toggle sounds">🔊</button>
+        <button class="btn btn-rebet"    id="btn-rebet"    onclick="reBetAndDeal()" style="display:none">↩ RE-BET</button>
+        <button class="btn btn-deal"     id="btn-deal"     onclick="deal()">DEAL</button>
+        <button class="btn btn-new"      id="btn-new"      onclick="newRound()" style="display:none">NEW ROUND</button>
+        <button class="btn btn-freehand" id="btn-freehand" onclick="freeHand()">👁 FREE HAND <span id="freehand-count" class="freehand-count">(10 left)</span></button>
+        <button class="sound-toggle"     id="sound-toggle" onclick="toggleSound()" title="Toggle sounds">🔊</button>
       </div>
     </div>
 
@@ -1210,11 +1243,13 @@ function totalBet() {
 
 // ─── DEAL ───
 function deal() {
-  if (totalBet() === 0) { setMsg('Place a bet first!'); return; }
+  if (!isFreeHand && totalBet() === 0) { setMsg('Place a bet first!'); return; }
   gamePhase = 'dealt';
   playSlotClick();
-  document.getElementById('btn-deal').style.display = 'none';
-  document.getElementById('btn-new').style.display  = 'inline-block';
+  document.getElementById('btn-deal').style.display     = 'none';
+  document.getElementById('btn-new').style.display      = 'inline-block';
+  document.getElementById('btn-rebet').style.display    = 'none';
+  document.getElementById('btn-freehand').style.display = 'none';
 
   // Build hands
   let pHand = [draw(), draw()];
@@ -1261,9 +1296,9 @@ function deal() {
   else if (winner === 'banker') scores.banker++;
   else scores.player++;
 
-  // Payout
+  // Payout (skipped for free hand)
   let net = 0;
-  if (winner === 'tie') {
+  if (!isFreeHand && winner === 'tie') {
     if (bets.tie > 0) net += bets.tie * 8;   // 8:1
     net += bets.tie; // return stake
     net += bets.banker; // push
@@ -1277,24 +1312,25 @@ function deal() {
     if (bets.tie > 0) { balance += bets.tie * 8; } // winnings
     // tie stake returned already (was deducted at chip placement)
     balance += bets.tie;
-  } else if (winner === 'banker') {
+  } else if (!isFreeHand && winner === 'banker') {
     if (bets.banker > 0) {
       const win = Math.floor(bets.banker * 0.95);
       balance += bets.banker + win;
       net = win;
     }
-    // player loses, tie loses (already deducted)
-  } else {
+  } else if (!isFreeHand) {
     if (bets.player > 0) {
       balance += bets.player * 2;
       net = bets.player;
     }
-    // banker loses, tie loses
   }
 
   // Build message
   let msg = '';
-  if (winner === 'tie') {
+  if (isFreeHand) {
+    const wLabel = winner === 'banker' ? '🏦 BANKER' : winner === 'player' ? '🛡 PLAYER' : '🤝 TIE';
+    msg = '👁 FREE HAND · ' + wLabel + ' WINS · No bet placed';
+  } else if (winner === 'tie') {
     msg = '🤝 TIE! ' + (bets.tie > 0 ? `You win $${bets.tie * 8}!` : 'All bets push.');
   } else if (winner === 'banker') {
     msg = '🏦 BANKER WINS! ' + (bets.banker > 0 ? `You win $${Math.floor(bets.banker * 0.95)}` : bets.player > 0 ? 'You lose.' : '');
@@ -1314,11 +1350,18 @@ function deal() {
   renderHistory();
 
   // Award XP + sounds
-  const betWon = (winner === 'banker' && bets.banker > 0) ||
-                 (winner === 'player' && bets.player > 0) ||
-                 (winner === 'tie'    && bets.tie    > 0);
-  if (betWon) playWinJingle(); else playCoinDrop();
-  earnXP(10 + (betWon ? 15 : 0));
+  if (isFreeHand) {
+    earnXP(5);
+    isFreeHand = false;
+  } else {
+    const betWon = (winner === 'banker' && bets.banker > 0) ||
+                   (winner === 'player' && bets.player > 0) ||
+                   (winner === 'tie'    && bets.tie    > 0);
+    if (betWon) playWinJingle(); else playCoinDrop();
+    earnXP(10 + (betWon ? 15 : 0));
+    // Save for re-bet
+    if (totalBet() > 0) lastBet = { banker: bets.banker, player: bets.player, tie: bets.tie };
+  }
 
   // Reset bets
   bets = { banker: 0, player: 0, tie: 0 };
@@ -1386,6 +1429,8 @@ function newRound() {
   document.getElementById('player-badge').innerHTML = '';
   document.getElementById('btn-deal').style.display = 'inline-block';
   document.getElementById('btn-new').style.display  = 'none';
+  updateReBetBtn();
+  updateFreeHandBtn();
 
   if (balance <= 0) {
     balance = 1000;
@@ -1415,6 +1460,71 @@ function updateScores() {
 
 function setMsg(text) {
   document.getElementById('message').textContent = text;
+}
+
+// ═══════════════════════════════════════════
+//  RE-BET
+// ═══════════════════════════════════════════
+
+let lastBet = null;
+
+function reBetAndDeal() {
+  if (gamePhase !== 'betting' || !lastBet) return;
+  const total = lastBet.banker + lastBet.player + lastBet.tie;
+  if (total <= 0) return;
+  if (balance < total) { setMsg('Not enough balance to re-bet!'); return; }
+  balance -= total;
+  bets = { banker: lastBet.banker, player: lastBet.player, tie: lastBet.tie };
+  updateUI();
+  setTimeout(deal, 280); // brief flash so player sees the bet populate
+}
+
+function updateReBetBtn() {
+  const btn = document.getElementById('btn-rebet');
+  if (!btn) return;
+  if (lastBet && gamePhase === 'betting') {
+    const total = lastBet.banker + lastBet.player + lastBet.tie;
+    if (total > 0 && balance >= total) {
+      btn.style.display = 'inline-block';
+      return;
+    }
+  }
+  btn.style.display = 'none';
+}
+
+// ═══════════════════════════════════════════
+//  FREE HAND
+// ═══════════════════════════════════════════
+
+const FREE_HAND_MAX = 10;
+let freeHandsRemaining = (() => {
+  const v = parseInt(localStorage.getItem('baccaratFreeHands'));
+  return (!isNaN(v) && v >= 0 && v <= FREE_HAND_MAX) ? v : FREE_HAND_MAX;
+})();
+let isFreeHand = false;
+
+function freeHand() {
+  if (gamePhase !== 'betting') return;
+  if (freeHandsRemaining <= 0) { setMsg('No free hands remaining!'); return; }
+  isFreeHand = true;
+  freeHandsRemaining--;
+  localStorage.setItem('baccaratFreeHands', freeHandsRemaining);
+  updateFreeHandBtn();
+  deal();
+}
+
+function updateFreeHandBtn() {
+  const btn = document.getElementById('btn-freehand');
+  const cnt = document.getElementById('freehand-count');
+  if (!btn) return;
+  if (freeHandsRemaining <= 0) {
+    btn.disabled = true;
+    btn.style.display = 'none';
+    return;
+  }
+  btn.disabled = false;
+  btn.style.display = gamePhase === 'betting' ? 'inline-block' : 'none';
+  if (cnt) cnt.textContent = '(' + freeHandsRemaining + ' left)';
 }
 
 // ═══════════════════════════════════════════
@@ -1766,6 +1876,8 @@ selectBetSlot('banker');
 updateUI();
 updateScores();
 updateXPDisplay();
+updateFreeHandBtn();
+updateReBetBtn();
 applyCasinoTheme();
 applyNeonState(selectedCasino);
 updateActiveCasinoBanner();
