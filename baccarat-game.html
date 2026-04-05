@@ -432,15 +432,205 @@
     line-height: 1.6;
   }
 
+  /* ─── CASINO SELECTOR ─── */
+  #tab-casino { max-width: 1100px; margin: 0 auto; padding: 20px 16px; }
+  .casino-page-header { text-align: center; margin-bottom: 24px; }
+  .casino-page-header h2 {
+    font-family: 'Cinzel', serif;
+    color: var(--gold);
+    font-size: 1.4rem;
+    letter-spacing: 3px;
+    margin-bottom: 8px;
+  }
+  .casino-page-header p { color: rgba(240,230,200,0.6); font-size: 0.85rem; }
+  .xp-bar-container { max-width: 500px; margin: 16px auto 0; text-align: center; }
+  .xp-label {
+    font-family: 'Cinzel', serif;
+    color: var(--gold);
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+    margin-bottom: 6px;
+  }
+  .xp-bar-track {
+    background: rgba(255,255,255,0.1);
+    border-radius: 20px;
+    height: 12px;
+    overflow: hidden;
+    border: 1px solid rgba(201,168,76,0.3);
+  }
+  .xp-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold) 0%, var(--gold-light) 100%);
+    border-radius: 20px;
+    transition: width 0.5s ease;
+  }
+  .tier-section { margin-bottom: 28px; }
+  .tier-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem;
+    letter-spacing: 3px;
+    color: rgba(240,230,200,0.5);
+    border-bottom: 1px solid rgba(201,168,76,0.15);
+    padding-bottom: 8px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .tier-badge {
+    background: rgba(201,168,76,0.15);
+    border: 1px solid rgba(201,168,76,0.3);
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 0.65rem;
+    color: var(--gold);
+    letter-spacing: 1px;
+  }
+  .tier-badge.unlocked { color: #44cc44; border-color: #44cc44; background: rgba(68,204,68,0.1); }
+  .casino-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 16px;
+  }
+  .casino-card {
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+    border: 2px solid rgba(255,255,255,0.05);
+  }
+  .casino-card:hover:not(.locked) {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+    border-color: rgba(201,168,76,0.4);
+  }
+  .casino-card.selected { border-color: var(--gold) !important; box-shadow: 0 0 24px rgba(201,168,76,0.4); }
+  .casino-card.locked { cursor: not-allowed; }
+  .casino-graphic {
+    height: 130px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .casino-graphic::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 40px;
+    background: linear-gradient(transparent, rgba(0,0,0,0.6));
+  }
+  .casino-landmark { font-size: 3.8rem; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.6)); z-index: 1; }
+  .casino-subtitle {
+    font-family: 'Cinzel', serif;
+    font-size: 0.58rem;
+    letter-spacing: 2px;
+    color: rgba(255,255,255,0.8);
+    z-index: 2;
+    margin-top: 4px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.9);
+    padding: 0 8px;
+    text-align: center;
+  }
+  .casino-info {
+    background: rgba(8,8,12,0.97);
+    padding: 10px 12px 12px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+  }
+  .casino-info .cname {
+    font-family: 'Cinzel', serif;
+    font-size: 0.78rem;
+    color: var(--gold);
+    margin-bottom: 2px;
+    letter-spacing: 0.5px;
+    line-height: 1.3;
+  }
+  .casino-info .cloc { font-size: 0.62rem; color: rgba(240,230,200,0.45); letter-spacing: 0.5px; margin-bottom: 4px; }
+  .casino-info .ctag { font-size: 0.6rem; color: rgba(240,230,200,0.35); font-style: italic; line-height: 1.4; }
+  .lock-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.72);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    backdrop-filter: blur(1px);
+  }
+  .lock-overlay .licon { font-size: 2.2rem; }
+  .lock-overlay .lxp { font-family: 'Cinzel', serif; font-size: 0.68rem; color: var(--gold); letter-spacing: 1px; margin-top: 6px; }
+  .selected-badge {
+    position: absolute;
+    top: 8px; right: 8px;
+    background: var(--gold);
+    color: #000;
+    font-family: 'Cinzel', serif;
+    font-size: 0.58rem;
+    padding: 3px 8px;
+    border-radius: 10px;
+    z-index: 5;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+  .active-casino-banner {
+    text-align: center;
+    padding: 8px 16px;
+    background: rgba(201,168,76,0.08);
+    border: 1px solid rgba(201,168,76,0.25);
+    border-radius: 8px;
+    margin-bottom: 12px;
+    font-family: 'Cinzel', serif;
+    font-size: 0.72rem;
+    color: var(--gold);
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .active-casino-banner:hover { background: rgba(201,168,76,0.14); }
+  .xp-notif {
+    position: fixed;
+    top: 80px;
+    right: -180px;
+    background: rgba(201,168,76,0.96);
+    color: #000;
+    padding: 8px 18px;
+    border-radius: 6px;
+    font-family: 'Cinzel', serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    z-index: 1000;
+    transition: right 0.3s ease;
+    pointer-events: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  }
+  .xp-notif.show { right: 20px; }
+  /* Casino table themes */
+  .felt-table.theme-blue { background: radial-gradient(ellipse at center, #1a3a5a 0%, #0a1a2a 100%); border-color: #7799cc; }
+  .felt-table.theme-purple { background: radial-gradient(ellipse at center, #3a1a5a 0%, #1a082a 100%); border-color: #9966cc; }
+  .felt-table.theme-red { background: radial-gradient(ellipse at center, #5a1a1a 0%, #2a0808 100%); border-color: #cc6644; }
+  .felt-table.theme-brown { background: radial-gradient(ellipse at center, #3a2810 0%, #1a1000 100%); border-color: #c9a84c; }
+  .felt-table.theme-teal { background: radial-gradient(ellipse at center, #1a3a3a 0%, #081a1a 100%); border-color: #44aaaa; }
+  .felt-table.theme-crimson { background: radial-gradient(ellipse at center, #4a0a1a 0%, #200008 100%); border-color: #cc3355; }
+  .felt-table.theme-emerald { background: radial-gradient(ellipse at center, #0a3a1a 0%, #041208 100%); border-color: #44cc88; }
+  .felt-table.theme-gold { background: radial-gradient(ellipse at center, #3a2800 0%, #150f00 100%); border-color: #f0d080; }
+
   /* ─── RESPONSIVE ─── */
   @media (max-width: 540px) {
     .table-sections, .bet-slots { grid-template-columns: 1fr; }
     .tie-section { min-height: 60px; flex-direction: row; justify-content: space-around; }
     .chip { width: 44px; height: 44px; font-size: 0.6rem; }
+    .casino-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; }
   }
 </style>
 </head>
 <body>
+
+<div class="xp-notif" id="xp-notif"></div>
 
 <header>
   <h1>♠ BACCARAT GLADIATOR ♠</h1>
@@ -448,9 +638,10 @@
 </header>
 
 <div class="tabs">
-  <button class="tab-btn active" onclick="showTab('game')">🎲 Play</button>
-  <button class="tab-btn" onclick="showTab('tutorial')">📖 Tutorial</button>
-  <button class="tab-btn" onclick="showTab('strategy')">🧠 Strategy</button>
+  <button class="tab-btn" id="tabbtn-casino" onclick="showTab('casino')">🏰 Casinos</button>
+  <button class="tab-btn active" id="tabbtn-game" onclick="showTab('game')">🎲 Play</button>
+  <button class="tab-btn" id="tabbtn-tutorial" onclick="showTab('tutorial')">📖 Tutorial</button>
+  <button class="tab-btn" id="tabbtn-strategy" onclick="showTab('strategy')">🧠 Strategy</button>
 </div>
 
 <!-- ════════════════════════════════ GAME TAB ════════════════════════════════ -->
@@ -463,10 +654,16 @@
     <div class="score-box"><div class="label">Player</div><div class="value" id="score-p">0</div></div>
     <div class="score-box"><div class="label">Tie</div><div class="value" id="score-t">0</div></div>
     <div class="score-box"><div class="label">Round</div><div class="value" id="score-r">0</div></div>
+    <div class="score-box"><div class="label">XP</div><div class="value" id="score-xp" style="font-size:1rem">0</div></div>
+  </div>
+
+  <!-- ACTIVE CASINO BANNER -->
+  <div class="active-casino-banner" id="active-casino-banner" onclick="showTab('casino')">
+    🏰 TAP TO SELECT YOUR CASINO
   </div>
 
   <!-- FELT TABLE -->
-  <div class="felt-table">
+  <div class="felt-table" id="felt-table">
 
     <!-- HANDS -->
     <div class="table-sections">
@@ -654,6 +851,20 @@
 
 </div>
 
+<!-- ════════════════════════════════ CASINO TAB ════════════════════════════════ -->
+<div id="tab-casino" style="display:none">
+  <div class="casino-page-header">
+    <h2>🏰 SELECT YOUR CASINO</h2>
+    <p>Choose your venue. Earn XP each round to unlock elite destinations around the world.</p>
+    <div class="xp-bar-container">
+      <div class="xp-label">GLADIATOR XP: <span id="casino-xp-display">0</span></div>
+      <div class="xp-bar-track"><div class="xp-bar-fill" id="xp-bar" style="width:0%"></div></div>
+      <div style="font-size:0.65rem;color:rgba(240,230,200,0.4);margin-top:6px;letter-spacing:1px">EARN 10 XP PER ROUND · +15 XP FOR A WINNING BET</div>
+    </div>
+  </div>
+  <div id="casino-list"></div>
+</div>
+
 <script>
 // ═══════════════════════════════════════════
 //  BACCARAT GLADIATOR — GAME ENGINE
@@ -706,12 +917,13 @@ function handTotal(cards) {
 
 // ─── TABS ───
 function showTab(name) {
-  document.getElementById('tab-game').style.display     = name === 'game'     ? 'block' : 'none';
-  document.getElementById('tab-tutorial').style.display = name === 'tutorial' ? 'block' : 'none';
-  document.getElementById('tab-strategy').style.display = name === 'strategy' ? 'block' : 'none';
-  document.querySelectorAll('.tab-btn').forEach((b, i) => {
-    b.classList.toggle('active', ['game','tutorial','strategy'][i] === name);
+  ['casino','game','tutorial','strategy'].forEach(t => {
+    const el = document.getElementById('tab-' + t);
+    if (el) el.style.display = (t === name) ? 'block' : 'none';
+    const btn = document.getElementById('tabbtn-' + t);
+    if (btn) btn.classList.toggle('active', t === name);
   });
+  if (name === 'casino') renderCasinoGrid();
 }
 
 // ─── BETTING ───
@@ -844,6 +1056,12 @@ function deal() {
   if (history.length > 60) history.shift();
   renderHistory();
 
+  // Award XP
+  const betWon = (winner === 'banker' && bets.banker > 0) ||
+                 (winner === 'player' && bets.player > 0) ||
+                 (winner === 'tie'    && bets.tie    > 0);
+  earnXP(10 + (betWon ? 15 : 0));
+
   // Reset bets
   bets = { banker: 0, player: 0, tie: 0 };
   updateScores();
@@ -940,11 +1158,171 @@ function setMsg(text) {
   document.getElementById('message').textContent = text;
 }
 
+// ═══════════════════════════════════════════
+//  CASINO SYSTEM
+// ═══════════════════════════════════════════
+
+const CASINOS = [
+  // ── TIER 0: STARTER (0 XP) ──
+  { id:'foxwoods',        name:'Foxwoods Resort Casino',        location:'Connecticut, USA',        emoji:'🌲', gradient:'linear-gradient(135deg,#0f2d0f 0%,#1e5c1e 100%)',  xpRequired:0,    tier:0, tierName:'STARTER — FREE',        tagline:'344,000 sq ft in a scenic woodland setting', theme:'default'  },
+  { id:'winstar',         name:'WinStar World Casino',          location:'Oklahoma, USA',            emoji:'⭐', gradient:'linear-gradient(135deg,#0d0d2b 0%,#1a1a5c 100%)',  xpRequired:0,    tier:0, tierName:'STARTER — FREE',        tagline:"World's largest casino — 600,000 sq ft",     theme:'blue'     },
+  { id:'mohegan',         name:'Mohegan Sun',                   location:'Connecticut, USA',         emoji:'🌀', gradient:'linear-gradient(135deg,#2b1500 0%,#6b3800 100%)',  xpRequired:0,    tier:0, tierName:'STARTER — FREE',        tagline:"America's 2nd-largest casino resort",        theme:'brown'    },
+
+  // ── TIER 1: LAS VEGAS (150 XP) ──
+  { id:'bellagio',        name:'Bellagio',                      location:'Las Vegas, USA',           emoji:'⛲', gradient:'linear-gradient(135deg,#001929 0%,#003056 100%)',  xpRequired:150,  tier:1, tierName:'LAS VEGAS CLASSICS',    tagline:'Italian elegance & iconic dancing fountains', theme:'blue'     },
+  { id:'mgm',             name:'MGM Grand Las Vegas',           location:'Las Vegas, USA',           emoji:'🦁', gradient:'linear-gradient(135deg,#0d1a00 0%,#1e3a00 100%)',  xpRequired:150,  tier:1, tierName:'LAS VEGAS CLASSICS',    tagline:'171,500 sq ft casino & 2,500+ slots',        theme:'emerald'  },
+  { id:'caesars',         name:'Caesars Palace',                location:'Las Vegas, USA',           emoji:'🏛️', gradient:'linear-gradient(135deg,#291900 0%,#5c3d00 100%)',  xpRequired:150,  tier:1, tierName:'LAS VEGAS CLASSICS',    tagline:'Roman grandeur & world-class sportsbook',    theme:'gold'     },
+  { id:'cosmopolitan',    name:'The Cosmopolitan',              location:'Las Vegas, USA',           emoji:'🍸', gradient:'linear-gradient(135deg,#150029 0%,#2b0057 100%)',  xpRequired:150,  tier:1, tierName:'LAS VEGAS CLASSICS',    tagline:'Three-level Chandelier bar & luxury rooms',  theme:'purple'   },
+
+  // ── TIER 2: PREMIER DESTINATIONS (350 XP) ──
+  { id:'venetian_lv',     name:'The Venetian Resort',          location:'Las Vegas, USA',           emoji:'🚣', gradient:'linear-gradient(135deg,#0d0d2b 0%,#1c1c5c 100%)',  xpRequired:350,  tier:2, tierName:'PREMIER DESTINATIONS',  tagline:"Venice canals & the Strip's largest poker room", theme:'blue'  },
+  { id:'resorts_world_lv',name:'Resorts World Las Vegas',      location:'Las Vegas, USA',           emoji:'🌐', gradient:'linear-gradient(135deg,#1a0008 0%,#3a0015 100%)',  xpRequired:350,  tier:2, tierName:'PREMIER DESTINATIONS',  tagline:"250,000 sq ft — Vegas's newest mega-resort", theme:'crimson' },
+  { id:'borgata',         name:'Borgata Hotel Casino & Spa',   location:'Atlantic City, USA',       emoji:'🌊', gradient:'linear-gradient(135deg,#000d1a 0%,#001d33 100%)',  xpRequired:350,  tier:2, tierName:'PREMIER DESTINATIONS',  tagline:"Atlantic City's top-rated casino & spa",     theme:'blue'     },
+  { id:'lisboa',          name:'Casino Lisboa',                location:'Lisbon, Portugal',         emoji:'🗼', gradient:'linear-gradient(135deg,#150a00 0%,#2e1500 100%)',  xpRequired:350,  tier:2, tierName:'PREMIER DESTINATIONS',  tagline:"One of Europe's largest — 65,000 sq ft",    theme:'brown'    },
+
+  // ── TIER 3: WORLD CLASS (600 XP) ──
+  { id:'montecarlo',      name:'Casino de Monte-Carlo',        location:'Monaco',                   emoji:'👑', gradient:'linear-gradient(135deg,#150d00 0%,#332200 100%)',  xpRequired:600,  tier:3, tierName:'WORLD CLASS',           tagline:'The legendary temple of European glamour',   theme:'gold'     },
+  { id:'marinabay',       name:'Marina Bay Sands',             location:'Singapore',                emoji:'🏝️', gradient:'linear-gradient(135deg,#001520 0%,#002a40 100%)',  xpRequired:600,  tier:3, tierName:'WORLD CLASS',           tagline:'Iconic rooftop infinity pool over the bay',  theme:'teal'     },
+  { id:'resorts_sentosa', name:'Resorts World Sentosa',        location:'Singapore',                emoji:'🎢', gradient:'linear-gradient(135deg,#000d15 0%,#001a26 100%)',  xpRequired:600,  tier:3, tierName:'WORLD CLASS',           tagline:'Universal Studios & world-class gaming',     theme:'teal'     },
+  { id:'city_dreams_med', name:'City of Dreams Mediterranean', location:'Cyprus',                   emoji:'🌅', gradient:'linear-gradient(135deg,#150700 0%,#2e0f00 100%)',  xpRequired:600,  tier:3, tierName:'WORLD CLASS',           tagline:"Europe's first integrated resort",           theme:'red'      },
+
+  // ── TIER 4: ELITE (900 XP) ──
+  { id:'suncity',         name:'Sun City Casino Resort',       location:'Johannesburg, South Africa',emoji:'🌞',gradient:'linear-gradient(135deg,#1f1400 0%,#3d2900 100%)', xpRequired:900,  tier:4, tierName:'ELITE',                 tagline:"Africa's premier entertainment resort",      theme:'gold'     },
+  { id:'kenya',           name:'Windsor Golf Hotel Casino',    location:'Nairobi, Kenya',            emoji:'🦒', gradient:'linear-gradient(135deg,#081a00 0%,#103300 100%)', xpRequired:900,  tier:4, tierName:'ELITE',                 tagline:"East Africa's premier casino resort",        theme:'emerald'  },
+  { id:'city_dreams_macau',name:'City of Dreams',             location:'Macau, China',              emoji:'🏙️', gradient:'linear-gradient(135deg,#080012 0%,#130024 100%)', xpRequired:900,  tier:4, tierName:'ELITE',                 tagline:'Morpheus tower & 420,000 sq ft of gaming',  theme:'purple'   },
+
+  // ── TIER 5: GLADIATOR ELITE (1500 XP) ──
+  { id:'venetian_macau',  name:'The Venetian Macao',           location:'Macau, China',             emoji:'🎭', gradient:'linear-gradient(135deg,#0d0d2b 0%,#1e1e5c 100%)',  xpRequired:1500, tier:5, tierName:'GLADIATOR ELITE',       tagline:'546,000 sq ft — legend of the Cotai Strip', theme:'blue'     },
+  { id:'galaxy_macau',    name:'Galaxy Macau',                 location:'Macau, China',             emoji:'🌌', gradient:'linear-gradient(135deg,#001212 0%,#002626 100%)',  xpRequired:1500, tier:5, tierName:'GLADIATOR ELITE',       tagline:"One of the world's largest gaming floors",  theme:'teal'     },
+  { id:'wynn_macau',      name:'Wynn Macau',                   location:'Macau, China',             emoji:'🎪', gradient:'linear-gradient(135deg,#0f0900 0%,#1f1300 100%)',  xpRequired:1500, tier:5, tierName:'GLADIATOR ELITE',       tagline:"Macau's first Vegas-style resort",           theme:'brown'    },
+  { id:'wynn_palace',     name:'Wynn Palace',                  location:'Macau, China',             emoji:'🌸', gradient:'linear-gradient(135deg,#14002a 0%,#280054 100%)',  xpRequired:1500, tier:5, tierName:'GLADIATOR ELITE',       tagline:'Opulent luxury & floral art installations',  theme:'purple'   },
+];
+
+// ─── XP + CASINO STATE ───
+let totalXP = parseInt(localStorage.getItem('baccaratXP') || '0');
+let selectedCasino = localStorage.getItem('baccaratCasino') || 'foxwoods';
+
+function earnXP(amount) {
+  totalXP += amount;
+  localStorage.setItem('baccaratXP', totalXP);
+  showXPNotif('+' + amount + ' XP');
+  updateXPDisplay();
+}
+
+function showXPNotif(text) {
+  const el = document.getElementById('xp-notif');
+  el.textContent = text;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2200);
+}
+
+function updateXPDisplay() {
+  const dispEl = document.getElementById('casino-xp-display');
+  if (dispEl) dispEl.textContent = totalXP.toLocaleString();
+  const scoreEl = document.getElementById('score-xp');
+  if (scoreEl) scoreEl.textContent = totalXP.toLocaleString();
+
+  // XP bar: progress to next tier threshold
+  const thresholds = [0, 150, 350, 600, 900, 1500, 9999];
+  let idx = 0;
+  for (let i = 0; i < thresholds.length - 1; i++) {
+    if (totalXP >= thresholds[i]) idx = i;
+  }
+  const from = thresholds[idx];
+  const to   = thresholds[idx + 1];
+  const pct  = to > from ? Math.min(100, ((totalXP - from) / (to - from)) * 100) : 100;
+  const bar = document.getElementById('xp-bar');
+  if (bar) bar.style.width = pct + '%';
+}
+
+function renderCasinoGrid() {
+  const container = document.getElementById('casino-list');
+  if (!container) return;
+
+  // Group by tier
+  const tiers = {};
+  CASINOS.forEach(c => {
+    if (!tiers[c.tier]) tiers[c.tier] = { name: c.tierName, xpRequired: c.xpRequired, casinos: [] };
+    tiers[c.tier].casinos.push(c);
+  });
+
+  container.innerHTML = '';
+  Object.keys(tiers).sort((a, b) => a - b).forEach(tierKey => {
+    const tier = tiers[tierKey];
+    const isUnlocked = totalXP >= tier.xpRequired;
+    const section = document.createElement('div');
+    section.className = 'tier-section';
+
+    const badge = isUnlocked
+      ? `<span class="tier-badge unlocked">✅ UNLOCKED</span>`
+      : `<span class="tier-badge">🔒 ${tier.xpRequired} XP</span>`;
+    section.innerHTML = `<div class="tier-label">${tier.name} ${badge}</div>`;
+
+    const grid = document.createElement('div');
+    grid.className = 'casino-grid';
+
+    tier.casinos.forEach(casino => {
+      const locked    = totalXP < casino.xpRequired;
+      const isSelected = selectedCasino === casino.id;
+
+      const card = document.createElement('div');
+      card.className = 'casino-card' + (locked ? ' locked' : '') + (isSelected ? ' selected' : '');
+
+      card.innerHTML = `
+        <div class="casino-graphic" style="background:${casino.gradient}">
+          <div class="casino-landmark">${casino.emoji}</div>
+          <div class="casino-subtitle">${casino.location.toUpperCase()}</div>
+        </div>
+        <div class="casino-info">
+          <div class="cname">${casino.name}</div>
+          <div class="cloc">📍 ${casino.location}</div>
+          <div class="ctag">${casino.tagline}</div>
+        </div>
+        ${locked ? `<div class="lock-overlay"><div class="licon">🔒</div><div class="lxp">${casino.xpRequired} XP Required</div></div>` : ''}
+        ${isSelected ? '<div class="selected-badge">▶ PLAYING</div>' : ''}
+      `;
+
+      if (!locked) card.onclick = () => selectCasino(casino.id);
+      grid.appendChild(card);
+    });
+
+    section.appendChild(grid);
+    container.appendChild(section);
+  });
+}
+
+function selectCasino(id) {
+  selectedCasino = id;
+  localStorage.setItem('baccaratCasino', id);
+  applyCasinoTheme();
+  updateActiveCasinoBanner();
+  renderCasinoGrid();
+  showTab('game');
+}
+
+function applyCasinoTheme() {
+  const casino = CASINOS.find(c => c.id === selectedCasino);
+  const table  = document.getElementById('felt-table');
+  if (!table || !casino) return;
+  table.className = 'felt-table theme-' + casino.theme;
+}
+
+function updateActiveCasinoBanner() {
+  const casino  = CASINOS.find(c => c.id === selectedCasino);
+  const banner  = document.getElementById('active-casino-banner');
+  if (banner && casino) {
+    banner.textContent = casino.emoji + '  ' + casino.name.toUpperCase() + '  ·  ' + casino.location;
+  }
+}
+
 // ─── INIT ───
 buildShoe();
 selectBetSlot('banker');
 updateUI();
 updateScores();
+updateXPDisplay();
+applyCasinoTheme();
+updateActiveCasinoBanner();
 </script>
 </body>
 </html>
