@@ -829,13 +829,27 @@ header {
 .hdr-venue-user {
   display:flex; flex-direction:column; gap:2px; min-width:0; flex:1 1 auto;
 }
+.hdr-venue-mode-row {
+  display:flex; flex-direction:column; gap:3px;
+}
 .hdr-venue-badge {
   display:inline-flex; align-items:center; gap:4px; cursor:pointer;
   padding:2px 7px 2px 4px; border-radius:12px;
   border:1px solid rgba(201,168,76,0.22); background:rgba(201,168,76,0.04);
-  transition:background 0.15s; max-width:160px;
+  transition:background 0.15s; max-width:180px;
 }
 .hdr-venue-badge:hover { background:rgba(201,168,76,0.12); border-color:rgba(201,168,76,0.5); }
+.hdr-mode-select {
+  background:rgba(0,0,0,0.35);
+  border:1px solid rgba(201,168,76,0.28); border-radius:8px;
+  color:var(--gold-lt); font-family:'Cinzel',serif;
+  font-size:0.52rem; letter-spacing:0.3px;
+  padding:3px 6px; cursor:pointer; max-width:180px;
+  -webkit-appearance:none; appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23c9a84c'/%3E%3C/svg%3E");
+  background-repeat:no-repeat; background-position:right 6px center; padding-right:20px;
+}
+.hdr-mode-select:focus { outline:none; border-color:var(--gold); }
 .hdr-venue-icon {
   font-size:1.05rem; line-height:1;
   filter:brightness(0.55) saturate(0.3) contrast(1.3);
@@ -2188,9 +2202,16 @@ body { padding-bottom:185px; }
   <div class="hdr-top">
     <!-- Left: Venue silhouette + User -->
     <div class="hdr-venue-user">
-      <div class="hdr-venue-badge" id="hdr-venue-badge" onclick="openCasinoModal()" title="Change Venue">
-        <span class="hdr-venue-icon" id="hdr-venue-icon">🎰</span>
-        <span class="hdr-venue-name" id="hdr-venue-name">Las Vegas</span>
+      <div class="hdr-venue-mode-row">
+        <div class="hdr-venue-badge" id="hdr-venue-badge" onclick="openCasinoModal()" title="Change Venue">
+          <span class="hdr-venue-icon" id="hdr-venue-icon">🎰</span>
+          <span class="hdr-venue-name" id="hdr-venue-name">Las Vegas</span>
+        </div>
+        <select class="hdr-mode-select" id="hdr-mode-select" onchange="setMode(this.value)">
+          <option value="standard">♠ Standard (Commission)</option>
+          <option value="ez" selected>🐉🐼 EZ Panda &amp; Dragon</option>
+          <option value="tiger">🐯 Tiger Baccarat</option>
+        </select>
       </div>
       <div class="hdr-user-area">
         <span id="hdr-user">Guest</span>
@@ -2297,7 +2318,7 @@ body { padding-bottom:185px; }
 </div>
 
 <!-- ═══════ MODE BAR — COMPACT ═══════ -->
-<div class="mode-bar" id="mode-subtitle">
+<div class="mode-bar">
   <div class="mode-pills">
     <button class="mode-pill" id="tab-standard" onclick="setMode('standard')">♠ Std</button>
     <button class="mode-pill ez active" id="tab-ez" onclick="setMode('ez')">🐉🐼 EZ</button>
@@ -2306,6 +2327,7 @@ body { padding-bottom:185px; }
   <span class="mode-bar-level">Lvl <strong id="eco-level">1</strong> <span id="eco-title">Recruit</span></span>
   <button class="mode-info-btn" onclick="toggleRules()">Rules ▾</button>
 </div>
+<div id="mode-subtitle" style="display:none;"></div>
 <div class="mode-rules" id="mode-rules-panel"></div>
 
 <!-- ═══════ ACTION STRIP (slim, replaces economy panel) ═══════ -->
@@ -3081,13 +3103,7 @@ function applyVenueTheme(){
   GRID_LINE=roadTheme.line;
   const tag=document.getElementById('eco-venue-theme');
   if(tag) tag.textContent='City: ' + (v.city || v.name);
-  const rank=venueRankText(v);
-  const sub=document.getElementById('mode-subtitle');
-  if(sub && !String(sub.textContent||'').includes('· Venue:')){
-    sub.textContent = String(sub.textContent||'') + ' · Venue: ' + v.name + (rank ? (' (' + rank + ')') : '');
-  } else if(sub){
-    sub.textContent = String(sub.textContent||'').replace(/ · Venue: .+$/, '') + ' · Venue: ' + v.name + (rank ? (' (' + rank + ')') : '');
-  }
+  const rank=venueRankText(v); // venue name shown in header badge, not mode-subtitle
   updateAllRoads();
   applyVenueAudioTheme();
 }
@@ -3855,15 +3871,18 @@ function bankerDraws(bT,pThird){
 function setMode(m){
   if(phase!=='betting') return;
   gameMode=m;
+  // Sync pills
   ['standard','ez','tiger'].forEach(t=>document.getElementById('tab-'+t).classList.toggle('active',t===m));
+  // Sync header dropdown
+  const msel=document.getElementById('hdr-mode-select');
+  if(msel) msel.value=m;
   document.getElementById('ez-side-panel').classList.toggle('visible',m==='ez');
   document.getElementById('tiger-side-panel').classList.toggle('visible',m==='tiger');
   document.getElementById('banker-odds').textContent=m==='standard'?'0.95:1':m==='tiger'?'1:1 (½ on 6)':'1:1';
-  document.getElementById('mode-subtitle').textContent=MODE_RULES[m].sub;
   applyVenueTheme();
   if(rulesOpen) showRules();
   clearBets();
-  setMsg('Mode: '+(m==='standard'?'Standard':m==='ez'?'Panda & Dragon Baccarat':'Tiger Baccarat')+' — Place your bets!');
+  setMsg('Mode: '+(m==='standard'?'Standard Commission':m==='ez'?'EZ Panda & Dragon':'Tiger Baccarat')+' — Place your bets!');
 }
 function toggleRules(){ rulesOpen=!rulesOpen; document.getElementById('mode-rules-panel').classList.toggle('open',rulesOpen); if(rulesOpen) showRules(); }
 function showRules(){
