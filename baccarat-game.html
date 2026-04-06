@@ -2319,11 +2319,8 @@ body { padding-bottom:185px; }
 
 <!-- ═══════ MODE BAR — COMPACT ═══════ -->
 <div class="mode-bar">
-  <div class="mode-pills">
-    <button class="mode-pill" id="tab-standard" onclick="setMode('standard')">♠ Std</button>
-    <button class="mode-pill ez active" id="tab-ez" onclick="setMode('ez')">🐉🐼 EZ</button>
-    <button class="mode-pill tiger" id="tab-tiger" onclick="setMode('tiger')">🐯 Tiger</button>
-  </div>
+  <!-- Pills hidden — game mode selected via header dropdown -->
+  <span style="display:none;"><button class="mode-pill" id="tab-standard" onclick="setMode('standard')">♠ Std</button><button class="mode-pill ez active" id="tab-ez" onclick="setMode('ez')">🐉🐼 EZ</button><button class="mode-pill tiger" id="tab-tiger" onclick="setMode('tiger')">🐯 Tiger</button></span>
   <span class="mode-bar-level">Lvl <strong id="eco-level">1</strong> <span id="eco-title">Recruit</span></span>
   <button class="mode-info-btn" onclick="toggleRules()">Rules ▾</button>
 </div>
@@ -2871,12 +2868,12 @@ const VENUES=[
 ];
 // ── VENUE AUDIO PROFILES (crowd ambience parameters only — music handled by ambientCasino engine) ──
 const VENUE_AUDIO={
-  vegas:       { musicGain:0.18, crowdGain:0.055, crowdBand:400, crowdHighpass:180 },
-  atlantic:    { musicGain:0.15, crowdGain:0.04,  crowdBand:300, crowdHighpass:155 },
-  macau:       { musicGain:0.17, crowdGain:0.035, crowdBand:500, crowdHighpass:210 },
-  buenosaires: { musicGain:0.16, crowdGain:0.038, crowdBand:350, crowdHighpass:160 },
-  morocco:     { musicGain:0.17, crowdGain:0.045, crowdBand:290, crowdHighpass:145 },
-  montecarlo:  { musicGain:0.14, crowdGain:0.018, crowdBand:200, crowdHighpass:110 }
+  vegas:       { musicGain:0.55, crowdGain:0.055, crowdBand:400, crowdHighpass:180 },
+  atlantic:    { musicGain:0.50, crowdGain:0.04,  crowdBand:300, crowdHighpass:155 },
+  macau:       { musicGain:0.52, crowdGain:0.035, crowdBand:500, crowdHighpass:210 },
+  buenosaires: { musicGain:0.50, crowdGain:0.038, crowdBand:350, crowdHighpass:160 },
+  morocco:     { musicGain:0.52, crowdGain:0.045, crowdBand:290, crowdHighpass:145 },
+  montecarlo:  { musicGain:0.48, crowdGain:0.018, crowdBand:200, crowdHighpass:110 }
 };
 
 // ── AMBIENT CASINO MUSIC PROFILES ───────────────────────────────
@@ -2893,12 +2890,12 @@ const AMBIENT_PROFILES = {
       { root: 138.6, ratios: [1, 1.189, 1.498, 2.0]  }, // C#m7
       { root: 123.5, ratios: [1, 1.25, 1.5, 1.875] }    // Bmaj7 (deceptive resolve)
     ],
-    padWave: 'sine',      padCutoff: 900,  padQ: 0.8,   padAttack: 3.5, padRelease: 4.0,
+    padWave: 'sine',      padCutoff: 900,  padQ: 0.8,   padAttack: 1.2, padRelease: 2.0,
     pluckWave: 'triangle', pluckCutoff: 1800, pluckDecay: 1.8,
     bassDecay: 4.5, bassCutoff: 180,
-    sparsity: 0.38,  // probability a piano note fires each bar
+    sparsity: 0.38,
     padLFORate: 0.04, padLFODepth: 80,
-    padGain: 0.11, pluckGain: 0.055, bassGain: 0.09
+    padGain: 0.08, pluckGain: 0.06, bassGain: 0.07
   },
 
   // 🌊 Atlantic City — warm jazz lounge, piano + brushed ambience, maj9 chords
@@ -2910,12 +2907,12 @@ const AMBIENT_PROFILES = {
       { root: 110.0, ratios: [1, 1.189, 1.498, 1.782, 2.245] },// Am9
       { root: 130.8, ratios: [1, 1.25, 1.498, 1.875, 2.245] }  // Cmaj9
     ],
-    padWave: 'sine',       padCutoff: 750,  padQ: 0.6,   padAttack: 4.0, padRelease: 5.0,
+    padWave: 'sine',       padCutoff: 750,  padQ: 0.6,   padAttack: 1.4, padRelease: 2.2,
     pluckWave: 'triangle', pluckCutoff: 2200, pluckDecay: 2.2,
     bassDecay: 5.0, bassCutoff: 160,
     sparsity: 0.44,
     padLFORate: 0.03, padLFODepth: 60,
-    padGain: 0.09, pluckGain: 0.065, bassGain: 0.07
+    padGain: 0.075, pluckGain: 0.07, bassGain: 0.06
   },
 
   // 🐉 Macau — pentatonic plucks, airy pads, spacious East Asian prestige
@@ -2927,12 +2924,12 @@ const AMBIENT_PROFILES = {
       { root: 110.0, ratios: [1, 1.25, 1.498, 2.0]   },  // Amaj add2
       { root: 164.8, ratios: [1, 1.189, 1.498, 1.782] }  // Em pent
     ],
-    padWave: 'sine',       padCutoff: 600,  padQ: 1.2,   padAttack: 5.0, padRelease: 6.0,
-    pluckWave: 'sawtooth', pluckCutoff: 2600, pluckDecay: 1.2, // guzheng-like fast decay
+    padWave: 'sine',       padCutoff: 600,  padQ: 1.2,   padAttack: 1.6, padRelease: 2.5,
+    pluckWave: 'sawtooth', pluckCutoff: 2600, pluckDecay: 1.2,
     bassDecay: 6.0, bassCutoff: 120,
-    sparsity: 0.28,   // more silence = more space
+    sparsity: 0.28,
     padLFORate: 0.025, padLFODepth: 40,
-    padGain: 0.10, pluckGain: 0.06, bassGain: 0.06
+    padGain: 0.08, pluckGain: 0.065, bassGain: 0.055
   },
 
   // 💃 Buenos Aires — warm nylon strings feel, tango minor harmonics, intimate
@@ -2944,12 +2941,12 @@ const AMBIENT_PROFILES = {
       { root: 123.5, ratios: [1, 1.25, 1.498, 1.875] },         // Bmaj7
       { root: 87.3,  ratios: [1, 1.189, 1.498, 1.782] }         // Fm7
     ],
-    padWave: 'triangle',   padCutoff: 820,  padQ: 0.9,   padAttack: 3.0, padRelease: 4.5,
-    pluckWave: 'triangle', pluckCutoff: 1600, pluckDecay: 2.8, // nylon string feel
+    padWave: 'triangle',   padCutoff: 820,  padQ: 0.9,   padAttack: 1.2, padRelease: 2.0,
+    pluckWave: 'triangle', pluckCutoff: 1600, pluckDecay: 2.8,
     bassDecay: 3.8, bassCutoff: 200,
     sparsity: 0.50,
     padLFORate: 0.05, padLFODepth: 70,
-    padGain: 0.10, pluckGain: 0.07, bassGain: 0.085
+    padGain: 0.08, pluckGain: 0.075, bassGain: 0.07
   },
 
   // 🕌 Morocco — exotic Dorian/Phrygian flavor, oud-like plucks, desert warmth
@@ -2961,12 +2958,12 @@ const AMBIENT_PROFILES = {
       { root: 130.8, ratios: [1, 1.122, 1.334, 1.498] },  // C sus (Phrygian color)
       { root: 146.8, ratios: [1, 1.25, 1.498, 1.875]  }   // Dmaj7 (resolve moment)
     ],
-    padWave: 'sine',       padCutoff: 680,  padQ: 1.4,   padAttack: 4.5, padRelease: 5.5,
-    pluckWave: 'sawtooth', pluckCutoff: 2000, pluckDecay: 1.5, // oud-like
+    padWave: 'sine',       padCutoff: 680,  padQ: 1.4,   padAttack: 1.5, padRelease: 2.2,
+    pluckWave: 'sawtooth', pluckCutoff: 2000, pluckDecay: 1.5,
     bassDecay: 5.5, bassCutoff: 140,
     sparsity: 0.32,
     padLFORate: 0.035, padLFODepth: 55,
-    padGain: 0.10, pluckGain: 0.058, bassGain: 0.07
+    padGain: 0.08, pluckGain: 0.062, bassGain: 0.06
   },
 
   // 👑 Monte Carlo — piano lounge jazz, rich maj7/9 chords, old-money elegance
@@ -2978,12 +2975,12 @@ const AMBIENT_PROFILES = {
       { root: 98.0,  ratios: [1, 1.189, 1.498, 1.782, 2.245] },// Gm9
       { root: 123.5, ratios: [1, 1.25, 1.498, 1.875] }          // Bm7 (lingering)
     ],
-    padWave: 'sine',       padCutoff: 650,  padQ: 0.5,   padAttack: 5.5, padRelease: 7.0,
-    pluckWave: 'triangle', pluckCutoff: 3000, pluckDecay: 3.5, // grand piano decay
+    padWave: 'sine',       padCutoff: 650,  padQ: 0.5,   padAttack: 1.8, padRelease: 2.8,
+    pluckWave: 'triangle', pluckCutoff: 3000, pluckDecay: 3.5,
     bassDecay: 7.0, bassCutoff: 130,
     sparsity: 0.42,
     padLFORate: 0.02, padLFODepth: 35,
-    padGain: 0.085, pluckGain: 0.07, bassGain: 0.065
+    padGain: 0.07, pluckGain: 0.072, bassGain: 0.058
   }
 };
 
@@ -3103,7 +3100,15 @@ function applyVenueTheme(){
   GRID_LINE=roadTheme.line;
   const tag=document.getElementById('eco-venue-theme');
   if(tag) tag.textContent='City: ' + (v.city || v.name);
-  const rank=venueRankText(v); // venue name shown in header badge, not mode-subtitle
+  // Neon backdrop: show for Vegas venue using selected casino config,
+  // or fall back to bellagio so the backdrop always appears on Vegas
+  if(typeof applyNeonState === 'function'){
+    if(v.id === 'vegas'){
+      applyNeonState(selectedCasino && VEGAS_CASINO_IDS && VEGAS_CASINO_IDS.has(selectedCasino) ? selectedCasino : 'bellagio');
+    } else {
+      applyNeonState(selectedCasino || '');
+    }
+  }
   updateAllRoads();
   applyVenueAudioTheme();
 }
@@ -5089,7 +5094,7 @@ function resolveHand(){
   // Special win celebrations (priority: Dragon7 > Panda8 > Tiger > Natural)
   if(r.isDragon7){ triggerSpecialAnim('dragon7'); soundDragon7(); }
   else if(r.isPanda8){ triggerSpecialAnim('panda8'); soundPanda8(); }
-  else if(r.isBigTiger||r.isSmallTiger||r.isTigerTie){ triggerSpecialAnim('tiger'); soundTiger(); }
+  else if((r.isBigTiger||r.isSmallTiger||r.isTigerTie)&&gameMode==='tiger'){ triggerSpecialAnim('tiger'); soundTiger(); }
   else if(isNatural){ triggerSpecialAnim(isNatural9?'natural9':'natural8'); soundNatural(); }
 
   // ── Centralized haptic feedback — unique pattern per outcome ──────
@@ -7817,6 +7822,7 @@ body[data-room='macau-vip'] .bet-slot.active { border-color:var(--gold); box-sha
 /* ══ NEON BACKDROP (Vegas) ══════════════════════════ */
 #neon-backdrop {
   display:none; position:relative; overflow:hidden;
+  grid-column:1/-1;
   background:linear-gradient(180deg,#070010 0%,#0e0018 100%);
   border-radius:10px; padding:11px 16px 7px; margin-bottom:10px;
   border:1px solid rgba(255,30,120,0.18);
