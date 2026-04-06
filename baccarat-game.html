@@ -2847,32 +2847,121 @@ const VENUES=[
   {id:'macau', name:'Macau', city:'Macau Cotai', requiredTitle:'Warlord', rank:2},
   {id:'montecarlo', name:'Monte Carlo', city:'Monte Carlo Riviera', requiredTitle:'Emperor', rank:1}
 ];
+// ── VENUE AUDIO PROFILES (crowd ambience parameters only — music handled by ambientCasino engine) ──
 const VENUE_AUDIO={
-  vegas:{
-    musicGain:0.24, crowdGain:0.06, crowdBand:420, crowdHighpass:190, brassType:'sawtooth', brassCutoff:1050,
-    melody:[[392,0.5],[440,0.5],[392,0.5],[349,0.5],[330,0.75],[392,0.25],[440,1.0],[349,0.5],[392,0.5],[330,0.5],[294,0.5],[262,1.5],[262,0.5]]
+  vegas:       { musicGain:0.18, crowdGain:0.055, crowdBand:400, crowdHighpass:180 },
+  atlantic:    { musicGain:0.15, crowdGain:0.04,  crowdBand:300, crowdHighpass:155 },
+  macau:       { musicGain:0.17, crowdGain:0.035, crowdBand:500, crowdHighpass:210 },
+  buenosaires: { musicGain:0.16, crowdGain:0.038, crowdBand:350, crowdHighpass:160 },
+  morocco:     { musicGain:0.17, crowdGain:0.045, crowdBand:290, crowdHighpass:145 },
+  montecarlo:  { musicGain:0.14, crowdGain:0.018, crowdBand:200, crowdHighpass:110 }
+};
+
+// ── AMBIENT CASINO MUSIC PROFILES ───────────────────────────────
+// Principles: texture over tune, ~70 BPM, slow chord changes,
+// seamless loop ~3min, no catchy melody, regional flavor via timbre.
+const AMBIENT_PROFILES = {
+  // 🇺🇸 Las Vegas — synth pads, electric piano, modern ambient lounge
+  vegas: {
+    tempo: 72,
+    // Chords as [root_hz, [interval_ratios]] — maj7 / sus2 colors
+    chords: [
+      { root: 130.8, ratios: [1, 1.25, 1.5, 1.875] },   // Cmaj7
+      { root: 110.0, ratios: [1, 1.25, 1.5, 1.875] },   // Amaj7
+      { root: 138.6, ratios: [1, 1.189, 1.498, 2.0]  }, // C#m7
+      { root: 123.5, ratios: [1, 1.25, 1.5, 1.875] }    // Bmaj7 (deceptive resolve)
+    ],
+    padWave: 'sine',      padCutoff: 900,  padQ: 0.8,   padAttack: 3.5, padRelease: 4.0,
+    pluckWave: 'triangle', pluckCutoff: 1800, pluckDecay: 1.8,
+    bassDecay: 4.5, bassCutoff: 180,
+    sparsity: 0.38,  // probability a piano note fires each bar
+    padLFORate: 0.04, padLFODepth: 80,
+    padGain: 0.11, pluckGain: 0.055, bassGain: 0.09
   },
-  atlantic:{
-    musicGain:0.2, crowdGain:0.045, crowdBand:300, crowdHighpass:160, brassType:'triangle', brassCutoff:820,
-    melody:[[330,0.6],[294,0.4],[330,0.6],[392,0.5],[440,0.8],[392,0.4],[330,0.6],[294,0.6],[262,1.0],[294,0.5],[330,0.9]]
+
+  // 🌊 Atlantic City — warm jazz lounge, piano + brushed ambience, maj9 chords
+  atlantic: {
+    tempo: 68,
+    chords: [
+      { root: 116.5, ratios: [1, 1.25, 1.498, 1.875, 2.245] }, // Bbmaj9
+      { root: 98.0,  ratios: [1, 1.189, 1.498, 1.782, 2.0]  }, // Gm9
+      { root: 110.0, ratios: [1, 1.189, 1.498, 1.782, 2.245] },// Am9
+      { root: 130.8, ratios: [1, 1.25, 1.498, 1.875, 2.245] }  // Cmaj9
+    ],
+    padWave: 'sine',       padCutoff: 750,  padQ: 0.6,   padAttack: 4.0, padRelease: 5.0,
+    pluckWave: 'triangle', pluckCutoff: 2200, pluckDecay: 2.2,
+    bassDecay: 5.0, bassCutoff: 160,
+    sparsity: 0.44,
+    padLFORate: 0.03, padLFODepth: 60,
+    padGain: 0.09, pluckGain: 0.065, bassGain: 0.07
   },
-  macau:{
-    musicGain:0.23, crowdGain:0.04, crowdBand:520, crowdHighpass:220, brassType:'square', brassCutoff:1150,
-    melody:[[523,0.35],[494,0.35],[440,0.45],[392,0.5],[440,0.4],[494,0.35],[523,0.6],[659,0.5],[587,0.5],[523,0.8]]
+
+  // 🐉 Macau — pentatonic plucks, airy pads, spacious East Asian prestige
+  macau: {
+    tempo: 64,
+    chords: [
+      { root: 146.8, ratios: [1, 1.189, 1.498, 1.782] }, // Dm (pentatonic: D F A C)
+      { root: 130.8, ratios: [1, 1.334, 1.498, 2.0]  },  // Csus2
+      { root: 110.0, ratios: [1, 1.25, 1.498, 2.0]   },  // Amaj add2
+      { root: 164.8, ratios: [1, 1.189, 1.498, 1.782] }  // Em pent
+    ],
+    padWave: 'sine',       padCutoff: 600,  padQ: 1.2,   padAttack: 5.0, padRelease: 6.0,
+    pluckWave: 'sawtooth', pluckCutoff: 2600, pluckDecay: 1.2, // guzheng-like fast decay
+    bassDecay: 6.0, bassCutoff: 120,
+    sparsity: 0.28,   // more silence = more space
+    padLFORate: 0.025, padLFODepth: 40,
+    padGain: 0.10, pluckGain: 0.06, bassGain: 0.06
   },
-  buenosaires:{
-    musicGain:0.21, crowdGain:0.04, crowdBand:360, crowdHighpass:170, brassType:'triangle', brassCutoff:960,
-    melody:[[330,0.45],[392,0.45],[440,0.7],[392,0.35],[349,0.5],[330,0.65],[294,0.45],[330,0.45],[392,0.8]]
+
+  // 💃 Buenos Aires — warm nylon strings feel, tango minor harmonics, intimate
+  buenosaires: {
+    tempo: 76,
+    chords: [
+      { root: 110.0, ratios: [1, 1.189, 1.498, 1.782, 2.0]  }, // Am7
+      { root: 98.0,  ratios: [1, 1.189, 1.498, 1.782, 2.245] },// Gm9
+      { root: 123.5, ratios: [1, 1.25, 1.498, 1.875] },         // Bmaj7
+      { root: 87.3,  ratios: [1, 1.189, 1.498, 1.782] }         // Fm7
+    ],
+    padWave: 'triangle',   padCutoff: 820,  padQ: 0.9,   padAttack: 3.0, padRelease: 4.5,
+    pluckWave: 'triangle', pluckCutoff: 1600, pluckDecay: 2.8, // nylon string feel
+    bassDecay: 3.8, bassCutoff: 200,
+    sparsity: 0.50,
+    padLFORate: 0.05, padLFODepth: 70,
+    padGain: 0.10, pluckGain: 0.07, bassGain: 0.085
   },
-  morocco:{
-    musicGain:0.22, crowdGain:0.05, crowdBand:310, crowdHighpass:150, brassType:'square', brassCutoff:900,
-    melody:[[294,0.4],[330,0.4],[349,0.55],[392,0.35],[349,0.5],[330,0.45],[294,0.7],[262,0.45],[294,0.8]]
+
+  // 🕌 Morocco — exotic Dorian/Phrygian flavor, oud-like plucks, desert warmth
+  morocco: {
+    tempo: 66,
+    chords: [
+      { root: 146.8, ratios: [1, 1.122, 1.498, 1.782] },  // Dm Phrygian flavor (D Eb A C)
+      { root: 138.6, ratios: [1, 1.189, 1.498, 2.0]  },   // C#m
+      { root: 130.8, ratios: [1, 1.122, 1.334, 1.498] },  // C sus (Phrygian color)
+      { root: 146.8, ratios: [1, 1.25, 1.498, 1.875]  }   // Dmaj7 (resolve moment)
+    ],
+    padWave: 'sine',       padCutoff: 680,  padQ: 1.4,   padAttack: 4.5, padRelease: 5.5,
+    pluckWave: 'sawtooth', pluckCutoff: 2000, pluckDecay: 1.5, // oud-like
+    bassDecay: 5.5, bassCutoff: 140,
+    sparsity: 0.32,
+    padLFORate: 0.035, padLFODepth: 55,
+    padGain: 0.10, pluckGain: 0.058, bassGain: 0.07
   },
-  montecarlo:{
-    musicGain:0.22, crowdGain:0.02, crowdBand:210, crowdHighpass:120,
-    brassType:'triangle', brassCutoff:980, leadGain:0.22, bassGain:0.08, drumGain:0.09,
-    padType:'sine', padCutoff:520, padGain:0.075, padHzRatio:0.5,
-    melody:[[262,0.9],[330,0.65],[392,0.65],[523,0.9],[659,0.58],[523,0.65],[587,0.52],[494,0.52],[440,0.82],[392,0.95],[330,0.86],[294,0.78]]
+
+  // 👑 Monte Carlo — piano lounge jazz, rich maj7/9 chords, old-money elegance
+  montecarlo: {
+    tempo: 62,
+    chords: [
+      { root: 130.8, ratios: [1, 1.25, 1.498, 1.875, 2.245] }, // Cmaj9
+      { root: 110.0, ratios: [1, 1.25, 1.498, 1.875, 2.245] }, // Amaj9
+      { root: 98.0,  ratios: [1, 1.189, 1.498, 1.782, 2.245] },// Gm9
+      { root: 123.5, ratios: [1, 1.25, 1.498, 1.875] }          // Bm7 (lingering)
+    ],
+    padWave: 'sine',       padCutoff: 650,  padQ: 0.5,   padAttack: 5.5, padRelease: 7.0,
+    pluckWave: 'triangle', pluckCutoff: 3000, pluckDecay: 3.5, // grand piano decay
+    bassDecay: 7.0, bassCutoff: 130,
+    sparsity: 0.42,
+    padLFORate: 0.02, padLFODepth: 35,
+    padGain: 0.085, pluckGain: 0.07, bassGain: 0.065
   }
 };
 
@@ -6344,64 +6433,151 @@ function stopCrowdAmbience(){
   _crowdNodes=null;
 }
 
-// ── Venue loop (synthesized; profile-driven) ──
-function startOrchestral(){
-  if(_orchNodes||!musicEnabled) return;
-  _orchNodes=true;
-  function playLoop(){
-    const profile=getVenueAudioProfile();
-    const melody=profile.melody || VENUE_AUDIO.vegas.melody;
-    const leadGain=Number.isFinite(profile.leadGain) ? profile.leadGain : 0.18;
-    const bassGain=Number.isFinite(profile.bassGain) ? profile.bassGain : 0.12;
-    const drumGain=Number.isFinite(profile.drumGain) ? profile.drumGain : 0.25;
-    const padGain=Number.isFinite(profile.padGain) ? profile.padGain : 0;
-    const padHzRatio=Number.isFinite(profile.padHzRatio) ? profile.padHzRatio : 0.5;
-    const ctx=getAudioCtx(), now=ctx.currentTime;
-    let t=now;
-    melody.forEach(([freq,dur])=>{
-      // Brass melody (sawtooth + lowpass)
-      const o=ctx.createOscillator(); o.type=profile.brassType || 'sawtooth'; o.frequency.value=freq*0.5;
-      const lp=ctx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=profile.brassCutoff || 900;
-      const g=ctx.createGain();
-      g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(leadGain,t+0.06);
-      g.gain.setValueAtTime(leadGain,t+dur-0.08); g.gain.linearRampToValueAtTime(0,t+dur);
-      o.connect(lp); lp.connect(g); g.connect(getMusicOut());
-      o.start(t); o.stop(t+dur+0.05);
-      if(padGain>0 && dur>=0.55){
-        const p=ctx.createOscillator(); p.type=profile.padType || 'sine'; p.frequency.value=freq*padHzRatio;
-        const plp=ctx.createBiquadFilter(); plp.type='lowpass'; plp.frequency.value=profile.padCutoff || 550;
-        const pg=ctx.createGain();
-        pg.gain.setValueAtTime(0,t); pg.gain.linearRampToValueAtTime(padGain,t+0.22);
-        pg.gain.setValueAtTime(padGain,t+Math.max(0.25,dur-0.15)); pg.gain.linearRampToValueAtTime(0,t+dur);
-        p.connect(plp); plp.connect(pg); pg.connect(getMusicOut());
-        p.start(t); p.stop(t+dur+0.06);
-      }
-      // Sub bass hit on beat
-      if(dur>=0.5){
-        const b=ctx.createOscillator(); b.type='sine'; b.frequency.value=freq*0.25;
-        const bg=ctx.createGain();
-        bg.gain.setValueAtTime(bassGain,t); bg.gain.exponentialRampToValueAtTime(0.001,t+0.35);
-        b.connect(bg); bg.connect(getMusicOut()); b.start(t); b.stop(t+0.4);
-        // Drum hit (noise burst)
-        const blen=Math.floor(ctx.sampleRate*0.08);
-        const bbuf=ctx.createBuffer(1,blen,ctx.sampleRate);
-        const dd=bbuf.getChannelData(0);
-        for(let i=0;i<blen;i++) dd[i]=(Math.random()*2-1)*(1-i/blen);
-        const bs=ctx.createBufferSource(); bs.buffer=bbuf;
-        const bf=ctx.createBiquadFilter(); bf.type='lowpass'; bf.frequency.value=200;
-        const bdg=ctx.createGain(); bdg.gain.value=drumGain;
-        bs.connect(bf); bf.connect(bdg); bdg.connect(getMusicOut()); bs.start(t);
-      }
-      t+=dur;
-    });
-    const totalDur=melody.reduce((s,[,d])=>s+d,0);
-    _orchTimer=setTimeout(playLoop,(totalDur-0.1)*1000);
-  }
-  playLoop();
+// ══════════════════════════════════════════════════════════════════
+//  AMBIENT CASINO MUSIC ENGINE
+//  Texture over tune · slow pads · sparse plucks · seamless loop
+// ══════════════════════════════════════════════════════════════════
+let _ambPadNodes   = [];  // running pad oscillators per chord voice
+let _ambLFOs       = [];  // pad filter LFOs
+let _ambLoopTimer  = null;
+let _ambChordIndex = 0;
+let _ambVariation  = 0;   // micro-variation counter (0-3)
+
+function _getAmbProfile(){
+  return AMBIENT_PROFILES[currentVenue] || AMBIENT_PROFILES.vegas;
 }
+
+// Schedule a single evolving pad chord
+function _schedPad(ctx, out, prof, chord, startT, durSec){
+  chord.ratios.forEach(function(ratio, vi){
+    const freq = chord.root * ratio;
+    // Two detuned oscillators per voice → warmth without harshness
+    [-4, 4].forEach(function(detuneCents){
+      const osc = ctx.createOscillator();
+      osc.type = prof.padWave;
+      osc.frequency.value = freq;
+      osc.detune.value = detuneCents;
+
+      const lp = ctx.createBiquadFilter();
+      lp.type = 'lowpass';
+      // Micro-variation: slightly shift cutoff each cycle
+      const cutoffShift = (_ambVariation % 4) * 35;
+      lp.frequency.value = prof.padCutoff + cutoffShift;
+      lp.Q.value = prof.padQ;
+
+      const env = ctx.createGain();
+      const vol = prof.padGain * (1 - vi * 0.08); // upper voices quieter
+      env.gain.setValueAtTime(0, startT);
+      env.gain.linearRampToValueAtTime(vol, startT + prof.padAttack);
+      env.gain.setValueAtTime(vol, startT + durSec - prof.padRelease);
+      env.gain.linearRampToValueAtTime(0, startT + durSec + 0.5);
+
+      // Slow LFO on filter cutoff for "breathing" pad
+      const lfo = ctx.createOscillator();
+      lfo.type = 'sine';
+      lfo.frequency.value = prof.padLFORate + (Math.random() * 0.01);
+      const lfoGain = ctx.createGain();
+      lfoGain.gain.value = prof.padLFODepth;
+      lfo.connect(lfoGain); lfoGain.connect(lp.frequency);
+
+      osc.connect(lp); lp.connect(env); env.connect(out);
+      osc.start(startT); osc.stop(startT + durSec + 1.0);
+      lfo.start(startT); lfo.stop(startT + durSec + 1.0);
+      _ambPadNodes.push(osc, lfo);
+    });
+
+    // Sub bass (root only, very low, barely felt)
+    if(vi === 0){
+      const bass = ctx.createOscillator();
+      bass.type = 'sine';
+      bass.frequency.value = chord.root * 0.5;
+      const blp = ctx.createBiquadFilter();
+      blp.type = 'lowpass'; blp.frequency.value = prof.bassCutoff;
+      const benv = ctx.createGain();
+      benv.gain.setValueAtTime(0, startT);
+      benv.gain.linearRampToValueAtTime(prof.bassGain, startT + prof.bassDecay * 0.6);
+      benv.gain.setValueAtTime(prof.bassGain, startT + durSec - prof.bassDecay * 0.4);
+      benv.gain.linearRampToValueAtTime(0, startT + durSec + 0.5);
+      bass.connect(blp); blp.connect(benv); benv.connect(out);
+      bass.start(startT); bass.stop(startT + durSec + 1.0);
+      _ambPadNodes.push(bass);
+    }
+  });
+}
+
+// Schedule sparse piano/pluck notes over a chord duration
+function _schedPlucks(ctx, out, prof, chord, startT, durSec){
+  // Beat interval at this tempo
+  const beatSec = 60 / prof.tempo;
+  const beats = Math.floor(durSec / beatSec);
+  const notes = chord.ratios.map(function(r){ return chord.root * r; })
+    .concat(chord.ratios.map(function(r){ return chord.root * r * 2; })); // add octave up
+
+  for(let b = 1; b < beats; b++){
+    if(Math.random() > prof.sparsity) continue; // silence most beats
+
+    const noteT = startT + b * beatSec + (Math.random() * beatSec * 0.18);
+    const freq = notes[Math.floor(Math.random() * notes.length)];
+    // Occasional octave displacement for variety
+    const oct = Math.random() > 0.7 ? 2.0 : (Math.random() > 0.5 ? 1.0 : 0.5);
+    const finalFreq = freq * oct;
+
+    const osc = ctx.createOscillator();
+    osc.type = prof.pluckWave;
+    osc.frequency.value = finalFreq;
+    const lp = ctx.createBiquadFilter();
+    lp.type = 'lowpass'; lp.frequency.value = prof.pluckCutoff;
+
+    const env = ctx.createGain();
+    const vel = prof.pluckGain * (0.5 + Math.random() * 0.5); // velocity humanization
+    env.gain.setValueAtTime(vel, noteT);
+    env.gain.exponentialRampToValueAtTime(0.0001, noteT + prof.pluckDecay);
+
+    osc.connect(lp); lp.connect(env); env.connect(out);
+    osc.start(noteT); osc.stop(noteT + prof.pluckDecay + 0.1);
+    _ambPadNodes.push(osc);
+  }
+}
+
+function startOrchestral(){
+  if(_orchNodes || !musicEnabled) return;
+  _orchNodes = true;
+  _ambPadNodes = [];
+  _ambChordIndex = 0;
+  _ambVariation = 0;
+
+  function scheduleNextChord(){
+    if(!_orchNodes) return;
+    const prof    = _getAmbProfile();
+    const ctx     = getAudioCtx();
+    const out     = getMusicOut();
+    const now     = ctx.currentTime;
+
+    const chord   = prof.chords[_ambChordIndex % prof.chords.length];
+    // Chord duration in seconds — 4 bars at this tempo, with micro-variation
+    const barSec  = (60 / prof.tempo) * 4;
+    const barsThisChord = (_ambVariation % 3 === 0 && _ambChordIndex > 0) ? 8 : 4; // occasional long hold
+    const durSec  = barSec * barsThisChord;
+
+    _schedPad(ctx, out, prof, chord, now, durSec);
+    _schedPlucks(ctx, out, prof, chord, now, durSec);
+
+    _ambChordIndex++;
+    _ambVariation++;
+
+    // Schedule next chord slightly before this one ends (smooth crossfade)
+    _orchTimer = setTimeout(scheduleNextChord, (durSec - prof.padRelease * 0.5) * 1000);
+  }
+
+  // Small initial delay so audio context is warm
+  _orchTimer = setTimeout(scheduleNextChord, 400);
+}
+
 function stopOrchestral(){
-  if(_orchTimer){ clearTimeout(_orchTimer); _orchTimer=null; }
-  _orchNodes=null;
+  if(_orchTimer){ clearTimeout(_orchTimer); _orchTimer = null; }
+  // Let current pads fade naturally — just stop scheduling new ones
+  _orchNodes = null;
+  _ambPadNodes = [];
 }
 
 // ── Chip: stone/metallic click ──
