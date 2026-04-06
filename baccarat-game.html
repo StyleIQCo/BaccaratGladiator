@@ -815,20 +815,158 @@ body[data-venue='montecarlo'] .road-hdr .road-count{
   color:rgba(245,214,145,0.72);
 }
 
-/* ─── HEADER ─── */
+/* ─── HEADER (compact) ─── */
 header {
-  background:linear-gradient(90deg,#0d1f10 0%,#1a5c2a 50%,#0d1f10 100%);
+  background:linear-gradient(180deg,#0d1f10 0%,#0a1a0c 100%);
   border-bottom:2px solid var(--gold);
-  padding:8px 14px;
-  display:flex; align-items:center; justify-content:space-between;
-  flex-wrap:wrap; gap:6px;
+  padding:0;
+  display:block;
 }
+.hdr-top {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:5px 10px 4px; gap:8px;
+}
+.hdr-venue-user {
+  display:flex; flex-direction:column; gap:2px; min-width:0; flex:1 1 auto;
+}
+.hdr-venue-badge {
+  display:inline-flex; align-items:center; gap:4px; cursor:pointer;
+  padding:2px 7px 2px 4px; border-radius:12px;
+  border:1px solid rgba(201,168,76,0.22); background:rgba(201,168,76,0.04);
+  transition:background 0.15s; max-width:160px;
+}
+.hdr-venue-badge:hover { background:rgba(201,168,76,0.12); border-color:rgba(201,168,76,0.5); }
+.hdr-venue-icon {
+  font-size:1.05rem; line-height:1;
+  filter:brightness(0.55) saturate(0.3) contrast(1.3);
+  flex-shrink:0;
+}
+.hdr-venue-name {
+  font-family:'Cinzel',serif; font-size:0.58rem; color:var(--gold);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  letter-spacing:0.5px;
+}
+.hdr-user-area {
+  display:flex; align-items:center; gap:3px;
+  font-size:0.5rem; color:rgba(140,200,255,0.72);
+}
+.hdr-title-area { flex:0 0 auto; text-align:center; }
 header h1 {
   font-family:'Cinzel',serif;
-  font-size:clamp(0.9rem,3vw,1.4rem);
-  color:var(--gold); letter-spacing:3px;
+  font-size:clamp(0.7rem,2.5vw,1.05rem);
+  color:var(--gold); letter-spacing:2px;
+  margin:0; line-height:1;
 }
-.header-sub { font-size:0.65rem; color:rgba(240,230,200,0.5); letter-spacing:2px; }
+.header-sub { display:none; } /* subtitle moved to mode-bar */
+.hdr-right {
+  display:flex; align-items:center; gap:5px; flex:1 1 auto; justify-content:flex-end;
+}
+.hdr-bal-wrap { text-align:right; line-height:1; }
+.hdr-bal-num {
+  font-family:'Cinzel',serif; color:var(--gold);
+  font-size:0.88rem; font-weight:700; display:block;
+}
+.hdr-bal-label { font-size:0.42rem; color:rgba(240,230,200,0.35); letter-spacing:0.12em; }
+.hdr-settings-btn {
+  background:none; border:1px solid rgba(201,168,76,0.22); border-radius:5px;
+  color:rgba(240,230,200,0.55); font-size:0.78rem; padding:3px 6px; cursor:pointer; line-height:1;
+}
+.hdr-settings-btn:hover { background:rgba(201,168,76,0.1); border-color:rgba(201,168,76,0.45); }
+.hdr-settings-btn.open { background:rgba(201,168,76,0.12); border-color:var(--gold); color:var(--gold); }
+
+/* Settings drawer */
+.hdr-settings-drawer {
+  display:none; padding:5px 10px 7px; flex-direction:column; gap:5px;
+  border-top:1px solid rgba(201,168,76,0.14); background:rgba(0,0,0,0.28);
+}
+.hdr-settings-drawer.open { display:flex; }
+.hdr-settings-row { display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+.hdr-settings-label {
+  font-size:0.5rem; color:rgba(240,230,200,0.42); white-space:nowrap;
+}
+.hdr-settings-label strong { color:var(--gold-lt); font-family:'Cinzel',serif; }
+
+/* Mode bar with level indicator */
+.mode-bar-level {
+  font-size:0.5rem; color:rgba(201,168,76,0.5);
+  font-family:'Cinzel',serif; white-space:nowrap; padding:0 3px;
+}
+
+/* ─── ACTION STRIP (slim row replacing bulky economy panel) ─── */
+.action-strip {
+  display:flex; align-items:center; gap:6px; flex-wrap:wrap;
+  padding:4px 10px; background:rgba(0,0,0,0.22);
+  border-bottom:1px solid rgba(201,168,76,0.12);
+}
+.action-strip .eco-stat {
+  font-size:0.54rem; color:rgba(230,220,195,0.72); white-space:nowrap;
+}
+.action-strip .eco-stat strong { color:var(--gold-lt); font-family:'Cinzel',serif; }
+.action-strip .eco-btn { font-size:0.52rem; padding:3px 7px; }
+.action-strip .eco-venue { font-size:0.52rem; padding:2px 5px; }
+
+/* ─── STICKY ACTION BAR (fixed bottom) ─── */
+.sticky-action-bar {
+  position:fixed; bottom:0; left:0; right:0; z-index:500;
+  background:linear-gradient(180deg, rgba(5,10,5,0.97) 0%, #040804 100%);
+  border-top:2px solid rgba(201,168,76,0.35);
+  padding:5px 8px calc(5px + env(safe-area-inset-bottom));
+  box-shadow:0 -4px 22px rgba(0,0,0,0.65);
+  backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);
+}
+.sab-chips {
+  display:flex; gap:5px; justify-content:center; margin-bottom:5px;
+}
+.sab-chips .chip { width:48px; height:48px; font-size:0.72rem; }
+.sab-main {
+  display:flex; gap:6px; align-items:stretch; justify-content:center;
+  margin-bottom:3px;
+}
+#btn-deal.sab-deal, .sab-deal {
+  flex:1; max-width:220px; font-size:1.0rem !important; letter-spacing:2px !important;
+  padding:13px 10px !important; font-family:'Cinzel',serif !important; font-weight:700 !important;
+  background:linear-gradient(135deg,#f0d080,#c9a84c,#977327) !important;
+  color:#000 !important; border:none !important; border-radius:6px !important; cursor:pointer !important;
+  box-shadow:0 0 22px rgba(201,168,76,0.45), 0 3px 10px rgba(0,0,0,0.5) !important;
+  transition:all 0.2s !important;
+}
+#btn-deal.sab-deal:hover:not(:disabled),
+.sab-deal:hover:not(:disabled) {
+  background:linear-gradient(135deg,#f8e898,#d4b860,#b09040) !important;
+  box-shadow:0 0 34px rgba(201,168,76,0.65), 0 4px 14px rgba(0,0,0,0.5) !important;
+}
+#btn-deal.sab-deal:disabled, .sab-deal:disabled { opacity:0.32 !important; box-shadow:none !important; }
+#btn-new.sab-new {
+  flex:1; max-width:220px; font-size:1.0rem !important; letter-spacing:2px !important;
+  padding:13px 10px !important; font-family:'Cinzel',serif !important; font-weight:700 !important;
+  background:linear-gradient(135deg,#2a8c45,#1a5c2a) !important;
+  color:#b0ffb0 !important; border:1px solid rgba(80,200,100,0.3) !important;
+  border-radius:6px !important; cursor:pointer !important;
+  box-shadow:0 0 16px rgba(30,140,60,0.35) !important;
+}
+#btn-new.sab-new:hover:not(:disabled) {
+  background:linear-gradient(135deg,#33a854,#226835) !important;
+  box-shadow:0 0 24px rgba(40,180,80,0.45) !important;
+}
+.sab-btn-side {
+  font-family:'Cinzel',serif; font-size:0.62rem; font-weight:700;
+  letter-spacing:0.4px; padding:13px 12px;
+  border:1px solid rgba(201,168,76,0.28); border-radius:6px;
+  background:rgba(201,168,76,0.07); color:var(--gold-lt);
+  cursor:pointer; transition:all 0.2s; flex-shrink:0;
+}
+.sab-btn-side:hover:not(:disabled) { background:rgba(201,168,76,0.15); border-color:var(--gold); }
+.sab-secondary {
+  display:flex; gap:5px; align-items:center; justify-content:center; flex-wrap:wrap;
+}
+.sab-stake { font-size:0.58rem; color:rgba(240,230,200,0.38); font-family:'Cinzel',serif; }
+.sab-stake strong { color:var(--gold); }
+
+/* ─── HIDE STORE BANNER ─── */
+.store-banner { display:none !important; }
+
+/* ─── BODY bottom pad for sticky bar ─── */
+body { padding-bottom:185px; }
 
 /* ─── MODE BAR — COMPACT PILLS ─── */
 .mode-bar {
@@ -1216,6 +1354,80 @@ header h1 {
 .bet-slot.tiger-slot   { border-color:rgba(204,102,0,0.4); }
 .bet-slot.tiger-slot.active  { border-color:var(--tiger-col); background:rgba(204,102,0,0.08); }
 .bet-slot.tiger-slot .sname  { color:var(--tiger-col); }
+
+/* ─── BANKER (red) / PLAYER (blue) identity rings ─── */
+#slot-banker {
+  border-color: rgba(220,70,70,0.55);
+  box-shadow: 0 0 0 1px rgba(220,70,70,0.25) inset, 0 0 10px rgba(220,70,70,0.12);
+}
+#slot-banker .sname { color: rgba(255,130,130,0.9); }
+#slot-banker:hover  { border-color: rgba(255,90,90,0.8); box-shadow: 0 0 0 1px rgba(255,90,90,0.3) inset, 0 0 14px rgba(255,90,90,0.2); }
+#slot-banker.active { border-color: rgba(255,100,100,0.9); border-style: solid; background: rgba(200,50,50,0.1); box-shadow: 0 0 0 2px rgba(255,80,80,0.35) inset, 0 0 18px rgba(255,80,80,0.25); }
+#slot-player {
+  border-color: rgba(70,130,220,0.55);
+  box-shadow: 0 0 0 1px rgba(70,130,220,0.25) inset, 0 0 10px rgba(70,130,220,0.12);
+}
+#slot-player .sname { color: rgba(130,170,255,0.9); }
+#slot-player:hover  { border-color: rgba(90,150,255,0.8); box-shadow: 0 0 0 1px rgba(90,150,255,0.3) inset, 0 0 14px rgba(90,150,255,0.2); }
+#slot-player.active { border-color: rgba(100,160,255,0.9); border-style: solid; background: rgba(50,100,200,0.1); box-shadow: 0 0 0 2px rgba(80,140,255,0.35) inset, 0 0 18px rgba(80,140,255,0.25); }
+
+/* ─── VENUE INTRO SPLASH ─── */
+.venue-intro-overlay {
+  position:fixed; inset:0; z-index:10000;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  background:rgba(0,0,0,0.0);
+  pointer-events:none;
+  opacity:0;
+  transition:background 0.25s, opacity 0.4s;
+}
+.venue-intro-overlay.vi-active {
+  background:rgba(0,0,0,0.86);
+  opacity:1;
+}
+.venue-intro-overlay.vi-exit {
+  opacity:0;
+  background:rgba(0,0,0,0.0);
+}
+.venue-intro-tagline {
+  font-family:'Cinzel',serif;
+  font-size:clamp(0.9rem,2.5vw,1.5rem);
+  color:rgba(255,255,255,0.88);
+  letter-spacing:0.25em;
+  text-transform:uppercase;
+  text-align:center;
+  margin-bottom:18px;
+  opacity:0;
+  transform:translateY(-28px);
+  transition:opacity 0.38s 0.12s, transform 0.38s 0.12s;
+}
+.venue-intro-overlay.vi-active .venue-intro-tagline {
+  opacity:1; transform:translateY(0);
+}
+.venue-intro-name {
+  font-family:'Cinzel',serif;
+  font-size:clamp(2rem,7vw,4.8rem);
+  font-weight:700;
+  letter-spacing:0.12em;
+  text-align:center;
+  text-transform:uppercase;
+  text-shadow:0 0 40px currentColor, 0 0 80px currentColor;
+  opacity:0;
+  transform:scale(0.38);
+  transition:opacity 0.42s 0.34s cubic-bezier(0.22,1,0.36,1), transform 0.42s 0.34s cubic-bezier(0.22,1,0.36,1);
+}
+.venue-intro-overlay.vi-active .venue-intro-name {
+  opacity:1; transform:scale(1);
+}
+.venue-intro-flag {
+  font-size:clamp(2rem,6vw,4rem);
+  margin-bottom:14px;
+  opacity:0;
+  transform:scale(0.5);
+  transition:opacity 0.3s 0.05s, transform 0.3s 0.05s;
+}
+.venue-intro-overlay.vi-active .venue-intro-flag {
+  opacity:1; transform:scale(1);
+}
 
 /* ─── SIDE BETS ─── */
 .side-bets-wrap { grid-column:1/-1; }
@@ -1952,13 +2164,20 @@ header h1 {
 
 <div class="age-overlay" id="age-overlay">
   <div class="age-box">
-    <div class="age-title">18+ Simulated Casino Experience</div>
+    <div class="age-title">♠ Baccarat Gladiator ♠</div>
+    <div style="font-size:0.7rem;color:rgba(150,190,255,0.65);text-align:center;margin-bottom:10px;letter-spacing:2px;">SIMULATED CASINO EXPERIENCE · 18+</div>
     <div class="age-copy">
-      This app is for adults and uses virtual credits only. No real-money gambling, no cash prizes, and no cashout.
-      Please play responsibly and take breaks.
+      <p style="margin:0 0 8px;">By continuing you confirm that:</p>
+      <ul style="margin:0 0 10px;padding-left:16px;line-height:1.8;">
+        <li>You are <strong>18 years of age or older</strong></li>
+        <li>This is <strong>simulated gameplay only</strong> — virtual credits have no real-world value</li>
+        <li>No real-money gambling, no cash prizes, no cashout</li>
+        <li>Baccarat outcomes are random — prior results do not predict future results</li>
+        <li>You will play responsibly and take breaks</li>
+      </ul>
     </div>
     <div class="age-actions">
-      <button class="age-btn" onclick="acceptAgeGate()">I Am 18+ · Continue</button>
+      <button class="age-btn" onclick="acceptAgeGate()">✔ I Am 18+ · I Understand · Enter</button>
       <button class="age-btn secondary" onclick="declineAgeGate()">Exit</button>
     </div>
   </div>
@@ -1966,33 +2185,55 @@ header h1 {
 
 <!-- ═══════ HEADER ═══════ -->
 <header>
-  <div>
-    <h1>♠ BACCARAT GLADIATOR ♠</h1>
-    <div class="header-sub" id="mode-subtitle">STANDARD · 5% COMMISSION · ALL 5 ROADS</div>
-  </div>
-  <div style="text-align:right;display:flex;align-items:center;gap:8px;">
-    <div class="audio-ctl">
-      <button id="btn-sound"  onclick="toggleSFX()"   title="Toggle SFX" class="audio-btn">🔊</button>
-      <button id="btn-music"  onclick="toggleMusic()"  title="Toggle Music" class="audio-btn">🎵</button>
-      <input  id="vol-slider" type="range" min="0" max="1" step="0.05" value="0.8"
-              oninput="setMasterVolume(this.value)" class="vol-slider" title="Master Volume">
-    </div>
-    <div>
-      <div style="font-family:'Cinzel',serif;color:var(--gold);font-size:0.85rem;font-weight:700;" id="hdr-balance">Credits: 1,000</div>
-      <div style="font-size:0.58rem;color:rgba(240,230,200,0.4);" id="hdr-rounds">Round 0</div>
-      <div style="font-size:0.56rem;color:rgba(140,220,255,0.82);" id="hdr-premium">Gems: 50 · LVL 1 Recruit</div>
-      <div id="hdr-trial" class="trial-badge">Session Hands: 10 remaining</div>
-      <div style="font-size:0.56rem;color:rgba(140,200,255,0.75);margin-top:2px;">
-        <span id="hdr-user">User: Guest</span>
+  <div class="hdr-top">
+    <!-- Left: Venue silhouette + User -->
+    <div class="hdr-venue-user">
+      <div class="hdr-venue-badge" id="hdr-venue-badge" onclick="openCasinoModal()" title="Change Venue">
+        <span class="hdr-venue-icon" id="hdr-venue-icon">🎰</span>
+        <span class="hdr-venue-name" id="hdr-venue-name">Las Vegas</span>
+      </div>
+      <div class="hdr-user-area">
+        <span id="hdr-user">Guest</span>
         <button class="hdr-auth-btn" id="hdr-login-btn" onclick="showAuthOverlay()">Login</button>
         <button class="hdr-auth-btn" id="hdr-logout-btn" onclick="cognitoLogout()" style="display:none;">Logout</button>
-      </div>
-      <div class="dealer-ctl">
-        <button class="dealer-ctl-btn active" id="dealer-style-core" onclick="setDealerStyle('core')">Dealer Core</button>
-        <button class="dealer-ctl-btn" id="dealer-style-glad" onclick="setDealerStyle('gladiator')">Dealer Gladiator</button>
-        <button class="dealer-ctl-btn active" id="dealer-captions-btn" onclick="toggleDealerCaptions()">Captions ON</button>
+        <span id="hdr-trial" class="trial-badge" style="margin-left:3px;"></span>
       </div>
     </div>
+    <!-- Center: Title -->
+    <div class="hdr-title-area">
+      <h1>♠ BG ♠</h1>
+    </div>
+    <!-- Right: Balance + audio + settings -->
+    <div class="hdr-right">
+      <div class="hdr-bal-wrap">
+        <span class="hdr-bal-num" id="hdr-balance">1,000</span>
+        <span class="hdr-bal-label">CREDITS</span>
+      </div>
+      <div class="audio-ctl">
+        <button id="btn-sound" onclick="toggleSFX()" title="SFX" class="audio-btn">🔊</button>
+        <button id="btn-music" onclick="toggleMusic()" title="Music" class="audio-btn">🎵</button>
+        <input id="vol-slider" type="range" min="0" max="1" step="0.05" value="0.8"
+               oninput="setMasterVolume(this.value)" class="vol-slider">
+      </div>
+      <button class="hdr-settings-btn" id="hdr-settings-btn" onclick="toggleSettings()">⚙</button>
+    </div>
+  </div>
+  <!-- Settings drawer (hidden by default) -->
+  <div class="hdr-settings-drawer" id="hdr-settings-drawer">
+    <div class="hdr-settings-row">
+      <span class="hdr-settings-label">Dealer:</span>
+      <button class="dealer-ctl-btn active" id="dealer-style-core" onclick="setDealerStyle('core')">Core</button>
+      <button class="dealer-ctl-btn" id="dealer-style-glad" onclick="setDealerStyle('gladiator')">Gladiator</button>
+      <button class="dealer-ctl-btn active" id="dealer-captions-btn" onclick="toggleDealerCaptions()">Captions ON</button>
+      <button class="dealer-ctl-btn active" id="dealer-voice-btn" onclick="toggleDealerVoice()">🔊 Voice ON</button>
+    </div>
+    <div class="hdr-settings-row">
+      <span class="hdr-settings-label">💎 <strong id="eco-gems">50</strong> Gems &nbsp;·&nbsp; Streak <strong id="eco-streak">0</strong></span>
+      <button class="eco-btn secondary" onclick="watchAdForChips()">+5k Chips</button>
+      <button class="eco-btn" onclick="exchangeGemsForChips(5,25000)">5💎→25k</button>
+    </div>
+    <div style="font-size:0.48rem;color:rgba(240,230,200,0.28);text-align:center;" id="hdr-rounds"></div>
+    <span id="hdr-premium" style="display:none;"></span>
   </div>
 </header>
 
@@ -2021,37 +2262,19 @@ header h1 {
       <button class="auth-btn alt" onclick="cognitoStart('signup')">CREATE ACCOUNT</button>
     </div>
     <div class="auth-row">
-      <button class="auth-btn alt" id="auth-trial-btn" onclick="startGuestTrial()">PLAY 10-HAND TRIAL</button>
+      <button class="auth-btn alt" id="auth-trial-btn" onclick="startGuestTrial()">PLAY 10-DEAL GUEST TRIAL</button>
     </div>
     <div class="auth-note" id="auth-note"></div>
   </div>
 </div>
 
-<!-- ═══════ BOT PERSONA PICKER ═══════ -->
-<div class="persona-overlay" id="persona-overlay">
-  <div class="persona-box">
-    <div class="persona-title">Choose Your Table Bot</div>
-    <div class="persona-sub">Pick a bot identity and speaking style before the first hand.</div>
-    <div class="persona-grid">
-      <button class="persona-bot-btn active" id="persona-bot-larry" onclick="selectBotPersona('larry')">
-        <span class="persona-bot-name">Late Bet Larry</span>
-        <span class="persona-bot-style">Aggro momentum chaser. Bets bigger when the table heats up.</span>
-      </button>
-      <button class="persona-bot-btn" id="persona-bot-jay" onclick="selectBotPersona('jay')">
-        <span class="persona-bot-name">Jay Dawg</span>
-        <span class="persona-bot-style">Hype streak rider. Follows runs and keeps the energy loud.</span>
-      </button>
-      <button class="persona-bot-btn" id="persona-bot-frank" onclick="selectBotPersona('frank')">
-        <span class="persona-bot-name">Second Bank Frank</span>
-        <span class="persona-bot-style">Banker grinder. Conservative sizing with old-school discipline.</span>
-      </button>
-    </div>
-    <div class="persona-voice-row">
-      <button class="persona-voice-btn active" id="persona-voice-vegas" onclick="selectBotVoice('vegas')">Vegas Pit Boss</button>
-      <button class="persona-voice-btn" id="persona-voice-macau" onclick="selectBotVoice('macau')">Old-School Macau</button>
-    </div>
-    <button class="persona-start-btn" onclick="confirmBotPersona()">LOCK IN BOT & ENTER TABLE</button>
-  </div>
+<!-- BOT PERSONA PICKER removed — bot and voice selected randomly at session start -->
+
+<!-- ═══════ VENUE INTRO SPLASH ═══════ -->
+<div class="venue-intro-overlay" id="venue-intro-overlay">
+  <div class="venue-intro-flag" id="venue-intro-flag"></div>
+  <div class="venue-intro-tagline" id="venue-intro-tagline"></div>
+  <div class="venue-intro-name" id="venue-intro-name"></div>
 </div>
 
 <!-- ═══════ XP NOTIF ═══════ -->
@@ -2074,33 +2297,25 @@ header h1 {
 </div>
 
 <!-- ═══════ MODE BAR — COMPACT ═══════ -->
-<div class="mode-bar">
+<div class="mode-bar" id="mode-subtitle">
   <div class="mode-pills">
     <button class="mode-pill" id="tab-standard" onclick="setMode('standard')">♠ Std</button>
     <button class="mode-pill ez active" id="tab-ez" onclick="setMode('ez')">🐉🐼 EZ</button>
     <button class="mode-pill tiger" id="tab-tiger" onclick="setMode('tiger')">🐯 Tiger</button>
   </div>
+  <span class="mode-bar-level">Lvl <strong id="eco-level">1</strong> <span id="eco-title">Recruit</span></span>
   <button class="mode-info-btn" onclick="toggleRules()">Rules ▾</button>
 </div>
 <div class="mode-rules" id="mode-rules-panel"></div>
 
-<div class="economy-panel">
-  <div class="eco-top">
-    <div class="eco-stat"><strong id="eco-chips">1,000</strong> Chips · <strong id="eco-gems">50</strong> Gems</div>
-    <div class="eco-stat">Lvl <strong id="eco-level">1</strong> <span id="eco-title">Recruit</span> · XP <strong id="eco-xp">0</strong></div>
-  </div>
-  <div class="eco-actions">
-    <button class="eco-btn" id="btn-daily-claim" onclick="claimDailyReward()">Claim Daily</button>
-    <button class="eco-btn secondary" onclick="watchAdForChips()">Watch Ad +5,000</button>
-    <button class="eco-btn" onclick="exchangeGemsForChips(5, 25000)">5 Gems → 25,000 Chips</button>
-    <button class="eco-casino-btn" onclick="openCasinoModal()">🏰 Casinos</button>
-  </div>
-  <div class="eco-venue-row" style="margin-top:7px;">
-    <label for="eco-venue">Venue</label>
-    <select id="eco-venue" class="eco-venue" onchange="selectVenue(this.value)"></select>
-    <span class="eco-stat" id="eco-streak">Daily Streak: 0</span>
-    <span class="eco-stat" id="eco-venue-theme">City: Las Vegas Neon</span>
-  </div>
+<!-- ═══════ ACTION STRIP (slim, replaces economy panel) ═══════ -->
+<div class="action-strip">
+  <button class="eco-btn" id="btn-daily-claim" onclick="claimDailyReward()">🎁 Daily</button>
+  <button class="eco-casino-btn" onclick="openCasinoModal()">🏰 Casinos</button>
+  <span class="eco-stat">XP <strong id="eco-xp">0</strong></span>
+  <select id="eco-venue" class="eco-venue" onchange="selectVenue(this.value)"></select>
+  <span id="eco-chips" style="display:none;"></span>
+  <span id="eco-venue-theme" style="display:none;"></span>
 </div>
 
 <!-- ═══════ GAME SECTION ═══════ -->
@@ -2304,33 +2519,50 @@ header h1 {
     </div>
   </div>
 
-  <!-- CHIPS -->
-  <div class="chips-btns">
+  <!-- chips, deal actions moved to sticky-action-bar below -->
+
+  <!-- EMOTE / THROWABLES PANEL -->
+  <div class="emote-panel" id="emote-panel">
+    <button class="emote-btn em-win"  onclick="throwEmote('champagne')" title="Buy the table a round!">🥂 Champagne <span class="emote-cost">$500</span></button>
+    <button class="emote-btn em-win"  onclick="throwEmote('confetti')"  title="Celebrate!">🎉 Confetti <span class="emote-cost">$100</span></button>
+    <button class="emote-btn em-win"  onclick="throwEmote('money')"     title="Make it rain!">💸 Make It Rain <span class="emote-cost">$200</span></button>
+    <button class="emote-btn em-loss" onclick="throwEmote('tomato')"    title="Express your frustration!">🍅 Throw Tomato <span class="emote-cost">$50</span></button>
+    <button class="emote-btn em-loss" onclick="throwEmote('flip')"      title="Flip the table!">😤 Flip Table <span class="emote-cost">$150</span></button>
+    <button class="emote-btn em-any"  onclick="throwEmote('lucky')"     title="Roll for luck!">🎲 Lucky Roll <span class="emote-cost">$75</span></button>
+    <button class="emote-btn em-any"  onclick="throwEmote('fire')"      title="You're on fire!">🔥 On Fire <span class="emote-cost">$250</span></button>
+  </div>
+
+  <!-- ROOM SELECTOR STRIP -->
+  <div class="room-selector-strip" id="room-selector-strip"></div>
+
+  <div class="msg-bar" id="msg-bar">Select a mode · place virtual chips · DEAL</div>
+  <div class="dealer-caption" id="dealer-caption"></div>
+</div>
+
+<!-- ═══════ STICKY ACTION BAR ═══════ -->
+<div class="sticky-action-bar" id="sticky-action-bar">
+  <div class="sab-chips">
     <div class="chip c1"   onclick="addChip(1)">$1</div>
     <div class="chip c5"   onclick="addChip(5)">$5</div>
     <div class="chip c25"  onclick="addChip(25)">$25</div>
     <div class="chip c100" onclick="addChip(100)">$100</div>
     <div class="chip c500" onclick="addChip(500)">$500</div>
   </div>
-
-  <!-- ACTIONS -->
-  <div class="action-btns">
-    <div class="bal-info">
-      Credits: <span id="bal-display">1,000</span>
-      &nbsp;Stake: <span id="bet-display">0</span>
-    </div>
-    <button class="btn btn-rebet"    id="btn-rebet"    onclick="reBetAndDeal()" style="display:none">↩ RE-BET</button>
-    <button class="btn btn-clear"    id="btn-clear"    onclick="clearBets()">Clear</button>
-    <button class="btn btn-deal"     id="btn-deal"     onclick="deal()">DEAL</button>
-    <button class="btn btn-new"      id="btn-new"      onclick="newRound()" style="display:none">New Round</button>
-    <button class="btn btn-auto"     id="btn-auto"     onclick="startAutoPlay()" title="Auto-deal next 5 hands with current bets">⚡ Auto ×5</button>
-    <button class="btn btn-freehand" id="btn-freehand" onclick="freeHandDeal()">👁 FREE HAND <span class="fh-count" id="fh-count">(10)</span></button>
+  <div class="sab-main">
+    <button class="sab-btn-side" id="btn-clear"   onclick="clearBets()">Clear</button>
+    <button class="sab-deal"     id="btn-deal"    onclick="deal()">🎴 DEAL</button>
+    <button class="sab-new"      id="btn-new"     onclick="newRound()" style="display:none">▶ NEW ROUND</button>
+    <button class="sab-deal"     id="btn-rebet"   onclick="reBetAndDeal()" style="display:none">↩ RE-BET</button>
+    <button class="sab-btn-side" id="btn-freehand" onclick="freeHandDeal()" title="Watch a hand with $0 bet — uses one of your 10 lifetime free watches">👁 $0 <span id="fh-count">(10)</span></button>
+  </div>
+  <div class="sab-secondary">
+    <span class="sab-stake">Stake: <strong id="bet-display">0</strong></span>
+    <span class="sab-stake">·</span>
+    <span class="sab-stake"><strong id="bal-display">1,000</strong> Credits</span>
+    <button class="btn btn-auto" id="btn-auto" onclick="startAutoPlay()" title="Auto×5">⚡ Auto×5</button>
     <div class="bet-timer-wrap"><div class="bet-timer" id="bet-timer">2:00</div></div>
   </div>
   <div class="auto-progress" id="auto-progress"></div>
-
-  <div class="msg-bar" id="msg-bar">Select a mode · place virtual chips · DEAL</div>
-  <div class="dealer-caption" id="dealer-caption"></div>
 </div>
 
 <div class="economy-friction" id="economy-friction">
@@ -2524,6 +2756,90 @@ let rulesOpen=false;
 const ECONOMY_KEY='bg_economy_v1';
 const DAILY_REWARDS=[10000,20000,50000,75000,100000,150000,300000];
 const TITLES=['Recruit','Gladiator','Centurion','Champion','Warlord','Emperor'];
+// ── VENUE INTRO LINES (Street Fighter announcer style) ───────────
+const VENUE_INTROS={
+  vegas:       { flag:'🎰', tagline:'Lights! Camera! Action!',                    name:'Las Vegas!',              color:'#82c8ff' },
+  atlantic:    { flag:'🌊', tagline:'The Boardwalk never sleeps. Ante up.',        name:'Atlantic City!',          color:'#46dcff' },
+  morocco:     { flag:'🏜️', tagline:'Ancient spice. Desert gold. Eternal night.',  name:'Marrakesh!',              color:'#f0a050' },
+  buenosaires: { flag:'💃', tagline:'Passion! Fire! Tango!',                       name:'Buenos Aires!',           color:'#88aaff' },
+  macau:       { flag:'🐉', tagline:'Nine dragons rise. Fortune or ruin.',         name:'Macau!',                  color:'#e050c8' },
+  montecarlo:  { flag:'👑', tagline:'Only the elite dare enter these halls.',       name:'Casino de Monte Carlo.',  color:'#f7d488' },
+};
+
+let _venueIntroTimer=null;
+function playVenueIntro(venueId){
+  const intro=VENUE_INTROS[venueId];
+  if(!intro) return;
+  const overlay=document.getElementById('venue-intro-overlay');
+  const flagEl=document.getElementById('venue-intro-flag');
+  const tagEl=document.getElementById('venue-intro-tagline');
+  const nameEl=document.getElementById('venue-intro-name');
+  if(!overlay||!tagEl||!nameEl) return;
+  // Abort any previous intro
+  if(_venueIntroTimer){ clearTimeout(_venueIntroTimer); _venueIntroTimer=null; }
+  overlay.classList.remove('vi-exit','vi-active');
+  flagEl.textContent=intro.flag;
+  tagEl.textContent=intro.tagline;
+  nameEl.textContent=intro.name;
+  nameEl.style.color=intro.color;
+  // Force reflow then animate in
+  void overlay.offsetWidth;
+  overlay.classList.add('vi-active');
+  soundVenueIntro(venueId, intro.color);
+  speakVenueIntro(venueId);
+  // Hold for 2.6s then fade out
+  _venueIntroTimer=setTimeout(function(){
+    overlay.classList.add('vi-exit');
+    _venueIntroTimer=setTimeout(function(){
+      overlay.classList.remove('vi-active','vi-exit');
+    }, 450);
+  }, 2600);
+}
+
+function soundVenueIntro(venueId, color){
+  try{
+    const AC=window.AudioContext||window.webkitAudioContext;
+    if(!AC) return;
+    const ctx=new AC();
+    // Short 3-note ascending fanfare stab + reverb tail
+    const venueNotes={
+      vegas:       [392,523,659],
+      atlantic:    [330,440,554],
+      morocco:     [294,370,440],
+      buenosaires: [349,466,587],
+      macau:       [415,554,698],
+      montecarlo:  [370,494,622],
+    };
+    const notes=(venueNotes[venueId]||[392,523,659]);
+    const master=ctx.createGain(); master.gain.setValueAtTime(0.28,ctx.currentTime); master.connect(ctx.destination);
+    // Simple delay for reverb feel
+    const delay=ctx.createDelay(0.5); delay.delayTime.value=0.22;
+    const fb=ctx.createGain(); fb.gain.value=0.35;
+    delay.connect(fb); fb.connect(delay); delay.connect(master);
+    notes.forEach(function(freq,i){
+      const osc=ctx.createOscillator();
+      const env=ctx.createGain();
+      osc.type='triangle';
+      osc.frequency.value=freq;
+      env.gain.setValueAtTime(0,ctx.currentTime+i*0.14);
+      env.gain.linearRampToValueAtTime(0.5,ctx.currentTime+i*0.14+0.04);
+      env.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+i*0.14+0.9);
+      osc.connect(env); env.connect(master); env.connect(delay);
+      osc.start(ctx.currentTime+i*0.14);
+      osc.stop(ctx.currentTime+i*0.14+0.9);
+    });
+    // Low boom hit on beat 0
+    const boom=ctx.createOscillator(); const boomEnv=ctx.createGain();
+    boom.type='sine'; boom.frequency.setValueAtTime(80,ctx.currentTime);
+    boom.frequency.exponentialRampToValueAtTime(35,ctx.currentTime+0.3);
+    boomEnv.gain.setValueAtTime(0.5,ctx.currentTime);
+    boomEnv.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.4);
+    boom.connect(boomEnv); boomEnv.connect(master);
+    boom.start(ctx.currentTime); boom.stop(ctx.currentTime+0.4);
+    setTimeout(function(){ try{ctx.close();}catch(e){} },3000);
+  }catch(e){}
+}
+
 const VENUES=[
   {id:'vegas', name:'Las Vegas', city:'Las Vegas Neon', requiredTitle:'Recruit', rank:5},
   {id:'atlantic', name:'Atlantic City', city:'Atlantic City Boardwalk', requiredTitle:'Gladiator', rank:6},
@@ -2561,19 +2877,22 @@ const VENUE_AUDIO={
   }
 };
 
-// ── FREE TRIAL ────────────────────────────────────────────────────
-const FREE_HAND_LIMIT = 10;
-let freeHandsUsed = 0;
+// ── GUEST TRIAL (counts every deal pressed, regular OR free hand) ─
+const GUEST_TRIAL_LIMIT = 10;  // total deals allowed before sign-in required
+let guestDealsUsed = 0;         // increments on every deal for non-logged-in users
 let trialExpired = false;
 let guestTrialStarted = false;
 
-function guestHandsRemaining(){
-  return Math.max(0, FREE_HAND_LIMIT - freeHandsUsed);
+function guestDealsRemaining(){
+  return Math.max(0, GUEST_TRIAL_LIMIT - guestDealsUsed);
 }
 
 function guestTrialExpired(){
-  return !authLocked && freeHandsUsed >= FREE_HAND_LIMIT;
+  return !authLocked && guestDealsUsed >= GUEST_TRIAL_LIMIT;
 }
+
+// keep old name as alias so any missed references still work
+function guestHandsRemaining(){ return guestDealsRemaining(); }
 
 // ── AUTO-PLAY ─────────────────────────────────────────────────────
 let autoPlayRemaining = 0;
@@ -2668,6 +2987,7 @@ function venueRankText(venue){
 function applyVenueTheme(){
   const v=getVenueById(currentVenue);
   document.body.setAttribute('data-venue', v.id);
+  updateHeaderVenueBadge(v.id);
   const roadTheme=VENUE_ROAD_THEME[v.id] || VENUE_ROAD_THEME.vegas;
   GRID_BG=roadTheme.bg;
   GRID_LINE=roadTheme.line;
@@ -2805,6 +3125,7 @@ function selectVenue(id){
     return;
   }
   currentVenue=id;
+  playVenueIntro(id);
   const rank=venueRankText(next);
   setMsg('Venue selected: ' + next.name + (rank ? (' (' + rank + ')') : '') + '.');
   postFeedMsg('🏛️ Entered venue: ' + next.name + '.', 'info');
@@ -2859,15 +3180,13 @@ function setHeaderUser(){
   if(!el) return;
   if(authLocked){
     const u=(currentUsername||'Player').trim();
-    const e=(currentUserEmail||'').trim();
-    const showEmail = e && e!=='user@unknown' && e!==u;
-    el.textContent = showEmail ? ('User: ' + u + ' (' + e + ')') : ('User: ' + u);
+    el.textContent = u;
   } else if(oauthCodeExchangeInFlight || authRecoveryInFlight){
-    el.textContent = 'User: Signing in...';
+    el.textContent = 'Signing in...';
   } else if(cognitoIdToken || cognitoAccessToken){
-    el.textContent = 'User: Restoring session...';
+    el.textContent = 'Restoring...';
   } else {
-    el.textContent = 'User: Guest';
+    el.textContent = 'Guest';
   }
   if(loginBtn) loginBtn.style.display = authLocked ? 'none' : 'inline-block';
   if(logoutBtn) logoutBtn.style.display = authLocked ? 'inline-block' : 'none';
@@ -2891,7 +3210,7 @@ function showAuthOverlay(mode){
   if(tb){
     const locked = guestTrialExpired();
     tb.disabled = locked;
-    tb.textContent = locked ? 'TRIAL COMPLETE' : 'PLAY 10-HAND TRIAL';
+    tb.textContent = locked ? 'TRIAL COMPLETE' : 'PLAY 10-DEAL GUEST TRIAL';
     tb.style.opacity = locked ? '0.5' : '1';
     tb.style.cursor = locked ? 'not-allowed' : 'pointer';
   }
@@ -2909,8 +3228,7 @@ function startGuestTrial(){
   }
   guestTrialStarted=true;
   hideAuthOverlay();
-  setMsg('Guest trial active. You have ' + guestHandsRemaining() + ' hands.');
-  if(!botPersonaLocked) showBotPersonaPicker();
+  setMsg('Guest trial active. ' + guestDealsRemaining() + ' deals remaining — sign in for unlimited play.');
 }
 
 function decodeJwtPayload(tok){
@@ -3646,7 +3964,135 @@ function toggleDealerCaptions(){
   }
 }
 
+// ── VOICE ENGINE (Web Speech API) ───────────────────────────────
+let dealerVoiceOn = true;
+let _ttsVoice = null;
+let _ttsReady = false;
+
+function _initTTSVoice(){
+  if(!window.speechSynthesis) return;
+  function _pick(){
+    const voices = window.speechSynthesis.getVoices();
+    if(!voices.length) return;
+    _ttsReady = true;
+    // Prefer a clear English voice with a deeper tone
+    const wantNames = ['Daniel','Google UK English Male','Microsoft David - English','Alex','Aaron','Fred','Tom'];
+    for(const n of wantNames){
+      const v = voices.find(v => v.name.includes(n));
+      if(v){ _ttsVoice = v; return; }
+    }
+    // Fall back to any en-GB or en-US voice
+    _ttsVoice = voices.find(v => v.lang==='en-GB')
+              || voices.find(v => v.lang.startsWith('en-'))
+              || voices[0];
+  }
+  _pick();
+  window.speechSynthesis.onvoiceschanged = _pick;
+}
+_initTTSVoice();
+
+function speak(text, opts){
+  if(!dealerVoiceOn || !text) return;
+  if(!window.speechSynthesis) return;
+  const utt = new SpeechSynthesisUtterance(text);
+  if(_ttsVoice) utt.voice = _ttsVoice;
+  utt.rate   = (opts && opts.rate  != null) ? opts.rate  : 0.88;
+  utt.pitch  = (opts && opts.pitch != null) ? opts.pitch : 0.88;
+  utt.volume = (opts && opts.vol   != null) ? opts.vol   : 0.95;
+  window.speechSynthesis.speak(utt);
+  return utt;
+}
+
+function speakNow(text, opts){
+  // Cancel any queued speech then speak immediately
+  if(window.speechSynthesis) window.speechSynthesis.cancel();
+  return speak(text, opts);
+}
+
+function speakVenueIntro(venueId){
+  const intro = VENUE_INTROS[venueId];
+  if(!intro || !dealerVoiceOn || !window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  // Tagline — fast, punchy
+  const u1 = new SpeechSynthesisUtterance(intro.tagline);
+  if(_ttsVoice) u1.voice = _ttsVoice;
+  u1.rate = 0.82; u1.pitch = 1.05; u1.volume = 1.0;
+  // Venue name — slow, dramatic, announcer punch
+  const u2 = new SpeechSynthesisUtterance(intro.name);
+  if(_ttsVoice) u2.voice = _ttsVoice;
+  u2.rate = 0.62; u2.pitch = 0.78; u2.volume = 1.0;
+  window.speechSynthesis.speak(u1);
+  window.speechSynthesis.speak(u2);
+}
+
+function cancelSpeech(){
+  if(window.speechSynthesis) window.speechSynthesis.cancel();
+}
+
+function toggleSettings(){
+  const drawer = document.getElementById('hdr-settings-drawer');
+  const btn    = document.getElementById('hdr-settings-btn');
+  if(!drawer) return;
+  const open = drawer.classList.toggle('open');
+  if(btn) btn.classList.toggle('open', open);
+}
+
+// ── VENUE BADGE (silhouette icon + name in compact header) ───────
+const VENUE_BADGE_ICONS = {
+  vegas:'🎰', atlantic:'🌊', morocco:'🕌',
+  buenosaires:'🎭', macau:'🐉', montecarlo:'👑'
+};
+function updateHeaderVenueBadge(venueId){
+  const icon = document.getElementById('hdr-venue-icon');
+  const name = document.getElementById('hdr-venue-name');
+  const v = getVenueById(venueId);
+  if(icon) icon.textContent = VENUE_BADGE_ICONS[venueId] || '🏛';
+  if(name) name.textContent = v ? v.name : venueId;
+}
+
+// ── IDLE MUTE (silence after 10 min no interaction) ──────────────
+let _idleTimer = null;
+let _idleSilenced = false;
+let _preIdleVolume = 0.8;
+
+function _resetIdle(){
+  if(_idleTimer) clearTimeout(_idleTimer);
+  if(_idleSilenced){
+    _idleSilenced = false;
+    // Restore volume on next interaction
+    setMasterVolume(_preIdleVolume);
+    const sl = document.getElementById('vol-slider');
+    if(sl) sl.value = _preIdleVolume;
+    if(window.speechSynthesis) window.speechSynthesis.cancel();
+  }
+  _idleTimer = setTimeout(function(){
+    _idleSilenced = true;
+    _preIdleVolume = masterVolume || 0.8;
+    setMasterVolume(0);
+    if(window.speechSynthesis) window.speechSynthesis.cancel();
+    const sl = document.getElementById('vol-slider');
+    if(sl) sl.value = 0;
+  }, 10 * 60 * 1000); // 10 minutes
+}
+['click','touchstart','keydown'].forEach(function(ev){
+  document.addEventListener(ev, _resetIdle, {passive:true});
+});
+_resetIdle();
+
+function toggleDealerVoice(){
+  dealerVoiceOn = !dealerVoiceOn;
+  const btn = document.getElementById('dealer-voice-btn');
+  if(btn){
+    btn.textContent = dealerVoiceOn ? '🔊 Voice ON' : '🔇 Voice OFF';
+    btn.classList.toggle('active', dealerVoiceOn);
+  }
+  if(!dealerVoiceOn) cancelSpeech();
+}
+// ────────────────────────────────────────────────────────────────
+
 function showDealerCaption(text){
+  // Speak the line regardless of caption visibility setting
+  speak(text);
   if(!dealerCaptionsOn) return;
   const cap = document.getElementById('dealer-caption');
   if(!cap) return;
@@ -3926,7 +4372,7 @@ let aiLossStreak = 0;
 let aiLastResult = null;
 let botPersona = 'larry';
 let botVoice = 'vegas';
-let botPersonaLocked = false;
+let botPersonaLocked = true;
 
 const BOT_PERSONAS = {
   larry: {
@@ -4170,11 +4616,6 @@ function deal(){
     setMsg('Finalizing sign-in...');
     return;
   }
-  if(!botPersonaLocked){
-    showBotPersonaPicker();
-    setMsg('Choose your bot persona before the first hand.');
-    return;
-  }
   if(!authLocked && cognitoAccessToken){
     setMsg('Restoring signed-in session...');
     recoverAuthFromApi().then(function(ok){
@@ -4197,7 +4638,7 @@ function deal(){
     return;
   }
   if(!_isFreeHand && totalBet()===0){ setMsg('Place virtual chips first!'); return; }
-  if(!_isFreeHand && checkTrialBlock()) return;
+  if(checkTrialBlock()) return;  // trial block applies to ALL deals, including free hands
   clearBetTimer();
   const playerWager = totalBet();
   if(!_isFreeHand){
@@ -4266,8 +4707,25 @@ function deal(){
   document.getElementById('banker-val').textContent='?';
   document.getElementById('player-val').textContent='?';
 
+  // Keep bet display visible during squeeze/reveal — only zero the live bet object
+  // but re-show the staked amounts so players can see what's riding on this hand
+  const _displayBets = Object.assign({}, bets);
   bets={banker:0,player:0,tie:0,dragon7:0,panda8:0,bigTiger:0,smallTiger:0,tigerTie:0};
   refreshUI();
+  // Restore display amounts (chips already taken, but amounts shown for suspense)
+  document.getElementById('amt-banker').textContent   = _displayBets.banker   ? '$'+_displayBets.banker.toLocaleString()   : '$0';
+  document.getElementById('amt-player').textContent   = _displayBets.player   ? '$'+_displayBets.player.toLocaleString()   : '$0';
+  document.getElementById('amt-tie').textContent      = _displayBets.tie      ? '$'+_displayBets.tie.toLocaleString()      : '$0';
+  // Only restore side-bet display amounts relevant to the current mode
+  if(gameMode==='ez'){
+    document.getElementById('amt-dragon7').textContent  = _displayBets.dragon7  ? '$'+_displayBets.dragon7.toLocaleString()  : '$0';
+    document.getElementById('amt-panda8').textContent   = _displayBets.panda8   ? '$'+_displayBets.panda8.toLocaleString()   : '$0';
+  }
+  if(gameMode==='tiger'){
+    document.getElementById('amt-bigTiger').textContent   = _displayBets.bigTiger   ? '$'+_displayBets.bigTiger.toLocaleString()   : '$0';
+    document.getElementById('amt-smallTiger').textContent = _displayBets.smallTiger ? '$'+_displayBets.smallTiger.toLocaleString() : '$0';
+    document.getElementById('amt-tigerTie').textContent   = _displayBets.tigerTie   ? '$'+_displayBets.tigerTie.toLocaleString()   : '$0';
+  }
   dealerPhaseAnnounced = false;
   setMsg('🎴 Click your cards to squeeze! Ask the dealer to reveal banker cards.');
 }
@@ -4569,6 +5027,35 @@ function resolveHand(){
   else if(r.isTigerTie&&gameMode==='tiger') postFeedMsg('🐯 Tiger Tie! Both sides score 6 — 35:1 side bet pays!', 'tiger');
   if(isNatural9) postFeedMsg('⚔️ Natural 9! Two-card natural — the Gladiator strikes!', 'natural');
   else if(isNatural8) postFeedMsg('🗡️ Natural 8! Two-card natural — the arena erupts!', 'natural');
+
+  // ── BACK DOOR ACTION: winner won with a 3-card hand (not a natural)
+  const winnerWon3Cards = (r.winner==='B' && r.bH.length===3) || (r.winner==='P' && r.pH.length===3);
+  if(winnerWon3Cards && !isNatural){
+    const bdSide = r.winner==='B' ? 'Banker' : 'Player';
+    const bdPhrases = [
+      '🚪 Back Door Action! ' + bdSide + ' sneaks in the win on card three!',
+      '🚪 Back Door Action! That third card changed everything!',
+      '🚪 Back Door Action! Nobody saw that coming — card three delivers!',
+      '🚪 Back Door Action! The ' + bdSide + ' slips in through the back!',
+    ];
+    const bdMsg = bdPhrases[Math.floor(Math.random()*bdPhrases.length)];
+    postFeedMsg(bdMsg, r.winner==='B'?'banker':'player');
+    showDealerCaption(bdMsg.replace('🚪 ',''));
+  }
+
+  // ── KALBI KOREAN BBQ: initial 2-card totals are 7 on one side and 6 on the other
+  const p2Total = (cardValue(r.pH[0]) + cardValue(r.pH[1])) % 10;
+  const b2Total = (cardValue(r.bH[0]) + cardValue(r.bH[1])) % 10;
+  if((p2Total===7 && b2Total===6) || (p2Total===6 && b2Total===7)){
+    const kbPhrases = [
+      '🥩 KALBI KOREAN BBQ! 7 and 6 on the initial deal — the table is sizzling!',
+      '🥩 Kalbi Korean BBQ! That 7-6 setup is as hot as the grill tonight!',
+      '🥩 Kalbi Korean BBQ! 갈비처럼 뜨겁다! (Hot like kalbi ribs!)',
+      '🥩 KALBI KOREAN BBQ! The classic 7-6 — prime cut on the table!',
+    ];
+    postFeedMsg(kbPhrases[Math.floor(Math.random()*kbPhrases.length)], 'natural');
+  }
+
   const cultureLine = getCultureSayingForHand(r, { isNatural9, isNatural8, winScore, loseScore, zeroHit });
   if(cultureLine) postFeedMsg('🎲 ' + cultureLine, 'info');
   const streakNow = latestNonTieStreakInfo();
@@ -4606,12 +5093,14 @@ function resolveHand(){
   document.getElementById('btn-clear').disabled=false;
   refreshUI();
   updateAllRoads();
+  checkRoomUnlocks();
+  showEmotePanel(!_isFreeHand);
   submitHandEventToCloud(r, b, false);
   if((scores.B+scores.P+scores.T)%2===0) fetchGlobalLeaderboard();
 
-  // ── free guest trial tracking ──
+  // ── guest trial tracking (counts every deal, regular or free hand) ──
   if(!authLocked){
-    freeHandsUsed++;
+    guestDealsUsed++;
     trialExpired = guestTrialExpired();
     updateTrialBadge();
     if(trialExpired){
@@ -4643,6 +5132,7 @@ function setBadge(id,type,text){
 
 // ── NEW ROUND ─────────────────────────────────────────────────────
 function newRound(){
+  cancelSpeech();
   phase='betting';
   dealerPhaseAnnounced = false;
   pendingHand=null;
@@ -4673,6 +5163,7 @@ function newRound(){
   selectSlot('banker');
   refreshUI();
   // ── New features ──
+  showEmotePanel(false);
   updateReBetBtn();
   updateFreeHandBtn();
   setTimeout(showDealerGreeting, 400);
@@ -4683,18 +5174,21 @@ function setMsg(t){ document.getElementById('msg-bar').className='msg-bar'; docu
 
 function refreshUI(){
   document.getElementById('bal-display').textContent=balance.toLocaleString();
-  document.getElementById('hdr-balance').textContent='Credits: '+balance.toLocaleString();
+  document.getElementById('hdr-balance').textContent=balance.toLocaleString();
   const hp=document.getElementById('hdr-premium');
-  if(hp) hp.textContent='Gems: '+hardGems.toLocaleString()+' · LVL '+playerLevel+' '+playerTitle;
+  if(hp) hp.textContent='LVL '+playerLevel+' '+playerTitle; // hidden, kept for compat
   document.getElementById('bet-display').textContent=totalBet().toLocaleString();
   document.getElementById('amt-banker').textContent=bets.banker.toLocaleString();
   document.getElementById('amt-player').textContent=bets.player.toLocaleString();
   document.getElementById('amt-tie').textContent=bets.tie.toLocaleString();
-  document.getElementById('amt-dragon7').textContent=bets.dragon7.toLocaleString();
-  document.getElementById('amt-panda8').textContent=bets.panda8.toLocaleString();
-  document.getElementById('amt-bigTiger').textContent=bets.bigTiger.toLocaleString();
-  document.getElementById('amt-smallTiger').textContent=bets.smallTiger.toLocaleString();
-  document.getElementById('amt-tigerTie').textContent=bets.tigerTie.toLocaleString();
+  // Only show side bet amounts when in the relevant mode
+  const _showEZ    = gameMode==='ez';
+  const _showTiger = gameMode==='tiger';
+  document.getElementById('amt-dragon7').textContent   = _showEZ    ? bets.dragon7.toLocaleString()    : '0';
+  document.getElementById('amt-panda8').textContent    = _showEZ    ? bets.panda8.toLocaleString()     : '0';
+  document.getElementById('amt-bigTiger').textContent  = _showTiger ? bets.bigTiger.toLocaleString()   : '0';
+  document.getElementById('amt-smallTiger').textContent= _showTiger ? bets.smallTiger.toLocaleString() : '0';
+  document.getElementById('amt-tigerTie').textContent  = _showTiger ? bets.tigerTie.toLocaleString()   : '0';
   const ec=document.getElementById('eco-chips'); if(ec) ec.textContent=balance.toLocaleString();
   const eg=document.getElementById('eco-gems'); if(eg) eg.textContent=hardGems.toLocaleString();
   const el=document.getElementById('eco-level'); if(el) el.textContent=String(playerLevel);
@@ -5370,13 +5864,15 @@ function reBetAndDeal(){
 }
 
 // ══════════════════════════════════════════════════════════════════
-//  FREE HAND (10 lifetime, no bet required)
+//  FREE HAND — watch with $0 bet (10 lifetime watches, separate from trial)
+//  Distinct from the guest trial limit which tracks total deals pressed.
 // ══════════════════════════════════════════════════════════════════
 const FREE_HAND_MAX = 10;
 let freeHandsLeft = (function(){
   var v=parseInt(localStorage.getItem('bgFreeHands')); return(!isNaN(v)&&v>=0&&v<=FREE_HAND_MAX)?v:FREE_HAND_MAX;
 })();
 let _isFreeHand = false;
+
 function updateFreeHandBtn(){
   const btn=document.getElementById('btn-freehand'), cnt=document.getElementById('fh-count');
   if(!btn) return;
@@ -5385,13 +5881,18 @@ function updateFreeHandBtn(){
   btn.disabled=false;
   if(cnt) cnt.textContent='('+freeHandsLeft+')';
 }
+
 function freeHandDeal(){
   if(phase!=='betting') return;
-  if(freeHandsLeft<=0){ setMsg('No free hands remaining!'); return; }
+  if(freeHandsLeft<=0){
+    setMsg('No free watches left! All 10 lifetime free hands used.');
+    return;
+  }
   _isFreeHand=true;
   freeHandsLeft--;
   localStorage.setItem('bgFreeHands', freeHandsLeft);
   updateFreeHandBtn();
+  setMsg('👁 Free watch — no bet required. (' + freeHandsLeft + ' free watches remaining)');
   deal();
 }
 
@@ -5510,9 +6011,15 @@ if(hasOauthCodeReturn && !authHashHandled){
   updateTrialBadge();    // show correct guest/signed-in state after auth restore
   fetchGlobalLeaderboard();
 }
-selectBotPersona('larry');
-selectBotVoice('vegas');
-applyBotPersonaToUI();
+// Randomly assign bot persona and pit boss voice at session start
+(function(){
+  const _personas = ['larry','jay','frank'];
+  const _voices   = ['vegas','macau'];
+  selectBotPersona(_personas[Math.floor(Math.random()*_personas.length)]);
+  selectBotVoice(_voices[Math.floor(Math.random()*_voices.length)]);
+  applyBotPersonaToUI();
+  botPersonaLocked = true;
+})();
 setDealerStyle('core');
 applyStoreSafeMode();
 maybeShowAgeGate();
@@ -5532,8 +6039,231 @@ window.addEventListener('resize', function(){
   _roadResizeTimer = setTimeout(function(){ updateAllRoads(); }, 120);
 });
 
+// ══════════════════════════════════════════════════════════════════
+//  ROOM ENVIRONMENTS
+// ══════════════════════════════════════════════════════════════════
+const ROOMS = [
+  {
+    id:'underground', name:'Underground Card Room', icon:'🕯️',
+    threshold:0,
+    desc:'A smoky basement den. Brick walls, bare bulbs, and the smell of ambition. Every Gladiator starts here.',
+    feltColor:'#1a0e00', accentColor:'rgba(180,90,20,0.5)'
+  },
+  {
+    id:'vegas-floor', name:'Vegas Casino Floor', icon:'🎰',
+    threshold:5000,
+    desc:"You've stacked enough chips to walk through those golden doors. Neon, noise, and no clocks.",
+    feltColor:'#001a33', accentColor:'rgba(60,130,255,0.5)'
+  },
+  {
+    id:'yacht', name:'Luxury Yacht', icon:'🛥️',
+    threshold:25000,
+    desc:'High seas, higher stakes. The felt is silk, the chips are weighted, and the horizon never ends.',
+    feltColor:'#002233', accentColor:'rgba(0,190,230,0.5)'
+  },
+  {
+    id:'macau-vip', name:'Macau VIP Penthouse', icon:'💎',
+    threshold:100000,
+    desc:'88th floor. Skyline of Cotai below. Private baccarat table, personal sommelier. You made it.',
+    feltColor:'#1a1200', accentColor:'rgba(201,168,76,0.6)'
+  }
+];
+
+const ROOM_KEY = 'bgCurrentRoom';
+const ROOMS_UNLOCKED_KEY = 'bgRoomsUnlocked';
+let currentRoom = localStorage.getItem(ROOM_KEY) || 'underground';
+let roomsUnlocked = (function(){
+  try{ return JSON.parse(localStorage.getItem(ROOMS_UNLOCKED_KEY)||'["underground"]'); }catch(e){ return ['underground']; }
+})();
+let _roomUnlockQueue = [];
+
+function getRoomById(id){ return ROOMS.find(r=>r.id===id)||ROOMS[0]; }
+function roomUnlocked(id){ return roomsUnlocked.includes(id); }
+
+function applyRoomTheme(id){
+  document.body.setAttribute('data-room', id);
+}
+
+function checkRoomUnlocks(){
+  // Check balance against thresholds — use all-time high (career balance peak)
+  const peak = Math.max(balance, parseInt(localStorage.getItem('bgCareerPeak')||'0'));
+  localStorage.setItem('bgCareerPeak', peak);
+  ROOMS.forEach(function(room){
+    if(!roomsUnlocked.includes(room.id) && peak >= room.threshold){
+      roomsUnlocked.push(room.id);
+      localStorage.setItem(ROOMS_UNLOCKED_KEY, JSON.stringify(roomsUnlocked));
+      _roomUnlockQueue.push(room.id);
+    }
+  });
+  renderRoomStrip();
+  if(_roomUnlockQueue.length > 0) showNextRoomUnlock();
+}
+
+function showNextRoomUnlock(){
+  if(_roomUnlockQueue.length === 0) return;
+  const id = _roomUnlockQueue.shift();
+  const room = getRoomById(id);
+  document.getElementById('rut-icon').textContent = room.icon;
+  document.getElementById('rut-name').textContent = room.name;
+  document.getElementById('rut-desc').textContent = room.desc;
+  const toast = document.getElementById('room-unlock-toast');
+  toast.classList.add('show');
+  // Auto-switch to newly unlocked room
+  currentRoom = id;
+  localStorage.setItem(ROOM_KEY, id);
+  applyRoomTheme(id);
+  renderRoomStrip();
+}
+
+function dismissRoomUnlock(){
+  const toast = document.getElementById('room-unlock-toast');
+  toast.classList.remove('show');
+  setTimeout(function(){ if(_roomUnlockQueue.length>0) showNextRoomUnlock(); }, 400);
+}
+
+function selectRoom(id){
+  if(!roomUnlocked(id)) return;
+  currentRoom = id;
+  localStorage.setItem(ROOM_KEY, id);
+  applyRoomTheme(id);
+  renderRoomStrip();
+  const room = getRoomById(id);
+  postFeedMsg('🚪 Moved to: ' + room.name + ' ' + room.icon, 'info');
+}
+
+function renderRoomStrip(){
+  const strip = document.getElementById('room-selector-strip'); if(!strip) return;
+  strip.innerHTML = '';
+  ROOMS.forEach(function(room){
+    const unlocked = roomUnlocked(room.id);
+    const active   = currentRoom === room.id;
+    const pill = document.createElement('button');
+    const lockLabel = unlocked ? '' : ' <span class="room-pill-lock">🔒$'+room.threshold.toLocaleString()+'</span>';
+    pill.className = 'room-pill' + (active?' room-active':'') + (!unlocked?' room-locked':'');
+    pill.innerHTML = room.icon + ' ' + room.name + lockLabel;
+    pill.title = unlocked ? room.desc : 'Reach $'+room.threshold.toLocaleString()+' to unlock';
+    if(unlocked) pill.onclick = function(){ selectRoom(room.id); };
+    strip.appendChild(pill);
+  });
+}
+
+// ══════════════════════════════════════════════════════════════════
+//  THROWABLES & EMOTES
+// ══════════════════════════════════════════════════════════════════
+const EMOTES = {
+  champagne: { cost:500,  label:'🥂 Champagne',    feedMsg:'🥂 %user% bought a round of champagne for the table!',  feedType:'win'  },
+  confetti:  { cost:100,  label:'🎉 Confetti',      feedMsg:'🎉 %user% is celebrating — confetti everywhere!',        feedType:'win'  },
+  money:     { cost:200,  label:'💸 Make It Rain',  feedMsg:'💸 %user% is making it rain!',                           feedType:'win'  },
+  tomato:    { cost:50,   label:'🍅 Tomato',        feedMsg:'🍅 %user% threw a tomato at the table!',                 feedType:'lose' },
+  flip:      { cost:150,  label:'😤 Flip Table',    feedMsg:'😤 %user% flipped the table! The nerve!',                feedType:'lose' },
+  lucky:     { cost:75,   label:'🎲 Lucky Roll',    feedMsg:'🎲 %user% is rolling for extra luck!',                   feedType:'info' },
+  fire:      { cost:250,  label:'🔥 On Fire',       feedMsg:'🔥 %user% is absolutely on fire right now!',             feedType:'win'  },
+};
+
+function throwEmote(type){
+  const emote = EMOTES[type]; if(!emote) return;
+  if(balance < emote.cost){ setMsg('Not enough credits! (' + emote.label + ' costs $' + emote.cost + ')'); return; }
+  balance -= emote.cost;
+  refreshUI();
+  const user = (authLocked && currentUsername) ? currentUsername : 'You';
+  const msg = emote.feedMsg.replace('%user%', user);
+  postFeedMsg(msg, emote.feedType);
+
+  if(type === 'flip'){
+    doTableFlip();
+  } else if(type === 'confetti'){
+    doConfettiBurst();
+    launchProjectiles(['🎉','✨','🎊','⭐'], 12);
+  } else if(type === 'champagne'){
+    launchProjectiles(['🥂','✨','💫','🍾'], 8);
+    doConfettiBurst(['#f0d080','#ffffff','#c9a84c','#fff8e1']);
+  } else if(type === 'money'){
+    launchProjectiles(['💸','💰','💵','🤑'], 10);
+  } else if(type === 'tomato'){
+    launchProjectiles(['🍅','💢','😤'], 5, true);
+  } else if(type === 'lucky'){
+    launchProjectiles(['🎲','🍀','⭐','✨'], 6);
+  } else if(type === 'fire'){
+    launchProjectiles(['🔥','🔥','✨','💫','🔥'], 9);
+  }
+}
+
+function launchProjectiles(emojis, count, angry){
+  const vw = window.innerWidth, vh = window.innerHeight;
+  for(let i=0;i<count;i++){
+    setTimeout(function(){
+      const el = document.createElement('div');
+      el.className = 'throwable-anim';
+      el.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+      // Start from random edge position
+      const startX = vw * (0.2 + Math.random()*0.6);
+      const startY = vh * 0.7;
+      el.style.left = startX+'px';
+      el.style.top  = startY+'px';
+      const angle = angry ? (Math.random()*180+90) : (Math.random()*360);
+      const dist1 = 80 + Math.random()*120;
+      const dist2 = 180 + Math.random()*200;
+      const dist3 = 300 + Math.random()*250;
+      el.style.setProperty('--tx1', Math.cos(angle)*dist1+'px');
+      el.style.setProperty('--ty1', Math.sin(angle)*dist1*0.5 - 60+'px');
+      el.style.setProperty('--tx2', Math.cos(angle)*dist2+'px');
+      el.style.setProperty('--ty2', Math.sin(angle)*dist2*0.3 - 100+'px');
+      el.style.setProperty('--tx3', Math.cos(angle)*dist3+'px');
+      el.style.setProperty('--ty3', Math.sin(angle)*dist3*0.4 + 80+'px');
+      el.style.setProperty('--tr1', (Math.random()*60-30)+'deg');
+      el.style.setProperty('--tr2', (Math.random()*180-90)+'deg');
+      el.style.setProperty('--tr3', (Math.random()*360-180)+'deg');
+      document.body.appendChild(el);
+      setTimeout(function(){ el.remove(); }, 1500);
+    }, i * 80);
+  }
+}
+
+function doConfettiBurst(colors){
+  colors = colors || ['#c9a84c','#ff4466','#44aaff','#44ff88','#ffaa00','#ff55ee'];
+  const vw = window.innerWidth, vh = window.innerHeight;
+  for(let i=0;i<60;i++){
+    const el = document.createElement('div');
+    el.className = 'confetti-piece';
+    el.style.background = colors[Math.floor(Math.random()*colors.length)];
+    el.style.left = (20+Math.random()*60)+'vw';
+    el.style.top  = '30vh';
+    const cx = (Math.random()*vw*0.8 - vw*0.4)+'px';
+    const cy = (100+Math.random()*vh*0.6)+'px';
+    el.style.setProperty('--cx', cx);
+    el.style.setProperty('--cy', cy);
+    el.style.setProperty('--cr', (Math.random()*720-360)+'deg');
+    el.style.animationDelay = (Math.random()*0.4)+'s';
+    el.style.borderRadius = Math.random()>0.5 ? '50%' : '2px';
+    el.style.width  = (5+Math.random()*8)+'px';
+    el.style.height = (5+Math.random()*8)+'px';
+    document.body.appendChild(el);
+    setTimeout(function(){ el.remove(); }, 2400);
+  }
+}
+
+function doTableFlip(){
+  const el = document.createElement('div');
+  el.className = 'table-flip-anim';
+  el.innerHTML = '<span>(╯°□°）╯︵ ┻━┻</span>';
+  el.style.fontSize = '2.5rem';
+  el.style.fontFamily = "'Cinzel',serif";
+  el.style.color = '#ff4444';
+  el.style.textShadow = '0 0 20px rgba(255,68,68,0.6)';
+  document.body.appendChild(el);
+  setTimeout(function(){ el.remove(); }, 1900);
+}
+
+function showEmotePanel(show){
+  const panel = document.getElementById('emote-panel');
+  if(panel) panel.classList.toggle('visible', show);
+}
+
 // ── New features boot ──────────────────────────────────────────
 applyNeonState(selectedCasino);
+applyRoomTheme(currentRoom);
+renderRoomStrip();
+checkRoomUnlocks();
 updateFreeHandBtn();
 updateReBetBtn();
 updateCasinoXPBar();
@@ -6042,17 +6772,21 @@ function updateTrialBadge(){
   const el=document.getElementById('hdr-trial');
   if(!el) return;
   if(authLocked){
-    el.textContent='Signed In · Unlimited Hands';
+    el.textContent='';
     el.className='trial-badge';
     return;
   }
-  const rem=guestHandsRemaining();
+  if(!guestTrialStarted){
+    el.textContent='';
+    return;
+  }
+  const rem=guestDealsRemaining();
   if(guestTrialExpired()){
-    el.textContent='Guest Trial Complete · Sign In to Continue';
+    el.textContent='Trial done · Sign in';
     el.className='trial-badge critical';
     return;
   }
-  el.textContent=`Guest Trial: ${rem} hand${rem===1?'':'s'} left`;
+  el.textContent=`Trial: ${rem} deal${rem===1?'':'s'} left`;
   if(rem<=2) el.className='trial-badge critical';
   else if(rem<=5) el.className='trial-badge warning';
   else el.className='trial-badge';
@@ -6375,8 +7109,6 @@ function enterArena(){
         setMsg('Finalizing sign-in...');
       } else if(!authLocked && !guestTrialStarted){
         showAuthOverlay('entry');
-      } else if(!botPersonaLocked){
-        showBotPersonaPicker();
       }
     }, 540);
   }, 120);
@@ -6683,6 +7415,182 @@ setTimeout(scheduleWaitress, 500);
   border-top:12px solid rgba(201,168,76,0.7);
 }
 
+/* ══ ROOM ENVIRONMENTS ══════════════════════════════ */
+/* Underground Card Room — default gritty brick den */
+body[data-room='underground'] {
+  --venue-bg1:#1a0e08; --venue-bg2:#0a0604;
+  --venue-glow:rgba(180,80,20,0.18); --venue-line:rgba(200,120,60,0.22);
+}
+body[data-room='underground']::before {
+  background:
+    repeating-linear-gradient(90deg, rgba(80,40,10,0.04) 0px, rgba(80,40,10,0.04) 2px, transparent 2px, transparent 60px),
+    repeating-linear-gradient(0deg,  rgba(80,40,10,0.04) 0px, rgba(80,40,10,0.04) 2px, transparent 2px, transparent 40px),
+    radial-gradient(55% 35% at 15% 0%, var(--venue-glow), transparent 70%),
+    radial-gradient(50% 30% at 85% 8%, var(--venue-glow), transparent 72%);
+}
+body[data-room='underground'] .game-section {
+  background:linear-gradient(180deg,#1e1208 0%,#120b05 100%);
+  border:1px solid rgba(160,80,20,0.3);
+  box-shadow:inset 0 0 60px rgba(0,0,0,0.7), 0 0 20px rgba(160,80,20,0.1);
+}
+body[data-room='underground'] .hand-box {
+  background:linear-gradient(135deg,#1a100a 0%,#100806 100%);
+  border-color:rgba(160,80,20,0.3);
+}
+body[data-room='underground'] .bet-slot { border-color:rgba(160,80,20,0.35); }
+body[data-room='underground'] .bet-slot.active { border-color:rgba(200,120,60,0.7); }
+body[data-room='underground']::after { --venue-city:'Underground Card Room'; }
+
+/* Las Vegas Casino Floor */
+body[data-room='vegas-floor'] {
+  --venue-bg1:#0a1830; --venue-bg2:#050d1c;
+  --venue-glow:rgba(60,120,255,0.28); --venue-line:rgba(120,180,255,0.24);
+}
+body[data-room='vegas-floor'] .game-section {
+  background:linear-gradient(180deg,#0d2040 0%,#081525 100%);
+  border:1px solid rgba(100,160,255,0.2);
+  box-shadow:inset 0 0 60px rgba(0,0,40,0.5), 0 0 30px rgba(60,100,255,0.12);
+}
+body[data-room='vegas-floor']::after { --venue-city:'Vegas Casino Floor'; }
+
+/* Luxury Yacht */
+body[data-room='yacht'] {
+  --venue-bg1:#051a2a; --venue-bg2:#021018;
+  --venue-glow:rgba(0,200,255,0.2); --venue-line:rgba(100,230,255,0.22);
+}
+body[data-room='yacht'] .game-section {
+  background:linear-gradient(180deg,#062535 0%,#031620 100%);
+  border:1px solid rgba(0,180,230,0.25);
+  box-shadow:inset 0 0 60px rgba(0,20,40,0.6), 0 0 40px rgba(0,180,230,0.1);
+}
+body[data-room='yacht']::before {
+  background:
+    repeating-linear-gradient(170deg, rgba(0,100,160,0.04) 0px, transparent 3px, transparent 80px),
+    radial-gradient(55% 35% at 15% 0%, var(--venue-glow), transparent 70%),
+    radial-gradient(50% 30% at 85% 8%, var(--venue-glow), transparent 72%);
+  animation:yacht-sway 8s ease-in-out infinite;
+}
+@keyframes yacht-sway { 0%,100%{transform:rotate(0deg)} 33%{transform:rotate(0.4deg)} 66%{transform:rotate(-0.3deg)} }
+body[data-room='yacht']::after { --venue-city:'Luxury Yacht — International Waters'; }
+
+/* Macau VIP Penthouse */
+body[data-room='macau-vip'] {
+  --venue-bg1:#1a1000; --venue-bg2:#0d0800;
+  --venue-glow:rgba(201,168,76,0.35); --venue-line:rgba(240,210,120,0.38);
+}
+body[data-room='macau-vip'] .game-section {
+  background:linear-gradient(180deg,#1c1200 0%,#0e0900 100%);
+  border:1px solid rgba(201,168,76,0.4);
+  box-shadow:inset 0 0 80px rgba(201,168,76,0.05), 0 0 50px rgba(201,168,76,0.15);
+}
+body[data-room='macau-vip']::before {
+  background:
+    radial-gradient(55% 35% at 15% 0%, var(--venue-glow), transparent 70%),
+    radial-gradient(50% 30% at 85% 8%, var(--venue-glow), transparent 72%);
+  animation:penthouse-pulse 4s ease-in-out infinite alternate;
+}
+@keyframes penthouse-pulse { from{opacity:0.7} to{opacity:1} }
+body[data-room='macau-vip']::after { --venue-city:'Macau VIP Penthouse — 88th Floor'; }
+body[data-room='macau-vip'] .hand-box { border-color:rgba(201,168,76,0.4); }
+body[data-room='macau-vip'] .bet-slot.active { border-color:var(--gold); box-shadow:0 0 12px rgba(201,168,76,0.3); }
+
+/* Room unlock toast */
+.room-unlock-toast {
+  position:fixed; top:0; left:0; right:0; bottom:0;
+  z-index:2000; display:flex; align-items:center; justify-content:center;
+  pointer-events:none; opacity:0; transition:opacity 0.5s;
+}
+.room-unlock-toast.show { opacity:1; pointer-events:auto; }
+.room-unlock-card {
+  background:rgba(5,5,15,0.97);
+  border:2px solid var(--gold);
+  border-radius:20px; padding:30px 40px; text-align:center;
+  box-shadow:0 0 80px rgba(201,168,76,0.3), inset 0 0 40px rgba(201,168,76,0.04);
+  animation:unlock-pop 0.5s cubic-bezier(.22,.68,0,1.3) forwards;
+  cursor:pointer; max-width:340px;
+}
+@keyframes unlock-pop { from{transform:scale(0.6) translateY(30px)} to{transform:scale(1) translateY(0)} }
+.room-unlock-icon  { font-size:4rem; margin-bottom:10px; filter:drop-shadow(0 0 20px rgba(201,168,76,0.6)); }
+.room-unlock-title { font-family:'Cinzel',serif; font-size:0.7rem; color:var(--gold); letter-spacing:4px; margin-bottom:8px; }
+.room-unlock-name  { font-family:'Cinzel',serif; font-size:1.4rem; color:#fff; margin-bottom:8px; letter-spacing:2px; }
+.room-unlock-desc  { font-size:0.8rem; color:rgba(240,230,200,0.65); line-height:1.5; margin-bottom:16px; }
+.room-unlock-dismiss { font-family:'Cinzel',serif; font-size:0.6rem; color:var(--gold); letter-spacing:2px; border:1px solid rgba(201,168,76,0.4); padding:6px 18px; border-radius:20px; background:transparent; cursor:pointer; }
+.room-unlock-dismiss:hover { background:rgba(201,168,76,0.1); }
+.room-selector-strip {
+  display:flex; gap:8px; flex-wrap:wrap; justify-content:center;
+  padding:6px 0 2px; border-top:1px solid rgba(201,168,76,0.12); margin-top:8px;
+}
+.room-pill {
+  font-family:'Cinzel',serif; font-size:0.58rem; letter-spacing:1px;
+  padding:4px 10px; border-radius:20px; cursor:pointer; transition:all 0.2s;
+  border:1px solid rgba(255,255,255,0.1); background:rgba(255,255,255,0.05); color:rgba(240,230,200,0.6);
+}
+.room-pill:hover:not(.room-locked) { border-color:var(--gold); color:var(--gold); }
+.room-pill.room-active { border-color:var(--gold); background:rgba(201,168,76,0.12); color:var(--gold); }
+.room-pill.room-locked { opacity:0.35; cursor:not-allowed; }
+.room-pill-lock { font-size:0.55rem; }
+
+/* ══ THROWABLES / EMOTES ════════════════════════════ */
+.emote-panel {
+  display:none; flex-wrap:wrap; gap:6px;
+  justify-content:center; padding:8px 0 2px;
+  border-top:1px solid rgba(201,168,76,0.12); margin-top:4px;
+}
+.emote-panel.visible { display:flex; }
+.emote-btn {
+  font-size:0.68rem; padding:5px 10px; border-radius:20px; cursor:pointer;
+  border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.05);
+  color:rgba(240,230,200,0.75); transition:all 0.2s; white-space:nowrap;
+  font-family:'Raleway',sans-serif;
+}
+.emote-btn:hover:not(:disabled) { transform:scale(1.06); border-color:var(--gold); color:#fff; }
+.emote-btn:disabled { opacity:0.25; cursor:not-allowed; }
+.emote-btn.em-win  { border-color:rgba(100,220,100,0.35); }
+.emote-btn.em-loss { border-color:rgba(220,80,80,0.35); }
+.emote-btn.em-any  { border-color:rgba(201,168,76,0.3); }
+.emote-cost { font-size:0.55rem; opacity:0.65; margin-left:3px; }
+
+/* Throwable projectile */
+.throwable-anim {
+  position:fixed; z-index:3000; pointer-events:none;
+  font-size:2.8rem; line-height:1;
+  filter:drop-shadow(0 4px 12px rgba(0,0,0,0.5));
+  animation:throw-fly 1.4s cubic-bezier(.2,.6,.4,1) forwards;
+  will-change:transform;
+}
+@keyframes throw-fly {
+  0%   { opacity:0; transform:translate(0,0) scale(0.4) rotate(0deg); }
+  15%  { opacity:1; transform:translate(var(--tx1),var(--ty1)) scale(1.1) rotate(var(--tr1)); }
+  70%  { opacity:1; transform:translate(var(--tx2),var(--ty2)) scale(0.95) rotate(var(--tr2)); }
+  100% { opacity:0; transform:translate(var(--tx3),var(--ty3)) scale(0.5) rotate(var(--tr3)); }
+}
+
+/* Confetti burst */
+.confetti-piece {
+  position:fixed; z-index:3000; pointer-events:none;
+  width:8px; height:8px; border-radius:2px;
+  animation:confetti-fall 2.2s ease-in forwards;
+}
+@keyframes confetti-fall {
+  0%   { opacity:1; transform:translate(0,0) rotate(0deg); }
+  100% { opacity:0; transform:translate(var(--cx),var(--cy)) rotate(var(--cr)); }
+}
+
+/* Table-flip animation */
+.table-flip-anim {
+  position:fixed; inset:0; z-index:3000; pointer-events:none;
+  display:flex; align-items:center; justify-content:center;
+  animation:table-flip-seq 1.8s ease forwards;
+}
+.table-flip-anim span { font-size:5rem; filter:drop-shadow(0 6px 20px rgba(0,0,0,0.6)); }
+@keyframes table-flip-seq {
+  0%  { opacity:0; transform:scale(0.3); }
+  20% { opacity:1; transform:scale(1.15) rotate(-5deg); }
+  50% { opacity:1; transform:scale(1) rotate(0deg); }
+  80% { opacity:1; transform:scale(0.9) rotate(8deg) translateY(-30px); }
+  100%{ opacity:0; transform:scale(0.4) translateY(-80px); }
+}
+
 /* ══ BET TIMER ══════════════════════════════════════ */
 .bet-timer-wrap { display:flex; align-items:center; gap:6px; margin-left:auto; }
 .bet-timer {
@@ -6797,5 +7705,15 @@ setTimeout(scheduleWaitress, 500);
 .eco-casino-btn:hover{background:rgba(201,168,76,0.1)}
 </style>
 
+<!-- ROOM UNLOCK TOAST -->
+<div class="room-unlock-toast" id="room-unlock-toast" onclick="dismissRoomUnlock()">
+  <div class="room-unlock-card">
+    <div class="room-unlock-icon" id="rut-icon">🎰</div>
+    <div class="room-unlock-title">NEW ROOM UNLOCKED</div>
+    <div class="room-unlock-name" id="rut-name">Las Vegas Casino Floor</div>
+    <div class="room-unlock-desc" id="rut-desc">You've earned your way to the big time.</div>
+    <button class="room-unlock-dismiss" onclick="dismissRoomUnlock()">TAP TO ENTER</button>
+  </div>
+</div>
 </body>
 </html>
