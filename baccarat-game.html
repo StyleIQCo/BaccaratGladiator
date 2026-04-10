@@ -228,6 +228,20 @@ html[data-skip-splash='1'] #splash-flash{
 .trial-badge.warning { color:#ffaa00; }
 .trial-badge.critical { color:#ff5555; animation:trialPulse 0.9s ease-in-out infinite; }
 @keyframes trialPulse { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
+@keyframes screenShakeLight {
+  0%,100%{transform:translate(0,0)} 20%{transform:translate(-2px,1px)} 40%{transform:translate(2px,-1px)} 60%{transform:translate(-1px,2px)} 80%{transform:translate(1px,-2px)}
+}
+@keyframes screenShakeHeavy {
+  0%,100%{transform:translate(0,0)} 10%{transform:translate(-5px,3px)} 20%{transform:translate(5px,-3px)} 30%{transform:translate(-4px,4px)} 40%{transform:translate(4px,-4px)} 50%{transform:translate(-3px,2px)} 60%{transform:translate(3px,3px)} 70%{transform:translate(-2px,-2px)} 80%{transform:translate(2px,1px)} 90%{transform:translate(-1px,-1px)}
+}
+body.shake-light { animation:screenShakeLight 0.28s ease-out; }
+body.shake-heavy { animation:screenShakeHeavy 0.45s ease-out; }
+@keyframes chipLand {
+  0%  { transform:scale(1.35); }
+  60% { transform:scale(0.92); }
+  100%{ transform:scale(1);    }
+}
+.bet-slot.chip-land .samt { animation:chipLand 0.22s ease-out; }
 
 /* ─── UPGRADE OVERLAY ─── */
 .upgrade-overlay {
@@ -937,6 +951,9 @@ header h1 {
   box-shadow:0 0 34px rgba(201,168,76,0.65), 0 4px 14px rgba(0,0,0,0.5) !important;
 }
 #btn-deal.sab-deal:disabled, .sab-deal:disabled { opacity:0.32 !important; box-shadow:none !important; }
+#btn-deal.sab-deal:active:not(:disabled), .sab-deal:active:not(:disabled) {
+  transform:scale(0.94) !important; box-shadow:0 0 10px rgba(201,168,76,0.3) !important; transition:transform 0.06s !important;
+}
 #btn-new.sab-new {
   flex:1; max-width:220px; font-size:1.0rem !important; letter-spacing:2px !important;
   padding:13px 10px !important; font-family:'Cinzel',serif !important; font-weight:700 !important;
@@ -949,6 +966,9 @@ header h1 {
   background:linear-gradient(135deg,#33a854,#226835) !important;
   box-shadow:0 0 24px rgba(40,180,80,0.45) !important;
 }
+#btn-new.sab-new:active:not(:disabled) {
+  transform:scale(0.94) !important; transition:transform 0.06s !important;
+}
 .sab-btn-side {
   font-family:'Cinzel',serif; font-size:0.62rem; font-weight:700;
   letter-spacing:0.4px; padding:13px 12px;
@@ -956,7 +976,8 @@ header h1 {
   background:rgba(201,168,76,0.07); color:var(--gold-lt);
   cursor:pointer; transition:all 0.2s; flex-shrink:0;
 }
-.sab-btn-side:hover:not(:disabled) { background:rgba(201,168,76,0.15); border-color:var(--gold); }
+.sab-btn-side:hover:not(:disabled)  { background:rgba(201,168,76,0.15); border-color:var(--gold); }
+.sab-btn-side:active:not(:disabled) { transform:scale(0.92); transition:transform 0.06s; }
 .sab-secondary {
   display:flex; gap:5px; align-items:center; justify-content:center; flex-wrap:wrap;
 }
@@ -1480,7 +1501,8 @@ body { padding-bottom:185px; }
   user-select:none; box-shadow:0 3px 8px rgba(0,0,0,0.5);
   text-shadow:0 1px 2px rgba(0,0,0,0.7);
 }
-.chip:hover { transform:scale(1.14); box-shadow:0 6px 18px rgba(0,0,0,0.6); }
+.chip:hover  { transform:scale(1.14); box-shadow:0 6px 18px rgba(0,0,0,0.6); }
+.chip:active { transform:scale(0.88); box-shadow:0 1px 4px rgba(0,0,0,0.5); transition:transform 0.06s, box-shadow 0.06s; }
 .c1   { background:radial-gradient(circle at 35% 35%,#ccc 0%,#777 100%); }
 .c5   { background:radial-gradient(circle at 35% 35%,#ff5555 0%,#aa1111 100%); }
 .c25  { background:radial-gradient(circle at 35% 35%,#55cc55 0%,#227722 100%); }
@@ -3911,6 +3933,9 @@ function addChip(val){
   }
   bets[selSlot]=(bets[selSlot]||0)+val; balance-=val;
   soundChip(); refreshUI();
+  // Animate the bet slot amount — snappy chip-land bounce
+  const slotIdMap = {banker:'slot-banker',player:'slot-player',tie:'slot-tie',dragon7:'slot-dragon7',panda8:'slot-panda8',bigTiger:'slot-bigTiger',smallTiger:'slot-smallTiger',tigerTie:'slot-tigerTie'};
+  betSlotChipLand(slotIdMap[selSlot]);
 }
 function clearBets(){
   if(phase!=='betting') return;
@@ -4972,6 +4997,7 @@ function updateRevealButtons(){
 // ── RESOLVE HAND (called after all cards revealed) ────────────────
 function resolveHand(){
   phase='dealt';
+  const _balanceBefore = balance;
   // Capture bet snapshot now so refreshUI can keep displaying stakes until New Round
   _resolvedBets = pendingHand ? Object.assign({}, pendingHand.betsSnapshot) : null;
   document.getElementById('btn-new').style.display='inline-block';
@@ -5056,9 +5082,9 @@ function resolveHand(){
   document.getElementById('msg-bar').className='msg-bar '+msgCls;
   document.getElementById('msg-bar').textContent=wLabel+special+netStr;
 
-  // ── play outcome sound ──
-  if(netChange>0) soundWin();
-  else if(netChange<0) soundLose();
+  // ── play outcome sound + screen shake ──
+  if(netChange>0){ soundWin(); screenShake(netChange >= handWager * 2); }
+  else if(netChange<0){ soundLose(); screenShake(false); }
 
   // Pair detection: first two cards share the same rank
   const pIsPair = r.pH[0].rank === r.pH[1].rank;
@@ -5181,6 +5207,8 @@ function resolveHand(){
 
   document.getElementById('btn-clear').disabled=false;
   refreshUI();
+  // Animate balance count-up/down after the hand resolves
+  if(balance !== _balanceBefore) animateBalanceChange(_balanceBefore, balance);
   updateAllRoads();
   checkRoomUnlocks();
   showEmotePanel(!_isFreeHand);
@@ -6414,6 +6442,42 @@ function toggleSound(){ toggleSFX(); }
 
 // ── Haptic feedback ──
 function haptic(pattern){ try{ if(navigator.vibrate) navigator.vibrate(pattern); }catch(e){} }
+
+function screenShake(heavy){
+  const cls = heavy ? 'shake-heavy' : 'shake-light';
+  document.body.classList.remove('shake-light','shake-heavy');
+  // Force reflow so re-triggering same class works
+  void document.body.offsetWidth;
+  document.body.classList.add(cls);
+  document.body.addEventListener('animationend', function _rm(){ document.body.classList.remove(cls); document.body.removeEventListener('animationend',_rm); });
+}
+
+function animateBalanceChange(from, to){
+  const el = document.getElementById('hdr-balance');
+  if(!el) return;
+  const diff = to - from;
+  if(diff === 0) return;
+  const duration = Math.min(900, Math.max(300, Math.abs(diff) / 10));
+  const start = performance.now();
+  function step(now){
+    const t = Math.min(1, (now - start) / duration);
+    const eased = t < 0.5 ? 2*t*t : -1+(4-2*t)*t; // ease-in-out quad
+    const cur = Math.round(from + diff * eased);
+    el.textContent = cur.toLocaleString();
+    if(t < 1) requestAnimationFrame(step);
+    else el.textContent = to.toLocaleString();
+  }
+  requestAnimationFrame(step);
+}
+
+function betSlotChipLand(slotId){
+  const el = document.getElementById(slotId);
+  if(!el) return;
+  el.classList.remove('chip-land');
+  void el.offsetWidth;
+  el.classList.add('chip-land');
+  el.addEventListener('animationend', function _rm(){ el.classList.remove('chip-land'); el.removeEventListener('animationend',_rm); }, {capture:false, once:true});
+}
 
 // ── Crowd ambience (low looping filtered noise) ──
 function startCrowdAmbience(){
