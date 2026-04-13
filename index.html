@@ -160,7 +160,8 @@ html,body{ width:100%; height:100%; background:#000; overflow:hidden; font-famil
 #title-overlay{
   position:absolute; bottom:0; left:0; right:0; z-index:15;
   display:flex; flex-direction:column; align-items:center;
-  padding-bottom:clamp(36px,7vh,70px); text-align:center;
+  padding-bottom:max(clamp(36px,7vh,70px), calc(env(safe-area-inset-bottom, 0px) + 24px));
+  text-align:center;
 }
 .splash-sub{ font-size:clamp(0.55rem,1.6vw,0.78rem); letter-spacing:0.18em; color:rgba(201,168,76,0.65); margin-bottom:4px; }
 .splash-title{
@@ -177,15 +178,18 @@ html,body{ width:100%; height:100%; background:#000; overflow:hidden; font-famil
 }
 .splash-tagline{ font-size:clamp(0.55rem,1.6vw,0.78rem); letter-spacing:0.16em; color:rgba(240,230,200,0.55); margin-bottom:clamp(18px,3.5vh,36px); }
 .enter-btn{
-  font-family:'Cinzel',serif; font-size:clamp(0.72rem,2vw,0.96rem);
+  font-family:'Cinzel',serif; font-size:clamp(0.82rem,2.4vw,0.96rem);
   letter-spacing:0.1em; text-transform:uppercase; color:#0a0800;
   background:linear-gradient(135deg,#f0d080,#c9a84c,#a07830);
   border:none; border-radius:3px;
-  padding:clamp(11px,2vh,17px) clamp(26px,5vw,52px);
+  padding:clamp(14px,2.5vh,17px) clamp(32px,6vw,52px);
+  min-height:52px; min-width:220px;
   cursor:pointer; position:relative; overflow:hidden;
   box-shadow:0 0 24px rgba(201,168,76,0.55), 0 4px 22px rgba(0,0,0,0.65);
   animation:fadeUp 1s ease 0.6s both;
   transition:transform 0.14s, box-shadow 0.14s;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
 }
 .enter-btn::before{ content:''; position:absolute; inset:0; background:linear-gradient(135deg,rgba(255,255,255,0.28),transparent); pointer-events:none; }
 .enter-btn:hover{ transform:scale(1.05); box-shadow:0 0 40px rgba(201,168,76,0.75),0 6px 28px rgba(0,0,0,0.7); }
@@ -335,8 +339,8 @@ html,body{ width:100%; height:100%; background:#000; overflow:hidden; font-famil
 
     <!-- 1: Atlantic City -->
     <div class="city-bg" id="city-bg-1">
-      <div class="grad-fallback" style="background:linear-gradient(180deg,#030a14 0%,#060f22 30%,#0a1835 55%,#0e2248 72%,#102a5a 88%,#0a1e40 100%)"></div>
-      <img src="https://images.unsplash.com/photo-1534430480872-3498386e7856?auto=format&fit=crop&w=1200&q=80" alt="Atlantic City" onerror="this.style.display='none'">
+      <div class="grad-fallback" style="background:linear-gradient(180deg,#020810 0%,#040e20 30%,#071530 55%,#0a1c44 72%,#0d2458 88%,#08183c 100%)"></div>
+      <img src="https://images.unsplash.com/photo-1519046904884-53103b34b206?auto=format&fit=crop&w=1200&q=80" alt="Atlantic City Boardwalk" onerror="this.style.display='none'">
       <div class="city-vignette"></div><div class="city-bottom-fade"></div><div class="city-left-fade"></div>
       <svg class="city-skyline" viewBox="0 0 1200 220" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
         <!-- Atlantic City: casino hotels, boardwalk, lighthouse -->
@@ -456,8 +460,8 @@ html,body{ width:100%; height:100%; background:#000; overflow:hidden; font-famil
 
     <!-- 4: Macau -->
     <div class="city-bg" id="city-bg-4">
-      <div class="grad-fallback" style="background:linear-gradient(180deg,#060010 0%,#100025 28%,#250055 52%,#4a0088 72%,#8800cc 88%,#cc00aa 100%)"></div>
-      <img src="https://images.unsplash.com/photo-1617184406756-e98f7d0fa85b?auto=format&fit=crop&w=1200&q=80" alt="Macau" onerror="this.style.display='none'">
+      <div class="grad-fallback" style="background:linear-gradient(180deg,#020100 0%,#0a0600 28%,#1c1000 52%,#3e2200 72%,#7a4800 88%,#b86800 100%)"></div>
+      <img src="https://images.unsplash.com/photo-1622547748225-3fc4abd2cca0?auto=format&fit=crop&w=1200&q=80" alt="Macau" onerror="this.style.display='none'">
       <div class="city-vignette"></div><div class="city-bottom-fade"></div><div class="city-left-fade"></div>
       <svg class="city-skyline" viewBox="0 0 1200 220" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
         <!-- Macau: Grand Lisboa lotus, Cotai Strip mega-towers, harbor -->
@@ -482,16 +486,16 @@ html,body{ width:100%; height:100%; background:#000; overflow:hidden; font-famil
         <!-- harbor water -->
         <rect x="0" y="178" width="1200" height="42" fill="rgba(0,0,0,0.88)"/>
         <!-- reflection shimmer -->
-        <rect x="358" y="12" width="71" height="10" fill="rgba(200,100,255,0.2)" rx="2"/>
-        <rect x="538" y="6" width="63" height="10" fill="rgba(180,80,255,0.18)" rx="2"/>
-        <rect x="700" y="27" width="76" height="10" fill="rgba(160,60,220,0.18)" rx="2"/>
+        <rect x="358" y="12" width="71" height="10" fill="rgba(255,180,30,0.22)" rx="2"/>
+        <rect x="538" y="6" width="63" height="10" fill="rgba(240,160,20,0.2)" rx="2"/>
+        <rect x="700" y="27" width="76" height="10" fill="rgba(220,140,10,0.18)" rx="2"/>
       </svg>
     </div>
 
     <!-- 5: Monte Carlo -->
     <div class="city-bg" id="city-bg-5">
-      <div class="grad-fallback" style="background:linear-gradient(180deg,#000d1a 0%,#001530 28%,#002050 52%,#003070 72%,#004d99 88%,#0060b8 100%)"></div>
-      <img src="https://images.unsplash.com/photo-1559699426-1a4c7c27bfe2?auto=format&fit=crop&w=1200&q=80" alt="Monte Carlo" onerror="this.style.display='none'">
+      <div class="grad-fallback" style="background:linear-gradient(180deg,#010608 0%,#020e18 28%,#041828 52%,#072240 72%,#0d325c 88%,#123868 100%)"></div>
+      <img src="https://images.unsplash.com/photo-1533104816931-20fa691ff6ca?auto=format&fit=crop&w=1200&q=80" alt="Monte Carlo Harbor" onerror="this.style.display='none'">
       <div class="city-vignette"></div><div class="city-bottom-fade"></div><div class="city-left-fade"></div>
       <svg class="city-skyline" viewBox="0 0 1200 220" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
         <!-- Monte Carlo: Casino, cliffs, Mediterranean, villas -->
@@ -1148,99 +1152,111 @@ function startTheme(){
   if(!splashSoundOn) return;
   themeStarted = true;
   const ctx = getCtx();
+
+  // Master output — fade in gently over 4s
   const master = ctx.createGain();
   master.gain.setValueAtTime(0, ctx.currentTime);
-  master.gain.linearRampToValueAtTime(0.55, ctx.currentTime + 2.5);
+  master.gain.linearRampToValueAtTime(0.28, ctx.currentTime + 4);
   master.connect(ctx.destination);
 
-  function makeDrone(freq, gainVal, type='sawtooth'){
-    const osc = ctx.createOscillator();
-    osc.type = type; osc.frequency.value = freq;
-    const g = ctx.createGain(); g.gain.value = gainVal;
-    const lp = ctx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=400; lp.Q.value=0.7;
-    osc.connect(lp); lp.connect(g); g.connect(master);
-    osc.start(); themeNodes.push(osc);
+  // Reverb using a decaying noise impulse
+  const irLen = Math.floor(ctx.sampleRate * 2.8);
+  const irBuf = ctx.createBuffer(2, irLen, ctx.sampleRate);
+  for(let ch=0; ch<2; ch++){
+    const d = irBuf.getChannelData(ch);
+    for(let i=0; i<irLen; i++) d[i] = (Math.random()*2-1) * Math.pow(1 - i/irLen, 2.2);
   }
-  makeDrone(36.7, 0.22, 'sine');
-  makeDrone(73.4, 0.14, 'sine');
-  makeDrone(110,  0.05, 'triangle');
+  const reverb = ctx.createConvolver(); reverb.buffer = irBuf;
+  const rvbGain = ctx.createGain(); rvbGain.gain.value = 0.38;
+  reverb.connect(rvbGain); rvbGain.connect(master);
 
-  const BPM = 72, beat = 60/BPM, loopLen = beat*8;
-
-  function scheduleDrum(type, times, vol){
-    times.forEach(t => {
-      const now = ctx.currentTime, when = now + t;
-      if(type==='kick'){
-        const o=ctx.createOscillator(); o.type='sine';
-        o.frequency.setValueAtTime(180,when); o.frequency.exponentialRampToValueAtTime(40,when+0.18);
-        const g=ctx.createGain(); g.gain.setValueAtTime(vol,when); g.gain.exponentialRampToValueAtTime(0.001,when+0.35);
-        o.connect(g); g.connect(master); o.start(when); o.stop(when+0.36); themeNodes.push(o);
-      }
-      if(type==='snare'){
-        const bufLen=Math.floor(ctx.sampleRate*0.12), buf=ctx.createBuffer(1,bufLen,ctx.sampleRate), d=buf.getChannelData(0);
-        for(let i=0;i<bufLen;i++) d[i]=(Math.random()*2-1)*(1-i/bufLen);
-        const src=ctx.createBufferSource(); src.buffer=buf;
-        const bpf=ctx.createBiquadFilter(); bpf.type='bandpass'; bpf.frequency.value=1800; bpf.Q.value=0.8;
-        const g=ctx.createGain(); g.gain.setValueAtTime(vol,when); g.gain.exponentialRampToValueAtTime(0.001,when+0.12);
-        src.connect(bpf); bpf.connect(g); g.connect(master); src.start(when); themeNodes.push(src);
-      }
-      if(type==='hhat'){
-        const bufLen=Math.floor(ctx.sampleRate*0.05), buf=ctx.createBuffer(1,bufLen,ctx.sampleRate), d=buf.getChannelData(0);
-        for(let i=0;i<bufLen;i++) d[i]=(Math.random()*2-1)*(1-i/bufLen);
-        const src=ctx.createBufferSource(); src.buffer=buf;
-        const hp=ctx.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=8000;
-        const g=ctx.createGain(); g.gain.setValueAtTime(vol*0.5,when); g.gain.exponentialRampToValueAtTime(0.001,when+0.05);
-        src.connect(hp); hp.connect(g); g.connect(master); src.start(when); themeNodes.push(src);
-      }
+  // Soft piano-like note: sine + slight triangle harmonic, sharp attack, long decay
+  function pianoNote(freq, t, dur, vol){
+    [1, 2, 3].forEach((harm, i) => {
+      const osc = ctx.createOscillator();
+      osc.type = 'sine'; osc.frequency.value = freq * harm;
+      const env = ctx.createGain();
+      const harmVol = vol * [1, 0.18, 0.06][i];
+      env.gain.setValueAtTime(0, t);
+      env.gain.linearRampToValueAtTime(harmVol, t + 0.012);
+      env.gain.exponentialRampToValueAtTime(harmVol * 0.55, t + 0.18);
+      env.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+      const lp = ctx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value = 3200 / harm;
+      osc.connect(lp); lp.connect(env);
+      env.connect(master); env.connect(reverb);
+      osc.start(t); osc.stop(t + dur + 0.05);
+      themeNodes.push(osc);
     });
   }
 
-  function schedulePercLoop(loopStart, rep){
-    const b=beat;
-    scheduleDrum('kick', [loopStart,loopStart+b*2,loopStart+b*4,loopStart+b*6].map(x=>x-ctx.currentTime+0.1), 0.5);
-    scheduleDrum('snare',[loopStart+b,loopStart+b*3,loopStart+b*5,loopStart+b*7].map(x=>x-ctx.currentTime+0.1), 0.3);
-    const hhTimes=[]; for(let i=0;i<16;i++) hhTimes.push(loopStart+i*b*0.5);
-    scheduleDrum('hhat', hhTimes.map(x=>x-ctx.currentTime+0.1), 0.15);
-    if(rep<20) setTimeout(()=>schedulePercLoop(loopStart+loopLen,rep+1),(loopLen-beat)*1000);
+  // Warm bass pad (sine, very low, long sustain)
+  function bassPad(freq, t, dur, vol){
+    const osc = ctx.createOscillator(); osc.type='sine'; osc.frequency.value=freq;
+    const env = ctx.createGain();
+    env.gain.setValueAtTime(0, t);
+    env.gain.linearRampToValueAtTime(vol, t + 1.2);
+    env.gain.setValueAtTime(vol, t + dur - 1.0);
+    env.gain.linearRampToValueAtTime(0, t + dur);
+    const lp = ctx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=220; lp.Q.value=0.5;
+    osc.connect(lp); lp.connect(env); env.connect(master);
+    osc.start(t); osc.stop(t + dur + 0.1);
+    themeNodes.push(osc);
   }
-  setTimeout(()=>schedulePercLoop(ctx.currentTime+beat*0.5,0),800);
 
-  const melody=[
-    [293.7,2,0.8,0.6],[349.2,3,0.8,0.55],[440,4,0.8,0.6],[587.3,5,1.5,0.65],[440,6.5,0.5,0.5],[349.2,7,1.0,0.5],
-    [220,9,0.5,0.5],[261.6,9.5,0.5,0.5],[293.7,10,0.8,0.6],[261.6,11,0.5,0.45],[220,11.5,0.5,0.45],[174.6,12,1.5,0.55],
-    [293.7,14,0.4,0.55],[349.2,14.5,0.4,0.55],[440,15,0.4,0.6],[523.3,15.5,0.4,0.6],[587.3,16,2.5,0.7],[440,18.5,0.5,0.5],[293.7,19,2.0,0.55]
+  // Jazz lounge chord progression: Fmaj7 → Dm7 → Bbmaj7 → C9
+  // Soft arpeggiated upward, one note every 0.14s
+  const BPM = 54, beat = 60/BPM, bar = beat * 4;
+
+  // chord = [root_bass, ...chord_notes]  (all in Hz)
+  const chords = [
+    { bass:87.3,  notes:[174.6, 220.0, 261.6, 329.6] }, // Fmaj7
+    { bass:73.4,  notes:[146.8, 174.6, 220.0, 261.6] }, // Dm7
+    { bass:116.5, notes:[116.5, 146.8, 174.6, 220.0] }, // Bbmaj7
+    { bass:130.8, notes:[130.8, 164.8, 196.0, 246.9] }, // C9
   ];
 
-  function playBrass(freq,startBeat,durBeats,vol){
-    const t=ctx.currentTime+startBeat*beat+0.5, dur=durBeats*beat;
-    const osc=ctx.createOscillator(); osc.type='sawtooth'; osc.frequency.value=freq;
-    const osc2=ctx.createOscillator(); osc2.type='sawtooth'; osc2.frequency.value=freq*1.005;
-    const filt=ctx.createBiquadFilter(); filt.type='lowpass';
-    filt.frequency.setValueAtTime(800,t); filt.frequency.linearRampToValueAtTime(2200,t+0.08); filt.frequency.exponentialRampToValueAtTime(900,t+dur); filt.Q.value=1.2;
-    const g=ctx.createGain(); g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(vol*0.28,t+0.06); g.gain.setValueAtTime(vol*0.28,t+dur-0.15); g.gain.exponentialRampToValueAtTime(0.001,t+dur);
-    osc.connect(filt); osc2.connect(filt); filt.connect(g); g.connect(master);
-    osc.start(t); osc2.start(t); osc.stop(t+dur+0.05); osc2.stop(t+dur+0.05);
-    themeNodes.push(osc,osc2);
+  function playChordBar(chord, t){
+    bassPad(chord.bass, t, bar * 0.92, 0.18);
+    chord.notes.forEach((freq, i) => {
+      pianoNote(freq, t + i * 0.14, bar * 0.78, 0.11);
+      // add octave above very quietly for shimmer
+      pianoNote(freq * 2, t + i * 0.14 + 0.07, bar * 0.5, 0.035);
+    });
   }
-  melody.forEach(([f,sb,db,v])=>playBrass(f,sb,db,v));
 
-  [[146.8,0,20,0.6],[174.6,0,20,0.45],[220,0,20,0.4]].forEach(([f,s,d,v])=>{
-    const t=ctx.currentTime+s*beat, dur=d*beat;
-    const osc=ctx.createOscillator(); osc.type='triangle'; osc.frequency.value=f;
-    const lfo=ctx.createOscillator(); lfo.type='sine'; lfo.frequency.value=6.5;
-    const lfoG=ctx.createGain(); lfoG.gain.value=0.15;
-    lfo.connect(lfoG); lfoG.connect(osc.frequency);
-    const g=ctx.createGain(); g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(v*0.2,t+0.3); g.gain.setValueAtTime(v*0.2,t+dur-0.5); g.gain.exponentialRampToValueAtTime(0.001,t+dur);
-    osc.connect(g); g.connect(master); lfo.start(t); osc.start(t); osc.stop(t+dur); lfo.stop(t+dur);
-    themeNodes.push(osc,lfo);
-  });
-
-  const loopSec=21*beat;
-  function scheduleLoop(rep){
-    if(rep>=10) return;
-    setTimeout(()=>{ if(!splashSoundOn) return; melody.forEach(([f,sb,db,v])=>playBrass(f,sb,db,v)); scheduleLoop(rep+1); },loopSec*1000);
+  // Very subtle brushed cymbal (barely audible texture)
+  function brush(t){
+    const bufLen = Math.floor(ctx.sampleRate * 0.06);
+    const buf = ctx.createBuffer(1, bufLen, ctx.sampleRate);
+    const d = buf.getChannelData(0);
+    for(let i=0; i<bufLen; i++) d[i] = (Math.random()*2-1) * (1-i/bufLen) * 0.6;
+    const src = ctx.createBufferSource(); src.buffer = buf;
+    const hp = ctx.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=7000;
+    const g = ctx.createGain(); g.gain.setValueAtTime(0.018, t); g.gain.exponentialRampToValueAtTime(0.0001, t+0.06);
+    src.connect(hp); hp.connect(g); g.connect(master);
+    src.start(t); themeNodes.push(src);
   }
-  setTimeout(()=>scheduleLoop(1),loopSec*1000);
+
+  // Schedule loops using setTimeout to avoid pre-creating hundreds of nodes
+  const now = ctx.currentTime;
+  let loopRep = 0;
+  const maxReps = 40;
+
+  function scheduleLoop(loopOffset){
+    if(!splashSoundOn || loopRep >= maxReps) return;
+    loopRep++;
+    chords.forEach((chord, bi) => {
+      const t = now + loopOffset + bi * bar;
+      playChordBar(chord, t);
+      // brushes on beats 1, 2.5, 3, 4.5 of each bar
+      [0, beat*1.5, beat*2, beat*3.5].forEach(bOff => brush(t + bOff));
+    });
+    const loopDur = bar * chords.length;
+    setTimeout(() => scheduleLoop(loopOffset + loopDur), (loopDur - beat) * 1000);
+  }
+
+  // Start first loop after a 1.5s atmospheric fade-in delay
+  setTimeout(() => scheduleLoop(0), 1500);
 }
 
 let themeArmed=false;
