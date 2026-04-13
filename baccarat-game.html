@@ -2203,6 +2203,8 @@ body { padding-bottom:185px; }
           <option value="standard">♠ Standard (Commission)</option>
           <option value="ez" selected>🐉🐼 EZ Panda &amp; Dragon</option>
           <option value="tiger">🐯 Tiger Baccarat</option>
+          <option value="speed">⚡ Speed Baccarat</option>
+          <option value="lightning">⚡ Lightning Baccarat</option>
         </select>
       </div>
       <div class="hdr-user-area">
@@ -2486,6 +2488,23 @@ body { padding-bottom:185px; }
     </div>
   </div>
 
+  <!-- PAIR BETS (all modes) -->
+  <div class="side-bets-wrap pair-side-panel" id="pair-side-panel">
+    <div class="side-bets-label">Pair Bets — all modes</div>
+    <div class="side-bets-row">
+      <div class="bet-slot pair-slot" id="slot-playerPair" onclick="selectSlot('playerPair')">
+        <div class="sname">P Pair</div>
+        <div class="sodds">Player 1st-2 same rank · 11:1</div>
+        <div class="samt" id="amt-playerPair">$0</div>
+      </div>
+      <div class="bet-slot pair-slot" id="slot-bankerPair" onclick="selectSlot('bankerPair')">
+        <div class="sname">B Pair</div>
+        <div class="sodds">Banker 1st-2 same rank · 11:1</div>
+        <div class="samt" id="amt-bankerPair">$0</div>
+      </div>
+    </div>
+  </div>
+
   <!-- TIGER SIDE BETS -->
   <div class="side-bets-wrap side-bets-panel" id="tiger-side-panel">
     <div class="side-bets-label">Tiger Side Bets</div>
@@ -2547,6 +2566,16 @@ body { padding-bottom:185px; }
 
   <div class="msg-bar" id="msg-bar">Select a mode · place virtual chips · DEAL</div>
   <div class="dealer-caption" id="dealer-caption"></div>
+  <!-- Lightning multiplier banner (Lightning mode) -->
+  <div class="lightning-banner" id="lightning-banner"></div>
+  <!-- Hot streak pill -->
+  <div class="streak-pill" id="streak-pill"></div>
+  <!-- Road prediction bar (shown after 5+ hands) -->
+  <div class="predict-bar" id="predict-bar">
+    <span class="predict-label">ROAD TREND:</span>
+    <span class="pred-chip" id="pred-chip-b"></span>
+    <span class="pred-chip" id="pred-chip-p"></span>
+  </div>
 </div>
 
 <!-- ═══════ STICKY ACTION BAR ═══════ -->
@@ -2741,6 +2770,24 @@ const MODE_RULES={
       <div class="rule-item"><div class="payout">50:1</div>🐯 Big Tiger — Banker 3-card 6</div>
       <div class="rule-item"><div class="payout">35:1</div>🐯 Tiger Tie — Both P &amp; B total 6</div>
     </div>`
+  },
+  speed:{
+    sub:'⚡ SPEED BACCARAT · EZ RULES · 12-SECOND TIMER · AUTO-REVEAL',
+    html:`<strong>⚡ Speed Baccarat</strong> — EZ no-commission rules. 12-second bet timer. Cards reveal automatically — no squeeze required.
+    <div class="rules-grid">
+      <div class="rule-item"><div class="payout">1:1</div>Banker win (no commission)</div>
+      <div class="rule-item"><div class="payout">PUSH</div>Banker 3-card 7 (Dragon 7)</div>
+      <div class="rule-item"><div class="payout">1:1</div>Player win · 8:1 Tie · 11:1 Pair</div>
+    </div>`
+  },
+  lightning:{
+    sub:'⚡ LIGHTNING BACCARAT · RANDOM MULTIPLIERS · UP TO 8×',
+    html:`<strong>⚡ Lightning Baccarat</strong> — EZ rules + each hand a random multiplier (2× to 8×) is applied to Banker and/or Player. Multiplier only pays if you win that side.
+    <div class="rules-grid">
+      <div class="rule-item"><div class="payout">×2–8</div>⚡ Random multiplier on Banker or Player (shown before each deal)</div>
+      <div class="rule-item"><div class="payout">1:1</div>Normal win (non-multiplied side)</div>
+      <div class="rule-item"><div class="payout">8:1</div>Tie · 11:1 P/B Pair</div>
+    </div>`
   }
 };
 
@@ -2754,7 +2801,9 @@ let playerTitle='Recruit';
 let dailyStreak=0;
 let lastDailyClaim='';
 let currentVenue='vegas';
-let bets={banker:0,player:0,tie:0,dragon7:0,panda8:0,bigTiger:0,smallTiger:0,tigerTie:0};
+let bets={banker:0,player:0,tie:0,dragon7:0,panda8:0,bigTiger:0,smallTiger:0,tigerTie:0,playerPair:0,bankerPair:0};
+let lightningMult={banker:1,player:1}; // per-hand multipliers for Lightning mode
+const LIGHTNING_MULTS=[2,3,5,8];
 let _resolvedBets=null; // holds bet snapshot while phase==='dealt', shown until New Round
 let selSlot='banker';
 let natWins=0;  // count of natural (2-card 8/9) wins this shoe
@@ -3891,17 +3940,24 @@ function setMode(m){
   if(phase!=='betting') return;
   gameMode=m;
   // Sync pills
-  ['standard','ez','tiger'].forEach(t=>document.getElementById('tab-'+t).classList.toggle('active',t===m));
+  ['standard','ez','tiger','speed','lightning'].forEach(t=>{
+    const el=document.getElementById('tab-'+t); if(el) el.classList.toggle('active',t===m);
+  });
   // Sync header dropdown
   const msel=document.getElementById('hdr-mode-select');
   if(msel) msel.value=m;
-  document.getElementById('ez-side-panel').classList.toggle('visible',m==='ez');
+  // EZ side panel visible for ez, speed, lightning
+  document.getElementById('ez-side-panel').classList.toggle('visible',m==='ez'||m==='speed'||m==='lightning');
   document.getElementById('tiger-side-panel').classList.toggle('visible',m==='tiger');
   document.getElementById('banker-odds').textContent=m==='standard'?'0.95:1':m==='tiger'?'1:1 (½ on 6)':'1:1';
+  // Generate lightning multipliers for new mode
+  generateLightningMult();
+  updateLightningDisplay();
   applyVenueTheme();
   if(rulesOpen) showRules();
   clearBets();
-  setMsg('Mode: '+(m==='standard'?'Standard Commission':m==='ez'?'EZ Panda & Dragon':'Tiger Baccarat')+' — Place your bets!');
+  const modeLabels={standard:'Standard Commission',ez:'EZ Panda & Dragon',tiger:'Tiger Baccarat',speed:'⚡ Speed Baccarat',lightning:'⚡ Lightning Baccarat'};
+  setMsg('Mode: '+(modeLabels[m]||m)+' — Place your bets!');
 }
 function toggleRules(){ rulesOpen=!rulesOpen; document.getElementById('mode-rules-panel').classList.toggle('open',rulesOpen); if(rulesOpen) showRules(); }
 function showRules(){
@@ -3940,7 +3996,7 @@ function addChip(val){
 function clearBets(){
   if(phase!=='betting') return;
   balance+=Object.values(bets).reduce((a,b)=>a+b,0);
-  bets={banker:0,player:0,tie:0,dragon7:0,panda8:0,bigTiger:0,smallTiger:0,tigerTie:0};
+  bets={banker:0,player:0,tie:0,dragon7:0,panda8:0,bigTiger:0,smallTiger:0,tigerTie:0,playerPair:0,bankerPair:0};
   refreshUI();
 }
 function totalBet(){ return Object.values(bets).reduce((a,b)=>a+b,0); }
@@ -4825,9 +4881,17 @@ function deal(){
   // Render initial 4 cards face-down
   renderInitialCards();
 
-  // Show dealer/player controls
-  document.getElementById('dealer-controls').style.display='flex';
-  document.getElementById('player-controls').style.display='flex';
+  // Speed Baccarat: hide squeeze controls, auto-reveal all cards
+  if(gameMode==='speed'){
+    document.getElementById('dealer-controls').style.display='none';
+    document.getElementById('player-controls').style.display='none';
+    setMsg('⚡ Speed deal — revealing…');
+    setTimeout(()=>revealCards(['pc0','bc0','pc1','bc1'],90),350);
+  } else {
+    // Show dealer/player controls
+    document.getElementById('dealer-controls').style.display='flex';
+    document.getElementById('player-controls').style.display='flex';
+  }
   updateRevealButtons();
 
   // Reset totals display
@@ -4836,7 +4900,7 @@ function deal(){
 
   // Save snapshot before zeroing bets — refreshUI uses _resolvedBets during revealing/dealt phases
   _resolvedBets = Object.assign({}, bets);
-  bets={banker:0,player:0,tie:0,dragon7:0,panda8:0,bigTiger:0,smallTiger:0,tigerTie:0};
+  bets={banker:0,player:0,tie:0,dragon7:0,panda8:0,bigTiger:0,smallTiger:0,tigerTie:0,playerPair:0,bankerPair:0};
   refreshUI(); // will display _resolvedBets since phase is now 'revealing'
   dealerPhaseAnnounced = false;
   setMsg('🎴 Click your cards to squeeze! Ask the dealer to reveal banker cards.');
@@ -4892,7 +4956,12 @@ function renderThirdCards(){
     zone.classList.add('visible');
     // deal sounds for third card(s)
     let tc=0; if(pThird){ soundDeal(tc*0.14); tc++; } if(bThird){ soundDeal(tc*0.14); }
-    setMsg('Third card(s) dealt! Squeeze them to reveal the result.');
+    if(gameMode==='speed'){
+      const speedIds=[]; if(pThird) speedIds.push('pc2'); if(bThird) speedIds.push('bc2');
+      setTimeout(()=>revealCards(speedIds,110),260);
+    } else {
+      setMsg('Third card(s) dealt! Squeeze them to reveal the result.');
+    }
   }
   updateRevealButtons();
 }
@@ -5089,6 +5158,24 @@ function resolveHand(){
   // Pair detection: first two cards share the same rank
   const pIsPair = r.pH[0].rank === r.pH[1].rank;
   const bIsPair = r.bH[0].rank === r.bH[1].rank;
+
+  // ── Pair bets (11:1, all modes)
+  if(b.playerPair>0){ if(pIsPair){ const w=b.playerPair*11; balance+=b.playerPair+w; netChange+=w; msgs.push(`P Pair! +$${w}`); } else { netChange-=b.playerPair; } }
+  if(b.bankerPair>0){ if(bIsPair){ const w=b.bankerPair*11; balance+=b.bankerPair+w; netChange+=w; msgs.push(`B Pair! +$${w}`); } else { netChange-=b.bankerPair; } }
+
+  // ── Lightning multiplier bonus (Lightning mode only)
+  if(gameMode==='lightning'){
+    if(r.winner==='B'&&b.banker>0&&lightningMult.banker>1){
+      const extra=Math.floor(b.banker*(lightningMult.banker-1));
+      balance+=extra; netChange+=extra;
+      msgs.push(`⚡ Lightning ×${lightningMult.banker}! +$${extra}`);
+    }
+    if(r.winner==='P'&&b.player>0&&lightningMult.player>1){
+      const extra=Math.floor(b.player*(lightningMult.player-1));
+      balance+=extra; netChange+=extra;
+      msgs.push(`⚡ Lightning ×${lightningMult.player}! +$${extra}`);
+    }
+  }
 
   // Store rich result: winner, special flags, pair flags, winning score, natural flag
   // (winScore, isNatural, isNatural9, isNatural8 already computed above in Golden Talon section)
@@ -5288,6 +5375,8 @@ function newRound(){
   updateFreeHandBtn();
   setTimeout(showDealerGreeting, 400);
   if(!guestTrialExpired() && autoPlayRemaining<=0) startBetTimer();
+  generateLightningMult();
+  updateLightningDisplay();
 }
 
 function setMsg(t){ document.getElementById('msg-bar').className='msg-bar'; document.getElementById('msg-bar').textContent=t; }
@@ -5313,6 +5402,11 @@ function refreshUI(){
   document.getElementById('amt-bigTiger').textContent  = _showTiger ? _dispBets.bigTiger.toLocaleString()   : '0';
   document.getElementById('amt-smallTiger').textContent= _showTiger ? _dispBets.smallTiger.toLocaleString() : '0';
   document.getElementById('amt-tigerTie').textContent  = _showTiger ? _dispBets.tigerTie.toLocaleString()   : '0';
+  const _amtPP=document.getElementById('amt-playerPair'); if(_amtPP) _amtPP.textContent=(_dispBets.playerPair||0).toLocaleString();
+  const _amtBP=document.getElementById('amt-bankerPair'); if(_amtBP) _amtBP.textContent=(_dispBets.bankerPair||0).toLocaleString();
+  updateStreakPill();
+  updatePredictBar();
+  updateLightningDisplay();
   const ec=document.getElementById('eco-chips'); if(ec) ec.textContent=balance.toLocaleString();
   const eg=document.getElementById('eco-gems'); if(eg) eg.textContent=hardGems.toLocaleString();
   const el=document.getElementById('eco-level'); if(el) el.textContent=String(playerLevel);
@@ -6047,7 +6141,7 @@ function pickNMBPhrase(){
 }
 function startBetTimer(){
   clearBetTimer();
-  _timerSecs = BET_TIMER_SECS;
+  _timerSecs = (gameMode==='speed') ? 12 : BET_TIMER_SECS;
   renderTimer();
   _timerInterval = setInterval(function(){
     _timerSecs--;
@@ -7577,6 +7671,100 @@ function waitressSpeak(text) {
 
 // Kick off the waitress timer once the page loads
 setTimeout(scheduleWaitress, 500);
+
+// ═══════════════════════════════════════════════════════════════
+//  LIGHTNING BACCARAT
+// ═══════════════════════════════════════════════════════════════
+function generateLightningMult(){
+  if(gameMode!=='lightning'){ lightningMult={banker:1,player:1}; return; }
+  const pick=()=>LIGHTNING_MULTS[Math.floor(Math.random()*LIGHTNING_MULTS.length)];
+  const r=Math.random();
+  if(r<0.18){
+    // Both sides get a multiplier
+    lightningMult={banker:pick(),player:pick()};
+  } else if(r<0.55){
+    // Only Banker gets a multiplier
+    lightningMult={banker:pick(),player:1};
+  } else {
+    // Only Player gets a multiplier
+    lightningMult={banker:1,player:pick()};
+  }
+}
+
+function updateLightningDisplay(){
+  const banner=document.getElementById('lightning-banner');
+  if(!banner) return;
+  if(gameMode!=='lightning'){
+    banner.classList.remove('show');
+    // Reset slot odds labels
+    const bo=document.querySelector('#slot-banker .sodds');
+    const po=document.querySelector('#slot-player .sodds');
+    if(bo) bo.innerHTML=gameMode==='standard'?'0.95:1':'1:1';
+    if(po) po.innerHTML='1:1';
+    return;
+  }
+  const parts=[];
+  if(lightningMult.banker>1) parts.push(`Banker ⚡×${lightningMult.banker}`);
+  if(lightningMult.player>1) parts.push(`Player ⚡×${lightningMult.player}`);
+  if(parts.length){
+    banner.textContent='⚡ LIGHTNING THIS HAND: '+parts.join(' · ');
+    banner.classList.add('show');
+  } else {
+    banner.classList.remove('show');
+  }
+  // Show multiplier badges in bet slot odds
+  const bo=document.querySelector('#slot-banker .sodds');
+  const po=document.querySelector('#slot-player .sodds');
+  if(bo) bo.innerHTML=lightningMult.banker>1
+    ?`1:1 <span class="lightning-mult-badge">⚡×${lightningMult.banker}</span>`:'1:1';
+  if(po) po.innerHTML=lightningMult.player>1
+    ?`1:1 <span class="lightning-mult-badge">⚡×${lightningMult.player}</span>`:'1:1';
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  HOT STREAK PILL
+// ═══════════════════════════════════════════════════════════════
+function updateStreakPill(){
+  const pill=document.getElementById('streak-pill');
+  if(!pill) return;
+  const streak=typeof latestNonTieStreakInfo==='function'?latestNonTieStreakInfo():null;
+  if(streak&&streak.count>=3){
+    const isB=streak.side==='B';
+    pill.textContent=(isB?'🔥 BANKER':'🔥 PLAYER')+' ×'+streak.count;
+    pill.className='streak-pill show '+(isB?'banker-hot':'player-hot');
+  } else {
+    pill.className='streak-pill';
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  ROAD PREDICTION BAR
+// ═══════════════════════════════════════════════════════════════
+function updatePredictBar(){
+  const bar=document.getElementById('predict-bar');
+  const chipB=document.getElementById('pred-chip-b');
+  const chipP=document.getElementById('pred-chip-p');
+  if(!bar||!chipB||!chipP) return;
+  if(results.length<5){ bar.classList.remove('show'); return; }
+  try{
+    const br=computeBigRoad(results);
+    const preds=getPredictions(results,br);
+    // BEB color for adding Banker: 'red' = follow streak, 'blue' = break
+    const bPred=preds.B.beb?preds.B.beb.color:null;
+    const pPred=preds.P.beb?preds.P.beb.color:null;
+    const streak=typeof latestNonTieStreakInfo==='function'?latestNonTieStreakInfo():null;
+    const lastSide=streak?streak.side:(results.length?results[results.length-1].w:null);
+    const bankLabel = (bPred==='red'&&lastSide==='B')||(bPred==='blue'&&lastSide==='P') ? 'FOLLOW 🏦' : 'BREAK 🏦';
+    const playLabel = (pPred==='red'&&lastSide==='P')||(pPred==='blue'&&lastSide==='B') ? 'FOLLOW 🛡' : 'BREAK 🛡';
+    const bankFollow = bankLabel.includes('FOLLOW');
+    const playFollow = playLabel.includes('FOLLOW');
+    chipB.textContent=bankLabel;
+    chipB.className='pred-chip '+(bankFollow?'follow-banker':'break-banker');
+    chipP.textContent=playLabel;
+    chipP.className='pred-chip '+(playFollow?'follow-player':'break-player');
+    bar.classList.add('show');
+  } catch(e){ bar.classList.remove('show'); }
+}
 </script>
 
 <!-- ═══════ WAITRESS OVERLAY ═══════ -->
@@ -7952,6 +8140,29 @@ body[data-room='macau-vip'] .bet-slot.active { border-color:var(--gold); box-sha
 .cm-sel-badge{position:absolute;top:6px;right:6px;background:var(--gold);color:#000;font-family:'Cinzel',serif;font-size:0.52rem;padding:2px 7px;border-radius:10px;z-index:5;font-weight:700;letter-spacing:1px}
 .eco-casino-btn{background:transparent;border:1px solid rgba(201,168,76,0.38);color:var(--gold);font-family:'Cinzel',serif;font-size:0.62rem;padding:3px 9px;border-radius:4px;cursor:pointer;letter-spacing:1px;transition:all 0.2s}
 .eco-casino-btn:hover{background:rgba(201,168,76,0.1)}
+/* ── SPEED & LIGHTNING MODES ─────────────────────────────────── */
+.lightning-banner{display:none;background:linear-gradient(135deg,rgba(60,20,130,0.92),rgba(20,0,70,0.92));border:1px solid rgba(180,100,255,0.55);border-radius:6px;padding:6px 14px;text-align:center;font-family:'Cinzel',serif;font-size:0.72rem;color:#cc88ff;letter-spacing:0.07em;margin:4px 0;animation:lb-glow 2s infinite alternate}
+.lightning-banner.show{display:block}
+@keyframes lb-glow{0%{box-shadow:0 0 8px rgba(150,50,255,0.3)}100%{box-shadow:0 0 20px rgba(190,110,255,0.65)}}
+.lightning-mult-badge{display:inline-block;background:linear-gradient(135deg,#5511aa,#8833ff);color:#fff;font-family:'Cinzel',serif;font-size:0.6rem;padding:1px 6px;border-radius:8px;margin-left:3px;font-weight:700}
+/* Hot streak pill */
+.streak-pill{display:none;align-items:center;justify-content:center;padding:4px 14px;border-radius:20px;font-family:'Cinzel',serif;font-size:0.7rem;letter-spacing:0.07em;margin:3px auto;width:fit-content}
+.streak-pill.show{display:flex}
+.streak-pill.banker-hot{background:rgba(160,20,20,0.45);border:1px solid rgba(220,60,60,0.55);color:#ff9090}
+.streak-pill.player-hot{background:rgba(20,40,180,0.45);border:1px solid rgba(70,110,230,0.55);color:#90b0ff}
+/* Pair bet slots */
+.bet-slot.pair-slot{min-width:90px}
+.pair-side-panel{margin:4px 0}
+.pair-side-panel .side-bets-label{font-size:0.58rem;color:rgba(240,230,200,0.42);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px;text-align:center}
+/* Prediction bar */
+.predict-bar{display:none;gap:8px;justify-content:center;align-items:center;padding:3px 0;flex-wrap:wrap}
+.predict-bar.show{display:flex}
+.predict-label{color:rgba(240,230,200,0.38);font-size:0.56rem;letter-spacing:0.06em}
+.pred-chip{padding:2px 10px;border-radius:10px;font-family:'Cinzel',serif;font-size:0.62rem;font-weight:700;letter-spacing:0.05em;border:1px solid}
+.pred-chip.follow-banker{background:rgba(180,20,20,0.35);border-color:rgba(220,60,60,0.5);color:#ffaaaa}
+.pred-chip.follow-player{background:rgba(20,50,200,0.35);border-color:rgba(70,120,240,0.5);color:#aaccff}
+.pred-chip.break-banker{background:rgba(20,50,200,0.35);border-color:rgba(70,120,240,0.5);color:#aaccff}
+.pred-chip.break-player{background:rgba(180,20,20,0.35);border-color:rgba(220,60,60,0.5);color:#ffaaaa}
 </style>
 
 <!-- ROOM UNLOCK TOAST -->
