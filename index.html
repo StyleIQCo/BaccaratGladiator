@@ -4,227 +4,290 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Baccarat Gladiator</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Cinzel+Decorative:wght@400;700&family=Raleway:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Cinzel+Decorative:wght@400;700&display=swap');
-
 *{ margin:0; padding:0; box-sizing:border-box; }
+html,body{ width:100%; height:100%; background:#000; overflow:hidden; font-family:'Cinzel',serif; }
 
-html, body {
-  width:100%; height:100%;
-  background:#000;
-  overflow:hidden;
-  font-family:'Cinzel', serif;
-}
-
-/* ── SPLASH CONTAINER ── */
-#splash {
+/* ── LAYOUT ─────────────────────────────────────────────────── */
+#splash{
   position:relative; width:100vw; height:100vh;
+  display:flex; overflow:hidden;
+}
+
+/* LEFT PANEL — city tour (full screen on mobile, ~62% on desktop) */
+#city-panel{
+  position:relative; flex:1; min-width:0; height:100%; overflow:hidden;
+}
+
+/* RIGHT PANEL — baccarat action */
+#bacc-panel{
+  position:relative; width:340px; flex-shrink:0; height:100%;
+  background:#000; overflow:hidden;
+  border-left:1px solid rgba(201,168,76,0.25);
   display:flex; flex-direction:column;
-  align-items:center; justify-content:center;
-  overflow:hidden;
+}
+@media(max-width:820px){ #bacc-panel{ display:none; } }
+
+/* ── CITY BACKGROUNDS ────────────────────────────────────────── */
+.city-bg{
+  position:absolute; inset:0;
+  opacity:0; transition:opacity 1.4s ease;
+  will-change:opacity;
+}
+.city-bg.active{ opacity:1; }
+.city-bg img{
+  position:absolute; inset:0;
+  width:100%; height:100%; object-fit:cover; object-position:center 30%;
+}
+.city-bg .grad-fallback{
+  position:absolute; inset:0;
 }
 
-/* Background image */
-#splash-bg {
-  position:absolute; inset:0;
-  width:100%; height:100%;
-  object-fit:cover; object-position:center;
-  opacity:0;
-  transition:opacity 1.8s ease;
+/* Cinematic layers */
+.city-vignette{
+  position:absolute; inset:0; z-index:2;
+  background:radial-gradient(ellipse at 50% 40%, transparent 20%, rgba(0,0,0,0.5) 70%, rgba(0,0,0,0.85) 100%);
+  pointer-events:none;
 }
-#splash-bg.loaded { opacity:1; }
-
-/* Dark vignette overlay */
-.vignette {
-  position:absolute; inset:0;
-  background:radial-gradient(ellipse at center,
-    rgba(0,0,0,0.1) 0%,
-    rgba(0,0,0,0.45) 55%,
-    rgba(0,0,0,0.82) 100%);
+.city-bottom-fade{
+  position:absolute; bottom:0; left:0; right:0; height:60%; z-index:3;
+  background:linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.6) 40%, transparent 100%);
+  pointer-events:none;
+}
+.city-left-fade{
+  position:absolute; top:0; left:0; bottom:0; width:15%; z-index:3;
+  background:linear-gradient(to right, rgba(0,0,0,0.6), transparent);
   pointer-events:none;
 }
 
-/* Bottom gradient to ground the text */
-.bottom-fade {
-  position:absolute; bottom:0; left:0; right:0; height:55%;
-  background:linear-gradient(to top, rgba(0,0,0,0.88) 0%, transparent 100%);
+/* SVG skylines sit at bottom of each city-bg */
+.city-skyline{
+  position:absolute; bottom:0; left:0; right:0; z-index:4;
   pointer-events:none;
 }
 
-/* ── CONTENT LAYER ── */
-.content {
-  position:relative; z-index:10;
-  display:flex; flex-direction:column;
-  align-items:center; justify-content:flex-end;
-  height:100%; width:100%;
-  padding-bottom:clamp(28px, 7vh, 64px);
-  text-align:center;
+/* ── CITY ANNOUNCE ───────────────────────────────────────────── */
+#city-announce{
+  position:absolute; top:0; left:0; right:0; bottom:0; z-index:10;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  pointer-events:none;
 }
-
-/* Decorative top ornament */
-.ornament {
-  position:absolute; top:clamp(16px,4vh,36px); left:50%; transform:translateX(-50%);
-  font-size:clamp(0.7rem,2vw,1rem);
-  color:rgba(201,168,76,0.5);
-  letter-spacing:6px;
-  opacity:0; animation:fadeUp 1s ease 0.8s forwards;
+.city-flag-emoji{
+  font-size:clamp(2rem,6vw,4rem);
+  opacity:0; transform:scale(0.5);
+  transition:opacity 0.5s ease, transform 0.5s ease;
+  filter:drop-shadow(0 0 20px rgba(255,255,255,0.3));
 }
+.city-flag-emoji.show{ opacity:1; transform:scale(1); }
 
-/* Title block */
-.title-block {
-  opacity:0; transform:translateY(30px);
-  animation:fadeUp 1s ease 0.4s forwards;
-}
-
-.sub-title {
-  font-size:clamp(0.6rem,2vw,0.85rem);
-  letter-spacing:clamp(6px,2vw,14px);
-  color:rgba(201,168,76,0.7);
-  margin-bottom:6px;
-  text-transform:uppercase;
-}
-
-.main-title {
-  font-family:'Cinzel Decorative', serif;
-  font-size:clamp(2.4rem,8vw,5.5rem);
-  font-weight:700;
-  line-height:1;
+.city-name-text{
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(1.8rem,5.5vw,4.2rem);
+  font-weight:700; letter-spacing:0.06em;
   color:#fff;
-  text-shadow:
-    0 0 40px rgba(201,168,76,0.6),
-    0 0 80px rgba(201,168,76,0.3),
-    2px 2px 8px rgba(0,0,0,0.9);
-  letter-spacing:clamp(4px,1.5vw,12px);
+  text-shadow:0 0 40px var(--city-accent,#c9a84c), 0 2px 12px rgba(0,0,0,0.9);
+  margin:6px 0 4px; text-align:center; padding:0 20px;
+  opacity:0; transform:translateY(20px);
+  transition:opacity 0.6s ease 0.15s, transform 0.6s ease 0.15s;
 }
+.city-name-text.show{ opacity:1; transform:translateY(0); }
 
-.main-title span {
-  color:#c9a84c;
-  text-shadow:
-    0 0 30px rgba(201,168,76,0.9),
-    0 0 60px rgba(201,168,76,0.5),
-    2px 2px 8px rgba(0,0,0,0.9);
+.city-tagline-text{
+  font-family:'Raleway',sans-serif;
+  font-size:clamp(0.65rem,2vw,0.95rem);
+  letter-spacing:0.22em; color:var(--city-accent,#c9a84c);
+  text-transform:uppercase; text-align:center;
+  opacity:0; transform:translateY(10px);
+  transition:opacity 0.5s ease 0.35s, transform 0.5s ease 0.35s;
 }
+.city-tagline-text.show{ opacity:1; transform:translateY(0); }
 
-/* Gold divider line */
-.divider {
-  width:clamp(120px,30vw,280px); height:1px;
-  background:linear-gradient(90deg, transparent, #c9a84c, transparent);
-  margin:clamp(10px,2vh,20px) auto;
-  opacity:0; animation:fadeIn 1s ease 1s forwards;
-}
-
-/* Tagline */
-.tagline {
-  font-size:clamp(0.6rem,1.8vw,0.88rem);
-  letter-spacing:clamp(3px,1vw,7px);
-  color:rgba(240,230,200,0.65);
-  margin-bottom:clamp(24px,5vh,48px);
-  opacity:0; animation:fadeIn 1s ease 1.2s forwards;
-}
-
-/* Enter button */
-.enter-btn {
-  position:relative;
-  font-family:'Cinzel', serif;
-  font-size:clamp(0.75rem,2vw,1rem);
-  letter-spacing:clamp(4px,1.5vw,8px);
-  text-transform:uppercase;
-  color:#000;
-  background:linear-gradient(135deg, #f0d080 0%, #c9a84c 50%, #a07830 100%);
-  border:none; border-radius:3px;
-  padding:clamp(12px,2vh,18px) clamp(28px,6vw,56px);
-  cursor:pointer;
-  box-shadow:
-    0 0 20px rgba(201,168,76,0.5),
-    0 4px 20px rgba(0,0,0,0.6);
-  opacity:0; animation:fadeUp 1s ease 1.5s forwards;
-  transition:transform 0.15s ease, box-shadow 0.15s ease;
-  overflow:hidden;
-}
-.enter-btn::before {
-  content:'';
-  position:absolute; inset:0;
-  background:linear-gradient(135deg,rgba(255,255,255,0.25),transparent);
+/* ── GLADIATOR TRAVELER ──────────────────────────────────────── */
+#gladiator-wrap{
+  position:absolute; bottom:clamp(90px,18%,200px); z-index:12;
   pointer-events:none;
+  transition:left 0.6s cubic-bezier(0.4,0,0.2,1);
 }
-.enter-btn:hover {
-  transform:scale(1.04);
-  box-shadow:0 0 35px rgba(201,168,76,0.75), 0 6px 24px rgba(0,0,0,0.7);
+#gladiator-svg{
+  width:clamp(54px,8vw,90px); height:auto;
+  filter:drop-shadow(0 4px 16px rgba(201,168,76,0.45));
+  animation:glad-walk 0.55s steps(2) infinite;
 }
-.enter-btn:active { transform:scale(0.97); }
-
-/* Free trial note */
-.trial-note {
-  margin-top:12px;
-  font-size:clamp(0.52rem,1.4vw,0.65rem);
-  color:rgba(240,230,200,0.35);
-  letter-spacing:2px;
-  opacity:0; animation:fadeIn 1s ease 2s forwards;
+@keyframes glad-walk{
+  0%  { transform:translateY(0) scaleX(1); }
+  50% { transform:translateY(-4px) scaleX(1); }
+  100%{ transform:translateY(0) scaleX(1); }
 }
-
-/* Sound toggle */
-.sound-toggle {
-  position:absolute; top:clamp(12px,3vh,24px); right:clamp(12px,3vw,24px);
-  z-index:20;
-  background:rgba(0,0,0,0.45);
-  border:1px solid rgba(201,168,76,0.35);
-  border-radius:6px;
-  color:rgba(201,168,76,0.8);
-  font-size:clamp(0.75rem,2vw,1rem);
-  padding:6px 10px; cursor:pointer;
-  transition:all 0.2s;
+#gladiator-wrap.traveling #gladiator-svg{
+  animation:glad-run 0.3s steps(2) infinite;
 }
-.sound-toggle:hover { border-color:#c9a84c; color:#c9a84c; }
-
-/* Version / build */
-.build-note {
-  position:absolute; bottom:8px; right:12px;
-  font-size:0.5rem; color:rgba(240,230,200,0.18);
-  letter-spacing:1px; z-index:10;
+@keyframes glad-run{
+  0%  { transform:translateY(0) skewX(-5deg); }
+  50% { transform:translateY(-6px) skewX(-8deg); }
+  100%{ transform:translateY(0) skewX(-5deg); }
+}
+#gladiator-wrap.exiting{ animation:glad-exit 0.45s ease forwards; }
+@keyframes glad-exit{
+  to{ transform:translateX(120px); opacity:0; }
+}
+#gladiator-wrap.entering{ animation:glad-enter 0.45s ease forwards; }
+@keyframes glad-enter{
+  from{ transform:translateX(-100px); opacity:0; }
+  to  { transform:translateX(0); opacity:1; }
 }
 
-/* SPQR badge */
-.spqr-badge {
-  position:absolute; top:clamp(12px,3vh,24px); left:clamp(12px,3vw,24px);
-  z-index:20;
-  font-size:clamp(0.55rem,1.5vw,0.7rem);
-  color:rgba(201,168,76,0.45);
-  letter-spacing:3px;
-  opacity:0; animation:fadeIn 1.5s ease 1s forwards;
+/* ── JOURNEY DOTS ────────────────────────────────────────────── */
+#journey-track{
+  position:absolute; bottom:clamp(12px,3vh,22px); left:50%; transform:translateX(-50%);
+  z-index:20; display:flex; align-items:center; gap:10px;
 }
+.j-dot{
+  width:8px; height:8px; border-radius:50%;
+  background:rgba(255,255,255,0.2);
+  border:1px solid rgba(201,168,76,0.3);
+  cursor:pointer; transition:all 0.3s;
+}
+.j-dot.active{
+  background:var(--city-accent,#c9a84c);
+  border-color:var(--city-accent,#c9a84c);
+  box-shadow:0 0 10px var(--city-accent,#c9a84c);
+  transform:scale(1.4);
+}
+.j-dot:hover:not(.active){ background:rgba(201,168,76,0.5); }
 
-/* ── CINEMATIC FLASH on enter ── */
-#flash {
-  position:fixed; inset:0; z-index:999;
-  background:#fff; opacity:0; pointer-events:none;
-  transition:opacity 0.08s ease;
+/* ── TITLE OVERLAY ───────────────────────────────────────────── */
+#title-overlay{
+  position:absolute; bottom:0; left:0; right:0; z-index:15;
+  display:flex; flex-direction:column; align-items:center;
+  padding-bottom:clamp(36px,7vh,70px); text-align:center;
 }
-#flash.on { opacity:0.7; }
+.splash-sub{ font-size:clamp(0.55rem,1.6vw,0.78rem); letter-spacing:0.18em; color:rgba(201,168,76,0.65); margin-bottom:4px; }
+.splash-title{
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(2rem,6vw,4.2rem); font-weight:700; line-height:1;
+  color:#fff; letter-spacing:0.06em;
+  text-shadow:0 0 50px rgba(201,168,76,0.55), 0 0 100px rgba(201,168,76,0.2), 2px 2px 12px rgba(0,0,0,0.95);
+}
+.splash-title span{ color:#c9a84c; }
+.splash-divider{
+  width:clamp(100px,25vw,240px); height:1px;
+  background:linear-gradient(90deg, transparent, #c9a84c, transparent);
+  margin:clamp(8px,2vh,16px) auto;
+}
+.splash-tagline{ font-size:clamp(0.55rem,1.6vw,0.78rem); letter-spacing:0.16em; color:rgba(240,230,200,0.55); margin-bottom:clamp(18px,3.5vh,36px); }
+.enter-btn{
+  font-family:'Cinzel',serif; font-size:clamp(0.72rem,2vw,0.96rem);
+  letter-spacing:0.1em; text-transform:uppercase; color:#0a0800;
+  background:linear-gradient(135deg,#f0d080,#c9a84c,#a07830);
+  border:none; border-radius:3px;
+  padding:clamp(11px,2vh,17px) clamp(26px,5vw,52px);
+  cursor:pointer; position:relative; overflow:hidden;
+  box-shadow:0 0 24px rgba(201,168,76,0.55), 0 4px 22px rgba(0,0,0,0.65);
+  animation:fadeUp 1s ease 0.6s both;
+  transition:transform 0.14s, box-shadow 0.14s;
+}
+.enter-btn::before{ content:''; position:absolute; inset:0; background:linear-gradient(135deg,rgba(255,255,255,0.28),transparent); pointer-events:none; }
+.enter-btn:hover{ transform:scale(1.05); box-shadow:0 0 40px rgba(201,168,76,0.75),0 6px 28px rgba(0,0,0,0.7); }
+.enter-btn:active{ transform:scale(0.97); }
+.trial-note{ margin-top:10px; font-size:clamp(0.5rem,1.3vw,0.6rem); color:rgba(240,230,200,0.3); letter-spacing:0.12em; animation:fadeIn 1s ease 1.2s both; }
 
-/* ── ANIMATIONS ── */
-@keyframes fadeUp {
-  from { opacity:0; transform:translateY(24px); }
-  to   { opacity:1; transform:translateY(0); }
+/* ── TOP CONTROLS ────────────────────────────────────────────── */
+#top-controls{
+  position:absolute; top:clamp(10px,3vh,22px); right:clamp(10px,3vw,22px);
+  z-index:30; display:flex; gap:8px; align-items:center;
 }
-@keyframes fadeIn {
-  from { opacity:0; }
-  to   { opacity:1; }
+.ctrl-btn{
+  background:rgba(0,0,0,0.5); border:1px solid rgba(201,168,76,0.35);
+  border-radius:6px; color:rgba(201,168,76,0.8);
+  font-size:clamp(0.72rem,1.8vw,0.9rem); padding:6px 11px;
+  cursor:pointer; font-family:'Cinzel',serif; transition:all 0.2s;
 }
+.ctrl-btn:hover{ border-color:#c9a84c; color:#c9a84c; background:rgba(0,0,0,0.65); }
+.spqr-badge{ font-size:clamp(0.5rem,1.2vw,0.62rem); color:rgba(201,168,76,0.4); letter-spacing:0.2em; }
 
-/* Gold particles (CSS only) */
-.particle {
-  position:absolute; width:3px; height:3px;
-  border-radius:50%; background:#c9a84c;
-  pointer-events:none; z-index:5;
+/* ── BACCARAT PANEL ──────────────────────────────────────────── */
+#bacc-panel-header{
+  padding:12px 14px 8px;
+  border-bottom:1px solid rgba(201,168,76,0.2);
+  background:rgba(5,12,6,0.9); flex-shrink:0;
+}
+.bacc-panel-title{
+  font-family:'Cinzel',serif; font-size:0.68rem; color:#c9a84c;
+  letter-spacing:0.12em; text-align:center;
+}
+.live-badge{
+  display:inline-flex; align-items:center; gap:4px;
+  background:rgba(180,20,20,0.7); color:#fff;
+  font-size:0.55rem; letter-spacing:0.1em;
+  padding:2px 7px; border-radius:10px;
+  margin-left:6px; font-family:'Cinzel',serif;
+}
+.live-dot{ width:5px; height:5px; border-radius:50%; background:#ff4444; animation:live-blink 1s infinite; }
+@keyframes live-blink{ 0%,100%{opacity:1}50%{opacity:0.2} }
+
+#bacc-canvas-wrap{
+  flex:1; position:relative; background:linear-gradient(180deg,#020e05,#031508);
+  display:flex; align-items:center; justify-content:center;
+}
+#bacc-canvas{ display:block; }
+
+/* Instruction overlay shown at start */
+#bacc-instruction{
+  position:absolute; inset:0; z-index:5; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; background:rgba(0,0,0,0.7);
+  cursor:pointer; transition:opacity 0.4s;
+}
+#bacc-instruction p{ font-size:0.7rem; color:rgba(240,230,200,0.55); letter-spacing:0.08em; text-align:center; margin-top:8px; }
+.play-icon{ font-size:2.8rem; color:rgba(201,168,76,0.8); animation:pulse-play 2s infinite; }
+@keyframes pulse-play{ 0%,100%{transform:scale(1);opacity:0.8}50%{transform:scale(1.12);opacity:1} }
+
+/* Result flash for canvas */
+#bacc-result{
+  position:absolute; bottom:0; left:0; right:0; z-index:6;
+  padding:8px; text-align:center;
+  font-family:'Cinzel',serif; font-size:0.82rem; letter-spacing:0.08em;
+  opacity:0; transition:opacity 0.3s;
+}
+#bacc-result.show{ opacity:1; }
+
+/* ── FLASH ───────────────────────────────────────────────────── */
+#flash{
+  position:fixed; inset:0; z-index:999; background:#fff;
+  opacity:0; pointer-events:none; transition:opacity 0.08s;
+}
+#flash.on{ opacity:0.75; }
+
+/* ── PARTICLES ───────────────────────────────────────────────── */
+.particle{
+  position:absolute; width:3px; height:3px; border-radius:50%;
+  background:#c9a84c; pointer-events:none; z-index:8;
   animation:floatUp var(--dur) ease-in var(--delay) infinite;
-  left:var(--x); bottom:-10px; opacity:0;
+  left:var(--x); bottom:-8px; opacity:0;
 }
-@keyframes floatUp {
-  0%   { transform:translateY(0) translateX(0) scale(1); opacity:0; }
-  10%  { opacity:0.6; }
-  80%  { opacity:0.3; }
-  100% { transform:translateY(-80vh) translateX(var(--drift)) scale(0); opacity:0; }
+@keyframes floatUp{
+  0%  { transform:translateY(0) scale(1); opacity:0; }
+  8%  { opacity:0.7; }
+  85% { opacity:0.25; }
+  100%{ transform:translateY(-88vh) translateX(var(--drift)) scale(0); opacity:0; }
 }
+
+/* ── ANIMATIONS ──────────────────────────────────────────────── */
+@keyframes fadeUp{ from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)} }
+@keyframes fadeIn{ from{opacity:0}to{opacity:1} }
+
+/* nav arrows */
+.city-nav{
+  position:absolute; top:50%; transform:translateY(-50%); z-index:20;
+  background:rgba(0,0,0,0.45); border:1px solid rgba(201,168,76,0.3);
+  color:rgba(201,168,76,0.7); width:36px; height:52px; border-radius:4px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.1rem; cursor:pointer; transition:all 0.2s; user-select:none;
+}
+.city-nav:hover{ background:rgba(0,0,0,0.65); border-color:#c9a84c; color:#c9a84c; }
+#city-prev{ left:8px; }
+#city-next{ right:8px; }
+@media(max-width:480px){ .city-nav{ display:none; } }
 </style>
 </head>
 <body>
@@ -232,49 +295,831 @@ html, body {
 <div id="flash"></div>
 
 <div id="splash">
-  <!-- Background image — save your image as splash-bg.jpg in this folder -->
-  <img id="splash-bg" src="splash-bg.jpg" alt="Baccarat Gladiator"
-       onload="this.classList.add('loaded')"
-       onerror="this.style.display='none'; document.getElementById('splash').style.background='radial-gradient(ellipse at 50% 30%,#1a3a1c,#050a05)'"/>
 
-  <div class="vignette"></div>
-  <div class="bottom-fade"></div>
+  <!-- ═══════ LEFT: CITY PANEL ═══════ -->
+  <div id="city-panel">
 
-  <!-- Gold particles -->
-  <div class="particle" style="--x:8%;  --dur:7s;  --delay:0s;   --drift:20px;"></div>
-  <div class="particle" style="--x:18%; --dur:9s;  --delay:1.5s; --drift:-15px;"></div>
-  <div class="particle" style="--x:30%; --dur:6s;  --delay:3s;   --drift:10px;"></div>
-  <div class="particle" style="--x:50%; --dur:11s; --delay:0.5s; --drift:-25px;"></div>
-  <div class="particle" style="--x:65%; --dur:8s;  --delay:2.2s; --drift:18px;"></div>
-  <div class="particle" style="--x:78%; --dur:7s;  --delay:4s;   --drift:-12px;"></div>
-  <div class="particle" style="--x:90%; --dur:10s; --delay:1s;   --drift:22px;"></div>
+    <!-- Six city backgrounds (photo + gradient fallback + skyline SVG) -->
 
-  <div class="spqr-badge">SPQR · MMXXVI</div>
-  <div class="ornament">✦ &nbsp; ENTER THE ARENA &nbsp; ✦</div>
-
-  <button class="sound-toggle" id="snd-btn" onclick="toggleSplashSound()" title="Toggle sound">🔊</button>
-
-  <div class="content">
-    <div class="title-block">
-      <div class="sub-title">The Ultimate</div>
-      <div class="main-title">BACCARAT<br><span>GLADIATOR</span></div>
+    <!-- 0: Las Vegas -->
+    <div class="city-bg active" id="city-bg-0">
+      <div class="grad-fallback" style="background:linear-gradient(180deg,#06001a 0%,#140035 25%,#2d0068 50%,#6600aa 72%,#bb3300 88%,#ff7700 100%)"></div>
+      <img src="https://images.unsplash.com/photo-1605833556294-ea5c7a74f57d?auto=format&fit=crop&w=1200&q=80" alt="Las Vegas" onerror="this.style.display='none'">
+      <div class="city-vignette"></div><div class="city-bottom-fade"></div><div class="city-left-fade"></div>
+      <svg class="city-skyline" viewBox="0 0 1200 220" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Vegas: pyramid, hotels, Eiffel replica, strip towers -->
+        <polygon points="80,180 140,60 200,180" fill="rgba(0,0,0,0.85)"/>
+        <rect x="210" y="80" width="50" height="100" fill="rgba(0,0,0,0.85)"/><rect x="215" y="60" width="40" height="22" fill="rgba(0,0,0,0.85)"/>
+        <rect x="275" y="50" width="70" height="130" fill="rgba(0,0,0,0.85)"/><rect x="290" y="30" width="40" height="22" fill="rgba(0,0,0,0.85)"/>
+        <!-- Eiffel-style tower -->
+        <polygon points="370,180 380,100 400,80 420,100 430,180" fill="rgba(0,0,0,0.85)"/>
+        <line x1="400" y1="80" x2="400" y2="45" stroke="rgba(0,0,0,0.85)" stroke-width="4"/>
+        <rect x="355" y="115" width="90" height="8" fill="rgba(0,0,0,0.85)"/><rect x="368" y="98" width="64" height="6" fill="rgba(0,0,0,0.85)"/>
+        <rect x="450" y="60" width="80" height="120" fill="rgba(0,0,0,0.85)"/><rect x="460" y="40" width="60" height="22" fill="rgba(0,0,0,0.85)"/>
+        <rect x="545" y="90" width="55" height="90" fill="rgba(0,0,0,0.85)"/>
+        <rect x="615" y="45" width="90" height="135" fill="rgba(0,0,0,0.85)"/><rect x="625" y="25" width="70" height="22" fill="rgba(0,0,0,0.85)"/>
+        <rect x="720" y="70" width="60" height="110" fill="rgba(0,0,0,0.85)"/>
+        <rect x="795" y="55" width="75" height="125" fill="rgba(0,0,0,0.85)"/><rect x="808" y="35" width="49" height="22" fill="rgba(0,0,0,0.85)"/>
+        <rect x="885" y="80" width="50" height="100" fill="rgba(0,0,0,0.85)"/>
+        <rect x="950" y="50" width="80" height="130" fill="rgba(0,0,0,0.85)"/>
+        <rect x="1045" y="75" width="60" height="105" fill="rgba(0,0,0,0.85)"/>
+        <rect x="1120" y="95" width="80" height="85" fill="rgba(0,0,0,0.85)"/>
+        <!-- ground -->
+        <rect x="0" y="178" width="1200" height="42" fill="rgba(0,0,0,0.88)"/>
+        <!-- neon windows glow -->
+        <rect x="278" y="55" width="64" height="14" fill="rgba(204,102,255,0.25)" rx="2"/>
+        <rect x="460" y="44" width="58" height="14" fill="rgba(255,100,0,0.2)" rx="2"/>
+        <rect x="618" y="28" width="66" height="16" fill="rgba(100,200,255,0.2)" rx="2"/>
+      </svg>
     </div>
 
-    <div class="divider"></div>
-    <div class="tagline">MASTER THE CARDS · CONQUER THE ARENA</div>
+    <!-- 1: Atlantic City -->
+    <div class="city-bg" id="city-bg-1">
+      <div class="grad-fallback" style="background:linear-gradient(180deg,#030a14 0%,#060f22 30%,#0a1835 55%,#0e2248 72%,#102a5a 88%,#0a1e40 100%)"></div>
+      <img src="https://images.unsplash.com/photo-1534430480872-3498386e7856?auto=format&fit=crop&w=1200&q=80" alt="Atlantic City" onerror="this.style.display='none'">
+      <div class="city-vignette"></div><div class="city-bottom-fade"></div><div class="city-left-fade"></div>
+      <svg class="city-skyline" viewBox="0 0 1200 220" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Atlantic City: casino hotels, boardwalk, lighthouse -->
+        <!-- Lighthouse -->
+        <rect x="40" y="80" width="22" height="100" fill="rgba(0,0,0,0.85)"/>
+        <polygon points="40,80 51,55 62,80" fill="rgba(0,0,0,0.85)"/>
+        <ellipse cx="51" cy="55" rx="12" ry="8" fill="rgba(255,240,150,0.3)"/>
+        <rect x="100" y="60" width="80" height="120" fill="rgba(0,0,0,0.85)"/>
+        <rect x="195" y="40" width="100" height="140" fill="rgba(0,0,0,0.85)"/><rect x="205" y="22" width="80" height="20" fill="rgba(0,0,0,0.85)"/>
+        <rect x="310" y="55" width="90" height="125" fill="rgba(0,0,0,0.85)"/>
+        <rect x="415" y="35" width="110" height="145" fill="rgba(0,0,0,0.85)"/><rect x="430" y="18" width="80" height="18" fill="rgba(0,0,0,0.85)"/>
+        <rect x="540" y="65" width="80" height="115" fill="rgba(0,0,0,0.85)"/>
+        <rect x="635" y="30" width="120" height="150" fill="rgba(0,0,0,0.85)"/><rect x="650" y="12" width="90" height="20" fill="rgba(0,0,0,0.85)"/>
+        <rect x="770" y="50" width="95" height="130" fill="rgba(0,0,0,0.85)"/>
+        <rect x="880" y="70" width="80" height="110" fill="rgba(0,0,0,0.85)"/>
+        <rect x="975" y="45" width="100" height="135" fill="rgba(0,0,0,0.85)"/>
+        <rect x="1090" y="80" width="110" height="100" fill="rgba(0,0,0,0.85)"/>
+        <!-- boardwalk + ocean -->
+        <rect x="0" y="178" width="1200" height="15" fill="rgba(15,30,60,0.9)"/>
+        <!-- ocean waves -->
+        <path d="M0 195 Q60 188 120 195 Q180 202 240 195 Q300 188 360 195 Q420 202 480 195 Q540 188 600 195 Q660 202 720 195 Q780 188 840 195 Q900 202 960 195 Q1020 188 1080 195 Q1140 202 1200 195 L1200 220 L0 220 Z" fill="rgba(10,40,80,0.9)"/>
+        <path d="M0 205 Q50 198 100 205 Q150 212 200 205 Q250 198 300 205 Q350 212 400 205 Q450 198 500 205 Q550 212 600 205 Q650 198 700 205 Q750 212 800 205 Q850 198 900 205 Q950 212 1000 205 Q1050 198 1100 205 Q1150 212 1200 205 L1200 220 L0 220 Z" fill="rgba(5,25,60,0.95)"/>
+        <rect x="200" y="42" width="98" height="14" fill="rgba(100,180,255,0.18)" rx="2"/>
+        <rect x="638" y="15" width="86" height="14" fill="rgba(80,160,255,0.15)" rx="2"/>
+      </svg>
+    </div>
 
-    <button class="enter-btn" id="enter-btn" onclick="enterArena()">
-      ⚔ &nbsp; ENTER THE ARENA &nbsp; ⚔
-    </button>
-    <div class="trial-note">FREE TRIAL · 10 HANDS · NO REGISTRATION REQUIRED</div>
+    <!-- 2: Marrakesh -->
+    <div class="city-bg" id="city-bg-2">
+      <div class="grad-fallback" style="background:linear-gradient(180deg,#080300 0%,#1a0800 28%,#3d1400 52%,#7a2800 72%,#bb4400 88%,#e05500 100%)"></div>
+      <img src="https://images.unsplash.com/photo-1539020140153-e479b8c22e70?auto=format&fit=crop&w=1200&q=80" alt="Marrakesh" onerror="this.style.display='none'">
+      <div class="city-vignette"></div><div class="city-bottom-fade"></div><div class="city-left-fade"></div>
+      <svg class="city-skyline" viewBox="0 0 1200 220" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Marrakesh: Koutoubia minaret, medina walls, arches, palms -->
+        <!-- Koutoubia minaret (left) -->
+        <rect x="60" y="40" width="45" height="140" fill="rgba(0,0,0,0.85)"/>
+        <rect x="55" y="32" width="55" height="10" fill="rgba(0,0,0,0.85)"/>
+        <polygon points="55,32 82,10 110,32" fill="rgba(0,0,0,0.85)"/>
+        <line x1="82" y1="10" x2="82" y2="0" stroke="rgba(0,0,0,0.85)" stroke-width="3"/>
+        <rect x="65" y="55" width="35" height="8" fill="rgba(200,120,30,0.25)" rx="1"/>
+        <rect x="65" y="70" width="35" height="8" fill="rgba(200,120,30,0.25)" rx="1"/>
+        <rect x="65" y="85" width="35" height="8" fill="rgba(200,120,30,0.25)" rx="1"/>
+        <!-- Arched gate -->
+        <rect x="140" y="100" width="120" height="80" fill="rgba(0,0,0,0.85)"/>
+        <path d="M140 100 Q200 60 260 100" fill="rgba(0,0,0,0.85)"/>
+        <path d="M155 100 Q200 68 245 100" fill="rgba(60,30,10,0.7)"/>
+        <!-- Medina wall -->
+        <rect x="270" y="110" width="500" height="70" fill="rgba(0,0,0,0.8)"/>
+        <!-- Merlons (castle battlements) -->
+        <rect x="270" y="100" width="22" height="12" fill="rgba(0,0,0,0.85)"/>
+        <rect x="300" y="100" width="22" height="12" fill="rgba(0,0,0,0.85)"/>
+        <rect x="330" y="100" width="22" height="12" fill="rgba(0,0,0,0.85)"/>
+        <rect x="360" y="100" width="22" height="12" fill="rgba(0,0,0,0.85)"/>
+        <rect x="390" y="100" width="22" height="12" fill="rgba(0,0,0,0.85)"/>
+        <rect x="420" y="100" width="22" height="12" fill="rgba(0,0,0,0.85)"/>
+        <rect x="450" y="100" width="22" height="12" fill="rgba(0,0,0,0.85)"/>
+        <rect x="480" y="100" width="22" height="12" fill="rgba(0,0,0,0.85)"/>
+        <rect x="510" y="100" width="22" height="12" fill="rgba(0,0,0,0.85)"/>
+        <rect x="540" y="100" width="22" height="12" fill="rgba(0,0,0,0.85)"/>
+        <rect x="570" y="100" width="22" height="12" fill="rgba(0,0,0,0.85)"/>
+        <rect x="600" y="100" width="22" height="12" fill="rgba(0,0,0,0.85)"/>
+        <rect x="630" y="100" width="22" height="12" fill="rgba(0,0,0,0.85)"/>
+        <rect x="660" y="100" width="22" height="12" fill="rgba(0,0,0,0.85)"/>
+        <rect x="690" y="100" width="22" height="12" fill="rgba(0,0,0,0.85)"/>
+        <rect x="720" y="100" width="22" height="12" fill="rgba(0,0,0,0.85)"/>
+        <!-- Domes -->
+        <ellipse cx="850" cy="102" rx="55" ry="38" fill="rgba(0,0,0,0.85)"/>
+        <ellipse cx="950" cy="108" rx="45" ry="30" fill="rgba(0,0,0,0.85)"/>
+        <ellipse cx="1050" cy="105" rx="50" ry="34" fill="rgba(0,0,0,0.85)"/>
+        <!-- Palm trees -->
+        <rect x="780" y="100" width="6" height="80" fill="rgba(0,0,0,0.85)"/>
+        <ellipse cx="783" cy="100" rx="22" ry="14" fill="rgba(0,0,0,0.82)" transform="rotate(-15,783,100)"/>
+        <rect x="1130" y="110" width="6" height="70" fill="rgba(0,0,0,0.85)"/>
+        <ellipse cx="1133" cy="110" rx="20" ry="13" fill="rgba(0,0,0,0.82)" transform="rotate(12,1133,110)"/>
+        <rect x="0" y="178" width="1200" height="42" fill="rgba(0,0,0,0.88)"/>
+      </svg>
+    </div>
+
+    <!-- 3: Buenos Aires -->
+    <div class="city-bg" id="city-bg-3">
+      <div class="grad-fallback" style="background:linear-gradient(180deg,#010610 0%,#030d24 28%,#061535 52%,#091c45 72%,#0e2458 88%,#0a1c4a 100%)"></div>
+      <img src="https://images.unsplash.com/photo-1589909202802-8f4aadce1849?auto=format&fit=crop&w=1200&q=80" alt="Buenos Aires" onerror="this.style.display='none'">
+      <div class="city-vignette"></div><div class="city-bottom-fade"></div><div class="city-left-fade"></div>
+      <svg class="city-skyline" viewBox="0 0 1200 220" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Buenos Aires: Obelisk, European-style buildings, wide avenues -->
+        <!-- Obelisk (center) -->
+        <polygon points="590,180 596,20 604,20 610,180" fill="rgba(0,0,0,0.85)"/>
+        <polygon points="586,180 596,162 604,162 614,180" fill="rgba(0,0,0,0.85)"/>
+        <polygon points="593,20 600,5 607,20" fill="rgba(0,0,0,0.85)"/>
+        <!-- Buildings left -->
+        <rect x="0" y="90" width="70" height="90" fill="rgba(0,0,0,0.85)"/>
+        <rect x="4" y="75" width="62" height="17" fill="rgba(0,0,0,0.85)"/>
+        <rect x="80" y="70" width="85" height="110" fill="rgba(0,0,0,0.85)"/>
+        <rect x="84" y="55" width="77" height="17" fill="rgba(0,0,0,0.85)"/>
+        <rect x="175" y="80" width="70" height="100" fill="rgba(0,0,0,0.85)"/>
+        <rect x="255" y="55" width="90" height="125" fill="rgba(0,0,0,0.85)"/>
+        <rect x="258" y="38" width="84" height="19" fill="rgba(0,0,0,0.85)"/>
+        <rect x="355" y="75" width="75" height="105" fill="rgba(0,0,0,0.85)"/>
+        <rect x="440" y="60" width="65" height="120" fill="rgba(0,0,0,0.85)"/>
+        <rect x="515" y="85" width="60" height="95" fill="rgba(0,0,0,0.85)"/>
+        <!-- Buildings right -->
+        <rect x="625" y="85" width="60" height="95" fill="rgba(0,0,0,0.85)"/>
+        <rect x="695" y="60" width="65" height="120" fill="rgba(0,0,0,0.85)"/>
+        <rect x="770" y="75" width="75" height="105" fill="rgba(0,0,0,0.85)"/>
+        <rect x="855" y="55" width="90" height="125" fill="rgba(0,0,0,0.85)"/>
+        <rect x="858" y="38" width="84" height="19" fill="rgba(0,0,0,0.85)"/>
+        <rect x="955" y="80" width="70" height="100" fill="rgba(0,0,0,0.85)"/>
+        <rect x="1035" y="70" width="85" height="110" fill="rgba(0,0,0,0.85)"/>
+        <rect x="1038" y="55" width="79" height="17" fill="rgba(0,0,0,0.85)"/>
+        <rect x="1130" y="90" width="70" height="90" fill="rgba(0,0,0,0.85)"/>
+        <!-- Wide avenue glow -->
+        <rect x="0" y="178" width="1200" height="42" fill="rgba(0,0,0,0.88)"/>
+        <rect x="0" y="176" width="1200" height="4" fill="rgba(220,180,80,0.15)"/>
+        <rect x="258" y="40" width="82" height="16" fill="rgba(180,220,255,0.12)" rx="2"/>
+      </svg>
+    </div>
+
+    <!-- 4: Macau -->
+    <div class="city-bg" id="city-bg-4">
+      <div class="grad-fallback" style="background:linear-gradient(180deg,#060010 0%,#100025 28%,#250055 52%,#4a0088 72%,#8800cc 88%,#cc00aa 100%)"></div>
+      <img src="https://images.unsplash.com/photo-1617184406756-e98f7d0fa85b?auto=format&fit=crop&w=1200&q=80" alt="Macau" onerror="this.style.display='none'">
+      <div class="city-vignette"></div><div class="city-bottom-fade"></div><div class="city-left-fade"></div>
+      <svg class="city-skyline" viewBox="0 0 1200 220" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Macau: Grand Lisboa lotus, Cotai Strip mega-towers, harbor -->
+        <!-- Grand Lisboa tower (lotus-shaped) -->
+        <rect x="80" y="30" width="50" height="150" fill="rgba(0,0,0,0.85)"/>
+        <ellipse cx="105" cy="30" rx="40" ry="24" fill="rgba(0,0,0,0.85)"/>
+        <ellipse cx="105" cy="18" rx="28" ry="16" fill="rgba(0,0,0,0.85)"/>
+        <polygon points="88,18 105,4 122,18" fill="rgba(0,0,0,0.85)"/>
+        <rect x="200" y="20" width="70" height="160" fill="rgba(0,0,0,0.85)"/>
+        <rect x="204" y="8" width="62" height="14" fill="rgba(0,0,0,0.85)"/>
+        <rect x="285" y="40" width="55" height="140" fill="rgba(0,0,0,0.85)"/>
+        <rect x="355" y="10" width="85" height="170" fill="rgba(0,0,0,0.85)"/><rect x="360" y="0" width="75" height="12" fill="rgba(0,0,0,0.85)"/>
+        <rect x="455" y="35" width="65" height="145" fill="rgba(0,0,0,0.85)"/>
+        <rect x="535" y="15" width="75" height="165" fill="rgba(0,0,0,0.85)"/><rect x="540" y="4" width="65" height="13" fill="rgba(0,0,0,0.85)"/>
+        <rect x="625" y="50" width="60" height="130" fill="rgba(0,0,0,0.85)"/>
+        <rect x="700" y="25" width="80" height="155" fill="rgba(0,0,0,0.85)"/>
+        <rect x="795" y="45" width="65" height="135" fill="rgba(0,0,0,0.85)"/>
+        <rect x="875" y="30" width="75" height="150" fill="rgba(0,0,0,0.85)"/>
+        <rect x="965" y="55" width="60" height="125" fill="rgba(0,0,0,0.85)"/>
+        <rect x="1040" y="35" width="80" height="145" fill="rgba(0,0,0,0.85)"/>
+        <rect x="1135" y="60" width="65" height="120" fill="rgba(0,0,0,0.85)"/>
+        <!-- harbor water -->
+        <rect x="0" y="178" width="1200" height="42" fill="rgba(0,0,0,0.88)"/>
+        <!-- reflection shimmer -->
+        <rect x="358" y="12" width="71" height="10" fill="rgba(200,100,255,0.2)" rx="2"/>
+        <rect x="538" y="6" width="63" height="10" fill="rgba(180,80,255,0.18)" rx="2"/>
+        <rect x="700" y="27" width="76" height="10" fill="rgba(160,60,220,0.18)" rx="2"/>
+      </svg>
+    </div>
+
+    <!-- 5: Monte Carlo -->
+    <div class="city-bg" id="city-bg-5">
+      <div class="grad-fallback" style="background:linear-gradient(180deg,#000d1a 0%,#001530 28%,#002050 52%,#003070 72%,#004d99 88%,#0060b8 100%)"></div>
+      <img src="https://images.unsplash.com/photo-1559699426-1a4c7c27bfe2?auto=format&fit=crop&w=1200&q=80" alt="Monte Carlo" onerror="this.style.display='none'">
+      <div class="city-vignette"></div><div class="city-bottom-fade"></div><div class="city-left-fade"></div>
+      <svg class="city-skyline" viewBox="0 0 1200 220" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Monte Carlo: Casino, cliffs, Mediterranean, villas -->
+        <!-- Rocky cliff -->
+        <path d="M0 220 L0 100 Q40 80 80 90 Q120 100 140 85 Q180 65 220 75 L220 220 Z" fill="rgba(0,0,0,0.85)"/>
+        <!-- Casino building -->
+        <rect x="240" y="70" width="130" height="110" fill="rgba(0,0,0,0.85)"/>
+        <rect x="235" y="60" width="140" height="12" fill="rgba(0,0,0,0.85)"/>
+        <!-- Casino turrets -->
+        <rect x="240" y="40" width="18" height="32" fill="rgba(0,0,0,0.85)"/><polygon points="240,40 249,28 258,40" fill="rgba(0,0,0,0.85)"/>
+        <rect x="352" y="40" width="18" height="32" fill="rgba(0,0,0,0.85)"/><polygon points="352,40 361,28 370,40" fill="rgba(0,0,0,0.85)"/>
+        <!-- Casino window row -->
+        <rect x="248" y="74" width="114" height="10" fill="rgba(255,240,180,0.18)" rx="2"/>
+        <rect x="248" y="90" width="114" height="10" fill="rgba(255,240,180,0.14)" rx="2"/>
+        <!-- Hillside villas -->
+        <rect x="385" y="90" width="55" height="90" fill="rgba(0,0,0,0.82)"/>
+        <rect x="450" y="80" width="60" height="100" fill="rgba(0,0,0,0.82)"/>
+        <rect x="520" y="70" width="70" height="110" fill="rgba(0,0,0,0.82)"/>
+        <rect x="600" y="85" width="55" height="95" fill="rgba(0,0,0,0.82)"/>
+        <rect x="665" y="65" width="80" height="115" fill="rgba(0,0,0,0.82)"/>
+        <rect x="755" y="80" width="65" height="100" fill="rgba(0,0,0,0.82)"/>
+        <rect x="830" y="55" width="85" height="125" fill="rgba(0,0,0,0.82)"/>
+        <rect x="925" y="75" width="70" height="105" fill="rgba(0,0,0,0.82)"/>
+        <rect x="1005" y="60" width="80" height="120" fill="rgba(0,0,0,0.82)"/>
+        <rect x="1095" y="80" width="105" height="100" fill="rgba(0,0,0,0.82)"/>
+        <!-- Mediterranean water -->
+        <rect x="0" y="178" width="1200" height="42" fill="rgba(0,0,0,0.88)"/>
+        <path d="M0 185 Q100 180 200 185 Q300 190 400 185 Q500 180 600 185 Q700 190 800 185 Q900 180 1000 185 Q1100 190 1200 185 L1200 220 L0 220 Z" fill="rgba(0,30,80,0.6)"/>
+      </svg>
+    </div>
+
+    <!-- City announce overlay (gladiator + city name) -->
+    <div id="city-announce">
+      <div class="city-flag-emoji" id="city-flag-el">🎰</div>
+      <div class="city-name-text" id="city-name-el">Las Vegas</div>
+      <div class="city-tagline-text" id="city-tagline-el">The Neon Strip · Nevada USA</div>
+    </div>
+
+    <!-- Gladiator traveler -->
+    <div id="gladiator-wrap" style="left:12%">
+      <svg id="gladiator-svg" viewBox="0 0 60 85" xmlns="http://www.w3.org/2000/svg">
+        <!-- helmet -->
+        <ellipse cx="30" cy="16" rx="16" ry="10" fill="#888"/>
+        <rect x="14" y="12" width="32" height="6" rx="3" fill="#777"/>
+        <!-- plume -->
+        <path d="M30 6 Q26 0 20 2 Q24 5 26 8 Q28 3 30 6Z" fill="#cc2200"/>
+        <path d="M30 6 Q34 0 40 2 Q36 5 34 8 Q32 3 30 6Z" fill="#cc2200"/>
+        <!-- face -->
+        <ellipse cx="30" cy="26" rx="10" ry="11" fill="#e8c090"/>
+        <!-- visor -->
+        <path d="M20 20 Q30 17 40 20" stroke="#555" stroke-width="2.5" fill="none"/>
+        <!-- body / cuirass -->
+        <rect x="20" y="36" width="20" height="22" rx="3" fill="#888"/>
+        <path d="M20 36 Q30 32 40 36" fill="#999"/>
+        <!-- shoulder guards -->
+        <ellipse cx="17" cy="38" rx="7" ry="4" fill="#777"/>
+        <ellipse cx="43" cy="38" rx="7" ry="4" fill="#777"/>
+        <!-- arm + sword -->
+        <line x1="17" y1="38" x2="10" y2="55" stroke="#e8c090" stroke-width="5" stroke-linecap="round"/>
+        <line x1="10" y1="52" x2="4" y2="68" stroke="#aaa" stroke-width="2.5" stroke-linecap="round"/>
+        <!-- shield arm -->
+        <line x1="43" y1="38" x2="52" y2="54" stroke="#e8c090" stroke-width="5" stroke-linecap="round"/>
+        <ellipse cx="54" cy="57" rx="7" ry="9" fill="#884400" transform="rotate(-10,54,57)"/>
+        <!-- cape -->
+        <path d="M20 36 Q12 50 14 65 Q22 58 24 58 L20 36Z" fill="#cc2200" opacity="0.85"/>
+        <!-- legs -->
+        <rect x="22" y="57" width="7" height="20" rx="3" fill="#cca060"/>
+        <rect x="31" y="57" width="7" height="20" rx="3" fill="#cca060"/>
+        <!-- sandals -->
+        <rect x="20" y="76" width="11" height="5" rx="2" fill="#888"/>
+        <rect x="29" y="76" width="11" height="5" rx="2" fill="#888"/>
+        <!-- gold trim -->
+        <path d="M20 36 Q30 32 40 36 Q40 46 30 46 Q20 46 20 36Z" fill="none" stroke="#c9a84c" stroke-width="1.2"/>
+      </svg>
+    </div>
+
+    <!-- Gold particles -->
+    <div class="particle" style="--x:12%;--dur:8s;--delay:0s;--drift:18px"></div>
+    <div class="particle" style="--x:25%;--dur:11s;--delay:2s;--drift:-14px"></div>
+    <div class="particle" style="--x:40%;--dur:7s;--delay:4s;--drift:10px"></div>
+    <div class="particle" style="--x:55%;--dur:9s;--delay:1s;--drift:-20px"></div>
+    <div class="particle" style="--x:70%;--dur:12s;--delay:3s;--drift:16px"></div>
+    <div class="particle" style="--x:85%;--dur:6s;--delay:5s;--drift:-10px"></div>
+
+    <!-- City nav arrows -->
+    <div class="city-nav" id="city-prev" onclick="stepCity(-1)">◀</div>
+    <div class="city-nav" id="city-next" onclick="stepCity(1)">▶</div>
+
+    <!-- Journey dots -->
+    <div id="journey-track"></div>
+
+    <!-- Title + CTA -->
+    <div id="title-overlay" style="animation:fadeIn 1s ease 0.5s both;opacity:0">
+      <div class="splash-sub">The Ultimate</div>
+      <div class="splash-title">BACCARAT<br><span>GLADIATOR</span></div>
+      <div class="splash-divider"></div>
+      <div class="splash-tagline">MASTER THE CARDS · CONQUER THE ARENA</div>
+      <button class="enter-btn" onclick="enterArena()">⚔ &nbsp; ENTER THE ARENA &nbsp; ⚔</button>
+      <div class="trial-note">FREE TRIAL · 10 HANDS · NO REGISTRATION REQUIRED</div>
+    </div>
+
+    <!-- Top controls -->
+    <div id="top-controls">
+      <span class="spqr-badge ctrl-btn" style="cursor:default;pointer-events:none;">SPQR · MMXXVI</span>
+      <button class="ctrl-btn" id="snd-btn" onclick="toggleSplashSound()" title="Toggle sound">🔊</button>
+    </div>
+
+  </div><!-- end city-panel -->
+
+  <!-- ═══════ RIGHT: BACCARAT ACTION PANEL ═══════ -->
+  <div id="bacc-panel">
+    <div id="bacc-panel-header">
+      <div class="bacc-panel-title">
+        LIVE BACCARAT ACTION
+        <span class="live-badge"><span class="live-dot"></span>LIVE</span>
+      </div>
+    </div>
+    <div id="bacc-canvas-wrap">
+      <canvas id="bacc-canvas"></canvas>
+      <div id="bacc-instruction" onclick="dismissInstruction()">
+        <div class="play-icon">🃏</div>
+        <p>BACCARAT<br>IN ACTION</p>
+      </div>
+      <div id="bacc-result"></div>
+    </div>
   </div>
 
-  <div class="build-note">BACCARAT GLADIATOR v2.0</div>
-</div>
+</div><!-- end splash -->
 
 <script>
+'use strict';
+
 // ══════════════════════════════════════════════════════════════════
-//  GLADIATOR THEME — Web Audio API synthesized epic fanfare
+//  CITY DATA
+// ══════════════════════════════════════════════════════════════════
+const CITIES = [
+  { name:'Las Vegas',    country:'Nevada · USA',        flag:'🎰', accent:'#ff88cc', tagline:'The Neon Strip · Nevada USA' },
+  { name:'Atlantic City',country:'New Jersey · USA',    flag:'🌊', accent:'#44aaff', tagline:'The Boardwalk · New Jersey USA' },
+  { name:'Marrakesh',    country:'Morocco',             flag:'🏜️', accent:'#ff8833', tagline:'Pearl of the South · Morocco' },
+  { name:'Buenos Aires', country:'Argentina',           flag:'💃', accent:'#88aaff', tagline:'Paris of the South · Argentina' },
+  { name:'Macau',        country:'SAR China',           flag:'🐉', accent:'#cc66ff', tagline:'The Monte Carlo of the Orient' },
+  { name:'Monte Carlo',  country:'Monaco',              flag:'👑', accent:'#66ccff', tagline:'Côte d\'Azur · Monaco' },
+];
+
+const GLAD_POSITIONS = ['12%','18%','14%','16%','13%','15%'];
+
+let currentCity = 0;
+let cityTimer   = null;
+let transitioning = false;
+
+// ── BUILD JOURNEY DOTS ──────────────────────────────────────────
+(function buildDots(){
+  const track = document.getElementById('journey-track');
+  CITIES.forEach((c,i) => {
+    const d = document.createElement('div');
+    d.className = 'j-dot' + (i===0?' active':'');
+    d.title = c.name;
+    d.onclick = () => goToCity(i);
+    track.appendChild(d);
+  });
+})();
+
+// ── CITY TRANSITIONS ────────────────────────────────────────────
+function goToCity(idx, skipGlad) {
+  if (transitioning || idx === currentCity) return;
+  transitioning = true;
+  clearTimeout(cityTimer);
+
+  const prev = currentCity;
+  currentCity = idx;
+
+  // Set CSS accent var
+  document.documentElement.style.setProperty('--city-accent', CITIES[idx].accent);
+
+  // Fade backgrounds
+  document.getElementById('city-bg-' + prev).classList.remove('active');
+  document.getElementById('city-bg-' + idx).classList.add('active');
+
+  // Update dots
+  document.querySelectorAll('.j-dot').forEach((d,i) => d.classList.toggle('active', i===idx));
+
+  // Dismiss city announce then re-animate
+  const flagEl    = document.getElementById('city-flag-el');
+  const nameEl    = document.getElementById('city-name-el');
+  const taglineEl = document.getElementById('city-tagline-el');
+  flagEl.classList.remove('show');
+  nameEl.classList.remove('show');
+  taglineEl.classList.remove('show');
+
+  // Move gladiator
+  if (!skipGlad) {
+    const wrap = document.getElementById('gladiator-wrap');
+    wrap.classList.add('exiting');
+    setTimeout(() => {
+      wrap.classList.remove('exiting');
+      wrap.style.left = GLAD_POSITIONS[idx];
+      wrap.classList.add('entering');
+      setTimeout(() => wrap.classList.remove('entering'), 460);
+    }, 450);
+  }
+
+  // Show new city name after background fades in
+  setTimeout(() => {
+    const c = CITIES[idx];
+    flagEl.textContent    = c.flag;
+    nameEl.textContent    = c.name;
+    nameEl.style.color    = '#fff';
+    nameEl.style.textShadow = `0 0 40px ${c.accent}, 0 2px 12px rgba(0,0,0,0.9)`;
+    taglineEl.textContent = c.tagline;
+    taglineEl.style.color = c.accent;
+    flagEl.classList.add('show');
+    nameEl.classList.add('show');
+    taglineEl.classList.add('show');
+    transitioning = false;
+    startCityTimer();
+  }, 700);
+}
+
+function stepCity(dir) {
+  const next = (currentCity + dir + CITIES.length) % CITIES.length;
+  goToCity(next);
+}
+
+function startCityTimer() {
+  clearTimeout(cityTimer);
+  cityTimer = setTimeout(() => stepCity(1), 5000);
+}
+
+// ── INIT: Show first city announce, start auto-rotate ───────────
+window.addEventListener('DOMContentLoaded', () => {
+  document.documentElement.style.setProperty('--city-accent', CITIES[0].accent);
+  const c = CITIES[0];
+  setTimeout(() => {
+    document.getElementById('city-flag-el').textContent    = c.flag;
+    document.getElementById('city-name-el').textContent    = c.name;
+    document.getElementById('city-tagline-el').textContent = c.tagline;
+    document.getElementById('city-tagline-el').style.color = c.accent;
+    document.getElementById('city-flag-el').classList.add('show');
+    document.getElementById('city-name-el').classList.add('show');
+    document.getElementById('city-tagline-el').classList.add('show');
+    startCityTimer();
+  }, 800);
+
+  // Touch/swipe support
+  let tx = 0;
+  const cp = document.getElementById('city-panel');
+  cp.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, {passive:true});
+  cp.addEventListener('touchend',   e => {
+    const dx = e.changedTouches[0].clientX - tx;
+    if (Math.abs(dx) > 50) stepCity(dx < 0 ? 1 : -1);
+  }, {passive:true});
+
+  startBaccCanvas();
+});
+
+// ══════════════════════════════════════════════════════════════════
+//  BACCARAT ACTION CANVAS ANIMATION
+// ══════════════════════════════════════════════════════════════════
+const RANKS = ['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
+const SUITS = ['♠','♥','♦','♣'];
+
+function cardVal(r) {
+  if(r==='A') return 1;
+  if(['10','J','Q','K'].includes(r)) return 0;
+  return parseInt(r);
+}
+function handTotal(cards) {
+  return cards.reduce((s,c) => (s + cardVal(c.rank)) % 10, 0);
+}
+function randomCard() {
+  return { rank: RANKS[Math.floor(Math.random()*RANKS.length)], suit: SUITS[Math.floor(Math.random()*SUITS.length)] };
+}
+function bankerDraws(bT, pThirdVal) {
+  if(bT<=2) return true; if(bT===7) return false;
+  if(pThirdVal===null) return bT<=5;
+  if(bT===3) return pThirdVal!==8;
+  if(bT===4) return pThirdVal>=2&&pThirdVal<=7;
+  if(bT===5) return pThirdVal>=4&&pThirdVal<=7;
+  if(bT===6) return pThirdVal===6||pThirdVal===7;
+  return false;
+}
+
+let baccAnimId = null;
+
+function startBaccCanvas() {
+  const wrap  = document.getElementById('bacc-canvas-wrap');
+  const canvas= document.getElementById('bacc-canvas');
+  if (!canvas || !wrap) return;
+
+  function resize() {
+    canvas.width  = wrap.clientWidth  || 340;
+    canvas.height = wrap.clientHeight || 480;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // Auto-start after short delay
+  setTimeout(() => {
+    document.getElementById('bacc-instruction').style.opacity = '0';
+    setTimeout(() => {
+      const el = document.getElementById('bacc-instruction');
+      if(el) el.style.display = 'none';
+    }, 400);
+    runBaccLoop(canvas);
+  }, 2200);
+}
+
+function dismissInstruction() {
+  const el = document.getElementById('bacc-instruction');
+  if(el){ el.style.opacity='0'; setTimeout(()=>el.style.display='none',400); }
+  const canvas = document.getElementById('bacc-canvas');
+  if (canvas) runBaccLoop(canvas);
+}
+
+function runBaccLoop(canvas) {
+  if (baccAnimId) return;
+
+  const ctx = canvas.getContext('2d');
+  const resultEl = document.getElementById('bacc-result');
+
+  // Deal a hand
+  function dealHand() {
+    let pH = [randomCard(), randomCard()];
+    let bH = [randomCard(), randomCard()];
+    let pT = handTotal(pH), bT = handTotal(bH);
+    const natural = pT>=8||bT>=8;
+    let pThird=null, bThird=null;
+    if(!natural){
+      if(pT<=5){ pThird=randomCard(); pH.push(pThird); pT=handTotal(pH); }
+      if(bankerDraws(bT, pThird?cardVal(pThird.rank):null)){ bThird=randomCard(); bH.push(bThird); bT=handTotal(bH); }
+    }
+    let winner = pT===bT?'T':(bT>pT?'B':'P');
+    return {pH,bH,pT,bT,winner,natural};
+  }
+
+  // ── RENDERING ──────────────────────────────────────────────────
+  function drawTable(w, h) {
+    // Felt
+    const feltGrad = ctx.createRadialGradient(w/2,h*0.45,20,w/2,h*0.45,Math.max(w,h)*0.7);
+    feltGrad.addColorStop(0,  '#1a5c2a');
+    feltGrad.addColorStop(0.6,'#0f3a1a');
+    feltGrad.addColorStop(1,  '#071208');
+    ctx.fillStyle = feltGrad;
+    ctx.fillRect(0, 0, w, h);
+
+    // Table border ring
+    ctx.strokeStyle = 'rgba(201,168,76,0.5)';
+    ctx.lineWidth   = 2;
+    ctx.beginPath();
+    ctx.ellipse(w/2, h*0.42, w*0.44, h*0.38, 0, 0, Math.PI*2);
+    ctx.stroke();
+    ctx.strokeStyle = 'rgba(201,168,76,0.2)';
+    ctx.lineWidth   = 1;
+    ctx.beginPath();
+    ctx.ellipse(w/2, h*0.42, w*0.41, h*0.35, 0, 0, Math.PI*2);
+    ctx.stroke();
+
+    // Labels
+    ctx.fillStyle   = 'rgba(201,168,76,0.55)';
+    ctx.font        = `bold ${Math.floor(w*0.048)}px Cinzel,serif`;
+    ctx.textAlign   = 'center';
+    ctx.fillText('BANKER', w/2, h*0.18);
+    ctx.fillText('PLAYER', w/2, h*0.72);
+
+    // Shoe box (top right corner)
+    const sx = w*0.82, sy = h*0.04, sw = w*0.15, sh = h*0.12;
+    ctx.fillStyle = '#1a0e00';
+    ctx.strokeStyle= 'rgba(201,168,76,0.4)';
+    ctx.lineWidth  = 1;
+    roundRect(ctx, sx, sy, sw, sh, 4);
+    ctx.fill(); ctx.stroke();
+    ctx.fillStyle  = 'rgba(201,168,76,0.5)';
+    ctx.font       = `${Math.floor(w*0.032)}px Cinzel,serif`;
+    ctx.fillText('SHOE', sx+sw/2, sy+sh*0.65);
+  }
+
+  function roundRect(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x+r, y);
+    ctx.lineTo(x+w-r, y); ctx.arcTo(x+w,y,x+w,y+r,r);
+    ctx.lineTo(x+w, y+h-r); ctx.arcTo(x+w,y+h,x+w-r,y+h,r);
+    ctx.lineTo(x+r, y+h); ctx.arcTo(x,y+h,x,y+h-r,r);
+    ctx.lineTo(x, y+r); ctx.arcTo(x,y,x+r,y,r);
+    ctx.closePath();
+  }
+
+  function drawCard(x, y, card, revealed, w, h) {
+    const cw = w*0.14, ch = cw*1.42;
+    const isRed = card.suit==='♥'||card.suit==='♦';
+
+    // Shadow
+    ctx.fillStyle = 'rgba(0,0,0,0.45)';
+    roundRect(ctx, x+3, y+3, cw, ch, 4);
+    ctx.fill();
+
+    // Card body
+    if (!revealed) {
+      // Back: blue pattern
+      const bg = ctx.createLinearGradient(x, y, x+cw, y+ch);
+      bg.addColorStop(0, '#1a3a8a');
+      bg.addColorStop(1, '#0e2060');
+      ctx.fillStyle = bg;
+    } else {
+      ctx.fillStyle = '#f8f4ee';
+    }
+    roundRect(ctx, x, y, cw, ch, 4);
+    ctx.fill();
+
+    if (!revealed) {
+      // Back pattern grid
+      ctx.strokeStyle = 'rgba(100,150,220,0.35)';
+      ctx.lineWidth   = 0.8;
+      for(let i=0; i<3; i++){
+        for(let j=0; j<4; j++){
+          roundRect(ctx, x+3+i*(cw-6)/3, y+3+j*(ch-6)/4, (cw-6)/3-1, (ch-6)/4-1, 1);
+          ctx.stroke();
+        }
+      }
+    } else {
+      // Face
+      ctx.fillStyle  = isRed ? '#cc1100' : '#111';
+      ctx.font       = `bold ${Math.floor(cw*0.38)}px serif`;
+      ctx.textAlign  = 'left';
+      ctx.fillText(card.rank, x+3, y+cw*0.38);
+      ctx.font       = `${Math.floor(cw*0.32)}px serif`;
+      ctx.fillText(card.suit, x+2, y+cw*0.62);
+      // Center suit
+      ctx.font       = `${Math.floor(cw*0.55)}px serif`;
+      ctx.textAlign  = 'center';
+      ctx.fillText(card.suit, x+cw/2, y+ch*0.62);
+    }
+
+    // Border
+    ctx.strokeStyle = revealed ? 'rgba(180,160,120,0.6)' : 'rgba(60,100,200,0.5)';
+    ctx.lineWidth   = 1;
+    roundRect(ctx, x, y, cw, ch, 4);
+    ctx.stroke();
+
+    return { cw, ch };
+  }
+
+  function drawScore(x, y, score, w) {
+    const sz = w*0.13;
+    const grad = ctx.createRadialGradient(x, y, 0, x, y, sz);
+    grad.addColorStop(0, 'rgba(201,168,76,0.25)');
+    grad.addColorStop(1, 'rgba(201,168,76,0)');
+    ctx.fillStyle = grad;
+    ctx.beginPath(); ctx.arc(x, y, sz, 0, Math.PI*2); ctx.fill();
+
+    ctx.fillStyle  = '#f0d080';
+    ctx.font       = `bold ${Math.floor(w*0.12)}px Cinzel,serif`;
+    ctx.textAlign  = 'center';
+    ctx.fillText(score, x, y + w*0.04);
+  }
+
+  function drawResultBanner(text, color, w, h) {
+    ctx.fillStyle = color + '22';
+    roundRect(ctx, w*0.1, h*0.4, w*0.8, h*0.12, 6);
+    ctx.fill();
+    ctx.strokeStyle = color;
+    ctx.lineWidth   = 1.5;
+    roundRect(ctx, w*0.1, h*0.4, w*0.8, h*0.12, 6);
+    ctx.stroke();
+    ctx.fillStyle  = color;
+    ctx.font       = `bold ${Math.floor(w*0.1)}px Cinzel,serif`;
+    ctx.textAlign  = 'center';
+    ctx.fillText(text, w/2, h*0.4 + h*0.08);
+  }
+
+  // ── ANIMATION STATE MACHINE ─────────────────────────────────────
+  let hand      = null;
+  let phase     = 'idle';
+  let phaseT    = 0;
+  let cardAnim  = []; // per-card reveal progress 0→1
+  let resultShown = false;
+
+  const PHASE_DURATIONS = { idle:60, dealing:120, revealing:180, result:140, clear:40 };
+
+  function nextHand() {
+    hand         = dealHand();
+    phase        = 'dealing';
+    phaseT       = 0;
+    resultShown  = false;
+    const nCards = hand.pH.length + hand.bH.length;
+    cardAnim     = new Array(nCards).fill(0);
+  }
+
+  // Card positions: banker top row, player bottom row
+  function cardPositions(w, h, hand) {
+    const cw   = w*0.14, ch = cw*1.42;
+    const gap  = cw*1.2;
+    const bCount = hand.bH.length, pCount = hand.pH.length;
+    const bY   = h*0.12, pY = h*0.62;
+    const bX0  = w/2 - gap*(bCount-1)/2;
+    const pX0  = w/2 - gap*(pCount-1)/2;
+    const pos  = [];
+    for(let i=0;i<bCount;i++) pos.push({x:bX0+i*gap, y:bY, card:hand.bH[i]});
+    for(let i=0;i<pCount;i++) pos.push({x:pX0+i*gap, y:pY, card:hand.pH[i]});
+    return pos;
+  }
+
+  function tick() {
+    const w = canvas.width, h = canvas.height;
+    ctx.clearRect(0, 0, w, h);
+
+    if (phase === 'idle') {
+      drawTable(w, h);
+      phaseT++;
+      if (phaseT > PHASE_DURATIONS.idle) nextHand();
+      baccAnimId = requestAnimationFrame(tick);
+      return;
+    }
+
+    drawTable(w, h);
+    phaseT++;
+
+    const pos = hand ? cardPositions(w, h, hand) : [];
+    const totalCards = pos.length;
+
+    if (phase === 'dealing') {
+      // Cards slide in one at a time every 18 frames
+      pos.forEach((p, i) => {
+        const startFrame = i * 18;
+        const prog = Math.min(1, Math.max(0, (phaseT - startFrame) / 14));
+        const revProg = Math.min(1, Math.max(0, (phaseT - startFrame - 8) / 10));
+
+        if (prog > 0) {
+          // Slide from top
+          const slideY = p.y - 60 * (1 - prog) * (1 - prog);
+          const scale  = 0.6 + 0.4 * prog;
+          ctx.save();
+          ctx.globalAlpha = prog;
+          ctx.translate(p.x, slideY); ctx.scale(scale, scale); ctx.translate(-p.x, -slideY);
+          drawCard(p.x - w*0.07, slideY, p.card, false, w, h);
+          ctx.restore();
+        }
+      });
+
+      // Score during deal (face-down so shows ?)
+      drawScore(w/2, h*0.38, '?', w);
+      drawScore(w/2, h*0.56, '?', w);
+
+      if (phaseT > totalCards*18+20) {
+        phase  = 'revealing';
+        phaseT = 0;
+      }
+    }
+
+    if (phase === 'revealing') {
+      // Cards revealed one at a time, flipping open
+      pos.forEach((p, i) => {
+        const startFrame = i * 22;
+        const prog    = Math.min(1, Math.max(0, (phaseT - startFrame) / 18));
+        const isFlipped = prog > 0.5;
+        const scaleX  = Math.abs(Math.cos(prog * Math.PI));
+
+        ctx.save();
+        ctx.translate(p.x, p.y + w*0.02);
+        ctx.scale(scaleX < 0.05 ? 0.05 : scaleX, 1);
+        ctx.translate(-p.x, -(p.y + w*0.02));
+        drawCard(p.x - w*0.07, p.y, p.card, isFlipped, w, h);
+        ctx.restore();
+      });
+
+      // Running totals
+      const pRevealed = pos.slice(hand.bH.length).filter((_,i) => phaseT > hand.bH.length*22 + i*22 + 11);
+      const bRevealed = pos.slice(0, hand.bH.length).filter((_,i) => phaseT > i*22 + 11);
+      const pScore = pRevealed.length ? handTotal(pRevealed.map(p=>p.card)) : '?';
+      const bScore = bRevealed.length ? handTotal(bRevealed.map(p=>p.card)) : '?';
+      drawScore(w/2, h*0.38, bScore, w);
+      drawScore(w/2, h*0.56, pScore, w);
+
+      if (phaseT > totalCards*22+30 && !resultShown) {
+        resultShown = true;
+        const labels = { B:'BANKER WINS', P:'PLAYER WINS', T:'TIE' };
+        const colors = { B:'#6688ff', P:'#ff8888', T:'#66dd66' };
+        drawResultBanner(labels[hand.winner], colors[hand.winner], w, h);
+        // Show HTML result overlay too
+        if (resultEl) {
+          resultEl.textContent = labels[hand.winner];
+          resultEl.style.background = hand.winner==='B'?'rgba(20,40,140,0.75)':hand.winner==='P'?'rgba(140,20,20,0.75)':'rgba(20,100,20,0.75)';
+          resultEl.style.color = colors[hand.winner];
+          resultEl.classList.add('show');
+        }
+        phase  = 'result';
+        phaseT = 0;
+      }
+    }
+
+    if (phase === 'result') {
+      // Keep cards visible, show result banner
+      pos.forEach((p) => drawCard(p.x - w*0.07, p.y, p.card, true, w, h));
+      drawScore(w/2, h*0.38, hand.bT, w);
+      drawScore(w/2, h*0.56, hand.pT, w);
+      const labels = { B:'BANKER WINS', P:'PLAYER WINS', T:'TIE' };
+      const colors = { B:'#6688ff', P:'#ff8888', T:'#66dd66' };
+      drawResultBanner(labels[hand.winner], colors[hand.winner], w, h);
+
+      if (phaseT > PHASE_DURATIONS.result) {
+        phase  = 'clear';
+        phaseT = 0;
+        if (resultEl) resultEl.classList.remove('show');
+      }
+    }
+
+    if (phase === 'clear') {
+      const fade = 1 - phaseT / PHASE_DURATIONS.clear;
+      ctx.globalAlpha = fade;
+      pos.forEach((p) => drawCard(p.x - w*0.07, p.y, p.card, true, w, h));
+      drawScore(w/2, h*0.38, hand.bT, w);
+      drawScore(w/2, h*0.56, hand.pT, w);
+      ctx.globalAlpha = 1;
+
+      if (phaseT > PHASE_DURATIONS.clear) {
+        phase  = 'idle';
+        phaseT = 0;
+        hand   = null;
+      }
+    }
+
+    baccAnimId = requestAnimationFrame(tick);
+  }
+
+  tick();
+}
+
+// ══════════════════════════════════════════════════════════════════
+//  GLADIATOR THEME AUDIO (preserved from original)
 // ══════════════════════════════════════════════════════════════════
 let audioCtx = null;
 let themeNodes = [];
@@ -290,11 +1135,8 @@ function getCtx(){
 function toggleSplashSound(){
   splashSoundOn = !splashSoundOn;
   document.getElementById('snd-btn').textContent = splashSoundOn ? '🔊' : '🔇';
-  if(splashSoundOn){
-    if(!themeStarted) startTheme();
-  } else {
-    stopTheme();
-  }
+  if(splashSoundOn){ if(!themeStarted) startTheme(); }
+  else { stopTheme(); }
 }
 
 function stopTheme(){
@@ -302,8 +1144,6 @@ function stopTheme(){
   themeNodes=[];
 }
 
-// ── THEME MUSIC ──────────────────────────────────────────────────
-// Gladiator-style epic: low drone + brass fanfare + percussion loop
 function startTheme(){
   if(!splashSoundOn) return;
   themeStarted = true;
@@ -313,7 +1153,6 @@ function startTheme(){
   master.gain.linearRampToValueAtTime(0.55, ctx.currentTime + 2.5);
   master.connect(ctx.destination);
 
-  // ── 1. DEEP DRONE (tonic D) ──────────────────────────────────
   function makeDrone(freq, gainVal, type='sawtooth'){
     const osc = ctx.createOscillator();
     osc.type = type; osc.frequency.value = freq;
@@ -321,32 +1160,24 @@ function startTheme(){
     const lp = ctx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=400; lp.Q.value=0.7;
     osc.connect(lp); lp.connect(g); g.connect(master);
     osc.start(); themeNodes.push(osc);
-    return osc;
   }
-  makeDrone(36.7, 0.22, 'sine');    // D1 sub bass
-  makeDrone(73.4, 0.14, 'sine');    // D2 bass
-  makeDrone(110,  0.05, 'triangle');// A2 fifth
+  makeDrone(36.7, 0.22, 'sine');
+  makeDrone(73.4, 0.14, 'sine');
+  makeDrone(110,  0.05, 'triangle');
 
-  // ── 2. PERCUSSION LOOP ────────────────────────────────────────
-  const BPM = 72;
-  const beat = 60 / BPM;
-  const loopLen = beat * 8; // 8-beat phrase
+  const BPM = 72, beat = 60/BPM, loopLen = beat*8;
 
   function scheduleDrum(type, times, vol){
     times.forEach(t => {
-      const now = ctx.currentTime;
-      const when = now + t;
+      const now = ctx.currentTime, when = now + t;
       if(type==='kick'){
         const o=ctx.createOscillator(); o.type='sine';
-        o.frequency.setValueAtTime(180,when); o.frequency.exponentialRampToValueAtTime(40, when+0.18);
-        const g=ctx.createGain();
-        g.gain.setValueAtTime(vol, when); g.gain.exponentialRampToValueAtTime(0.001, when+0.35);
+        o.frequency.setValueAtTime(180,when); o.frequency.exponentialRampToValueAtTime(40,when+0.18);
+        const g=ctx.createGain(); g.gain.setValueAtTime(vol,when); g.gain.exponentialRampToValueAtTime(0.001,when+0.35);
         o.connect(g); g.connect(master); o.start(when); o.stop(when+0.36); themeNodes.push(o);
       }
       if(type==='snare'){
-        const bufLen=Math.floor(ctx.sampleRate*0.12);
-        const buf=ctx.createBuffer(1,bufLen,ctx.sampleRate);
-        const d=buf.getChannelData(0);
+        const bufLen=Math.floor(ctx.sampleRate*0.12), buf=ctx.createBuffer(1,bufLen,ctx.sampleRate), d=buf.getChannelData(0);
         for(let i=0;i<bufLen;i++) d[i]=(Math.random()*2-1)*(1-i/bufLen);
         const src=ctx.createBufferSource(); src.buffer=buf;
         const bpf=ctx.createBiquadFilter(); bpf.type='bandpass'; bpf.frequency.value=1800; bpf.Q.value=0.8;
@@ -354,9 +1185,7 @@ function startTheme(){
         src.connect(bpf); bpf.connect(g); g.connect(master); src.start(when); themeNodes.push(src);
       }
       if(type==='hhat'){
-        const bufLen=Math.floor(ctx.sampleRate*0.05);
-        const buf=ctx.createBuffer(1,bufLen,ctx.sampleRate);
-        const d=buf.getChannelData(0);
+        const bufLen=Math.floor(ctx.sampleRate*0.05), buf=ctx.createBuffer(1,bufLen,ctx.sampleRate), d=buf.getChannelData(0);
         for(let i=0;i<bufLen;i++) d[i]=(Math.random()*2-1)*(1-i/bufLen);
         const src=ctx.createBufferSource(); src.buffer=buf;
         const hp=ctx.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=8000;
@@ -366,159 +1195,82 @@ function startTheme(){
     });
   }
 
-  // Roman war-drum pattern (repeats)
   function schedulePercLoop(loopStart, rep){
     const b=beat;
-    // Kicks: beats 1, 3 (strong downbeats)
-    scheduleDrum('kick', [loopStart, loopStart+b*2, loopStart+b*4, loopStart+b*6].map(x=>x-ctx.currentTime+0.1), 0.5);
-    // Snares: beats 2, 4 (upbeats)
-    scheduleDrum('snare',[loopStart+b, loopStart+b*3, loopStart+b*5, loopStart+b*7].map(x=>x-ctx.currentTime+0.1), 0.3);
-    // Hi-hat every half beat
-    const hhTimes=[];
-    for(let i=0;i<16;i++) hhTimes.push(loopStart+i*b*0.5);
+    scheduleDrum('kick', [loopStart,loopStart+b*2,loopStart+b*4,loopStart+b*6].map(x=>x-ctx.currentTime+0.1), 0.5);
+    scheduleDrum('snare',[loopStart+b,loopStart+b*3,loopStart+b*5,loopStart+b*7].map(x=>x-ctx.currentTime+0.1), 0.3);
+    const hhTimes=[]; for(let i=0;i<16;i++) hhTimes.push(loopStart+i*b*0.5);
     scheduleDrum('hhat', hhTimes.map(x=>x-ctx.currentTime+0.1), 0.15);
-    if(rep<20) setTimeout(()=>schedulePercLoop(loopStart+loopLen, rep+1), (loopLen-beat)*1000);
+    if(rep<20) setTimeout(()=>schedulePercLoop(loopStart+loopLen,rep+1),(loopLen-beat)*1000);
   }
-  setTimeout(()=>schedulePercLoop(ctx.currentTime+beat*0.5, 0), 800);
+  setTimeout(()=>schedulePercLoop(ctx.currentTime+beat*0.5,0),800);
 
-  // ── 3. BRASS FANFARE MELODY ──────────────────────────────────
-  // D-minor modal: D F A C D (dark heroic)
-  // Frequencies: D3=146.8, F3=174.6, A3=220, C4=261.6, D4=293.7, F4=349.2, A4=440
-  const melody = [
-    // [freq, startBeat, durBeats, vol]
-    // Opening fanfare (starts at beat 2)
-    [293.7, 2,   0.8, 0.6],   // D4
-    [349.2, 3,   0.8, 0.55],  // F4
-    [440,   4,   0.8, 0.6],   // A4
-    [587.3, 5,   1.5, 0.65],  // D5 (high point)
-    [440,   6.5, 0.5, 0.5],   // A4 fall
-    [349.2, 7,   1.0, 0.5],   // F4
-
-    // Second phrase (beats 9-16) — deeper call
-    [220,   9,   0.5, 0.5],   // A3
-    [261.6, 9.5, 0.5, 0.5],   // C4
-    [293.7, 10,  0.8, 0.6],   // D4
-    [261.6, 11,  0.5, 0.45],  // C4
-    [220,   11.5,0.5, 0.45],  // A3
-    [174.6, 12,  1.5, 0.55],  // F3
-
-    // Third phrase — triumphant rise
-    [293.7, 14,  0.4, 0.55],  // D4
-    [349.2, 14.5,0.4, 0.55],  // F4
-    [440,   15,  0.4, 0.6],   // A4
-    [523.3, 15.5,0.4, 0.6],   // C5
-    [587.3, 16,  2.5, 0.7],   // D5 sustained
-    [440,   18.5,0.5, 0.5],   // A4
-    [293.7, 19,  2.0, 0.55],  // D4 resolve
+  const melody=[
+    [293.7,2,0.8,0.6],[349.2,3,0.8,0.55],[440,4,0.8,0.6],[587.3,5,1.5,0.65],[440,6.5,0.5,0.5],[349.2,7,1.0,0.5],
+    [220,9,0.5,0.5],[261.6,9.5,0.5,0.5],[293.7,10,0.8,0.6],[261.6,11,0.5,0.45],[220,11.5,0.5,0.45],[174.6,12,1.5,0.55],
+    [293.7,14,0.4,0.55],[349.2,14.5,0.4,0.55],[440,15,0.4,0.6],[523.3,15.5,0.4,0.6],[587.3,16,2.5,0.7],[440,18.5,0.5,0.5],[293.7,19,2.0,0.55]
   ];
 
-  function playBrass(freq, startBeat, durBeats, vol){
-    const t = ctx.currentTime + startBeat * beat + 0.5; // 0.5s initial delay
-    const dur = durBeats * beat;
-    // Sawtooth + filter for brass timbre
-    const osc = ctx.createOscillator();
-    osc.type = 'sawtooth'; osc.frequency.value = freq;
-    // Add slight detuned unison for thickness
-    const osc2 = ctx.createOscillator();
-    osc2.type = 'sawtooth'; osc2.frequency.value = freq * 1.005;
-
-    const filt = ctx.createBiquadFilter();
-    filt.type = 'lowpass';
-    filt.frequency.setValueAtTime(800, t);
-    filt.frequency.linearRampToValueAtTime(2200, t + 0.08);
-    filt.frequency.exponentialRampToValueAtTime(900, t + dur);
-    filt.Q.value = 1.2;
-
-    const g = ctx.createGain();
-    g.gain.setValueAtTime(0, t);
-    g.gain.linearRampToValueAtTime(vol * 0.28, t + 0.06);  // attack
-    g.gain.setValueAtTime(vol * 0.28, t + dur - 0.15);
-    g.gain.exponentialRampToValueAtTime(0.001, t + dur);   // release
-
-    const merge = ctx.createChannelMerger();
+  function playBrass(freq,startBeat,durBeats,vol){
+    const t=ctx.currentTime+startBeat*beat+0.5, dur=durBeats*beat;
+    const osc=ctx.createOscillator(); osc.type='sawtooth'; osc.frequency.value=freq;
+    const osc2=ctx.createOscillator(); osc2.type='sawtooth'; osc2.frequency.value=freq*1.005;
+    const filt=ctx.createBiquadFilter(); filt.type='lowpass';
+    filt.frequency.setValueAtTime(800,t); filt.frequency.linearRampToValueAtTime(2200,t+0.08); filt.frequency.exponentialRampToValueAtTime(900,t+dur); filt.Q.value=1.2;
+    const g=ctx.createGain(); g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(vol*0.28,t+0.06); g.gain.setValueAtTime(vol*0.28,t+dur-0.15); g.gain.exponentialRampToValueAtTime(0.001,t+dur);
     osc.connect(filt); osc2.connect(filt); filt.connect(g); g.connect(master);
-
-    osc.start(t); osc2.start(t);
-    osc.stop(t + dur + 0.05); osc2.stop(t + dur + 0.05);
-    themeNodes.push(osc, osc2);
+    osc.start(t); osc2.start(t); osc.stop(t+dur+0.05); osc2.stop(t+dur+0.05);
+    themeNodes.push(osc,osc2);
   }
+  melody.forEach(([f,sb,db,v])=>playBrass(f,sb,db,v));
 
-  melody.forEach(([f, sb, db, v]) => playBrass(f, sb, db, v));
-
-  // ── 4. LOW STRINGS TREMOLO PAD ────────────────────────────────
-  function makePad(freq, startBeat, durBeats, vol){
-    const t = ctx.currentTime + startBeat * beat;
-    const dur = durBeats * beat;
-    const osc = ctx.createOscillator();
-    osc.type = 'triangle'; osc.frequency.value = freq;
-    // tremolo LFO
-    const lfo = ctx.createOscillator(); lfo.type='sine'; lfo.frequency.value=6.5;
-    const lfoG = ctx.createGain(); lfoG.gain.value = 0.15;
+  [[146.8,0,20,0.6],[174.6,0,20,0.45],[220,0,20,0.4]].forEach(([f,s,d,v])=>{
+    const t=ctx.currentTime+s*beat, dur=d*beat;
+    const osc=ctx.createOscillator(); osc.type='triangle'; osc.frequency.value=f;
+    const lfo=ctx.createOscillator(); lfo.type='sine'; lfo.frequency.value=6.5;
+    const lfoG=ctx.createGain(); lfoG.gain.value=0.15;
     lfo.connect(lfoG); lfoG.connect(osc.frequency);
-    const g = ctx.createGain();
-    g.gain.setValueAtTime(0, t);
-    g.gain.linearRampToValueAtTime(vol*0.2, t+0.3);
-    g.gain.setValueAtTime(vol*0.2, t+dur-0.5);
-    g.gain.exponentialRampToValueAtTime(0.001, t+dur);
-    osc.connect(g); g.connect(master);
-    lfo.start(t); osc.start(t); osc.stop(t+dur); lfo.stop(t+dur);
-    themeNodes.push(osc, lfo);
-  }
+    const g=ctx.createGain(); g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(v*0.2,t+0.3); g.gain.setValueAtTime(v*0.2,t+dur-0.5); g.gain.exponentialRampToValueAtTime(0.001,t+dur);
+    osc.connect(g); g.connect(master); lfo.start(t); osc.start(t); osc.stop(t+dur); lfo.stop(t+dur);
+    themeNodes.push(osc,lfo);
+  });
 
-  // D-minor chord pad under the melody
-  [[146.8,0,20,0.6],[174.6,0,20,0.45],[220,0,20,0.4]].forEach(([f,s,d,v])=>makePad(f,s,d,v));
-
-  // ── 5. LOOP: repeat melody every ~21 beats ────────────────────
-  const loopSec = 21 * beat;
+  const loopSec=21*beat;
   function scheduleLoop(rep){
-    if(rep >= 10) return; // stop after ~10 repeats
-    setTimeout(()=>{
-      if(!splashSoundOn) return;
-      melody.forEach(([f,sb,db,v]) => playBrass(f, sb, db, v));
-      scheduleLoop(rep+1);
-    }, loopSec * 1000);
+    if(rep>=10) return;
+    setTimeout(()=>{ if(!splashSoundOn) return; melody.forEach(([f,sb,db,v])=>playBrass(f,sb,db,v)); scheduleLoop(rep+1); },loopSec*1000);
   }
-  setTimeout(()=>scheduleLoop(1), loopSec * 1000);
+  setTimeout(()=>scheduleLoop(1),loopSec*1000);
 }
 
-// ── AUTO-START THEME ON FIRST INTERACTION ────────────────────────
-// (browsers block audio until user gesture — we start on first touch/click)
-let themeArmed = false;
+let themeArmed=false;
 function armTheme(){
-  if(themeArmed) return;
-  themeArmed = true;
+  if(themeArmed) return; themeArmed=true;
   if(splashSoundOn) startTheme();
 }
-document.addEventListener('click',    armTheme, {once:true});
+document.addEventListener('click',     armTheme, {once:true});
 document.addEventListener('touchstart',armTheme, {once:true});
 
 // ── ENTER ARENA ──────────────────────────────────────────────────
 function enterArena(){
-  armTheme(); // ensure audio context unlocked
-  // Cinematic flash
-  const flash = document.getElementById('flash');
+  armTheme();
+  if(baccAnimId){ cancelAnimationFrame(baccAnimId); baccAnimId=null; }
+  clearTimeout(cityTimer);
+  const flash=document.getElementById('flash');
   flash.classList.add('on');
   stopTheme();
-  // Play a short sword-clash sound
   swordClash();
-  setTimeout(()=>{
-    window.location.href='baccarat-scoreboard.html';
-  }, 180);
+  setTimeout(()=>{ window.location.href='baccarat-scoreboard.html'; }, 200);
 }
 
 function swordClash(){
-  const ctx = getCtx(), now = ctx.currentTime;
-  // metallic ring
-  [880, 1320, 1760, 2200].forEach((f,i)=>{
+  const ctx=getCtx(), now=ctx.currentTime;
+  [880,1320,1760,2200].forEach((f,i)=>{
     const o=ctx.createOscillator(); o.type='triangle'; o.frequency.value=f;
-    const g=ctx.createGain();
-    g.gain.setValueAtTime(0.15-i*0.025, now); g.gain.exponentialRampToValueAtTime(0.001, now+0.6);
+    const g=ctx.createGain(); g.gain.setValueAtTime(0.15-i*0.025,now); g.gain.exponentialRampToValueAtTime(0.001,now+0.6);
     o.connect(g); g.connect(ctx.destination); o.start(now); o.stop(now+0.65);
   });
-  // impact noise
-  const bufLen=Math.floor(ctx.sampleRate*0.08);
-  const buf=ctx.createBuffer(1,bufLen,ctx.sampleRate);
-  const d=buf.getChannelData(0);
+  const bufLen=Math.floor(ctx.sampleRate*0.08), buf=ctx.createBuffer(1,bufLen,ctx.sampleRate), d=buf.getChannelData(0);
   for(let i=0;i<bufLen;i++) d[i]=(Math.random()*2-1)*(1-i/bufLen)*0.8;
   const src=ctx.createBufferSource(); src.buffer=buf;
   const g=ctx.createGain(); g.gain.value=0.5;
