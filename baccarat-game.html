@@ -3056,11 +3056,25 @@ let cognitoIdToken = '';
 let cognitoAccessToken = '';
 
 // ── CLOUD CONFIG (replace with deployed values) ─────────────────
+// Build redirectUri dynamically so www vs non-www never mismatches Cognito.
+// Falls back to the canonical URL on non-browser or unexpected environments.
+const _CANONICAL_REDIRECT = 'https://www.baccaratgladiator.com/baccarat-scoreboard.html';
+const _REDIRECT_URI = (function(){
+  try{
+    const loc = window.location;
+    // Only override when we're actually on the production domain (with or without www)
+    if(/baccaratgladiator\.com/i.test(loc.hostname)){
+      return loc.origin + '/baccarat-scoreboard.html';
+    }
+  }catch(e){}
+  return _CANONICAL_REDIRECT;
+})();
+
 const CLOUD_CONFIG = {
   apiBaseUrl: 'https://xr68waxn2h.execute-api.us-east-1.amazonaws.com',
   cognitoDomain: 'https://baccaratgladiator-prod-henry-v2.auth.us-east-1.amazoncognito.com',
   userPoolClientId: '20u4p2s42nr3hi1fsg9uhnlgdk',
-  redirectUri: 'https://www.baccaratgladiator.com/baccarat-scoreboard.html'
+  redirectUri: _REDIRECT_URI
 };
 const AUTH_TOK_KEY = 'bg_cognito_tokens_v1';
 const AUTH_PROFILE_KEY = 'bg_auth_profile_v1';
@@ -3487,12 +3501,19 @@ async function cognitoStart(mode){
   }
   const path = mode==='signup' ? '/signup' : '/login';
   try{ sessionStorage.setItem('bg_auth_redirect_pending','1'); }catch(e){}
-  // PKCE with localStorage (survives cross-origin navigation unlike sessionStorage).
-  // Cognito requires PKCE for public clients (no client secret).
+  // PKCE — store verifier in localStorage with sessionStorage fallback.
+  // localStorage blocked in Android incognito / Firefox strict mode causes silent failure;
+  // sessionStorage survives same-tab redirects (Cognito → back to this page).
+  function _pkceWrite(verifier){
+    let ok=false;
+    try{ localStorage.setItem('bg_pkce_verifier',verifier); ok=true; }catch(e){}
+    try{ sessionStorage.setItem('bg_pkce_verifier',verifier); ok=true; }catch(e){}
+    return ok;
+  }
   try{
     const arr = crypto.getRandomValues(new Uint8Array(32));
     const verifier = Array.from(arr, b => ('0'+b.toString(16)).slice(-2)).join('');
-    try{ localStorage.setItem('bg_pkce_verifier', verifier); }catch(e){}
+    _pkceWrite(verifier);
     const enc = new TextEncoder();
     const hBuf = await crypto.subtle.digest('SHA-256', enc.encode(verifier));
     const challenge = btoa(String.fromCharCode(...new Uint8Array(hBuf)))
@@ -3618,7 +3639,9 @@ async function processCognitoCallbackCode(){
     const tokenUrl = CLOUD_CONFIG.cognitoDomain.replace(/\/$/,'') + '/oauth2/token';
     let verifier = '';
     try{ verifier = localStorage.getItem('bg_pkce_verifier') || ''; }catch(e){}
+    if(!verifier){ try{ verifier = sessionStorage.getItem('bg_pkce_verifier') || ''; }catch(e){} }
     try{ localStorage.removeItem('bg_pkce_verifier'); }catch(e){}
+    try{ sessionStorage.removeItem('bg_pkce_verifier'); }catch(e){}
     _authDebug('Exchanging code (verifier ' + (verifier?'present':'MISSING') + ')...');
     const bodyParams = {
       grant_type:'authorization_code',
