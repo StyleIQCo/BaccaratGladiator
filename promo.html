@@ -97,7 +97,7 @@ body{background:#000;display:flex;justify-content:center;align-items:center;min-
 #flash{position:absolute;inset:0;background:#ffd700;opacity:0;pointer-events:none;z-index:70;transition:opacity .05s}
 
 /* ---- CTA ---- */
-#s-cta{display:flex;align-items:center;justify-content:center}
+#s-cta{display:flex;align-items:center;justify-content:center;position:relative}
 #cta-canvas{position:absolute;inset:0;width:100%;height:100%}
 .cta-box{position:relative;z-index:2;text-align:center}
 .cta-eyebrow{font-size:16px;letter-spacing:8px;color:#c8a320;text-transform:uppercase;opacity:0;transition:opacity .5s}
@@ -107,9 +107,13 @@ body{background:#000;display:flex;justify-content:center;align-items:center;min-
 .cta-headline .gold{color:#c8a320}
 .cta-url{font-size:26px;letter-spacing:5px;color:#888;text-transform:uppercase;margin-top:14px;opacity:0;transition:opacity .5s .5s}
 .cta-url.show{opacity:1}
-.replay-btn{display:inline-block;margin-top:36px;padding:13px 38px;background:transparent;border:2px solid #c8a320;color:#c8a320;font-size:17px;letter-spacing:5px;text-transform:uppercase;cursor:pointer;border-radius:6px;font-family:inherit;opacity:0;transition:opacity .5s .8s,background .2s,color .2s}
+.cta-enter-btn{display:inline-block;margin-top:28px;padding:16px 52px;background:linear-gradient(135deg,#f0d080,#c9a84c,#a07830);color:#0a0800;font-family:'Cinzel',serif;font-size:18px;font-weight:700;letter-spacing:6px;text-transform:uppercase;border:none;border-radius:4px;cursor:pointer;position:relative;overflow:hidden;box-shadow:0 0 28px rgba(201,168,76,0.6),0 5px 22px rgba(0,0,0,0.65);opacity:0;transform:scale(.9);transition:opacity .5s .65s,transform .5s .65s,box-shadow .15s}
+.cta-enter-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0.22),transparent);pointer-events:none}
+.cta-enter-btn.show{opacity:1;transform:scale(1)}
+.cta-enter-btn:hover{box-shadow:0 0 44px rgba(201,168,76,0.85),0 6px 28px rgba(0,0,0,0.7);transform:scale(1.04)}
+.replay-btn{display:inline-block;margin-top:20px;padding:10px 30px;background:transparent;border:1px solid rgba(200,163,32,0.45);color:rgba(200,163,32,0.65);font-size:13px;letter-spacing:4px;text-transform:uppercase;cursor:pointer;border-radius:6px;font-family:inherit;opacity:0;transition:opacity .5s 1s,background .2s,color .2s}
 .replay-btn.show{opacity:1}
-.replay-btn:hover{background:#c8a320;color:#000}
+.replay-btn:hover{background:rgba(200,163,32,0.12);color:#c8a320;border-color:#c8a320}
 
 /* ---- PROGRESS + WATERMARK ---- */
 #progress-bar{position:absolute;bottom:0;left:0;height:3px;background:linear-gradient(to right,#c8a320,#ffd700);width:0;z-index:200;pointer-events:none}
@@ -795,8 +799,45 @@ body{background:#000;display:flex;justify-content:center;align-items:center;min-
     <div class="cta-eyebrow" id="cta-eye">Free to Play &nbsp;·&nbsp; No Deposit</div>
     <div class="cta-headline" id="cta-head">Play <span class="gold">Free</span><br>Now</div>
     <div class="cta-url" id="cta-url">baccaratgladiator.com</div>
-    <br>
+    <div><button class="cta-enter-btn" id="cta-enter-btn" onclick="window.location.href='/'">⚔ &nbsp; ENTER THE ARENA &nbsp; ⚔</button></div>
+  </div>
+  <!-- replay + tournament sit outside cta-box so they don't push button below center on mobile -->
+  <div id="cta-footer" style="position:absolute;bottom:48px;left:0;right:0;display:flex;flex-direction:column;align-items:center;gap:0;">
     <button class="replay-btn" id="replay-btn" onclick="startPromo()">↺ &nbsp;REPLAY</button>
+    <div id="tourn-promo" style="
+      margin-top:24px;
+      padding:18px 28px;
+      background:linear-gradient(135deg,rgba(26,8,0,0.92) 0%,rgba(45,20,0,0.95) 50%,rgba(26,10,0,0.92) 100%);
+      border:1px solid rgba(201,168,76,0.55);
+      border-radius:10px;
+      box-shadow:0 0 32px rgba(201,168,76,0.18), inset 0 0 20px rgba(0,0,0,0.4);
+      max-width:540px;
+      opacity:0;
+      transition:opacity 0.7s 1.2s;
+    ">
+      <div style="font-size:11px;letter-spacing:7px;color:#c8a320;text-transform:uppercase;margin-bottom:6px;">Upcoming Event</div>
+      <div style="font-size:28px;font-weight:900;color:#fff;letter-spacing:2px;line-height:1.1;margin-bottom:4px;">
+        MAY 16 &nbsp;<span style="color:#c8a320;">INVITATIONAL</span>
+      </div>
+      <div style="font-size:13px;color:rgba(220,195,130,0.85);letter-spacing:1px;margin-bottom:14px;">
+        The first <strong style="color:#f0d060;">50 players</strong> to sign up compete live for the global leaderboard crown
+      </div>
+      <a href="baccaratgladiator.com" onclick="event.preventDefault();window.location.href='/?signup=1'"
+        style="
+          display:inline-block;
+          padding:11px 32px;
+          background:linear-gradient(135deg,#c9a84c,#a0782a);
+          color:#1a0800;
+          font-family:'Cinzel Decorative',Cinzel,serif;
+          font-size:13px;font-weight:700;letter-spacing:1.5px;
+          border-radius:6px;text-decoration:none;
+          box-shadow:0 3px 14px rgba(201,168,76,0.45);
+          transition:filter 0.2s;
+        "
+        onmouseover="this.style.filter='brightness(1.15)'"
+        onmouseout="this.style.filter=''"
+      >Sign Up to Compete</a>
+    </div>
   </div>
 </div>
 
@@ -1483,6 +1524,8 @@ function startPromo(){
   ['glad-lv','glad-mc','glad-mo'].forEach(id=>{const e=document.getElementById(id);if(e){e.style.transition='none';e.style.left='-170px';}});
   document.getElementById('arena-winner').classList.remove('show');
   document.getElementById('bet-bar').classList.remove('show');
+  var tp=document.getElementById('tourn-promo');if(tp)tp.style.opacity='0';
+  var ce=document.getElementById('cta-enter-btn');if(ce)ce.classList.remove('show');
   startProgress(TOTAL);
 
   /* TITLE 0-5.5s */
@@ -1537,7 +1580,8 @@ function startPromo(){
     showScene('s-cta');
     runAnnouncer('cta');
     after(300,()=>show('cta-eye'));after(500,()=>show('cta-head'));
-    after(900,()=>show('cta-url'));after(1400,()=>show('replay-btn'));
+    after(900,()=>show('cta-url'));after(1300,()=>show('cta-enter-btn'));after(1800,()=>show('replay-btn'));
+    after(2400,()=>{var t=document.getElementById('tourn-promo');if(t)t.style.opacity='1';});
   });
 
   /* Loop */

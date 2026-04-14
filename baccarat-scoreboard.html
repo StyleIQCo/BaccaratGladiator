@@ -1301,8 +1301,10 @@ header h1 {
 .btn:disabled { opacity:0.3; cursor:not-allowed; }
 .btn-deal  { background:var(--gold); color:#000; }
 .btn-deal:hover:not(:disabled) { background:var(--gold-lt); }
-.btn-clear { background:transparent; color:var(--gold); border:1px solid var(--gold); }
-.btn-new   { background:var(--green); color:#fff; border:1px solid var(--gold); }
+.btn-clear  { background:transparent; color:var(--gold); border:1px solid var(--gold); }
+.btn-repeat { background:transparent; color:rgba(180,220,255,0.9); border:1px solid rgba(140,180,255,0.5); }
+.btn-repeat:hover:not(:disabled) { background:rgba(100,140,220,0.15); }
+.btn-new    { background:var(--green); color:#fff; border:1px solid var(--gold); }
 
 .msg-bar {
   text-align:center;
@@ -1998,6 +2000,54 @@ header h1 {
   </div>
 </header>
 
+<!-- ═══════ TOURNAMENT PROMO BANNER ═══════ -->
+<div id="tourn-banner" style="
+  position:relative;
+  background:linear-gradient(135deg,#1a0a00 0%,#2d1500 40%,#1a0800 100%);
+  border-bottom:2px solid rgba(201,168,76,0.6);
+  border-top:1px solid rgba(201,168,76,0.25);
+  padding:10px 44px 10px 16px;
+  text-align:center;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  flex-wrap:wrap;
+">
+  <span style="font-size:1.3rem;line-height:1;">🏆</span>
+  <div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
+    <div style="font-family:'Cinzel',serif;font-size:0.78rem;font-weight:700;color:#f0d060;letter-spacing:1.5px;text-shadow:0 0 8px rgba(220,170,0,0.5);">
+      MAY 16 INVITATIONAL TOURNAMENT
+    </div>
+    <div style="font-size:0.65rem;color:rgba(220,200,150,0.88);letter-spacing:0.5px;">
+      The first <strong style="color:#f0d060;">50 players</strong> to sign up are guaranteed an invite — compete live for the top spot on the global leaderboard
+    </div>
+  </div>
+  <button onclick="document.getElementById('tourn-banner').style.display='none';sessionStorage.setItem('tourn-dismissed','1');showAuthOverlay();"
+    style="
+      font-family:'Cinzel',serif;font-size:0.65rem;font-weight:700;letter-spacing:0.8px;
+      background:linear-gradient(135deg,#c9a84c,#a0782a);
+      color:#1a0a00;border:none;border-radius:6px;
+      padding:6px 14px;cursor:pointer;white-space:nowrap;
+      box-shadow:0 2px 8px rgba(201,168,76,0.4);
+      flex-shrink:0;
+    ">Sign Up to Compete</button>
+  <button onclick="document.getElementById('tourn-banner').style.display='none';sessionStorage.setItem('tourn-dismissed','1');"
+    title="Dismiss"
+    style="
+      position:absolute;top:6px;right:8px;
+      background:none;border:none;color:rgba(201,168,76,0.55);
+      font-size:1rem;cursor:pointer;line-height:1;padding:2px 4px;
+    ">✕</button>
+</div>
+<script>
+(function(){
+  if(sessionStorage.getItem('tourn-dismissed')==='1'){
+    var b=document.getElementById('tourn-banner');
+    if(b) b.style.display='none';
+  }
+})();
+</script>
 
 <!-- ═══════ UPGRADE OVERLAY ═══════ -->
 <div class="upgrade-overlay" id="upgrade-overlay">
@@ -2235,8 +2285,9 @@ header h1 {
       &nbsp;·&nbsp; Stake: <span id="bet-display">0</span>
     </div>
     <button class="btn btn-clear" id="btn-clear" onclick="clearBets()">Clear</button>
+    <button class="btn btn-repeat" id="btn-repeat" onclick="repeatLastBet()" title="Repeat last bet">↺ Repeat</button>
     <button class="btn btn-deal"  id="btn-deal"  onclick="deal()">DEAL</button>
-    <button class="btn btn-new"   id="btn-new"   onclick="newRound()" style="display:none">New Round</button>
+    <button class="btn btn-new"   id="btn-new"   onclick="newRound()" style="visibility:hidden">New Round</button>
     <button class="btn btn-auto"  id="btn-auto"  onclick="startAutoPlay()" title="Auto-deal next 5 hands with current bets">⚡ Auto ×5</button>
   </div>
   <div class="auto-progress" id="auto-progress"></div>
@@ -2422,6 +2473,8 @@ let dailyStreak=0;
 let lastDailyClaim='';
 let currentVenue='vegas';
 let bets={banker:0,player:0,tie:0,dragon7:0,panda8:0,bigTiger:0,smallTiger:0,tigerTie:0};
+let lastBets={banker:0,player:0,tie:0,dragon7:0,panda8:0,bigTiger:0,smallTiger:0,tigerTie:0};
+let lastHandStake=0;
 let selSlot='banker';
 let natWins=0;  // count of natural (2-card 8/9) wins this shoe
 let phase='betting';   // 'betting' | 'revealing' | 'dealt'
@@ -3333,6 +3386,17 @@ function clearBets(){
   bets={banker:0,player:0,tie:0,dragon7:0,panda8:0,bigTiger:0,smallTiger:0,tigerTie:0};
   refreshUI();
 }
+function repeatLastBet(){
+  if(phase!=='betting') return;
+  if(checkTrialBlock()) return;
+  const total=Object.values(lastBets).reduce((a,b)=>a+b,0);
+  if(total===0){ setMsg('No previous bet to repeat.'); return; }
+  if(balance<total){ setMsg('Not enough credits to repeat last bet!'); return; }
+  clearBets();
+  bets={...lastBets};
+  balance-=total;
+  soundChip(); refreshUI();
+}
 function totalBet(){ return Object.values(bets).reduce((a,b)=>a+b,0); }
 
 // ═══════════════════════════════════════════════════════════════
@@ -4021,6 +4085,7 @@ function deal(){
   }
   if(totalBet()===0){ setMsg('Place virtual chips first!'); return; }
   if(checkTrialBlock()) return;
+  lastBets={...bets};
   const playerWager = totalBet();
   postFeedMsg(getPreRevealCallout(playerWager), 'info');
   dealerCall('no_more_bets', {}, {feed:true, caption:true});
@@ -4030,8 +4095,9 @@ function deal(){
   aiBetForHand();
 
   document.getElementById('btn-deal').disabled=true;
-  document.getElementById('btn-new').style.display='none';
+  document.getElementById('btn-new').style.visibility='hidden';
   document.getElementById('btn-clear').disabled=true;
+  document.getElementById('btn-repeat').disabled=true;
 
   // Compute full hand (including potential third cards)
   let pH=[drawCard(),drawCard()];
@@ -4082,6 +4148,7 @@ function deal(){
   document.getElementById('banker-val').textContent='?';
   document.getElementById('player-val').textContent='?';
 
+  lastHandStake=totalBet();
   bets={banker:0,player:0,tie:0,dragon7:0,panda8:0,bigTiger:0,smallTiger:0,tigerTie:0};
   refreshUI();
   dealerPhaseAnnounced = false;
@@ -4243,7 +4310,7 @@ function updateRevealButtons(){
 // ── RESOLVE HAND (called after all cards revealed) ────────────────
 function resolveHand(){
   phase='dealt';
-  document.getElementById('btn-new').style.display='inline-block';
+  document.getElementById('btn-new').style.visibility='visible';
   document.getElementById('dealer-controls').style.display='none';
   document.getElementById('player-controls').style.display='none';
 
@@ -4408,6 +4475,7 @@ function resolveHand(){
   lastBet = {...r.betsSnapshot};
   addXp(Math.max(1, Math.floor(handWager/2)));
   document.getElementById('btn-clear').disabled=false;
+  document.getElementById('btn-repeat').disabled=false;
   refreshUI();
   updateAllRoads();
   submitHandEventToCloud(r, b, false);
@@ -4464,8 +4532,10 @@ function newRound(){
     document.getElementById('btn-deal').disabled=false;
     document.getElementById('btn-auto').disabled=guestTrialExpired();
   }
-  document.getElementById('btn-new').style.display='none';
+  document.getElementById('btn-new').style.visibility='hidden';
+  lastHandStake=0;
   document.getElementById('btn-clear').disabled=false;
+  document.getElementById('btn-repeat').disabled=false;
   document.getElementById('msg-bar').className='msg-bar';
   // Reset AI current bet display for new round
   aiCurrentBet = { slot: null, amount: 0 };
@@ -4485,7 +4555,7 @@ function refreshUI(){
   document.getElementById('hdr-balance').textContent='Credits: '+balance.toLocaleString();
   const hp=document.getElementById('hdr-premium');
   if(hp) hp.textContent='Gems: '+hardGems.toLocaleString()+' · LVL '+playerLevel+' '+playerTitle;
-  document.getElementById('bet-display').textContent=totalBet().toLocaleString();
+  document.getElementById('bet-display').textContent=(totalBet()||lastHandStake).toLocaleString();
   document.getElementById('amt-banker').textContent=bets.banker.toLocaleString();
   document.getElementById('amt-player').textContent=bets.player.toLocaleString();
   document.getElementById('amt-tie').textContent=bets.tie.toLocaleString();
@@ -5574,8 +5644,9 @@ function dealAuto(){
   soundDrum();  // drum roll for auto-deal
   aiBetForHand();
   document.getElementById('btn-deal').disabled=true;
-  document.getElementById('btn-new').style.display='none';
+  document.getElementById('btn-new').style.visibility='hidden';
   document.getElementById('btn-clear').disabled=true;
+  document.getElementById('btn-repeat').disabled=true;
   if(shoe.length<15) buildShoe();
 
   const pH=[drawCard(),drawCard()];
