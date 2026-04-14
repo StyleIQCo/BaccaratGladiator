@@ -2063,16 +2063,50 @@ header h1 {
 <!-- ═══════ LOGIN OVERLAY ═══════ -->
 <div class="auth-overlay" id="auth-overlay">
   <div class="auth-box">
-    <div class="auth-title">Cognito Login</div>
-    <div class="auth-sub">Sign in across devices, or start with a free 10-hand guest trial.</div>
-    <div class="auth-row">
-      <button class="auth-btn" onclick="cognitoStart('login')">SIGN IN</button>
-      <button class="auth-btn alt" onclick="cognitoStart('signup')">CREATE ACCOUNT</button>
+
+    <!-- Panel 1: main login/signup choice -->
+    <div id="auth-panel-main">
+      <div class="auth-title">Cognito Login</div>
+      <div class="auth-sub">Sign in across devices, or start with a free 10-hand guest trial.</div>
+      <div class="auth-row">
+        <button class="auth-btn" onclick="cognitoStart('login')">SIGN IN</button>
+        <button class="auth-btn alt" onclick="showAgeVerify()">CREATE ACCOUNT</button>
+      </div>
+      <div class="auth-row">
+        <button class="auth-btn alt" id="auth-trial-btn" onclick="startGuestTrial()">PLAY 10-HAND TRIAL</button>
+      </div>
+      <div class="auth-note" id="auth-note"></div>
     </div>
-    <div class="auth-row">
-      <button class="auth-btn alt" id="auth-trial-btn" onclick="startGuestTrial()">PLAY 10-HAND TRIAL</button>
+
+    <!-- Panel 2: age verification before signup -->
+    <div id="auth-panel-age" style="display:none">
+      <div class="auth-title">Verify Your Age</div>
+      <div class="auth-sub" style="margin-bottom:14px;">You must be 21 or older to create an account. Please confirm your date of birth.</div>
+      <div style="display:flex;gap:8px;justify-content:center;margin-bottom:14px;">
+        <select id="age-month" style="flex:2;padding:8px;background:#0d1f12;color:#e8dcc8;border:1px solid rgba(201,168,76,0.4);border-radius:4px;font-size:0.8rem;">
+          <option value="">Month</option>
+          <option value="1">January</option><option value="2">February</option><option value="3">March</option>
+          <option value="4">April</option><option value="5">May</option><option value="6">June</option>
+          <option value="7">July</option><option value="8">August</option><option value="9">September</option>
+          <option value="10">October</option><option value="11">November</option><option value="12">December</option>
+        </select>
+        <select id="age-day" style="flex:1;padding:8px;background:#0d1f12;color:#e8dcc8;border:1px solid rgba(201,168,76,0.4);border-radius:4px;font-size:0.8rem;">
+          <option value="">Day</option>
+        </select>
+        <select id="age-year" style="flex:1.5;padding:8px;background:#0d1f12;color:#e8dcc8;border:1px solid rgba(201,168,76,0.4);border-radius:4px;font-size:0.8rem;">
+          <option value="">Year</option>
+        </select>
+      </div>
+      <div id="age-verify-note" style="font-size:0.65rem;color:#ff8080;min-height:16px;margin-bottom:10px;text-align:center;"></div>
+      <div class="auth-row">
+        <button class="auth-btn alt" onclick="showAuthPanel('main')" style="flex:1">← Back</button>
+        <button class="auth-btn" onclick="confirmAgeAndSignup()" style="flex:2">CONFIRM &amp; CONTINUE</button>
+      </div>
+      <div style="font-size:0.58rem;color:rgba(200,180,130,0.5);margin-top:10px;text-align:center;line-height:1.5;">
+        Must be 21+ to register. For entertainment only.<br>No real-money gambling involved.
+      </div>
     </div>
-    <div class="auth-note" id="auth-note"></div>
+
   </div>
 </div>
 
@@ -2826,12 +2860,49 @@ function setHeaderUser(){
 function hideAuthOverlay(){
   const o=document.getElementById('auth-overlay');
   if(o) o.classList.remove('show');
+  showAuthPanel('main');
+}
+
+function showAuthPanel(panel){
+  document.getElementById('auth-panel-main').style.display = panel==='main' ? '' : 'none';
+  document.getElementById('auth-panel-age').style.display  = panel==='age'  ? '' : 'none';
+  document.getElementById('age-verify-note').textContent='';
+}
+
+function showAgeVerify(){
+  // Populate day options 1–31
+  const dayEl=document.getElementById('age-day');
+  if(dayEl.options.length<=1){
+    for(let d=1;d<=31;d++){ const o=document.createElement('option'); o.value=d; o.textContent=d; dayEl.appendChild(o); }
+  }
+  // Populate year options (current year down to 1920)
+  const yearEl=document.getElementById('age-year');
+  if(yearEl.options.length<=1){
+    const cur=new Date().getFullYear();
+    for(let y=cur;y>=1920;y--){ const o=document.createElement('option'); o.value=y; o.textContent=y; yearEl.appendChild(o); }
+  }
+  showAuthPanel('age');
+}
+
+function confirmAgeAndSignup(){
+  const m=parseInt(document.getElementById('age-month').value);
+  const d=parseInt(document.getElementById('age-day').value);
+  const y=parseInt(document.getElementById('age-year').value);
+  const note=document.getElementById('age-verify-note');
+  if(!m||!d||!y){ note.textContent='Please select your full date of birth.'; return; }
+  const dob=new Date(y,m-1,d);
+  const today=new Date();
+  let age=today.getFullYear()-dob.getFullYear();
+  if(today.getMonth()<dob.getMonth()||(today.getMonth()===dob.getMonth()&&today.getDate()<dob.getDate())) age--;
+  if(age<21){ note.textContent='You must be 21 or older to create an account.'; return; }
+  cognitoStart('signup');
 }
 
 function showAuthOverlay(mode){
   const m=mode||'entry';
   const o=document.getElementById('auth-overlay');
   if(o) o.classList.add('show');
+  showAuthPanel('main');
   const tb=document.getElementById('auth-trial-btn');
   if(tb){
     const locked = guestTrialExpired();
