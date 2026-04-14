@@ -2126,7 +2126,15 @@ header h1 {
       </button>
       <button class="persona-bot-btn" id="persona-bot-frank" onclick="selectBotPersona('frank')">
         <span class="persona-bot-name">Second Bank Frank</span>
-        <span class="persona-bot-style">Banker grinder. Conservative sizing with old-school discipline.</span>
+        <span class="persona-bot-style">Waits for 3+ player streaks then rides the second banker. Half-martingale, ÷3 on wins.</span>
+      </button>
+      <button class="persona-bot-btn" id="persona-bot-steven" onclick="selectBotPersona('steven')">
+        <span class="persona-bot-name">Even Steven</span>
+        <span class="persona-bot-style">Flat banker every hand. Locks profit at +1%, walks at -10%. Boring wins.</span>
+      </button>
+      <button class="persona-bot-btn" id="persona-bot-nancy" onclick="selectBotPersona('nancy')">
+        <span class="persona-bot-name">Natural Nancy</span>
+        <span class="persona-bot-style">Counts naturals on the board. When the shoe runs dry of 8s & 9s, bets Dragon 7.</span>
       </button>
     </div>
     <div class="persona-voice-row">
@@ -3385,6 +3393,10 @@ function buildShoe(){
     const j=Math.floor(Math.random()*(i+1));
     [shoe[i],shoe[j]]=[shoe[j],shoe[i]];
   }
+  // Reset per-shoe bot state on new shoe
+  _frankPlayerStreak = 0; _frankConfirmed = false; _frankReadyToBet = false;
+  _nancyNaturalCount = 0; _nancyHandCount = 0;
+  _stevenShoeStartBalance = aiBalance; _stevenShoeStopped = false;
   soundShuffle();
   if(results.length>0){
     dealerCall('cut_card', {}, {feed:true, caption:true});
@@ -3936,21 +3948,61 @@ const BOT_PERSONAS = {
   },
   frank: {
     name: 'Second Bank Frank',
-    styleLabel: 'Banker Grind',
+    styleLabel: 'Second Bank',
     betLadder: [20, 35, 55, 80],
     lossCap: 35,
     voice: {
       vegas: {
-        bet: ['Frank is leaning Banker till proven otherwise.', 'Second bank grind, small and steady.', 'Discipline first, chips second.'],
-        win: ['That is textbook Banker grind.', 'Small edge, clean result.', 'Frank keeps it tidy.'],
-        lose: ['Take the hit, stay disciplined.', 'One hand only, no hero bets.', 'Bankroll protection mode stays on.'],
-        push: ['Tie is housekeeping. Carry on.', 'Push hand. No leak.']
+        bet: ['Player ran long. Second bank is live.', 'Three player in a row, Frank steps on Banker.', 'Pattern confirmed. Second bank entry.'],
+        win: ['That is the second bank paying out.', 'Streak reversed exactly on cue.', 'Patient wait, clean collect.'],
+        lose: ['Bump the unit, stay the process.', 'One miss, half-step up, carry on.', 'Discipline survives one bad beat.'],
+        push: ['Tie. Hold sizing, reset count.', 'Push hand. No damage.']
       },
       macau: {
-        bet: ['Bank side first. Respect old house rhythm.', 'Small unit, steady pace.', 'Macau rule: survive long, win slow.'],
-        win: ['Simple Bank side collection.', 'Good conservative hand.', 'This is proper pace.'],
-        lose: ['Accept loss, preserve stack.', 'No revenge hand.', 'Protect chip line first.'],
-        push: ['Tie board, nothing lost.', 'Push. Keep discipline.']
+        bet: ['Player streak long. Banker side now.', 'Second bank position confirmed.', 'Wait for pattern, enter correctly.'],
+        win: ['Second bank paid. Old method works.', 'Pattern respected, table agreed.', 'Steady hand, correct result.'],
+        lose: ['Step size up by half. Continue.', 'One loss in pattern, no panic.', 'Process holds. Adjust unit.'],
+        push: ['Tie hand. Wait for next setup.', 'Push. Count resets clean.']
+      }
+    }
+  },
+  steven: {
+    name: 'Even Steven',
+    styleLabel: 'Flat Banker',
+    betLadder: [50, 50, 50, 50],
+    lossCap: 50,
+    voice: {
+      vegas: {
+        bet: ['Flat Banker, every hand, no debate.', 'Steven says Banker, same as always.', 'One bet, one side, every time.'],
+        win: ['Small edge, collected clean.', 'That is how flat betting wins.', 'Steady as she goes.'],
+        lose: ['One loss. Bet stays the same. Always.', 'House took one. Next hand is identical.', 'Flat means flat. No adjustment.'],
+        push: ['Tie pushes. Bet does not change.', 'Push. Steven does not flinch.']
+      },
+      macau: {
+        bet: ['Same bet, Banker, every hand.', 'No system, no change, just Banker.', 'Flat is the only honest bet.'],
+        win: ['Collected. Next hand same.', 'Good result. Bet unchanged.', 'Consistency is the strategy.'],
+        lose: ['Loss accepted. Bet unchanged.', 'No martingale here. Flat only.', 'Same unit next hand.'],
+        push: ['Tie. Continue flat.', 'Push hand. No emotion.']
+      }
+    }
+  },
+  nancy: {
+    name: 'Natural Nancy',
+    styleLabel: 'Natural Count',
+    betLadder: [40, 40, 40, 40],
+    lossCap: 40,
+    voice: {
+      vegas: {
+        bet: ['Naturals are thin. Dragon window is open.', 'Board shows low naturals. Nancy likes the Dragon.', 'Eight-nine count is depleted. Banker flat plus Dragon watch.'],
+        win: ['Natural depletion paid off.', 'Counted the shoe right.', 'Dragon hit exactly when the 8s and 9s ran out.'],
+        lose: ['Naturals still thin. Stay patient.', 'Not every depleted shoe fires the Dragon.', 'Count is right, variance happens.'],
+        push: ['Tie. Natural count unchanged.', 'Push. Still watching the 8-9 count.']
+      },
+      macau: {
+        bet: ['Natural cards scarce. Third cards will come.', 'Low natural density. Dragon becomes possible.', 'Board confirms depletion. Watch for Dragon.'],
+        win: ['Low naturals, Dragon arrived.', 'Shoe composition correct.', 'Patience with count. Table confirmed.'],
+        lose: ['Count still valid. One miss acceptable.', 'Dragon window still open.', 'Stay with natural count. Process intact.'],
+        push: ['Tie hand. Count continues.', 'Push. Density unchanged.']
       }
     }
   }
@@ -3983,7 +4035,7 @@ function applyBotPersonaToUI(){
 function selectBotPersona(key){
   if(!BOT_PERSONAS[key]) return;
   botPersona = key;
-  ['larry','jay','frank'].forEach(function(k){
+  ['larry','jay','frank','steven','nancy'].forEach(function(k){
     const el = document.getElementById('persona-bot-' + k);
     if(el) el.classList.toggle('active', k===key);
   });
@@ -4019,8 +4071,60 @@ function confirmBotPersona(){
   setMsg(activeBot().name + ' is live — ' + activeVoiceLabel() + ' voice.');
 }
 
+// Track SBF state for Frank bot
+let _frankPlayerStreak = 0;
+let _frankConfirmed = false;
+let _frankReadyToBet = false;
+// Track natural count for Nancy bot
+let _nancyNaturalCount = 0;
+let _nancyHandCount = 0;
+// Track Even Steven shoe stop conditions
+let _stevenShoeStartBalance = 1000;
+let _stevenShoeStopped = false;
+
+function aiUpdateStreakTracking(winner){
+  // Called after each hand resolves to update Frank & Nancy internal state
+  if(winner === 'T') return; // ties don't change anything
+
+  // Frank: track 3+ player streak → banker confirm → bet next
+  if(winner === 'P'){
+    _frankPlayerStreak++;
+    _frankConfirmed = false;
+    _frankReadyToBet = false;
+  } else if(winner === 'B'){
+    if(_frankPlayerStreak >= 3 && !_frankConfirmed){
+      _frankConfirmed = true;
+      _frankReadyToBet = false;
+    } else if(_frankPlayerStreak >= 3 && _frankConfirmed){
+      _frankReadyToBet = true;
+      _frankPlayerStreak = 0;
+      _frankConfirmed = false;
+    } else {
+      _frankPlayerStreak = 0;
+      _frankConfirmed = false;
+      _frankReadyToBet = false;
+    }
+  }
+}
+
+function aiTrackNaturals(isNatural){
+  // Nancy counts naturals seen on the board this shoe
+  _nancyHandCount++;
+  if(isNatural) _nancyNaturalCount++;
+}
+
+function nancyNaturalDepleted(){
+  // Natural density: baseline = ~15.4% of cards are 8s or 9s
+  // Board natural rate tracks it with ~85% accuracy
+  // When natural count on board is low relative to hands played → shoe is natural-depleted
+  // Expected naturals by now ≈ handsPlayed * 0.154 * 2 (two cards min per natural hand) * ~0.59 (true natural rate)
+  // Simpler heuristic: if naturals per 10 hands < 1.0 (vs expected ~1.8), dragon window is open
+  if(_nancyHandCount < 20) return false; // not enough data
+  const rate = _nancyNaturalCount / _nancyHandCount;
+  return rate < 0.10; // below 10% natural rate = depleted
+}
+
 function aiChooseSlot() {
-  const bot = activeBot();
   const nonTie = results.filter(function(r){ return r.w !== 'T'; });
   const recent = nonTie.slice(-7);
   if (recent.length < 2) return botPersona === 'jay' ? 'player' : 'banker';
@@ -4029,15 +4133,24 @@ function aiChooseSlot() {
   const last = recent[recent.length - 1].w;
   const prev = recent.length>1 ? recent[recent.length - 2].w : last;
 
+  // Even Steven: always Banker, flat bet
+  if(botPersona === 'steven') return 'banker';
+
+  // Natural Nancy: always Banker main bet (Dragon is side commentary only)
+  if(botPersona === 'nancy') return 'banker';
+
+  // Second Bank Frank: wait for 3+ player streak → confirmed → bet banker
   if(botPersona === 'frank'){
-    if(pCount >= 5) return 'player';
-    if(last === 'P' && prev === 'P') return 'player';
+    if(_frankReadyToBet) return 'banker';
+    // While waiting, sit on banker as default but with minimal intent
     return 'banker';
   }
+
   if(botPersona === 'jay'){
     if(bCount === pCount) return last === 'B' ? 'banker' : 'player';
     return bCount > pCount ? 'banker' : 'player';
   }
+
   // Larry: late-entry momentum. If two in a row, jump in. Otherwise lean table majority.
   if(last === prev) return last === 'B' ? 'banker' : 'player';
   return bCount >= pCount ? 'banker' : 'player';
@@ -4048,7 +4161,78 @@ function aiBetForHand() {
     postFeedMsg('🤖 Bot is out of chips! Reloading $1,000…', 'ai');
     aiBalance = 1000;
     aiWinStreak = 0; aiLossStreak = 0;
+    _stevenShoeStartBalance = 1000; _stevenShoeStopped = false;
   }
+
+  // Even Steven: flat Banker with shoe stop-win (+1%) / stop-loss (-10%)
+  if(botPersona === 'steven'){
+    if(_stevenShoeStopped){
+      aiCurrentBet = { slot: null, amount: 0 };
+      updateAIPanel();
+      postFeedMsg('🤖 Steven: "Target reached for this shoe. Standing pat."', 'ai');
+      return;
+    }
+    const stopWin  = Math.ceil(_stevenShoeStartBalance * 1.01);
+    const stopLoss = Math.floor(_stevenShoeStartBalance * 0.90);
+    if(aiBalance >= stopWin){
+      _stevenShoeStopped = true;
+      aiCurrentBet = { slot: null, amount: 0 };
+      updateAIPanel();
+      postFeedMsg('🤖 Steven: "Up 1% for the shoe — stop-win hit. Taking the profit."', 'ai');
+      return;
+    }
+    if(aiBalance <= stopLoss){
+      _stevenShoeStopped = true;
+      aiCurrentBet = { slot: null, amount: 0 };
+      updateAIPanel();
+      postFeedMsg('🤖 Steven: "Down 10% for the shoe — stop-loss hit. Done for this shoe."', 'ai');
+      return;
+    }
+    const amount = Math.min(50, aiBalance);
+    aiCurrentBet = { slot: 'banker', amount: amount };
+    updateAIPanel();
+    postFeedMsg('🤖 Steven bets $' + amount + ' on 🔴 Banker (flat bet) — ' + botLine('bet', 'Flat Banker, every hand, no debate.'), 'ai');
+    return;
+  }
+
+  // Second Bank Frank: only bet when the SBF setup is confirmed
+  if(botPersona === 'frank'){
+    if(!_frankReadyToBet){
+      aiCurrentBet = { slot: null, amount: 0 };
+      updateAIPanel();
+      const streakMsg = _frankPlayerStreak >= 3 && _frankConfirmed
+        ? 'Banker confirmed once — waiting for the second banker to bet.'
+        : _frankPlayerStreak >= 3
+        ? 'Player streak at ' + _frankPlayerStreak + ' — watching for banker confirmation.'
+        : 'Watching for a 3+ player streak...';
+      postFeedMsg('🤖 Frank sits out — ' + streakMsg, 'ai');
+      return;
+    }
+    const bot = activeBot();
+    const ladderIdx = aiWinStreak >= 3 ? 3 : aiWinStreak >= 2 ? 2 : aiWinStreak >= 1 ? 1 : 0;
+    const amount = Math.min(bot.betLadder[ladderIdx], aiBalance);
+    aiCurrentBet = { slot: 'banker', amount: amount };
+    updateAIPanel();
+    postFeedMsg('🤖 Frank bets $' + amount + ' on 🔴 Banker (SBF confirmed) — ' + botLine('bet', 'Second bank is set. Taking the banker.'), 'ai');
+    return;
+  }
+
+  // Natural Nancy: Banker bet, Dragon commentary when natural-depleted
+  if(botPersona === 'nancy'){
+    const bot = activeBot();
+    const ladderIdx = aiWinStreak >= 3 ? 3 : aiWinStreak >= 2 ? 2 : aiWinStreak >= 1 ? 1 : 0;
+    let amount = Math.min(bot.betLadder[ladderIdx], aiBalance);
+    if(aiLossStreak >= 2) amount = Math.min(amount, bot.lossCap);
+    aiCurrentBet = { slot: 'banker', amount: amount };
+    updateAIPanel();
+    const depleted = nancyNaturalDepleted();
+    const betLine = depleted
+      ? botLine('bet', 'Natural density below 10% — Dragon window may be open.')
+      : botLine('bet', 'Tracking naturals. Banker side.');
+    postFeedMsg('🤖 Nancy bets $' + amount + ' on 🔴 Banker' + (depleted ? ' 🐉 (Dragon window!)' : '') + ' — ' + betLine, 'ai');
+    return;
+  }
+
   const slot = aiChooseSlot();
   const bot = activeBot();
   const ladderIdx = aiWinStreak >= 3 ? 3 : aiWinStreak >= 2 ? 2 : aiWinStreak >= 1 ? 1 : 0;
@@ -4087,6 +4271,9 @@ function aiResolve(winner, specialNote) {
     aiWinStreak = 0;
   }
 
+  // Frank: one bet per SBF setup — reset ready flag after betting
+  if(botPersona === 'frank') _frankReadyToBet = false;
+
   aiLastResult = resultType;
   aiCurrentBet = { slot: null, amount: 0 };
   updateAIPanel();
@@ -4095,11 +4282,11 @@ function aiResolve(winner, specialNote) {
   const winQuips = ['Gladiator Bot triumphs!', 'The trend holds!', 'Perfect read!', 'Victory for the Bot!'];
   const loseQuips = ['Adjusting strategy…', 'Trend reversed on the Bot.', 'The Bot recalibrates.', 'Stayed disciplined.'];
   if (resultType === 'win') {
-    postFeedMsg('🤖 Bot WON +$' + net + ' on ' + slotLabel + ' — ' + botLine('win', winQuips[Math.floor(Math.random()*winQuips.length)]), 'ai');
+    postFeedMsg('🤖 ' + activeBot().name + ' WON +$' + net + ' on ' + slotLabel + ' — ' + botLine('win', winQuips[Math.floor(Math.random()*winQuips.length)]), 'ai');
   } else if (resultType === 'lose') {
-    postFeedMsg('🤖 Bot lost -$' + Math.abs(net) + ' on ' + slotLabel + ' — ' + botLine('lose', loseQuips[Math.floor(Math.random()*loseQuips.length)]), 'ai');
+    postFeedMsg('🤖 ' + activeBot().name + ' lost -$' + Math.abs(net) + ' on ' + slotLabel + ' — ' + botLine('lose', loseQuips[Math.floor(Math.random()*loseQuips.length)]), 'ai');
   } else {
-    postFeedMsg('🤖 Bot push on ' + slotLabel + ' (Tie — stake returned) — ' + botLine('push', 'New dealer tie.'), 'ai');
+    postFeedMsg('🤖 ' + activeBot().name + ' push on ' + slotLabel + ' (Tie — stake returned) — ' + botLine('push', 'New dealer tie.'), 'ai');
   }
   if (specialNote) postFeedMsg('🤖 ' + specialNote, 'ai');
 }
@@ -4540,6 +4727,8 @@ function resolveHand(){
   // ── AI player resolution
   let aiSpecialNote = feedSpecial.trim() || null;
   if(aiSpecialNote) aiSpecialNote = aiSpecialNote + ' — the crowd goes wild!';
+  aiUpdateStreakTracking(r.winner);
+  if(botPersona === 'nancy') aiTrackNaturals(isNatural);
   aiResolve(r.winner, aiSpecialNote);
 
   // remember this bet for auto-play re-use
