@@ -333,12 +333,14 @@ html[data-skip-splash='1'] #splash-flash{
   border:1px solid rgba(201,168,76,0.35);
 }
 .hdr-auth-btn {
-  border:1px solid rgba(120,170,255,0.36);
-  color:#bfe0ff; background:rgba(80,120,220,0.15);
-  font-size:0.5rem; border-radius:9px; padding:2px 7px; cursor:pointer;
-  margin-left:6px;
+  border:1px solid rgba(120,170,255,0.55);
+  color:#cce8ff; background:rgba(80,120,220,0.22);
+  font-family:'Cinzel',serif; font-size:0.62rem; font-weight:700;
+  letter-spacing:0.5px; border-radius:6px;
+  padding:5px 14px; cursor:pointer; margin-left:6px;
+  transition:all 0.2s;
 }
-.hdr-auth-btn:hover { border-color:#88bbff; color:#e2f2ff; }
+.hdr-auth-btn:hover { border-color:#88bbff; background:rgba(80,120,220,0.38); color:#e8f4ff; }
 
 /* ─── GLOBAL LEADERBOARD ─── */
 .leaderboard-panel {
@@ -364,7 +366,7 @@ html[data-skip-splash='1'] #splash-flash{
   font-size:0.56rem; padding:2px 7px; cursor:pointer;
 }
 .leaderboard-refresh:hover { background:rgba(120,170,255,0.12); }
-.leaderboard-body { max-height:168px; overflow-y:auto; padding:4px 6px; }
+.leaderboard-body { padding:4px 6px; }
 .leaderboard-empty {
   text-align:center; padding:12px 6px;
   font-size:0.6rem; color:rgba(200,220,240,0.5); font-style:italic;
@@ -612,6 +614,7 @@ body {
   min-height:100vh;
   overflow-x:hidden;
   position:relative;
+  padding-bottom:calc(155px + env(safe-area-inset-bottom,0px));
 }
 body::before{
   content:'';
@@ -1259,22 +1262,20 @@ header h1 {
 }
 
 
-/* ─── CHIPS ─── */
-.chips-btns {
-  grid-column:1/-1;
-  display:flex; gap:6px; justify-content:center; flex-wrap:wrap; align-items:center;
-}
+/* ─── CHIPS (used in bottom bar) ─── */
 .chip {
-  width:54px; height:54px; border-radius:50%;
+  width:48px; height:48px; border-radius:50%;
   border:3px dashed rgba(255,255,255,0.55);
   cursor:pointer; font-family:'Cinzel',serif;
-  font-size:0.78rem; font-weight:900; color:#fff;
+  font-size:0.72rem; font-weight:900; color:#fff;
   display:flex; align-items:center; justify-content:center;
   transition:transform 0.15s, box-shadow 0.15s;
   user-select:none; box-shadow:0 3px 8px rgba(0,0,0,0.5);
   text-shadow:0 1px 2px rgba(0,0,0,0.7);
+  flex-shrink:0;
 }
-.chip:hover { transform:scale(1.14); box-shadow:0 6px 18px rgba(0,0,0,0.6); }
+.chip:active { transform:scale(0.92); }
+.chip:hover  { transform:scale(1.12); box-shadow:0 6px 18px rgba(0,0,0,0.6); }
 .c1   { background:radial-gradient(circle at 35% 35%,#ccc 0%,#777 100%); }
 .c5   { background:radial-gradient(circle at 35% 35%,#ff5555 0%,#aa1111 100%); }
 .c25  { background:radial-gradient(circle at 35% 35%,#55cc55 0%,#227722 100%); }
@@ -1282,18 +1283,15 @@ header h1 {
 .c500 { background:radial-gradient(circle at 35% 35%,#bb44ee 0%,#661199 100%); }
 
 /* ─── ACTIONS ─── */
-.action-btns {
-  grid-column:1/-1;
-  display:flex; gap:8px; justify-content:center; flex-wrap:wrap; align-items:center;
-}
 .bal-info {
-  display:flex; gap:14px; align-items:center; font-size:0.82rem;
-  flex-wrap:wrap; background:rgba(0,0,0,0.35); border-radius:6px;
-  padding:6px 14px; border:1px solid rgba(201,168,76,0.2);
+  display:flex; gap:10px; align-items:center; font-size:0.75rem;
+  background:rgba(0,0,0,0.35); border-radius:6px;
+  padding:5px 10px; border:1px solid rgba(201,168,76,0.2);
+  white-space:nowrap;
 }
 .bal-info span {
   font-family:'Cinzel',serif; color:var(--gold);
-  font-size:1.25rem; font-weight:700; letter-spacing:1px;
+  font-size:1.05rem; font-weight:700; letter-spacing:1px;
 }
 .btn {
   font-family:'Cinzel',serif; font-size:0.7rem; letter-spacing:1px;
@@ -1307,14 +1305,13 @@ header h1 {
 .btn-new   { background:var(--green); color:#fff; border:1px solid var(--gold); }
 
 .msg-bar {
-  grid-column:1/-1; text-align:center;
-  font-family:'Cinzel',serif; font-size:0.82rem;
-  color:var(--gold-lt); min-height:22px; letter-spacing:1px;
+  text-align:center;
+  font-family:'Cinzel',serif; font-size:0.78rem;
+  color:var(--gold-lt); min-height:18px; letter-spacing:1px;
 }
 .dealer-caption {
-  grid-column:1/-1; text-align:center;
-  min-height:18px;
-  font-size:0.62rem; letter-spacing:0.35px;
+  text-align:center; min-height:15px;
+  font-size:0.58rem; letter-spacing:0.35px;
   color:rgba(227,214,182,0.78);
   opacity:0; transition:opacity 0.18s ease;
 }
@@ -1322,6 +1319,27 @@ header h1 {
 .msg-win  { color:#80ff80; }
 .msg-lose { color:#ff8080; }
 .msg-tie  { color:var(--gold); }
+
+/* ─── FIXED BOTTOM CONTROL BAR ─── */
+#bottom-bar {
+  position:fixed; bottom:0; left:0; right:0; z-index:9000;
+  background:linear-gradient(0deg,#050c06 0%,#091408 100%);
+  border-top:1px solid rgba(201,168,76,0.4);
+  box-shadow:0 -4px 28px rgba(0,0,0,0.75);
+  padding:5px 10px calc(5px + env(safe-area-inset-bottom,0px));
+  display:flex; flex-direction:column; gap:5px;
+}
+#bb-status { text-align:center; line-height:1.2; }
+#bb-chips  {
+  display:flex; gap:7px; justify-content:center; align-items:center; flex-wrap:wrap;
+}
+#bb-actions {
+  display:flex; gap:6px; justify-content:center; align-items:center; flex-wrap:wrap;
+}
+.auto-progress {
+  text-align:center; font-size:0.6rem; color:rgba(201,168,76,0.7);
+  letter-spacing:1px; min-height:14px;
+}
 
 /* ─── THIRD CARD REVEAL ZONE ─── */
 .third-card-zone {
@@ -1950,6 +1968,10 @@ header h1 {
   </div>
 </div>
 
+<!-- hidden elements kept for JS compatibility (no null-checks in those call sites) -->
+<span id="hdr-balance" style="display:none"></span>
+<span id="hdr-rounds"  style="display:none"></span>
+
 <!-- ═══════ HEADER ═══════ -->
 <header>
   <div>
@@ -1958,33 +1980,24 @@ header h1 {
   </div>
   <div style="text-align:right;display:flex;align-items:center;gap:8px;">
     <div class="audio-ctl">
-      <button id="btn-sound"  onclick="toggleSFX()"   title="Toggle SFX" class="audio-btn">🔊</button>
-      <button id="btn-music"  onclick="toggleMusic()"  title="Toggle Music" class="audio-btn">🎵</button>
-      <input  id="vol-slider" type="range" min="0" max="1" step="0.05" value="0.8"
-              oninput="setMasterVolume(this.value)" class="vol-slider" title="Master Volume">
+      <button id="btn-sound" onclick="toggleSFX()"  title="Toggle SFX"   class="audio-btn">🔊</button>
+      <button id="btn-music" onclick="toggleMusic()" title="Toggle Music" class="audio-btn">🎵</button>
     </div>
     <div>
-      <div style="font-family:'Cinzel',serif;color:var(--gold);font-size:0.85rem;font-weight:700;" id="hdr-balance">Credits: 1,000</div>
-      <div style="font-size:0.58rem;color:rgba(240,230,200,0.4);" id="hdr-rounds">Round 0</div>
       <div style="font-size:0.56rem;color:rgba(140,220,255,0.82);" id="hdr-premium">Gems: 50 · LVL 1 Recruit</div>
       <div id="hdr-trial" class="trial-badge">Session Hands: 10 remaining</div>
       <div style="font-size:0.56rem;color:rgba(140,200,255,0.75);margin-top:2px;">
-        <span id="hdr-user">User: Guest</span>
+        <span id="hdr-user">Guest</span>
         <button class="hdr-auth-btn" id="hdr-login-btn" onclick="showAuthOverlay()">Login</button>
         <button class="hdr-auth-btn" id="hdr-logout-btn" onclick="cognitoLogout()" style="display:none;">Logout</button>
       </div>
       <div class="dealer-ctl">
-        <button class="dealer-ctl-btn active" id="dealer-style-core" onclick="setDealerStyle('core')">Dealer Core</button>
-        <button class="dealer-ctl-btn" id="dealer-style-glad" onclick="setDealerStyle('gladiator')">Dealer Gladiator</button>
-        <button class="dealer-ctl-btn active" id="dealer-captions-btn" onclick="toggleDealerCaptions()">Captions ON</button>
+        <button class="dealer-ctl-btn active" id="dealer-captions-btn" onclick="toggleDealerCaptions()">Captions</button>
       </div>
     </div>
   </div>
 </header>
 
-<div class="store-banner" id="store-banner">
-  Simulated gameplay only. Virtual credits have no real-world value. Baccarat outcomes are random and prior results do not predict future results.
-</div>
 
 <!-- ═══════ UPGRADE OVERLAY ═══════ -->
 <div class="upgrade-overlay" id="upgrade-overlay">
@@ -2043,7 +2056,7 @@ header h1 {
 <!-- ═══════ MODE BAR — COMPACT ═══════ -->
 <div class="mode-bar">
   <div class="mode-pills">
-    <button class="mode-pill" id="tab-standard" onclick="setMode('standard')">♠ Std</button>
+    <button class="mode-pill" id="tab-standard" onclick="setMode('standard')">♠ 5% Comm</button>
     <button class="mode-pill ez active" id="tab-ez" onclick="setMode('ez')">🐉🐼 EZ</button>
     <button class="mode-pill tiger" id="tab-tiger" onclick="setMode('tiger')">🐯 Tiger</button>
   </div>
@@ -2051,21 +2064,23 @@ header h1 {
 </div>
 <div class="mode-rules" id="mode-rules-panel"></div>
 
+<!-- hidden eco IDs for JS updates (null-checked at call sites) -->
+<span id="eco-chips" style="display:none"></span>
+<span id="eco-gems"  style="display:none"></span>
+<span id="eco-level" style="display:none"></span>
+<span id="eco-title" style="display:none"></span>
+<span id="eco-xp"    style="display:none"></span>
+<span id="eco-streak" style="display:none"></span>
+<span id="eco-venue-theme" style="display:none"></span>
+
 <div class="economy-panel">
-  <div class="eco-top">
-    <div class="eco-stat"><strong id="eco-chips">1,000</strong> Chips · <strong id="eco-gems">50</strong> Gems</div>
-    <div class="eco-stat">Lvl <strong id="eco-level">1</strong> <span id="eco-title">Recruit</span> · XP <strong id="eco-xp">0</strong></div>
-  </div>
   <div class="eco-actions">
     <button class="eco-btn" id="btn-daily-claim" onclick="claimDailyReward()">Claim Daily</button>
-    <button class="eco-btn secondary" onclick="watchAdForChips()">Watch Ad +5,000</button>
     <button class="eco-btn" onclick="exchangeGemsForChips(5, 25000)">5 Gems → 25,000 Chips</button>
   </div>
-  <div class="eco-venue-row" style="margin-top:7px;">
+  <div class="eco-venue-row" style="margin-top:5px;">
     <label for="eco-venue">Venue</label>
     <select id="eco-venue" class="eco-venue" onchange="selectVenue(this.value)"></select>
-    <span class="eco-stat" id="eco-streak">Daily Streak: 0</span>
-    <span class="eco-stat" id="eco-venue-theme">City: Las Vegas Neon</span>
   </div>
 </div>
 
@@ -2199,30 +2214,32 @@ header h1 {
     </div>
   </div>
 
-  <!-- CHIPS -->
-  <div class="chips-btns">
+</div>
+
+<!-- ═══════ FIXED BOTTOM CONTROL BAR ═══════ -->
+<div id="bottom-bar">
+  <div id="bb-status">
+    <div class="msg-bar" id="msg-bar">Select a mode · place virtual chips · DEAL</div>
+    <div class="dealer-caption" id="dealer-caption"></div>
+  </div>
+  <div id="bb-chips">
     <div class="chip c1"   onclick="addChip(1)">$1</div>
     <div class="chip c5"   onclick="addChip(5)">$5</div>
     <div class="chip c25"  onclick="addChip(25)">$25</div>
     <div class="chip c100" onclick="addChip(100)">$100</div>
     <div class="chip c500" onclick="addChip(500)">$500</div>
   </div>
-
-  <!-- ACTIONS -->
-  <div class="action-btns">
+  <div id="bb-actions">
     <div class="bal-info">
       Credits: <span id="bal-display">1,000</span>
-      &nbsp;Stake: <span id="bet-display">0</span>
+      &nbsp;·&nbsp; Stake: <span id="bet-display">0</span>
     </div>
-    <button class="btn btn-clear"  id="btn-clear"  onclick="clearBets()">Clear</button>
-    <button class="btn btn-deal"   id="btn-deal"   onclick="deal()">DEAL</button>
-    <button class="btn btn-new"    id="btn-new"    onclick="newRound()" style="display:none">New Round</button>
-    <button class="btn btn-auto"   id="btn-auto"   onclick="startAutoPlay()" title="Auto-deal next 5 hands with current bets">⚡ Auto ×5</button>
+    <button class="btn btn-clear" id="btn-clear" onclick="clearBets()">Clear</button>
+    <button class="btn btn-deal"  id="btn-deal"  onclick="deal()">DEAL</button>
+    <button class="btn btn-new"   id="btn-new"   onclick="newRound()" style="display:none">New Round</button>
+    <button class="btn btn-auto"  id="btn-auto"  onclick="startAutoPlay()" title="Auto-deal next 5 hands with current bets">⚡ Auto ×5</button>
   </div>
   <div class="auto-progress" id="auto-progress"></div>
-
-  <div class="msg-bar" id="msg-bar">Select a mode · place virtual chips · DEAL</div>
-  <div class="dealer-caption" id="dealer-caption"></div>
 </div>
 
 <div class="economy-friction" id="economy-friction">
@@ -2328,7 +2345,7 @@ header h1 {
 </div>
 
 <div class="store-footer">
-  <div>For entertainment only. If play stops being fun, take a break.</div>
+  <div>For entertainment only · Simulated play · Virtual credits only · Outcomes are random · No real-money gambling</div>
   <div class="store-links">
     <a href="#" id="privacy-link">Privacy Policy</a>
     <a href="#" id="terms-link">Terms of Use</a>
@@ -2372,7 +2389,7 @@ const MODE_RULES={
     </div>`
   },
   ez:{
-    sub:'PANDA & DRAGON BACCARAT · NO COMMISSION · DRAGON 7 · PANDA 8',
+    sub:'NO COMMISSION · DRAGON 7 · PANDA 8',
     html:`<strong>🐉🐼 Panda &amp; Dragon Baccarat</strong> — No commission. Dragon 7 banker wins push. Dragon &amp; Panda bonus bets available.
     <div class="rules-grid">
       <div class="rule-item"><div class="payout">1:1</div>Banker win (no commission)</div>
@@ -2562,13 +2579,7 @@ function applyVenueTheme(){
   GRID_LINE=roadTheme.line;
   const tag=document.getElementById('eco-venue-theme');
   if(tag) tag.textContent='City: ' + (v.city || v.name);
-  const rank=venueRankText(v);
-  const sub=document.getElementById('mode-subtitle');
-  if(sub && !String(sub.textContent||'').includes('· Venue:')){
-    sub.textContent = String(sub.textContent||'') + ' · Venue: ' + v.name + (rank ? (' (' + rank + ')') : '');
-  } else if(sub){
-    sub.textContent = String(sub.textContent||'').replace(/ · Venue: .+$/, '') + ' · Venue: ' + v.name + (rank ? (' (' + rank + ')') : '');
-  }
+  // venue shown in dropdown — not repeated in subtitle
   updateAllRoads();
   applyVenueAudioTheme();
 }
@@ -2791,7 +2802,7 @@ function startGuestTrial(){
   guestTrialStarted=true;
   hideAuthOverlay();
   setMsg('Guest trial active. You have ' + guestHandsRemaining() + ' hands.');
-  if(!botPersonaLocked) showBotPersonaPicker();
+  if(!botPersonaLocked) confirmBotPersona();
 }
 
 function decodeJwtPayload(tok){
@@ -3204,15 +3215,31 @@ function renderLeaderboardRows(items){
   if(empty) empty.remove();
 }
 
+const LEADERBOARD_SEEDS = [
+  {username:'Late Bet Larry',  topScore:487250, rounds:1843},
+  {username:'Even Steven',     topScore:312800, rounds:1204},
+  {username:'Jay Dawg',        topScore:198600, rounds:871},
+  {username:'2ndBankFrank',    topScore:134400, rounds:632},
+  {username:'DragonSlayer',    topScore:87900,  rounds:415},
+];
+
 async function fetchGlobalLeaderboard(){
-  if(CLOUD_CONFIG.apiBaseUrl.includes('YOUR_HTTP_API_ID')) return;
+  if(CLOUD_CONFIG.apiBaseUrl.includes('YOUR_HTTP_API_ID')){
+    renderLeaderboardRows(LEADERBOARD_SEEDS.map(s=>({...s,_seed:true})));
+    return;
+  }
   try{
     const data=await apiFetch('/leaderboard?limit=20', {method:'GET'});
     const items=Array.isArray(data && data.items) ? data.items : (Array.isArray(data) ? data : []);
-    renderLeaderboardRows(items);
+    const merged=[...items];
+    for(const seed of LEADERBOARD_SEEDS){
+      const alreadyPresent=merged.some(it=>(it.username||it.userName||'').toLowerCase()===seed.username.toLowerCase());
+      if(!alreadyPresent) merged.push({...seed,_seed:true});
+    }
+    merged.sort((a,b)=>Number(b.topScore||b.score||0)-Number(a.topScore||a.score||0));
+    renderLeaderboardRows(merged);
   }catch(e){
-    const body=document.getElementById('leaderboard-body');
-    if(body) body.innerHTML='<div class="leaderboard-empty">Leaderboard unavailable. Check API config.</div>';
+    renderLeaderboardRows(LEADERBOARD_SEEDS.map(s=>({...s,_seed:true})));
   }
 }
 
@@ -4002,7 +4029,7 @@ function deal(){
   soundDrum();   // drum roll before cards are revealed
   aiBetForHand();
 
-  document.getElementById('btn-deal').style.display='none';
+  document.getElementById('btn-deal').disabled=true;
   document.getElementById('btn-new').style.display='none';
   document.getElementById('btn-clear').disabled=true;
 
@@ -4434,7 +4461,7 @@ function newRound(){
   document.getElementById('player-controls').style.display='none';
   // only show Deal btn when not in auto-play mode
   if(autoPlayRemaining<=0){
-    document.getElementById('btn-deal').style.display='inline-block';
+    document.getElementById('btn-deal').disabled=false;
     document.getElementById('btn-auto').disabled=guestTrialExpired();
   }
   document.getElementById('btn-new').style.display='none';
@@ -5032,174 +5059,104 @@ function haptic(pattern){ try{ if(navigator.vibrate) navigator.vibrate(pattern);
 
 // ── Crowd ambience (low looping filtered noise) ──
 function startCrowdAmbience(){
-  if(_crowdNodes) return;
-  const ctx=getAudioCtx();
-  // Electronic sub-bass drone — deep pulsing atmosphere inspired by synthwave track
-  // Layer 1: filtered noise for air/room feel
-  const bufSec=4, bufLen=Math.floor(ctx.sampleRate*bufSec);
-  const buf=ctx.createBuffer(1,bufLen,ctx.sampleRate);
-  const d=buf.getChannelData(0);
-  for(let i=0;i<bufLen;i++) d[i]=Math.random()*2-1;
-  const src=ctx.createBufferSource(); src.buffer=buf; src.loop=true;
-  const hp=ctx.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=80;
-  const bp=ctx.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=220; bp.Q.value=0.4;
-  const g=ctx.createGain(); g.gain.value=0.032;
-  // Layer 2: sub-bass sine drone on G1 (49 Hz) — the low-end "room" feel
-  const sub=ctx.createOscillator(); sub.type='sine'; sub.frequency.value=49;
-  const subG=ctx.createGain(); subG.gain.value=0.04;
-  // Layer 3: slow LFO pulse (0.9 Hz) — breathing/pulsing feel
-  const lfo=ctx.createOscillator(); lfo.type='sine'; lfo.frequency.value=0.9;
-  const lfoG=ctx.createGain(); lfoG.gain.value=0.018;
-  lfo.connect(lfoG); lfoG.connect(g.gain);
-  // Also modulate the sub slightly
-  const lfo2=ctx.createOscillator(); lfo2.type='sine'; lfo2.frequency.value=0.45;
-  const lfo2G=ctx.createGain(); lfo2G.gain.value=0.015;
-  lfo2.connect(lfo2G); lfo2G.connect(subG.gain);
-  src.connect(hp); hp.connect(bp); bp.connect(g); g.connect(getMusicOut());
-  sub.connect(subG); subG.connect(getMusicOut());
-  lfo.start(); lfo2.start(); sub.start(); src.start();
-  _crowdNodes={src,g,lfo,bp,hp,sub,subG,lfo2};
+  // no ocean/drone noise — jazz music handles atmosphere
 }
 function stopCrowdAmbience(){
-  if(!_crowdNodes) return;
-  try{
-    _crowdNodes.src.stop(); _crowdNodes.lfo.stop();
-    _crowdNodes.sub.stop(); _crowdNodes.lfo2.stop();
-  }catch(e){}
   _crowdNodes=null;
 }
 
-// ── SYNTHWAVE ENGINE — G minor, 110 BPM, 8-bar loop ─────────────
-// Inspired by uploaded track: dark electronic, pulsing bass, arpeggios, neon pads
+// ── JAZZ LOUNGE ENGINE — Fmaj7→Dm7→Bbmaj7→C9, 54 BPM ───────────
 let _orchTimer=null;
-// Chord progression: Gm → Cm → Eb → Dm  (2 bars each)
-// Each entry: [bassHz, padNotes[root,3rd,5th]]
-const _SW_CHORDS=[
-  {bass:98,  pad:[196,233,294]},  // Gm: G2 bass, G3-Bb3-D4 pad
-  {bass:98,  pad:[196,233,294]},  // Gm bar 2
-  {bass:131, pad:[262,311,392]},  // Cm: C3 bass, C4-Eb4-G4 pad
-  {bass:131, pad:[262,311,392]},  // Cm bar 2
-  {bass:156, pad:[311,392,466]},  // Eb: Eb3 bass, Eb4-G4-Bb4 pad
-  {bass:156, pad:[311,392,466]},  // Eb bar 2
-  {bass:147, pad:[294,349,440]},  // Dm: D3 bass, D4-F4-A4 pad
-  {bass:147, pad:[294,349,440]},  // Dm bar 2
-];
-// 8 eighth-note arpeggio patterns per bar (ascending→peak→descending)
-const _SW_ARPS=[
-  [196,294,392,466,392,294,196,294],  // Gm bar1
-  [196,294,466,392,294,196,294,392],  // Gm bar2 (varied)
-  [262,392,523,659,523,392,262,392],  // Cm bar1
-  [262,523,392,523,659,523,392,262],  // Cm bar2
-  [311,466,622,784,622,466,311,466],  // Eb bar1
-  [311,622,466,622,784,622,466,311],  // Eb bar2
-  [294,440,587,698,587,440,294,440],  // Dm bar1
-  [294,587,440,587,698,587,440,294],  // Dm bar2
-];
 
 function startOrchestral(){
   if(_orchNodes||!musicEnabled) return;
   _orchNodes=true;
-  const BPM=110, beat=60/BPM, bar=beat*4, loopLen=bar*8;
+  const ctx=getAudioCtx();
 
-  function playLoop(){
-    const ctx=getAudioCtx();
-    const now=ctx.currentTime + 0.05; // small safety offset
-
-    for(let bi=0; bi<8; bi++){
-      const bs=now + bi*bar;
-      const chord=_SW_CHORDS[bi];
-      const arpPat=_SW_ARPS[bi];
-
-      // ── 808 KICK (beats 1 & 3) ──
-      [0, beat*2].forEach(off=>{
-        const t=bs+off;
-        const k=ctx.createOscillator(); k.type='sine';
-        k.frequency.setValueAtTime(170,t); k.frequency.exponentialRampToValueAtTime(38,t+0.22);
-        const kg=ctx.createGain();
-        kg.gain.setValueAtTime(0.52,t); kg.gain.exponentialRampToValueAtTime(0.001,t+0.45);
-        k.connect(kg); kg.connect(getMusicOut()); k.start(t); k.stop(t+0.46);
-      });
-
-      // ── SNARE (beats 2 & 4) ──
-      [beat, beat*3].forEach(off=>{
-        const t=bs+off;
-        // Noise body
-        const nlen=Math.floor(ctx.sampleRate*0.18);
-        const nbuf=ctx.createBuffer(1,nlen,ctx.sampleRate);
-        const nd=nbuf.getChannelData(0);
-        for(let i=0;i<nlen;i++) nd[i]=(Math.random()*2-1)*Math.pow(1-i/nlen,0.6);
-        const ns=ctx.createBufferSource(); ns.buffer=nbuf;
-        const nbp=ctx.createBiquadFilter(); nbp.type='bandpass'; nbp.frequency.value=2200; nbp.Q.value=0.7;
-        const ng=ctx.createGain(); ng.gain.setValueAtTime(0.22,t); ng.gain.exponentialRampToValueAtTime(0.001,t+0.2);
-        ns.connect(nbp); nbp.connect(ng); ng.connect(getMusicOut()); ns.start(t);
-        // Tone crack (gives it punch)
-        const sk=ctx.createOscillator(); sk.type='triangle'; sk.frequency.value=220;
-        const skg=ctx.createGain(); skg.gain.setValueAtTime(0.09,t); skg.gain.exponentialRampToValueAtTime(0.001,t+0.07);
-        sk.connect(skg); skg.connect(getMusicOut()); sk.start(t); sk.stop(t+0.08);
-      });
-
-      // ── CLOSED HI-HAT (every 8th note) ──
-      for(let h=0;h<8;h++){
-        const t=bs+h*beat*0.5;
-        const isOpen=(h%2===1); // open hat on offbeats
-        const hlen=Math.floor(ctx.sampleRate*(isOpen?0.09:0.03));
-        const hbuf=ctx.createBuffer(1,hlen,ctx.sampleRate);
-        const hd=hbuf.getChannelData(0);
-        for(let i=0;i<hlen;i++) hd[i]=(Math.random()*2-1)*(1-i/hlen);
-        const hh=ctx.createBufferSource(); hh.buffer=hbuf;
-        const hhp=ctx.createBiquadFilter(); hhp.type='highpass'; hhp.frequency.value=9000;
-        const hg=ctx.createGain(); hg.gain.value=isOpen?0.10:0.06;
-        hh.connect(hhp); hhp.connect(hg); hg.connect(getMusicOut()); hh.start(t);
-      }
-
-      // ── SAWTOOTH BASS (pulsing 8th notes, filtered) ──
-      for(let n=0;n<8;n++){
-        const t=bs+n*beat*0.5;
-        const isAcc=(n===0||n===4); // accent on beat 1 & 3
-        const bl=ctx.createOscillator(); bl.type='sawtooth'; bl.frequency.value=chord.bass;
-        const blp=ctx.createBiquadFilter(); blp.type='lowpass'; blp.frequency.value=isAcc?520:300;
-        blp.Q.value=1.2;
-        const bg=ctx.createGain();
-        bg.gain.setValueAtTime(0,t);
-        bg.gain.linearRampToValueAtTime(isAcc?0.19:0.11,t+0.02);
-        bg.gain.exponentialRampToValueAtTime(0.001,t+beat*0.46);
-        bl.connect(blp); blp.connect(bg); bg.connect(getMusicOut());
-        bl.start(t); bl.stop(t+beat*0.5);
-      }
-
-      // ── DETUNED PAD CHORDS (sustained full bar, 2 detuned saws per note) ──
-      chord.pad.forEach(freq=>{
-        [-6,6].forEach(cents=>{
-          const p=ctx.createOscillator(); p.type='sawtooth';
-          p.frequency.value=freq*Math.pow(2,cents/1200);
-          const plp=ctx.createBiquadFilter(); plp.type='lowpass'; plp.frequency.value=800; plp.Q.value=0.5;
-          const pg=ctx.createGain();
-          pg.gain.setValueAtTime(0,bs);
-          pg.gain.linearRampToValueAtTime(0.028,bs+0.28);
-          pg.gain.setValueAtTime(0.028,bs+bar-0.18);
-          pg.gain.linearRampToValueAtTime(0,bs+bar+0.05);
-          p.connect(plp); plp.connect(pg); pg.connect(getMusicOut());
-          p.start(bs); p.stop(bs+bar+0.1);
-        });
-      });
-
-      // ── ARPEGGIO (8th-note triangle lead, G minor) ──
-      arpPat.forEach((freq,ai)=>{
-        const t=bs+ai*beat*0.5;
-        const ar=ctx.createOscillator(); ar.type='triangle'; ar.frequency.value=freq;
-        const alp=ctx.createBiquadFilter(); alp.type='lowpass'; alp.frequency.value=3200;
-        const ag=ctx.createGain();
-        ag.gain.setValueAtTime(0,t);
-        ag.gain.linearRampToValueAtTime(0.11,t+0.018);
-        ag.gain.exponentialRampToValueAtTime(0.001,t+beat*0.47);
-        ar.connect(alp); alp.connect(ag); ag.connect(getMusicOut());
-        ar.start(t); ar.stop(t+beat*0.5);
-      });
-    }
-
-    _orchTimer=setTimeout(playLoop,(loopLen-0.15)*1000);
+  // Reverb using decaying noise impulse
+  const irLen=Math.floor(ctx.sampleRate*2.8);
+  const irBuf=ctx.createBuffer(2,irLen,ctx.sampleRate);
+  for(let ch=0;ch<2;ch++){
+    const d=irBuf.getChannelData(ch);
+    for(let i=0;i<irLen;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/irLen,2.2);
   }
-  playLoop();
+  const reverb=ctx.createConvolver(); reverb.buffer=irBuf;
+  const rvbGain=ctx.createGain(); rvbGain.gain.value=0.38;
+  reverb.connect(rvbGain); rvbGain.connect(getMusicOut());
+
+  function pianoNote(freq,t,dur,vol){
+    [1,2,3].forEach((harm,i)=>{
+      const osc=ctx.createOscillator(); osc.type='sine'; osc.frequency.value=freq*harm;
+      const env=ctx.createGain();
+      const hv=vol*[1,0.18,0.06][i];
+      env.gain.setValueAtTime(0,t);
+      env.gain.linearRampToValueAtTime(hv,t+0.012);
+      env.gain.exponentialRampToValueAtTime(hv*0.55,t+0.18);
+      env.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+      const lp=ctx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=3200/harm;
+      osc.connect(lp); lp.connect(env);
+      env.connect(getMusicOut()); env.connect(reverb);
+      osc.start(t); osc.stop(t+dur+0.05);
+    });
+  }
+
+  function bassPad(freq,t,dur,vol){
+    const osc=ctx.createOscillator(); osc.type='sine'; osc.frequency.value=freq;
+    const env=ctx.createGain();
+    env.gain.setValueAtTime(0,t);
+    env.gain.linearRampToValueAtTime(vol,t+1.2);
+    env.gain.setValueAtTime(vol,t+dur-1.0);
+    env.gain.linearRampToValueAtTime(0,t+dur);
+    const lp=ctx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=220; lp.Q.value=0.5;
+    osc.connect(lp); lp.connect(env); env.connect(getMusicOut());
+    osc.start(t); osc.stop(t+dur+0.1);
+  }
+
+  function brush(t){
+    const bufLen=Math.floor(ctx.sampleRate*0.06);
+    const buf=ctx.createBuffer(1,bufLen,ctx.sampleRate);
+    const d=buf.getChannelData(0);
+    for(let i=0;i<bufLen;i++) d[i]=(Math.random()*2-1)*(1-i/bufLen)*0.6;
+    const src=ctx.createBufferSource(); src.buffer=buf;
+    const hp=ctx.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=7000;
+    const g=ctx.createGain(); g.gain.setValueAtTime(0.018,t); g.gain.exponentialRampToValueAtTime(0.0001,t+0.06);
+    src.connect(hp); hp.connect(g); g.connect(getMusicOut());
+    src.start(t);
+  }
+
+  const BPM=54, beat=60/BPM, bar=beat*4;
+  const chords=[
+    {bass:87.3,  notes:[174.6,220.0,261.6,329.6]}, // Fmaj7
+    {bass:73.4,  notes:[146.8,174.6,220.0,261.6]}, // Dm7
+    {bass:116.5, notes:[116.5,146.8,174.6,220.0]}, // Bbmaj7
+    {bass:130.8, notes:[130.8,164.8,196.0,246.9]}, // C9
+  ];
+
+  function playChordBar(chord,t){
+    bassPad(chord.bass,t,bar*0.92,0.18);
+    chord.notes.forEach((freq,i)=>{
+      pianoNote(freq,t+i*0.14,bar*0.78,0.11);
+      pianoNote(freq*2,t+i*0.14+0.07,bar*0.5,0.035);
+    });
+  }
+
+  let loopRep=0;
+  const maxReps=200;
+
+  function scheduleLoop(loopOffset){
+    if(!musicEnabled||loopRep>=maxReps) return;
+    loopRep++;
+    const now=ctx.currentTime;
+    chords.forEach((chord,bi)=>{
+      const t=now+loopOffset+bi*bar;
+      playChordBar(chord,t);
+      [0,beat*1.5,beat*2,beat*3.5].forEach(bOff=>brush(t+bOff));
+    });
+    const loopDur=bar*chords.length;
+    _orchTimer=setTimeout(()=>scheduleLoop(loopOffset+loopDur),(loopDur-beat)*1000);
+  }
+
+  setTimeout(()=>scheduleLoop(0), 800);
 }
 function stopOrchestral(){
   if(_orchTimer){ clearTimeout(_orchTimer); _orchTimer=null; }
@@ -5585,7 +5542,7 @@ function startAutoPlay(){
   autoPlayBetsSnapshot={...bets};
   autoPlayRemaining=5;
   document.getElementById('btn-auto').disabled=true;
-  document.getElementById('btn-deal').style.display='none';
+  document.getElementById('btn-deal').disabled=true;
   updateAutoProgress();
   autoPlayNextHand();
 }
@@ -5616,7 +5573,7 @@ function dealAuto(){
   dealerCall('no_more_bets', {}, {feed:false, caption:true});
   soundDrum();  // drum roll for auto-deal
   aiBetForHand();
-  document.getElementById('btn-deal').style.display='none';
+  document.getElementById('btn-deal').disabled=true;
   document.getElementById('btn-new').style.display='none';
   document.getElementById('btn-clear').disabled=true;
   if(shoe.length<15) buildShoe();
@@ -5872,7 +5829,7 @@ function enterArena(){
       } else if(!authLocked && !guestTrialStarted){
         showAuthOverlay('entry');
       } else if(!botPersonaLocked){
-        showBotPersonaPicker();
+        confirmBotPersona();
       }
     }, 540);
   }, 120);
