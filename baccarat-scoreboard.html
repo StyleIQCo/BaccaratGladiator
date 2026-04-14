@@ -1958,13 +1958,13 @@ header h1 {
 
 <div class="age-overlay" id="age-overlay">
   <div class="age-box">
-    <div class="age-title">18+ Simulated Casino Experience</div>
+    <div class="age-title">21+ Simulated Casino Experience</div>
     <div class="age-copy">
       This app is for adults and uses virtual credits only. No real-money gambling, no cash prizes, and no cashout.
       Please play responsibly and take breaks.
     </div>
     <div class="age-actions">
-      <button class="age-btn" onclick="acceptAgeGate()">I Am 18+ · Continue</button>
+      <button class="age-btn" onclick="acceptAgeGate()">I Am 21+ · Continue</button>
       <button class="age-btn secondary" onclick="declineAgeGate()">Exit</button>
     </div>
   </div>
@@ -2539,7 +2539,7 @@ let autoPlayRemaining = 0;
 let autoPlayBetsSnapshot = null;
 let lastBet = null;   // remembered from most recent hand
 const STORE_SAFE_MODE = true;
-const AGE_GATE_KEY = 'bg_age_gate_18_v1';
+const AGE_GATE_KEY = 'bg_age_gate_21_v1';
 let authLocked = false;
 let currentUserEmail = '';
 let currentUsername = '';
@@ -2787,7 +2787,7 @@ function acceptAgeGate(){
 function declineAgeGate(){
   const o=document.getElementById('age-overlay');
   if(o) o.classList.remove('show');
-  document.body.innerHTML='<div style="display:flex;align-items:center;justify-content:center;min-height:100vh;background:#07101f;color:#d9e7ff;font-family:Georgia,serif;padding:18px;text-align:center;">This simulated casino app is available for adults 18+ only.</div>';
+  document.body.innerHTML='<div style="display:flex;align-items:center;justify-content:center;min-height:100vh;background:#07101f;color:#d9e7ff;font-family:Georgia,serif;padding:18px;text-align:center;">This simulated casino app is available for adults 21+ only.</div>';
 }
 
 function maybeShowAgeGate(){
@@ -5749,97 +5749,95 @@ function startSplashTheme(){
   const ctx=getSplashCtx();
   const master=ctx.createGain();
   master.gain.setValueAtTime(0,ctx.currentTime);
-  master.gain.linearRampToValueAtTime(0.5,ctx.currentTime+2.5);
+  master.gain.linearRampToValueAtTime(0.52,ctx.currentTime+2.5);
   master.connect(ctx.destination);
 
-  // Deep drone
-  [[36.7,'sine',0.22],[73.4,'sine',0.13],[110,'triangle',0.05]].forEach(([f,t,g])=>{
-    const o=ctx.createOscillator(); o.type=t; o.frequency.value=f;
-    const gn=ctx.createGain(); gn.gain.value=g;
-    const lp=ctx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=400;
-    o.connect(lp); lp.connect(gn); gn.connect(master); o.start(); splashThemeNodes.push(o);
-  });
+  // Reverb
+  const irLen=Math.floor(ctx.sampleRate*2.8);
+  const irBuf=ctx.createBuffer(2,irLen,ctx.sampleRate);
+  for(let ch=0;ch<2;ch++){
+    const d=irBuf.getChannelData(ch);
+    for(let i=0;i<irLen;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/irLen,2.2);
+  }
+  const reverb=ctx.createConvolver(); reverb.buffer=irBuf;
+  const rvbGain=ctx.createGain(); rvbGain.gain.value=0.38;
+  reverb.connect(rvbGain); rvbGain.connect(master);
 
-  // Percussion loop
-  const BPM=72, beat=60/BPM, loopLen=beat*8;
-  function drum(type,times,vol){
-    times.forEach(when=>{
-      if(type==='kick'){
-        const o=ctx.createOscillator(); o.type='sine';
-        o.frequency.setValueAtTime(180,when); o.frequency.exponentialRampToValueAtTime(40,when+0.18);
-        const g=ctx.createGain(); g.gain.setValueAtTime(vol,when); g.gain.exponentialRampToValueAtTime(0.001,when+0.35);
-        o.connect(g); g.connect(master); o.start(when); o.stop(when+0.36); splashThemeNodes.push(o);
-      } else if(type==='snare'){
-        const buf=ctx.createBuffer(1,Math.floor(ctx.sampleRate*0.12),ctx.sampleRate);
-        const d=buf.getChannelData(0); for(let i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*(1-i/d.length);
-        const s=ctx.createBufferSource(); s.buffer=buf;
-        const bp=ctx.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=1800; bp.Q.value=0.8;
-        const g=ctx.createGain(); g.gain.setValueAtTime(vol,when); g.gain.exponentialRampToValueAtTime(0.001,when+0.12);
-        s.connect(bp); bp.connect(g); g.connect(master); s.start(when); splashThemeNodes.push(s);
-      } else if(type==='hhat'){
-        const buf=ctx.createBuffer(1,Math.floor(ctx.sampleRate*0.05),ctx.sampleRate);
-        const d=buf.getChannelData(0); for(let i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*(1-i/d.length);
-        const s=ctx.createBufferSource(); s.buffer=buf;
-        const hp=ctx.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=8000;
-        const g=ctx.createGain(); g.gain.setValueAtTime(vol*0.5,when); g.gain.exponentialRampToValueAtTime(0.001,when+0.05);
-        s.connect(hp); hp.connect(g); g.connect(master); s.start(when); splashThemeNodes.push(s);
-      }
+  function pianoNote(freq,t,dur,vol){
+    [1,2,3].forEach((harm,i)=>{
+      const osc=ctx.createOscillator(); osc.type='sine'; osc.frequency.value=freq*harm;
+      const env=ctx.createGain();
+      const hv=vol*[1,0.18,0.06][i];
+      env.gain.setValueAtTime(0,t);
+      env.gain.linearRampToValueAtTime(hv,t+0.012);
+      env.gain.exponentialRampToValueAtTime(hv*0.55,t+0.18);
+      env.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+      const lp=ctx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=3200/harm;
+      osc.connect(lp); lp.connect(env);
+      env.connect(master); env.connect(reverb);
+      osc.start(t); osc.stop(t+dur+0.05);
+      splashThemeNodes.push(osc);
     });
   }
-  function percLoop(ls,rep){
-    const n=ctx.currentTime, b=beat;
-    drum('kick', [ls,ls+b*2,ls+b*4,ls+b*6], 0.5);
-    drum('snare',[ls+b,ls+b*3,ls+b*5,ls+b*7], 0.3);
-    const hh=[]; for(let i=0;i<16;i++) hh.push(ls+i*b*0.5);
-    drum('hhat',hh,0.15);
-    if(rep<25) setTimeout(()=>percLoop(ls+loopLen,rep+1),(loopLen-beat)*1000);
-  }
-  setTimeout(()=>percLoop(ctx.currentTime+beat*0.5,0),800);
 
-  // Brass melody (D-minor heroic)
-  const mel=[
-    [293.7,2,0.8,0.6],[349.2,3,0.8,0.55],[440,4,0.8,0.6],[587.3,5,1.5,0.65],
-    [440,6.5,0.5,0.5],[349.2,7,1.0,0.5],
-    [220,9,0.5,0.5],[261.6,9.5,0.5,0.5],[293.7,10,0.8,0.6],
-    [261.6,11,0.5,0.45],[220,11.5,0.5,0.45],[174.6,12,1.5,0.55],
-    [293.7,14,0.4,0.55],[349.2,14.5,0.4,0.55],[440,15,0.4,0.6],
-    [523.3,15.5,0.4,0.6],[587.3,16,2.5,0.7],[440,18.5,0.5,0.5],[293.7,19,2.0,0.55]
+  function bassPad(freq,t,dur,vol){
+    const osc=ctx.createOscillator(); osc.type='sine'; osc.frequency.value=freq;
+    const env=ctx.createGain();
+    env.gain.setValueAtTime(0,t);
+    env.gain.linearRampToValueAtTime(vol,t+1.2);
+    env.gain.setValueAtTime(vol,t+dur-1.0);
+    env.gain.linearRampToValueAtTime(0,t+dur);
+    const lp=ctx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=220; lp.Q.value=0.5;
+    osc.connect(lp); lp.connect(env); env.connect(master);
+    osc.start(t); osc.stop(t+dur+0.1);
+    splashThemeNodes.push(osc);
+  }
+
+  function brush(t){
+    const bufLen=Math.floor(ctx.sampleRate*0.06);
+    const buf=ctx.createBuffer(1,bufLen,ctx.sampleRate);
+    const d=buf.getChannelData(0);
+    for(let i=0;i<bufLen;i++) d[i]=(Math.random()*2-1)*(1-i/bufLen)*0.6;
+    const src=ctx.createBufferSource(); src.buffer=buf;
+    const hp=ctx.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=7000;
+    const g=ctx.createGain(); g.gain.setValueAtTime(0.018,t); g.gain.exponentialRampToValueAtTime(0.0001,t+0.06);
+    src.connect(hp); hp.connect(g); g.connect(master);
+    src.start(t);
+    splashThemeNodes.push(src);
+  }
+
+  const BPM=54, beat=60/BPM, bar=beat*4;
+  const chords=[
+    {bass:87.3,  notes:[174.6,220.0,261.6,329.6]}, // Fmaj7
+    {bass:73.4,  notes:[146.8,174.6,220.0,261.6]}, // Dm7
+    {bass:116.5, notes:[116.5,146.8,174.6,220.0]}, // Bbmaj7
+    {bass:130.8, notes:[130.8,164.8,196.0,246.9]}, // C9
   ];
-  function brass(freq,startB,durB,vol){
-    const t=ctx.currentTime+startB*beat+0.5, dur=durB*beat;
-    const o=ctx.createOscillator(); o.type='sawtooth'; o.frequency.value=freq;
-    const o2=ctx.createOscillator(); o2.type='sawtooth'; o2.frequency.value=freq*1.005;
-    const filt=ctx.createBiquadFilter(); filt.type='lowpass'; filt.Q.value=1.2;
-    filt.frequency.setValueAtTime(800,t); filt.frequency.linearRampToValueAtTime(2200,t+0.08);
-    filt.frequency.exponentialRampToValueAtTime(900,t+dur);
-    const g=ctx.createGain();
-    g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(vol*0.27,t+0.06);
-    g.gain.setValueAtTime(vol*0.27,t+dur-0.15); g.gain.exponentialRampToValueAtTime(0.001,t+dur);
-    o.connect(filt); o2.connect(filt); filt.connect(g); g.connect(master);
-    o.start(t); o2.start(t); o.stop(t+dur+0.05); o2.stop(t+dur+0.05);
-    splashThemeNodes.push(o,o2);
-  }
-  mel.forEach(([f,sb,db,v])=>brass(f,sb,db,v));
 
-  // String pad
-  [[146.8,0,25,0.6],[174.6,0,25,0.45],[220,0,25,0.4]].forEach(([f,s,d,v])=>{
-    const t=ctx.currentTime+s*beat, dur=d*beat;
-    const o=ctx.createOscillator(); o.type='triangle'; o.frequency.value=f;
-    const lfo=ctx.createOscillator(); lfo.type='sine'; lfo.frequency.value=6.5;
-    const lg=ctx.createGain(); lg.gain.value=10; lfo.connect(lg); lg.connect(o.frequency);
-    const g=ctx.createGain(); g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(v*0.18,t+0.3);
-    g.gain.setValueAtTime(v*0.18,t+dur-0.5); g.gain.exponentialRampToValueAtTime(0.001,t+dur);
-    o.connect(g); g.connect(master); lfo.start(t); o.start(t); o.stop(t+dur); lfo.stop(t+dur);
-    splashThemeNodes.push(o,lfo);
-  });
-
-  // Loop melody every ~21 beats
-  const loopSec=21*beat;
-  function melLoop(rep){
-    if(rep>=12) return;
-    setTimeout(()=>{ if(!splashSndOn) return; mel.forEach(([f,sb,db,v])=>brass(f,sb,db,v)); melLoop(rep+1); },loopSec*1000);
+  function playChordBar(chord,t){
+    bassPad(chord.bass,t,bar*0.92,0.18);
+    chord.notes.forEach((freq,i)=>{
+      pianoNote(freq,t+i*0.14,bar*0.78,0.11);
+      pianoNote(freq*2,t+i*0.14+0.07,bar*0.5,0.035);
+    });
   }
-  setTimeout(()=>melLoop(1),loopSec*1000);
+
+  let splashLoopRep=0;
+  function scheduleLoop(loopOffset){
+    if(!splashSndOn||splashLoopRep>=200) return;
+    splashLoopRep++;
+    const now=ctx.currentTime;
+    chords.forEach((chord,bi)=>{
+      const t=now+loopOffset+bi*bar;
+      playChordBar(chord,t);
+      [0,beat*1.5,beat*2,beat*3.5].forEach(bOff=>brush(t+bOff));
+    });
+    const loopDur=bar*chords.length;
+    const tid=setTimeout(()=>scheduleLoop(loopOffset+loopDur),(loopDur-beat)*1000);
+    splashThemeNodes.push({stop:()=>clearTimeout(tid)});
+  }
+
+  setTimeout(()=>scheduleLoop(0), 800);
 }
 
 // Start theme on first user interaction (browser audio policy)
