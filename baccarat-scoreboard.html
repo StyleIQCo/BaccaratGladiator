@@ -3827,8 +3827,8 @@ const DEALER_MOODS = {
   commission_banker:{ src:'dealer/playful_smirk',  audio:false, loop:true  },
   tie:              { src:'dealer/sympathetic',    audio:false, loop:true  },
   paying_tie:       { src:'dealer/sympathetic',    audio:false, loop:true  },
-  player_wins:      { src:'dealer/warm_congrats',  audio:false, loop:true  },
-  paying_player:    { src:'dealer/warm_congrats',  audio:false, loop:true  },
+  player_wins:      { src:'dealer/warm_congrats',  audio:true,  loop:false },
+  paying_player:    { src:'dealer/warm_congrats',  audio:true,  loop:false },
   natural:          { src:'dealer/laughing',       audio:false, loop:true  },
   big_win:          { src:'dealer/laughing',       audio:false, loop:true  },
 };
@@ -3858,7 +3858,10 @@ function setDealerMood(key){
   if(_dealerMoodTimer) clearTimeout(_dealerMoodTimer);
   const idleKeys = ['idle','place_bets','deal_player','deal_banker'];
   if(idleKeys.indexOf(key) === -1){
-    _dealerMoodTimer = setTimeout(function(){ setDealerMood('idle'); }, 3200);
+    // HeyGen clips need longer before returning to idle — use clip duration + buffer
+    const mood = DEALER_MOODS[key] || DEALER_MOODS.idle;
+    const delay = mood.audio ? 6500 : 3200;
+    _dealerMoodTimer = setTimeout(function(){ setDealerMood('idle'); }, delay);
   }
 }
 
