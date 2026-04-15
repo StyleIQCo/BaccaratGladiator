@@ -2353,27 +2353,8 @@ body { padding-bottom:185px; }
         <div class="sb-text" id="sb-text">Good luck!</div>
         <div class="sb-rom"  id="sb-rom"></div>
       </div>
-      <!-- Dealer SVG -->
-      <svg viewBox="0 0 60 80" width="54" height="72" xmlns="http://www.w3.org/2000/svg">
-        <rect x="8" y="5" width="44" height="14" rx="7" fill="#1a7a1a"/>
-        <rect x="4" y="17" width="52" height="4" rx="2" fill="#0d5c0d"/>
-        <rect x="10" y="7" width="40" height="5" rx="2.5" fill="rgba(255,255,255,0.16)"/>
-        <ellipse cx="30" cy="42" rx="19" ry="19" fill="#f5d0a0"/>
-        <ellipse cx="11" cy="42" rx="4" ry="5" fill="#f0c898"/>
-        <ellipse cx="49" cy="42" rx="4" ry="5" fill="#f0c898"/>
-        <ellipse cx="22" cy="39" rx="3" ry="3.3" fill="#1a1a4a"/>
-        <ellipse cx="38" cy="39" rx="3" ry="3.3" fill="#1a1a4a"/>
-        <circle cx="23.5" cy="37.5" r="1.1" fill="white"/>
-        <circle cx="39.5" cy="37.5" r="1.1" fill="white"/>
-        <path d="M22 52 Q30 58 38 52" stroke="#c07850" stroke-width="2" fill="rgba(255,255,255,0.55)" stroke-linecap="round"/>
-        <rect x="26" y="60" width="8" height="7" fill="#f5d0a0"/>
-        <polygon points="12,68 30,75 28,61" fill="white"/>
-        <polygon points="48,68 30,75 32,61" fill="white"/>
-        <rect x="8" y="73" width="44" height="5" rx="2" fill="white"/>
-        <polygon points="24,64 28,68 24,72" fill="#cc1111"/>
-        <polygon points="36,64 32,68 36,72" fill="#cc1111"/>
-        <ellipse cx="30" cy="68" rx="3.2" ry="2.6" fill="#aa0000"/>
-      </svg>
+      <!-- Dealer Photo -->
+      <img id="dealer-photo" class="dealer-photo" src="dealer/dealing.jpeg" data-mood="idle" alt="Dealer">
       <div class="av-label">DEALER</div>
     </div>
 
@@ -4365,10 +4346,56 @@ function dealerLine(key, data){
   return val || '';
 }
 
+// ── DEALER MOOD (photo expression switching) ─────────────────────
+const DEALER_MOODS = {
+  idle:             'dealer/dealing.jpeg',
+  place_bets:       'dealer/dealing.jpeg',
+  deal_player:      'dealer/dealing.jpeg',
+  deal_banker:      'dealer/dealing.jpeg',
+  shuffle:          'dealer/pro_dealer.jpeg',
+  cut_card:         'dealer/pro_dealer.jpeg',
+  new_shoe:         'dealer/pro_dealer.jpeg',
+  no_more_bets:     'dealer/intense_focus.jpeg',
+  totals:           'dealer/intense_focus.jpeg',
+  player_draws:     'dealer/intense_focus.jpeg',
+  banker_draws:     'dealer/intense_focus.jpeg',
+  last_hand:        'dealer/intense_focus.jpeg',
+  player_stands:    'dealer/playful_smirk.jpeg',
+  banker_stands:    'dealer/playful_smirk.jpeg',
+  banker_wins:      'dealer/playful_smirk.jpeg',
+  commission_banker:'dealer/playful_smirk.jpeg',
+  tie:              'dealer/sympathetic.jpeg',
+  paying_tie:       'dealer/sympathetic.jpeg',
+  player_wins:      'dealer/warm_congrats.jpeg',
+  paying_player:    'dealer/warm_congrats.jpeg',
+  paying_banker:    'dealer/pro_dealer.jpeg',
+  natural:          'dealer/laughing.jpeg',
+  big_win:          'dealer/laughing.jpeg',
+};
+let _dealerMoodTimer = null;
+function setDealerMood(key){
+  const src = DEALER_MOODS[key] || DEALER_MOODS.idle;
+  const img = document.getElementById('dealer-photo');
+  if(!img) return;
+  if(img.getAttribute('data-mood') === key) return;
+  img.classList.add('mood-fade');
+  setTimeout(function(){
+    img.src = src;
+    img.setAttribute('data-mood', key);
+    img.classList.remove('mood-fade');
+  }, 180);
+  if(_dealerMoodTimer) clearTimeout(_dealerMoodTimer);
+  const idleKeys = ['idle','place_bets','deal_player','deal_banker'];
+  if(idleKeys.indexOf(key) === -1){
+    _dealerMoodTimer = setTimeout(function(){ setDealerMood('idle'); }, 3200);
+  }
+}
+
 function dealerCall(key, data, opts){
   const text = dealerLine(key, data || {});
   if(!text) return;
   const o = opts || {};
+  setDealerMood(key);
   if(o.feed !== false) postFeedMsg('🎴 ' + text, o.type || 'info');
   if(o.caption !== false) showDealerCaption(text);
 }
@@ -8112,10 +8139,12 @@ body[data-room='macau-vip'] .bet-slot.active { border-color:var(--gold); box-sha
 .avatar-strip{display:flex;justify-content:space-between;align-items:flex-end;padding:0 4px 8px;position:relative}
 .av-slot{display:flex;flex-direction:column;align-items:center;gap:3px;position:relative}
 .av-slot svg{filter:drop-shadow(0 3px 6px rgba(0,0,0,0.5))}
+.dealer-photo{width:72px;height:96px;object-fit:cover;object-position:top center;border-radius:10px;border:1px solid rgba(201,168,76,0.35);box-shadow:0 4px 14px rgba(0,0,0,0.7);transition:opacity 0.18s ease}
+.dealer-photo.mood-fade{opacity:0}
 .av-label{font-family:'Cinzel',serif;font-size:0.48rem;letter-spacing:2px;color:var(--gold)}
 .av-vs{font-family:'Cinzel',serif;font-size:0.6rem;color:rgba(201,168,76,0.3);letter-spacing:2px;padding-bottom:16px}
 /* Speech bubble */
-.speech-bubble{position:absolute;top:-6px;left:68px;background:rgba(6,6,16,0.97);border:1px solid var(--gold);border-radius:10px;padding:6px 11px;min-width:128px;max-width:188px;z-index:30;opacity:0;transform:translateY(5px);transition:opacity 0.35s,transform 0.35s;pointer-events:none}
+.speech-bubble{position:absolute;top:-6px;left:80px;background:rgba(6,6,16,0.97);border:1px solid var(--gold);border-radius:10px;padding:6px 11px;min-width:128px;max-width:188px;z-index:30;opacity:0;transform:translateY(5px);transition:opacity 0.35s,transform 0.35s;pointer-events:none}
 .speech-bubble::before{content:'';position:absolute;left:-8px;top:13px;border:6px solid transparent;border-right-color:var(--gold)}
 .speech-bubble::after{content:'';position:absolute;left:-6px;top:14px;border:5px solid transparent;border-right-color:rgba(6,6,16,0.97)}
 .speech-bubble.show{opacity:1;transform:translateY(0)}
