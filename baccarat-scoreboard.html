@@ -1318,6 +1318,15 @@ header h1 {
   opacity:0; transition:opacity 0.18s ease;
 }
 .dealer-caption.show { opacity:1; }
+/* ── Floating dealer avatar ── */
+#dealer-widget{position:fixed;bottom:108px;left:12px;z-index:8999;display:flex;flex-direction:column;align-items:center;gap:3px}
+#dealer-widget .dealer-photo{width:64px;height:86px;object-fit:cover;object-position:top center;border-radius:9px;border:1px solid rgba(201,168,76,0.35);box-shadow:0 4px 14px rgba(0,0,0,0.75);transition:opacity 0.18s ease}
+#dealer-widget .dealer-photo.mood-fade{opacity:0}
+#dealer-widget .dealer-label{font-family:'Cinzel',serif;font-size:0.44rem;letter-spacing:2px;color:var(--gold)}
+#dealer-widget .dealer-bubble{position:absolute;top:-4px;left:72px;background:rgba(6,6,16,0.97);border:1px solid var(--gold);border-radius:10px;padding:5px 10px;min-width:120px;max-width:180px;z-index:30;opacity:0;transform:translateY(5px);transition:opacity 0.35s,transform 0.35s;pointer-events:none;font-size:0.78rem;color:#fff;font-weight:600}
+#dealer-widget .dealer-bubble::before{content:'';position:absolute;left:-8px;top:12px;border:6px solid transparent;border-right-color:var(--gold)}
+#dealer-widget .dealer-bubble::after{content:'';position:absolute;left:-6px;top:13px;border:5px solid transparent;border-right-color:rgba(6,6,16,0.97)}
+#dealer-widget .dealer-bubble.show{opacity:1;transform:translateY(0)}
 .msg-win  { color:#80ff80; }
 .msg-lose { color:#ff8080; }
 .msg-tie  { color:var(--gold); }
@@ -2306,6 +2315,13 @@ header h1 {
     </div>
   </div>
 
+</div>
+
+<!-- ═══════ FLOATING DEALER AVATAR ═══════ -->
+<div id="dealer-widget">
+  <div class="dealer-bubble" id="dealer-bubble"></div>
+  <img class="dealer-photo" id="dealer-photo" src="dealer/dealing.jpeg" data-mood="idle" alt="Dealer">
+  <div class="dealer-label">DEALER</div>
 </div>
 
 <!-- ═══════ FIXED BOTTOM CONTROL BAR ═══════ -->
@@ -3626,11 +3642,14 @@ function toggleDealerCaptions(){
 function showDealerCaption(text){
   if(!dealerCaptionsOn) return;
   const cap = document.getElementById('dealer-caption');
-  if(!cap) return;
-  cap.textContent = text;
-  cap.classList.add('show');
+  if(cap){ cap.textContent = text; cap.classList.add('show'); }
+  const bub = document.getElementById('dealer-bubble');
+  if(bub){ bub.textContent = text; bub.classList.add('show'); }
   if(dealerCaptionTimer) clearTimeout(dealerCaptionTimer);
-  dealerCaptionTimer = setTimeout(()=>{ cap.classList.remove('show'); }, 1600);
+  dealerCaptionTimer = setTimeout(()=>{
+    if(cap) cap.classList.remove('show');
+    if(bub) bub.classList.remove('show');
+  }, 1600);
 }
 
 function dealerLine(key, data){
@@ -3690,10 +3709,56 @@ function dealerLine(key, data){
   return val || '';
 }
 
+// ── DEALER MOOD (photo expression switching) ─────────────────────
+const DEALER_MOODS = {
+  idle:             'dealer/dealing.jpeg',
+  place_bets:       'dealer/dealing.jpeg',
+  deal_player:      'dealer/dealing.jpeg',
+  deal_banker:      'dealer/dealing.jpeg',
+  shuffle:          'dealer/pro_dealer.jpeg',
+  cut_card:         'dealer/pro_dealer.jpeg',
+  new_shoe:         'dealer/pro_dealer.jpeg',
+  no_more_bets:     'dealer/intense_focus.jpeg',
+  totals:           'dealer/intense_focus.jpeg',
+  player_draws:     'dealer/intense_focus.jpeg',
+  banker_draws:     'dealer/intense_focus.jpeg',
+  last_hand:        'dealer/intense_focus.jpeg',
+  player_stands:    'dealer/playful_smirk.jpeg',
+  banker_stands:    'dealer/playful_smirk.jpeg',
+  banker_wins:      'dealer/playful_smirk.jpeg',
+  commission_banker:'dealer/playful_smirk.jpeg',
+  tie:              'dealer/sympathetic.jpeg',
+  paying_tie:       'dealer/sympathetic.jpeg',
+  player_wins:      'dealer/warm_congrats.jpeg',
+  paying_player:    'dealer/warm_congrats.jpeg',
+  paying_banker:    'dealer/pro_dealer.jpeg',
+  natural:          'dealer/laughing.jpeg',
+  big_win:          'dealer/laughing.jpeg',
+};
+let _dealerMoodTimer = null;
+function setDealerMood(key){
+  const src = DEALER_MOODS[key] || DEALER_MOODS.idle;
+  const img = document.getElementById('dealer-photo');
+  if(!img) return;
+  if(img.getAttribute('data-mood') === key) return;
+  img.classList.add('mood-fade');
+  setTimeout(function(){
+    img.src = src;
+    img.setAttribute('data-mood', key);
+    img.classList.remove('mood-fade');
+  }, 180);
+  if(_dealerMoodTimer) clearTimeout(_dealerMoodTimer);
+  const idleKeys = ['idle','place_bets','deal_player','deal_banker'];
+  if(idleKeys.indexOf(key) === -1){
+    _dealerMoodTimer = setTimeout(function(){ setDealerMood('idle'); }, 3200);
+  }
+}
+
 function dealerCall(key, data, opts){
   const text = dealerLine(key, data || {});
   if(!text) return;
   const o = opts || {};
+  setDealerMood(key);
   if(o.feed !== false) postFeedMsg('🎴 ' + text, o.type || 'info');
   if(o.caption !== false) showDealerCaption(text);
 }
