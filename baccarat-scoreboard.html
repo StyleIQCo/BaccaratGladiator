@@ -1318,15 +1318,79 @@ header h1 {
   opacity:0; transition:opacity 0.18s ease;
 }
 .dealer-caption.show { opacity:1; }
-/* ── Floating dealer avatar ── */
-#dealer-widget{position:fixed;bottom:108px;left:12px;z-index:8999;display:flex;flex-direction:column;align-items:center;gap:3px}
-#dealer-widget .dealer-photo{width:64px;height:86px;object-fit:cover;object-position:top center;border-radius:9px;border:1px solid rgba(201,168,76,0.35);box-shadow:0 4px 14px rgba(0,0,0,0.75);transition:opacity 0.18s ease}
-#dealer-widget .dealer-photo.mood-fade{opacity:0}
-#dealer-widget .dealer-label{font-family:'Cinzel',serif;font-size:0.44rem;letter-spacing:2px;color:var(--gold)}
-#dealer-widget .dealer-bubble{position:absolute;top:-4px;left:72px;background:rgba(6,6,16,0.97);border:1px solid var(--gold);border-radius:10px;padding:5px 10px;min-width:120px;max-width:180px;z-index:30;opacity:0;transform:translateY(5px);transition:opacity 0.35s,transform 0.35s;pointer-events:none;font-size:0.78rem;color:#fff;font-weight:600}
-#dealer-widget .dealer-bubble::before{content:'';position:absolute;left:-8px;top:12px;border:6px solid transparent;border-right-color:var(--gold)}
-#dealer-widget .dealer-bubble::after{content:'';position:absolute;left:-6px;top:13px;border:5px solid transparent;border-right-color:rgba(6,6,16,0.97)}
-#dealer-widget .dealer-bubble.show{opacity:1;transform:translateY(0)}
+/* ── Dealer portrait section ── */
+#dealer-section{
+  display:flex; flex-direction:column; align-items:center;
+  padding:14px 0 6px; position:relative; overflow:visible;
+}
+#dealer-section::before{
+  content:''; position:absolute; top:0; left:50%; transform:translateX(-50%);
+  width:280px; height:260px; pointer-events:none;
+  background:radial-gradient(ellipse at 50% 30%, rgba(201,168,76,0.11) 0%, transparent 68%);
+}
+#dealer-portrait-wrap{position:relative; display:inline-block;}
+.dealer-photo{
+  width:150px; height:200px;
+  object-fit:cover; object-position:top center;
+  border-radius:50% 50% 14px 14px;
+  border:2px solid rgba(201,168,76,0.55);
+  box-shadow:0 0 32px rgba(201,168,76,0.13), 0 10px 30px rgba(0,0,0,0.85);
+  animation:dealerBreathe 5s ease-in-out infinite;
+  transition:opacity 0.18s ease, box-shadow 0.4s ease;
+  display:block;
+}
+.dealer-photo.mood-fade{opacity:0}
+.dealer-photo.speaking{
+  box-shadow:0 0 48px rgba(201,168,76,0.42), 0 0 90px rgba(201,168,76,0.14), 0 10px 30px rgba(0,0,0,0.85);
+  animation:dealerBreathe 5s ease-in-out infinite, dealerSpeak 0.6s ease;
+}
+@keyframes dealerBreathe{
+  0%,100%{transform:translateY(0) scale(1)}
+  50%{transform:translateY(-4px) scale(1.007)}
+}
+@keyframes dealerSpeak{
+  0%{transform:scale(1)}
+  40%{transform:scale(1.025)}
+  100%{transform:scale(1)}
+}
+/* Speech bubble — above her head, pointing down */
+#dealer-bubble{
+  position:absolute; bottom:calc(100% + 10px); left:50%;
+  transform:translateX(-50%) translateY(6px);
+  background:rgba(6,6,18,0.96); border:1px solid var(--gold);
+  border-radius:14px; padding:9px 16px;
+  min-width:170px; max-width:270px;
+  text-align:center; font-size:0.86rem; color:#fff; font-weight:600;
+  line-height:1.45; white-space:normal;
+  opacity:0; transition:opacity 0.32s, transform 0.32s;
+  pointer-events:none; z-index:50;
+}
+#dealer-bubble::after{
+  content:''; position:absolute; bottom:-12px; left:50%;
+  transform:translateX(-50%);
+  border:7px solid transparent; border-top-color:var(--gold);
+}
+#dealer-bubble::before{
+  content:''; position:absolute; bottom:-10px; left:50%;
+  transform:translateX(-50%); z-index:1;
+  border:6px solid transparent; border-top-color:rgba(6,6,18,0.96);
+}
+#dealer-bubble.show{opacity:1; transform:translateX(-50%) translateY(0)}
+/* Nameplate */
+#dealer-nameplate{margin-top:8px; text-align:center; line-height:1.3;}
+#dealer-nameplate .d-name{
+  font-family:'Cinzel',serif; font-size:0.82rem; letter-spacing:4px;
+  color:var(--gold); text-shadow:0 0 10px rgba(201,168,76,0.45);
+}
+#dealer-nameplate .d-role{
+  font-family:'Cinzel',serif; font-size:0.42rem; letter-spacing:2.5px;
+  color:rgba(201,168,76,0.48); display:block; margin-top:1px;
+}
+@media(max-width:480px){
+  .dealer-photo{width:120px; height:160px;}
+  #dealer-section::before{width:200px; height:190px;}
+  #dealer-bubble{font-size:0.78rem; min-width:140px; max-width:230px; padding:7px 13px;}
+}
 .msg-win  { color:#80ff80; }
 .msg-lose { color:#ff8080; }
 .msg-tie  { color:var(--gold); }
@@ -2185,6 +2249,18 @@ header h1 {
   </div>
 </div>
 
+<!-- ═══════ DEALER PORTRAIT ═══════ -->
+<div id="dealer-section">
+  <div id="dealer-portrait-wrap">
+    <div id="dealer-bubble"></div>
+    <img class="dealer-photo" id="dealer-photo" src="dealer/dealing.jpeg" data-mood="idle" alt="Sofia the dealer">
+  </div>
+  <div id="dealer-nameplate">
+    <span class="d-name">SOFIA</span>
+    <span class="d-role">Baccarat Dealer · Las Vegas</span>
+  </div>
+</div>
+
 <!-- ═══════ GAME SECTION ═══════ -->
 <div class="game-section">
 
@@ -2315,13 +2391,6 @@ header h1 {
     </div>
   </div>
 
-</div>
-
-<!-- ═══════ FLOATING DEALER AVATAR ═══════ -->
-<div id="dealer-widget">
-  <div class="dealer-bubble" id="dealer-bubble"></div>
-  <img class="dealer-photo" id="dealer-photo" src="dealer/dealing.jpeg" data-mood="idle" alt="Dealer">
-  <div class="dealer-label">DEALER</div>
 </div>
 
 <!-- ═══════ FIXED BOTTOM CONTROL BAR ═══════ -->
@@ -3640,68 +3709,87 @@ function toggleDealerCaptions(){
 }
 
 function showDealerCaption(text){
-  if(!dealerCaptionsOn) return;
-  const cap = document.getElementById('dealer-caption');
-  if(cap){ cap.textContent = text; cap.classList.add('show'); }
   const bub = document.getElementById('dealer-bubble');
   if(bub){ bub.textContent = text; bub.classList.add('show'); }
+  const img = document.getElementById('dealer-photo');
+  if(img){ img.classList.add('speaking'); }
+  if(dealerCaptionsOn){
+    const cap = document.getElementById('dealer-caption');
+    if(cap){ cap.textContent = text; cap.classList.add('show'); }
+  }
   if(dealerCaptionTimer) clearTimeout(dealerCaptionTimer);
   dealerCaptionTimer = setTimeout(()=>{
-    if(cap) cap.classList.remove('show');
     if(bub) bub.classList.remove('show');
-  }, 1600);
+    if(img) img.classList.remove('speaking');
+    if(dealerCaptionsOn){
+      const cap = document.getElementById('dealer-caption');
+      if(cap) cap.classList.remove('show');
+    }
+  }, 2400);
 }
 
 function dealerLine(key, data){
   const p = data && data.pTotal;
   const b = data && data.bTotal;
+  const $ = pickOne;
+  // Streak context for empathetic responses
+  const streak = (typeof latestNonTieStreakInfo === 'function') ? latestNonTieStreakInfo() : null;
+  const streakCount = streak ? streak.count : 0;
   const core = {
-    place_bets:'Place your chips',
-    no_more_bets:'No more bets',
-    deal_player:'Player',
-    deal_banker:'Banker',
-    totals:(p,b)=>`Player ${p}, Banker ${b}`,
-    player_draws:'Player draws a third card',
-    player_stands:'Player stands',
-    banker_draws:'Banker draws',
-    banker_stands:'Banker stands',
-    player_wins:'Player wins',
-    banker_wins:'Banker wins',
-    tie:'Tie',
-    paying_player:'Paying Player',
-    paying_banker:'Paying Banker',
-    paying_tie:'Paying Tie',
-    commission_banker:'Commission on Banker',
-    last_hand:'Last hand',
-    cut_card:'Cut card',
-    shuffle:'Shuffle',
-    new_shoe:'New shoe',
-    natural:'A natural',
-    big_win:'A crushing victory'
+    place_bets:$(['Place your bets, please.','Good luck everyone — bets down.','Take your time. Bets are open.','Whenever you\'re ready — place your chips.']),
+    no_more_bets:$(['No more bets, please.','Bets are closed.','No more bets — cards are coming.']),
+    deal_player:$(['Player.','Dealing to Player.']),
+    deal_banker:$(['Banker.','Dealing to Banker.']),
+    totals:`Player ${p}, Banker ${b}.`,
+    player_draws:$(['Player draws.','Player takes a third card.']),
+    player_stands:$(['Player stands.','Player is standing.']),
+    banker_draws:$(['Banker draws.','Banker takes a card.']),
+    banker_stands:$(['Banker stands.','Banker is standing.']),
+    player_wins: streakCount >= 3
+      ? $(['Player wins — you\'re on a run! Enjoy it!','Player wins again. What a streak!'])
+      : $(['Player wins!','That\'s a win for Player.','Nice hand — Player wins.']),
+    banker_wins: streakCount >= 3
+      ? $(['Banker wins — the shoe is strong right now.','Banker wins again. The house is hot.'])
+      : $(['Banker wins.','Banker takes it.','Banker wins this hand.']),
+    tie:$(['Tie — no action on Player and Banker bets.','We have a tie. Tie bets pay 8 to 1.','Tie game — Push on Player and Banker.']),
+    paying_player:$(['Paying Player — congratulations!','Good call on Player!','Player pays even money — well done.']),
+    paying_banker:$(['Paying Banker.','Banker pays, minus five percent commission.','Banker wins — collecting commission.']),
+    paying_tie:$(['Paying Tie — eight to one, nice!','Tie pays eight to one — great call!','That\'s a Tie payout — well played!']),
+    commission_banker:$(['Five percent commission on Banker, please.','Collecting the five percent.','Commission on Banker — thank you.']),
+    last_hand:$(['Just a heads-up — last hand before a reshuffle.','One more hand before I shuffle.','Last hand on this shoe.']),
+    cut_card:$(['Cut card — time to shuffle.','We\'ve hit the cut card.','Cut card reached.']),
+    shuffle:$(['Shuffling up — won\'t be a moment.','One moment while I shuffle.','Shuffling the deck for you.']),
+    new_shoe:$(['Fresh shoe — good luck!','New shoe in play. Anything can happen!','Here we go — new shoe, fresh start.']),
+    natural:$(['A natural! That\'s an automatic winner!','Natural! Eight or nine dealt — beautiful.','A natural — no third cards needed!']),
+    big_win:$(['What a hand! Nicely done!','Big win! That\'s what we love to see.','Outstanding — enjoy that one!']),
   };
   const gladiator = {
-    place_bets:'Place your chips, challengers',
-    no_more_bets:'No more bets — the fates are sealed',
-    deal_player:'Player steps forward',
-    deal_banker:'Banker enters the arena',
-    totals:(p,b)=>`Player shows ${p}. Banker reveals ${b}.`,
-    player_draws:'Player draws again',
-    player_stands:'Player stands firm',
-    banker_draws:'Banker calls for another card',
-    banker_stands:'Banker stands firm',
-    player_wins:'Player claims victory!',
-    banker_wins:'Banker triumphs!',
-    tie:'A tie — neither yields!',
-    paying_player:'Reward the victors',
-    paying_banker:'Reward the victors',
-    paying_tie:'Reward the victors',
-    commission_banker:'The house claims its tribute',
-    last_hand:'Last hand in the arena',
-    cut_card:'Cut card. Fate shifts.',
-    shuffle:'Shuffle the steel',
-    new_shoe:'A new shoe enters the arena',
-    natural:'A natural! Divine favor!',
-    big_win:'A crushing victory!'
+    place_bets:$(['Place your chips, challengers.','The arena awaits your wager.','Stake your claim, gladiator.']),
+    no_more_bets:$(['No more bets — the fates are sealed.','Cards are coming — bets are locked.','The die is cast. No more bets.']),
+    deal_player:$(['Player steps forward.','Player enters the fray.']),
+    deal_banker:$(['Banker enters the arena.','The house shows its hand.']),
+    totals:`Player shows ${p}. Banker reveals ${b}.`,
+    player_draws:$(['Player demands another card.','Player draws — the battle continues.']),
+    player_stands:$(['Player holds the line.','Player stands firm.']),
+    banker_draws:$(['Banker calls for steel.','Banker draws — pressing forward.']),
+    banker_stands:$(['Banker holds the gate.','Banker stands — unwavering.']),
+    player_wins: streakCount >= 3
+      ? $(['Player conquers again! The arena bows!','Victory upon victory — Player reigns!'])
+      : $(['Player claims victory!','The crowd roars — Player wins!','A triumphant hand for Player!']),
+    banker_wins: streakCount >= 3
+      ? $(['The house is unstoppable tonight!','Banker dominates — the arena trembles!'])
+      : $(['Banker triumphs!','The house prevails.','Banker takes the spoils!']),
+    tie:$(['A tie — neither gladiator yields!','Deadlock! Push on Player and Banker.','An equal match — Tie pays eight to one!']),
+    paying_player:$(['Reward the Player — glory is yours!','Victory paid — well fought!','Player is paid. Magnificent!']),
+    paying_banker:$(['Banker is victorious — the house collects.','Paying the Banker\'s tribute.','The house claims its prize.']),
+    paying_tie:$(['Tie pays eight to one — fortune smiles on you!','The tie is rewarded — spectacular!','Eight to one on the Tie — audacious call!']),
+    commission_banker:$(['The house claims its five percent tribute.','Commission collected — the arena must be fed.','Five percent to the house, as always.']),
+    last_hand:$(['Last hand in this shoe — make it count.','Final battle before the reshuffle!','One last chance on this shoe, gladiator.']),
+    cut_card:$(['Cut card reached — fate demands a shuffle.','The cut card appears. Destiny resets.','The shoe is spent. Time to reshuffle.']),
+    shuffle:$(['Shuffling the cards of fate.','The deck is reshuffled — new destinies await.','Shuffling — the arena resets.']),
+    new_shoe:$(['A new shoe enters the arena — all bets are off!','Fresh deck — new fates are written!','New shoe! The battle begins anew.']),
+    natural:$(['A natural! Divine favor has spoken!','Natural eight or nine — the gods have smiled!','A natural! No mortal can challenge that!']),
+    big_win:$(['A crushing victory! The crowd erupts!','Legendary win! The arena is yours!','Glorious! A hand for the ages!']),
   };
   const dict = dealerStyle==='gladiator' ? gladiator : core;
   const val = dict[key];
