@@ -3812,6 +3812,8 @@ const DEALER_MOODS = {
   place_bets:       { src:'dealer/dealing',        audio:false, loop:true  },
   deal_player:      { src:'dealer/dealing',        audio:false, loop:true  },
   deal_banker:      { src:'dealer/dealing',        audio:false, loop:true  },
+  dealing_cards:    { src:'dealer/dealing',        audio:false, loop:true  },
+  new_round:        { src:'dealer/pro_dealer',     audio:true,  loop:false },
   shuffle:          { src:'dealer/pro_dealer',     audio:true,  loop:false },
   cut_card:         { src:'dealer/pro_dealer',     audio:true,  loop:false },
   new_shoe:         { src:'dealer/pro_dealer',     audio:true,  loop:false },
@@ -3856,7 +3858,7 @@ function setDealerMood(key){
     el.classList.remove('mood-fade');
   }, 180);
   if(_dealerMoodTimer) clearTimeout(_dealerMoodTimer);
-  const idleKeys = ['idle','place_bets','deal_player','deal_banker'];
+  const idleKeys = ['idle','place_bets','deal_player','deal_banker','dealing_cards'];
   if(idleKeys.indexOf(key) === -1){
     // HeyGen clips need longer before returning to idle — use clip duration + buffer
     const mood = DEALER_MOODS[key] || DEALER_MOODS.idle;
@@ -4519,6 +4521,7 @@ function deal(){
   }
   if(totalBet()===0){ setMsg('Place virtual chips first!'); return; }
   if(checkTrialBlock()) return;
+  setDealerMood('dealing_cards');
   lastBets={...bets};
   const playerWager = totalBet();
   postFeedMsg(getPreRevealCallout(playerWager), 'info');
@@ -4951,6 +4954,7 @@ function setBadge(id,type,text){
 
 // ── NEW ROUND ─────────────────────────────────────────────────────
 function newRound(){
+  setDealerMood('new_round');
   phase='betting';
   dealerPhaseAnnounced = false;
   pendingHand=null;
