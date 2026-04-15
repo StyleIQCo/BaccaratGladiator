@@ -3805,55 +3805,54 @@ function dealerLine(key, data){
 }
 
 // ── DEALER MOOD (photo expression switching) ─────────────────────
+// audio:true  = HeyGen clip with voice — unmute, no loop
+// audio:false = Kling ambient clip — muted, loops
 const DEALER_MOODS = {
-  idle:             'dealer/dealing.jpeg',
-  place_bets:       'dealer/dealing.jpeg',
-  deal_player:      'dealer/dealing.jpeg',
-  deal_banker:      'dealer/dealing.jpeg',
-  shuffle:          'dealer/pro_dealer.jpeg',
-  cut_card:         'dealer/pro_dealer.jpeg',
-  new_shoe:         'dealer/pro_dealer.jpeg',
-  no_more_bets:     'dealer/intense_focus.jpeg',
-  totals:           'dealer/intense_focus.jpeg',
-  player_draws:     'dealer/intense_focus.jpeg',
-  banker_draws:     'dealer/intense_focus.jpeg',
-  last_hand:        'dealer/intense_focus.jpeg',
-  player_stands:    'dealer/playful_smirk.jpeg',
-  banker_stands:    'dealer/playful_smirk.jpeg',
-  banker_wins:      'dealer/playful_smirk.jpeg',
-  commission_banker:'dealer/playful_smirk.jpeg',
-  tie:              'dealer/sympathetic.jpeg',
-  paying_tie:       'dealer/sympathetic.jpeg',
-  player_wins:      'dealer/warm_congrats.jpeg',
-  paying_player:    'dealer/warm_congrats.jpeg',
-  paying_banker:    'dealer/pro_dealer.jpeg',
-  natural:          'dealer/laughing.jpeg',
-  big_win:          'dealer/laughing.jpeg',
+  idle:             { src:'dealer/dealing',        audio:false, loop:true  },
+  place_bets:       { src:'dealer/dealing',        audio:false, loop:true  },
+  deal_player:      { src:'dealer/dealing',        audio:false, loop:true  },
+  deal_banker:      { src:'dealer/dealing',        audio:false, loop:true  },
+  shuffle:          { src:'dealer/pro_dealer',     audio:true,  loop:false },
+  cut_card:         { src:'dealer/pro_dealer',     audio:true,  loop:false },
+  new_shoe:         { src:'dealer/pro_dealer',     audio:true,  loop:false },
+  paying_banker:    { src:'dealer/pro_dealer',     audio:true,  loop:false },
+  no_more_bets:     { src:'dealer/intense_focus',  audio:false, loop:true  },
+  totals:           { src:'dealer/intense_focus',  audio:false, loop:true  },
+  player_draws:     { src:'dealer/intense_focus',  audio:false, loop:true  },
+  banker_draws:     { src:'dealer/intense_focus',  audio:false, loop:true  },
+  last_hand:        { src:'dealer/intense_focus',  audio:false, loop:true  },
+  player_stands:    { src:'dealer/playful_smirk',  audio:false, loop:true  },
+  banker_stands:    { src:'dealer/playful_smirk',  audio:false, loop:true  },
+  banker_wins:      { src:'dealer/playful_smirk',  audio:false, loop:true  },
+  commission_banker:{ src:'dealer/playful_smirk',  audio:false, loop:true  },
+  tie:              { src:'dealer/sympathetic',    audio:false, loop:true  },
+  paying_tie:       { src:'dealer/sympathetic',    audio:false, loop:true  },
+  player_wins:      { src:'dealer/warm_congrats',  audio:false, loop:true  },
+  paying_player:    { src:'dealer/warm_congrats',  audio:false, loop:true  },
+  natural:          { src:'dealer/laughing',       audio:false, loop:true  },
+  big_win:          { src:'dealer/laughing',       audio:false, loop:true  },
 };
 let _dealerMoodTimer = null;
 function setDealerMood(key){
-  const jpegSrc = DEALER_MOODS[key] || DEALER_MOODS.idle;
-  const base    = jpegSrc.replace('.jpeg','');
+  const mood = DEALER_MOODS[key] || DEALER_MOODS.idle;
   const el = document.getElementById('dealer-photo');
   if(!el) return;
   if(el.getAttribute('data-mood') === key) return;
   el.classList.add('mood-fade');
   setTimeout(function(){
-    const isVideo = el.tagName === 'VIDEO';
-    if(isVideo){
-      // Update <source> elements then reload
+    el.setAttribute('data-mood', key);
+    el.poster = mood.src + '.jpeg';
+    if(el.tagName === 'VIDEO'){
       const sources = el.querySelectorAll('source');
       sources.forEach(function(s){
-        if(s.type === 'video/webm') s.src = base + '.webm';
-        if(s.type === 'video/mp4')  s.src = base + '.mp4';
+        if(s.type === 'video/webm') s.src = mood.src + '.webm';
+        if(s.type === 'video/mp4')  s.src = mood.src + '.mp4';
       });
-      el.poster = jpegSrc;
+      el.muted = !mood.audio;
+      el.loop  = mood.loop;
       el.load();
       el.play().catch(function(){});
-    } else {
-      el.src = jpegSrc;
     }
-    el.setAttribute('data-mood', key);
     el.classList.remove('mood-fade');
   }, 180);
   if(_dealerMoodTimer) clearTimeout(_dealerMoodTimer);
