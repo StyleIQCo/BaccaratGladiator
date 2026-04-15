@@ -35,7 +35,7 @@ exports.handler = async (event) => {
     return { statusCode: 400, headers: CORS, body: JSON.stringify({ error: 'Invalid JSON' }) };
   }
 
-  const { packageId, game, sessionId } = body;
+  const { packageId, game, sessionId, userId } = body;
 
   // Validate package
   const pkg = PACKAGE_MAP[packageId];
@@ -81,8 +81,9 @@ exports.handler = async (event) => {
       // Pass metadata so the webhook knows what to credit
       metadata: {
         packageId,
-        chips:     String(pkg.chips),
+        chips:           String(pkg.chips),
         game,
+        userId:          userId || '',
         clientSessionId: sessionId || '',
       },
       success_url: `${gameUrl}?purchase=success&chips=${pkg.chips}&session_id={CHECKOUT_SESSION_ID}`,

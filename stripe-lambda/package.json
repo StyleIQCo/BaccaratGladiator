@@ -4,6 +4,7 @@
   "description": "BaccaratGladiator Stripe chip purchase backend",
   "main": "src/createCheckout.js",
   "dependencies": {
+    "firebase-admin": "^13.8.0",
     "stripe": "^14.0.0"
   }
 }

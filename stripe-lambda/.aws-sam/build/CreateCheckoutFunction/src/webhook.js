@@ -6,11 +6,26 @@ const { PACKAGE_MAP } = require('./packages');
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 const WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET;
 
+// Lazy-init Firebase Admin (only if FIREBASE_SERVICE_ACCOUNT env var is set)
+let _db = null;
+function getDb() {
+  if (_db) return _db;
+  const serviceAccountJson = process.env.FIREBASE_SERVICE_ACCOUNT;
+  if (!serviceAccountJson) return null;
+  const admin = require('firebase-admin');
+  if (!admin.apps.length) {
+    admin.initializeApp({
+      credential: admin.credential.cert(JSON.parse(serviceAccountJson)),
+    });
+  }
+  _db = admin.firestore();
+  return _db;
+}
+
 exports.handler = async (event) => {
   const sig = event.headers['stripe-signature'] || event.headers['Stripe-Signature'];
   const rawBody = event.body;
 
-  // Verify the webhook came from Stripe
   let stripeEvent;
   try {
     stripeEvent = stripe.webhooks.constructEvent(rawBody, sig, WEBHOOK_SECRET);
@@ -19,20 +34,16 @@ exports.handler = async (event) => {
     return { statusCode: 400, body: `Webhook Error: ${err.message}` };
   }
 
-  // Only handle successful checkouts
   if (stripeEvent.type !== 'checkout.session.completed') {
     return { statusCode: 200, body: JSON.stringify({ received: true }) };
   }
 
   const session = stripeEvent.data.object;
-
-  // Verify payment was actually paid
   if (session.payment_status !== 'paid') {
-    console.log('Session not paid, ignoring:', session.id);
     return { statusCode: 200, body: JSON.stringify({ received: true }) };
   }
 
-  const { packageId, chips, game, clientSessionId } = session.metadata || {};
+  const { packageId, chips, game, userId, clientSessionId } = session.metadata || {};
   const pkg = PACKAGE_MAP[packageId];
 
   if (!pkg) {
@@ -40,26 +51,46 @@ exports.handler = async (event) => {
     return { statusCode: 200, body: JSON.stringify({ received: true }) };
   }
 
-  // Log the successful purchase — this is the verified server-side record
+  const chipCount = parseInt(chips, 10);
+
   console.log(JSON.stringify({
     event:           'chip_purchase',
     stripeSessionId: session.id,
     packageId,
-    chips:           parseInt(chips, 10),
+    chips:           chipCount,
     game,
+    userId:          userId || 'guest',
     clientSessionId,
     amountTotal:     session.amount_total,
-    currency:        session.currency,
     customerEmail:   session.customer_details?.email || null,
     timestamp:       new Date().toISOString(),
   }));
 
-  // The frontend credits chips on the success_url redirect using the
-  // chips= query param. The webhook serves as the verified audit log.
-  // If you add a database later, persist the purchase here.
+  // Credit chips directly to Firestore if userId is present
+  if (userId) {
+    const db = getDb();
+    if (db) {
+      try {
+        const userRef = db.collection('users').doc(userId);
+        await db.runTransaction(async (tx) => {
+          const snap = await tx.get(userRef);
+          const current = snap.exists ? (snap.data().balance || 0) : 0;
+          tx.set(userRef, {
+            balance:        current + chipCount,
+            totalPurchased: (snap.exists ? (snap.data().totalPurchased || 0) : 0) + session.amount_total,
+          }, { merge: true });
+        });
+        console.log(`Credited ${chipCount} chips to user ${userId}`);
+      } catch (err) {
+        console.error('Firestore credit failed:', err.message);
+      }
+    } else {
+      console.warn('FIREBASE_SERVICE_ACCOUNT not set — chips not auto-credited to Firestore');
+    }
+  }
 
   return {
     statusCode: 200,
-    body: JSON.stringify({ received: true, chips: parseInt(chips, 10) }),
+    body: JSON.stringify({ received: true, chips: chipCount }),
   };
 };
