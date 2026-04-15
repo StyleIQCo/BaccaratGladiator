@@ -1337,8 +1337,10 @@ header h1 {
   box-shadow:0 0 32px rgba(201,168,76,0.13), 0 10px 30px rgba(0,0,0,0.85);
   animation:dealerBreathe 5s ease-in-out infinite;
   transition:opacity 0.18s ease, box-shadow 0.4s ease;
-  display:block;
+  display:block; overflow:hidden;
 }
+/* video needs explicit sizing since object-fit isn't supported the same way */
+video.dealer-photo{ background:#000; }
 .dealer-photo.mood-fade{opacity:0}
 .dealer-photo.speaking{
   box-shadow:0 0 48px rgba(201,168,76,0.42), 0 0 90px rgba(201,168,76,0.14), 0 10px 30px rgba(0,0,0,0.85);
@@ -2253,7 +2255,12 @@ header h1 {
 <div id="dealer-section">
   <div id="dealer-portrait-wrap">
     <div id="dealer-bubble"></div>
-    <img class="dealer-photo" id="dealer-photo" src="dealer/dealing.jpeg" data-mood="idle" alt="Sofia the dealer">
+    <video class="dealer-photo" id="dealer-photo" data-mood="idle"
+           autoplay loop muted playsinline
+           poster="dealer/dealing.jpeg">
+      <source src="dealer/dealing.webm" type="video/webm">
+      <source src="dealer/dealing.mp4"  type="video/mp4">
+    </video>
   </div>
   <div id="dealer-nameplate">
     <span class="d-name">SOFIA</span>
@@ -3825,15 +3832,29 @@ const DEALER_MOODS = {
 };
 let _dealerMoodTimer = null;
 function setDealerMood(key){
-  const src = DEALER_MOODS[key] || DEALER_MOODS.idle;
-  const img = document.getElementById('dealer-photo');
-  if(!img) return;
-  if(img.getAttribute('data-mood') === key) return;
-  img.classList.add('mood-fade');
+  const jpegSrc = DEALER_MOODS[key] || DEALER_MOODS.idle;
+  const base    = jpegSrc.replace('.jpeg','');
+  const el = document.getElementById('dealer-photo');
+  if(!el) return;
+  if(el.getAttribute('data-mood') === key) return;
+  el.classList.add('mood-fade');
   setTimeout(function(){
-    img.src = src;
-    img.setAttribute('data-mood', key);
-    img.classList.remove('mood-fade');
+    const isVideo = el.tagName === 'VIDEO';
+    if(isVideo){
+      // Update <source> elements then reload
+      const sources = el.querySelectorAll('source');
+      sources.forEach(function(s){
+        if(s.type === 'video/webm') s.src = base + '.webm';
+        if(s.type === 'video/mp4')  s.src = base + '.mp4';
+      });
+      el.poster = jpegSrc;
+      el.load();
+      el.play().catch(function(){});
+    } else {
+      el.src = jpegSrc;
+    }
+    el.setAttribute('data-mood', key);
+    el.classList.remove('mood-fade');
   }, 180);
   if(_dealerMoodTimer) clearTimeout(_dealerMoodTimer);
   const idleKeys = ['idle','place_bets','deal_player','deal_banker'];
