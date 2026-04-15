@@ -1,0 +1,9 @@
+{
+  "name": "bg-stripe-lambda",
+  "version": "1.0.0",
+  "description": "BaccaratGladiator Stripe chip purchase backend",
+  "main": "src/createCheckout.js",
+  "dependencies": {
+    "stripe": "^14.0.0"
+  }
+}

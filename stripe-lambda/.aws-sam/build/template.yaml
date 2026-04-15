@@ -1,0 +1,82 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: BaccaratGladiator Stripe chip purchase backend
+Globals:
+  Function:
+    Timeout: 10
+    Runtime: nodejs20.x
+    Environment:
+      Variables:
+        STRIPE_SECRET_KEY:
+          Ref: StripeSecretKey
+        STRIPE_WEBHOOK_SECRET:
+          Ref: StripeWebhookSecret
+        ALLOWED_ORIGIN:
+          Ref: AllowedOrigin
+Parameters:
+  StripeSecretKey:
+    Type: String
+    NoEcho: true
+    Description: Stripe secret key (sk_live_... or sk_test_...)
+  StripeWebhookSecret:
+    Type: String
+    NoEcho: true
+    Description: Stripe webhook signing secret (whsec_...)
+  AllowedOrigin:
+    Type: String
+    Default: https://baccaratgladiator.com
+    Description: CORS allowed origin
+Resources:
+  CreateCheckoutFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: bg-stripe-create-checkout
+      Handler: src/createCheckout.handler
+      Description: Creates a Stripe checkout session for chip purchases
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: BgApi
+            Path: /create-checkout
+            Method: POST
+      CodeUri: CreateCheckoutFunction
+    Metadata:
+      SamResourceId: CreateCheckoutFunction
+  WebhookFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: bg-stripe-webhook
+      Handler: src/webhook.handler
+      Description: Handles Stripe webhook events to verify payment
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: BgApi
+            Path: /webhook
+            Method: POST
+      CodeUri: WebhookFunction
+    Metadata:
+      SamResourceId: WebhookFunction
+  BgApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: bg-stripe-api
+      StageName: prod
+      Cors:
+        AllowMethods: '''POST,OPTIONS'''
+        AllowHeaders: '''Content-Type,stripe-signature'''
+        AllowOrigin:
+          Fn::Sub: '''${AllowedOrigin}'''
+Outputs:
+  CreateCheckoutUrl:
+    Description: POST to this URL to create a checkout session
+    Value:
+      Fn::Sub: https://${BgApi}.execute-api.${AWS::Region}.amazonaws.com/prod/create-checkout
+  WebhookUrl:
+    Description: Add this URL as a Stripe webhook endpoint
+    Value:
+      Fn::Sub: https://${BgApi}.execute-api.${AWS::Region}.amazonaws.com/prod/webhook
