@@ -4,15 +4,25 @@ const Stripe = require('stripe');
 const { PACKAGE_MAP } = require('./packages');
 
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
-const ORIGIN = process.env.ALLOWED_ORIGIN;
 
-const CORS = {
-  'Access-Control-Allow-Origin':  ORIGIN,
-  'Access-Control-Allow-Headers': 'Content-Type',
-  'Access-Control-Allow-Methods': 'POST,OPTIONS',
-};
+const ALLOWED_ORIGINS = [
+  'https://baccaratgladiator.com',
+  'https://www.baccaratgladiator.com',
+];
+
+function getCors(event) {
+  const origin = (event.headers || {})['origin'] || (event.headers || {})['Origin'] || '';
+  const allowed = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+  return {
+    'Access-Control-Allow-Origin':  allowed,
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Methods': 'POST,OPTIONS',
+  };
+}
 
 exports.handler = async (event) => {
+  const CORS = getCors(event);
+
   // Handle preflight
   if (event.httpMethod === 'OPTIONS') {
     return { statusCode: 200, headers: CORS, body: '' };
@@ -46,8 +56,9 @@ exports.handler = async (event) => {
     };
   }
 
-  const gameSlug = game === 'blackjack' ? 'bj' : '';
-  const gameUrl  = gameSlug ? `${ORIGIN}/${gameSlug}` : ORIGIN;
+  const BASE_URL  = 'https://baccaratgladiator.com';
+  const gameSlug  = game === 'blackjack' ? 'bj/' : '';
+  const gameUrl   = gameSlug ? `${BASE_URL}/${gameSlug}` : `${BASE_URL}/`;
 
   try {
     const session = await stripe.checkout.sessions.create({
@@ -61,7 +72,7 @@ exports.handler = async (event) => {
             product_data: {
               name:        `${pkg.name} — ${pkg.chips.toLocaleString()} Chips`,
               description: `${pkg.chips.toLocaleString()} chips for BaccaratGladiator${pkg.bonus ? ` (${pkg.bonus} value)` : ''}`,
-              images:      [`${ORIGIN}/baccarat-gladiator-logo.svg`],
+              images:      [`${BASE_URL}/baccarat-gladiator-logo.svg`],
             },
           },
           quantity: 1,

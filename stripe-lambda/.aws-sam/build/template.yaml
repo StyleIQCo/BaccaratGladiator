@@ -69,8 +69,7 @@ Resources:
       Cors:
         AllowMethods: '''POST,OPTIONS'''
         AllowHeaders: '''Content-Type,stripe-signature'''
-        AllowOrigin:
-          Fn::Sub: '''${AllowedOrigin}'''
+        AllowOrigin: '''*'''
 Outputs:
   CreateCheckoutUrl:
     Description: POST to this URL to create a checkout session

@@ -342,6 +342,20 @@ function passAgeGate() {
   g.style.display = 'flex'; g.style.flexDirection = 'column';
   init();
 }
+// Handle return from Stripe — must run before DOMContentLoaded checks age gate
+(function handleReturn() {
+  const p = new URLSearchParams(window.location.search);
+  if (p.get('purchase') !== 'success') return;
+  window.history.replaceState({}, '', window.location.pathname);
+  const chips = parseInt(p.get('chips') || '0', 10);
+  if (chips > 0) {
+    localStorage.setItem('bg_pending_chips', String(chips));
+    sessionStorage.setItem(AGE_KEY, '1');  // auto-pass age gate
+  }
+  // Clean up any leftover session data
+  localStorage.removeItem('bg_stripe_session');
+})();
+
 window.addEventListener('DOMContentLoaded', function() {
   if(sessionStorage.getItem(AGE_KEY) === '1') {
     document.getElementById('age-gate').style.display = 'none';
@@ -799,6 +813,23 @@ function init() {
   postFeed('⚔ Welcome to Blackjack Gladiator! Place your bets.', 'info');
   postFeed('Match the Dealer side bet: Non-suited 3:1 · Suited 14:1', 'mtd');
   postFeed('Dealer stands soft 17 · BJ pays 3:2 · Split up to 4 hands', 'info');
+
+  // Apply any pending chip purchase that came back from Stripe
+  const pending = localStorage.getItem('bg_pending_chips');
+  if (pending) {
+    localStorage.removeItem('bg_pending_chips');
+    const chips = parseInt(pending, 10);
+    if (chips > 0) {
+      balance += chips;
+      document.getElementById('bal').textContent = '$' + balance.toLocaleString();
+      const t = document.createElement('div');
+      t.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#0d2a10;border:2px solid #4caf50;border-radius:10px;padding:14px 24px;color:#fff;font-size:15px;font-weight:600;z-index:10000;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,0.5);';
+      t.textContent = '🎉 ' + chips.toLocaleString() + ' chips added to your balance!';
+      document.body.appendChild(t);
+      setTimeout(() => t.remove(), 5000);
+      postFeed('🎉 ' + chips.toLocaleString() + ' chips added to your balance!', 'info');
+    }
+  }
 }
 </script>
 
@@ -858,22 +889,6 @@ async function purchaseChips(packageId) {
   }
 }
 
-// Credit chips on return from Stripe
-(function handleReturn() {
-  const p = new URLSearchParams(window.location.search);
-  if (!p.get('purchase')) return;
-  window.history.replaceState({}, '', window.location.pathname);
-  const chips = parseInt(p.get('chips') || '0', 10);
-  if (p.get('purchase') === 'success' && chips > 0) {
-    balance += chips;
-    document.getElementById('bal').textContent = '$' + balance.toLocaleString();
-    const t = document.createElement('div');
-    t.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#0d2a10;border:2px solid #4caf50;border-radius:10px;padding:14px 24px;color:#fff;font-size:15px;font-weight:600;z-index:10000;text-align:center;';
-    t.textContent = '🎉 ' + chips.toLocaleString() + ' chips added!';
-    document.body.appendChild(t);
-    setTimeout(() => t.remove(), 5000);
-  }
-})();
 </script>
 </body>
 </html>

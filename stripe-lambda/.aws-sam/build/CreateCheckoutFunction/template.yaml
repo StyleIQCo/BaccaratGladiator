@@ -67,7 +67,7 @@ Resources:
       Cors:
         AllowMethods: "'POST,OPTIONS'"
         AllowHeaders: "'Content-Type,stripe-signature'"
-        AllowOrigin: !Sub "'${AllowedOrigin}'"
+        AllowOrigin: "'*'"
 
 Outputs:
   CreateCheckoutUrl:
