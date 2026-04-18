@@ -783,19 +783,16 @@ body[data-venue='vegas'] .hand-box{
   border-color:rgba(90,160,255,0.30);
   box-shadow:0 0 18px rgba(60,120,255,0.12), inset 0 0 12px rgba(20,60,140,0.10);
 }
-/* Bet slots: semi-transparent so skyline bleeds through at bottom */
-body[data-venue='vegas'] .bet-slot{
-  background:rgba(6,16,40,0.78);
-  border-color:rgba(90,160,255,0.25);
+/* Bet slots: Vegas blue sky tint */
+body[data-venue='vegas'] .main-bets-row{
+  border-color:rgba(90,160,255,0.38);
+  box-shadow:inset 0 0 40px rgba(6,16,50,0.6),0 4px 18px rgba(0,0,10,0.6);
 }
-body[data-venue='vegas'] .bet-slot.active{
-  background:rgba(15,35,90,0.85);
-  border-color:rgba(130,190,255,0.55);
-  box-shadow:0 0 14px rgba(70,140,255,0.25);
-}
-body[data-venue='vegas'] .bet-slot.tie-slot{
-  background:rgba(4,20,14,0.78);
-}
+body[data-venue='vegas'] #slot-player{ background:rgba(6,18,55,0.72); }
+body[data-venue='vegas'] #slot-player.active{ background:rgba(15,40,110,0.85); box-shadow:inset 0 0 0 2px rgba(90,160,255,0.5); }
+body[data-venue='vegas'] #slot-tie  { background:rgba(4,20,14,0.72); }
+body[data-venue='vegas'] #slot-banker{ background:rgba(30,6,6,0.72); }
+body[data-venue='vegas'] #slot-banker.active{ background:rgba(80,15,15,0.85); box-shadow:inset 0 0 0 2px rgba(255,90,90,0.5); }
 body[data-venue='atlantic'] header{
   background:linear-gradient(90deg,#0f3b47 0%,#1d6f82 50%,#0f3b47 100%);
 }
@@ -861,8 +858,8 @@ body[data-venue='montecarlo'] .hand-box{
   border-color:rgba(250,217,143,0.52);
   box-shadow:inset 0 0 28px rgba(255,227,164,0.09), 0 0 14px rgba(228,172,78,0.14);
 }
-body[data-venue] .bet-slot{
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,0.03);
+body[data-venue] .main-bets-row{
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,0.03),inset 0 0 40px rgba(0,0,0,0.45),0 4px 18px rgba(0,0,0,0.55);
 }
 body[data-venue='vegas'] .chip{ box-shadow:0 0 16px rgba(90,160,255,0.28); }
 body[data-venue='atlantic'] .chip{ box-shadow:0 0 14px rgba(100,220,220,0.22); }
@@ -870,14 +867,11 @@ body[data-venue='macau'] .chip{ box-shadow:0 0 14px rgba(220,120,200,0.2); }
 body[data-venue='buenosaires'] .chip{ box-shadow:0 0 14px rgba(134,182,255,0.22); }
 body[data-venue='morocco'] .chip{ box-shadow:0 0 14px rgba(230,154,98,0.22); }
 body[data-venue='montecarlo'] .chip{ box-shadow:0 0 18px rgba(255,226,148,0.4); }
-body[data-venue='montecarlo'] .bet-slot{
-  border-color:rgba(248,216,138,0.46);
-  background:linear-gradient(180deg,rgba(113,82,37,0.22) 0%,rgba(57,41,18,0.2) 100%);
-  box-shadow:inset 0 0 0 1px rgba(255,242,205,0.08);
+body[data-venue='montecarlo'] .main-bets-row{
+  border-color:rgba(248,216,138,0.52);
+  box-shadow:inset 0 0 40px rgba(0,0,0,0.4),0 4px 20px rgba(228,172,78,0.15);
 }
-body[data-venue='montecarlo'] .bet-slot .sname{
-  color:#ffe5b0;
-}
+body[data-venue='montecarlo'] .main-bet .sname{ color:#ffe5b0; }
 body[data-venue='montecarlo'] .bet-slot .sodds{
   color:rgba(255,236,191,0.8);
 }
@@ -1279,44 +1273,149 @@ header h1 {
 .hctrl-btn.player-style:hover:not(:disabled) { background:rgba(34,68,204,0.2); border-color:#7799ff; }
 
 /* ─── BET SLOTS ─── */
-.bet-section {
+/* ─── CASINO TABLE BETTING LAYOUT ─── */
+#table-betting {
   grid-column:1/-1;
-  display:grid; grid-template-columns:1fr auto 1fr;
-  gap:6px; align-items:start;
+  display:flex; align-items:stretch; gap:4px;
+  padding:2px 4px 0;
 }
+
+/* Main 3-bet zone — unified casino table arc */
+.main-bets-row {
+  flex:1; display:flex; align-items:stretch;
+  border:2px solid rgba(201,168,76,0.48);
+  border-radius:12px; overflow:hidden;
+  box-shadow:
+    inset 0 0 40px rgba(0,0,0,0.45),
+    inset 0 2px 0 rgba(201,168,76,0.12),
+    0 4px 18px rgba(0,0,0,0.55);
+}
+
+/* Each main bet zone */
 .bet-slot {
-  border:2px dashed rgba(201,168,76,0.3);
-  border-radius:6px; padding:5px 6px;
-  text-align:center; cursor:pointer; transition:all 0.2s;
+  cursor:pointer; transition:background 0.2s, box-shadow 0.15s;
+  text-align:center;
 }
-.bet-slot:hover { border-color:var(--gold); }
-.bet-slot.active { border-color:var(--gold); border-style:solid; background:rgba(201,168,76,0.09); }
-.bet-slot .sname { font-size:0.6rem; letter-spacing:1.5px; color:var(--gold); text-transform:uppercase; }
-.bet-slot .sodds { font-size:0.52rem; color:rgba(240,230,200,0.4); }
-.bet-slot .samt  { font-family:'Cinzel',serif; font-size:1.1rem; font-weight:700; color:#fff; }
-.bet-slot.tie-slot { padding:4px; }
+.bet-slot.main-bet {
+  flex:1; border:none; border-radius:0;
+  border-right:1px solid rgba(201,168,76,0.18);
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  padding:10px 6px 8px; min-height:88px; position:relative;
+}
+.bet-slot.main-bet:last-child { border-right:none; }
 
-.bet-slot.dragon-slot  { border-color:rgba(184,134,11,0.4); }
-.bet-slot.dragon-slot.active { border-color:var(--ez-col); background:rgba(184,134,11,0.08); }
-.bet-slot.dragon-slot .sname { color:var(--ez-col); }
-.bet-slot.panda-slot   { border-color:rgba(0,160,80,0.4); }
-.bet-slot.panda-slot.active  { border-color:#00cc60; background:rgba(0,160,80,0.08); }
-.bet-slot.panda-slot .sname  { color:#00cc60; }
-.bet-slot.tiger-slot   { border-color:rgba(204,102,0,0.4); }
-.bet-slot.tiger-slot.active  { border-color:var(--tiger-col); background:rgba(204,102,0,0.08); }
-.bet-slot.tiger-slot .sname  { color:var(--tiger-col); }
+/* Player — blue tint */
+#slot-player {
+  background:linear-gradient(160deg,rgba(25,60,180,0.18) 0%,rgba(10,25,70,0.1) 100%);
+}
+#slot-player:hover {
+  background:linear-gradient(160deg,rgba(25,60,180,0.32) 0%,rgba(10,25,70,0.2) 100%);
+}
+#slot-player.active {
+  background:linear-gradient(160deg,rgba(25,60,180,0.38) 0%,rgba(10,25,70,0.25) 100%);
+  box-shadow:inset 0 0 0 2px rgba(90,150,255,0.5),inset 0 0 18px rgba(30,60,200,0.2);
+}
+/* Tie — narrow green center */
+#slot-tie {
+  flex:0.62;
+  border-right:1px solid rgba(201,168,76,0.18);
+  background:linear-gradient(160deg,rgba(15,110,45,0.18) 0%,rgba(5,40,15,0.1) 100%);
+}
+#slot-tie:hover {
+  background:linear-gradient(160deg,rgba(15,110,45,0.32) 0%,rgba(5,40,15,0.2) 100%);
+}
+#slot-tie.active {
+  background:linear-gradient(160deg,rgba(15,110,45,0.4) 0%,rgba(5,40,15,0.25) 100%);
+  box-shadow:inset 0 0 0 2px rgba(80,220,130,0.5),inset 0 0 18px rgba(15,110,45,0.2);
+}
+/* Banker — red tint */
+#slot-banker {
+  background:linear-gradient(160deg,rgba(180,25,25,0.18) 0%,rgba(70,10,10,0.1) 100%);
+}
+#slot-banker:hover {
+  background:linear-gradient(160deg,rgba(180,25,25,0.32) 0%,rgba(70,10,10,0.2) 100%);
+}
+#slot-banker.active {
+  background:linear-gradient(160deg,rgba(180,25,25,0.4) 0%,rgba(70,10,10,0.25) 100%);
+  box-shadow:inset 0 0 0 2px rgba(255,80,80,0.5),inset 0 0 18px rgba(160,25,25,0.25);
+}
 
-/* ─── SIDE BETS ─── */
-.side-bets-wrap { grid-column:1/-1; }
-.side-bets-label {
-  font-size:0.55rem; letter-spacing:2px;
+/* Labels */
+.main-bet .sname {
+  font-family:'Cinzel',serif; font-size:0.68rem; letter-spacing:2px;
+  color:var(--gold); text-shadow:0 0 8px rgba(201,168,76,0.35);
+  text-transform:uppercase;
+}
+.main-bet .sodds {
+  font-size:0.48rem; color:rgba(240,230,200,0.38); margin-top:1px; letter-spacing:0.5px;
+}
+/* Betting circle — where chips visually land */
+.bet-circle {
+  width:44px; height:44px; border-radius:50%;
+  border:1px dashed rgba(201,168,76,0.38);
+  display:flex; align-items:center; justify-content:center;
+  margin-top:6px; background:rgba(0,0,0,0.28);
+  transition:border-color 0.2s, box-shadow 0.2s;
+}
+.bet-slot.active .bet-circle {
+  border-style:solid; border-color:rgba(201,168,76,0.75);
+  box-shadow:0 0 14px rgba(201,168,76,0.28);
+}
+#slot-player.active .bet-circle { border-color:rgba(90,150,255,0.7); }
+#slot-tie.active    .bet-circle { border-color:rgba(80,220,130,0.7); }
+#slot-banker.active .bet-circle { border-color:rgba(255,90,90,0.7); }
+.bet-circle .samt {
+  font-family:'Cinzel',serif; font-size:0.95rem; font-weight:700; color:#fff;
+}
+
+/* ── Dragon 7 / Panda 8 flanking strips (EZ mode) ── */
+.ez-strip {
+  display:none; flex-direction:column;
+  width:58px; flex-shrink:0;
+}
+.ez-strip.visible { display:flex; }
+.ez-strip .bet-slot {
+  flex:1; border-radius:8px; padding:6px 4px;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:2px;
+  border:1px dashed rgba(201,168,76,0.25);
+  min-height:0;
+}
+.ez-strip .bet-slot .sname {
+  font-size:0.52rem; letter-spacing:1px; color:var(--gold);
+  text-transform:uppercase; text-align:center; line-height:1.3;
+}
+.ez-strip .bet-slot .sodds { font-size:0.46rem; color:rgba(240,230,200,0.38); }
+.ez-strip .bet-slot .samt  { font-family:'Cinzel',serif; font-size:0.85rem; font-weight:700; color:#fff; }
+.ez-strip .bet-slot.dragon-slot  { border-color:rgba(184,134,11,0.4); background:rgba(80,50,0,0.18); }
+.ez-strip .bet-slot.dragon-slot.active { border-color:var(--ez-col); border-style:solid; background:rgba(184,134,11,0.18); box-shadow:inset 0 0 10px rgba(184,134,11,0.15); }
+.ez-strip .bet-slot.dragon-slot .sname { color:var(--ez-col); }
+.ez-strip .bet-slot.panda-slot   { border-color:rgba(0,160,80,0.4); background:rgba(0,60,25,0.18); }
+.ez-strip .bet-slot.panda-slot.active  { border-color:#00cc60; border-style:solid; background:rgba(0,160,80,0.18); box-shadow:inset 0 0 10px rgba(0,160,80,0.15); }
+.ez-strip .bet-slot.panda-slot .sname  { color:#00cc60; }
+
+/* ── Tiger row (below table, Tiger mode only) ── */
+.tiger-row-wrap { grid-column:1/-1; }
+.tiger-row-label {
+  font-size:0.52rem; letter-spacing:2px;
   color:rgba(240,230,200,0.3); text-align:center;
-  padding:4px 0 3px; text-transform:uppercase;
+  padding:3px 0 2px; text-transform:uppercase;
 }
-.side-bets-row {
-  display:flex; gap:5px; justify-content:center; flex-wrap:wrap;
+.tiger-row {
+  display:flex; gap:4px; justify-content:center;
 }
-.side-bets-row .bet-slot { flex:1; min-width:80px; max-width:130px; }
+.tiger-row .bet-slot {
+  flex:1; min-width:70px; max-width:130px;
+  border:1px dashed rgba(204,102,0,0.35);
+  border-radius:8px; padding:6px 4px; text-align:center;
+}
+.tiger-row .bet-slot .sname { font-size:0.56rem; letter-spacing:1px; color:var(--tiger-col); text-transform:uppercase; }
+.tiger-row .bet-slot .sodds { font-size:0.46rem; color:rgba(240,230,200,0.38); }
+.tiger-row .bet-slot .samt  { font-family:'Cinzel',serif; font-size:0.95rem; font-weight:700; color:#fff; }
+.tiger-row .bet-slot.active { border-color:var(--tiger-col); border-style:solid; background:rgba(204,102,0,0.1); }
+.tiger-row .bet-slot:hover  { border-color:rgba(204,102,0,0.7); }
+
 .side-bets-panel { display:none; }
 .side-bets-panel.visible { display:block; }
 
@@ -1751,8 +1850,12 @@ video.dealer-photo{ background:#000; }
   font-family:'Cinzel',serif; font-size:0.6rem; letter-spacing:3px;
   color:var(--gold); text-align:center; padding:4px 0 7px; opacity:0.8;
 }
-.roads-row1 { display:grid; grid-template-columns:220px 1fr; gap:5px; margin-bottom:5px; }
-.roads-row2 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:5px; margin-bottom:8px; }
+/* Big Road — full width, prominent */
+.roads-big { margin-bottom:6px; }
+.roads-big .road-panel { border-width:2px; border-color:rgba(201,168,76,0.5); }
+.roads-big .road-hdr .road-name { font-size:0.65rem; color:var(--gold); letter-spacing:2px; }
+/* Secondary roads — 4-up compact grid */
+.roads-row2 { display:grid; grid-template-columns:repeat(4,1fr); gap:4px; margin-bottom:8px; }
 .road-panel {
   border:1px solid rgba(140,100,30,0.5); border-radius:3px; overflow:hidden;
   box-shadow:0 2px 8px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,240,180,0.08);
@@ -1909,11 +2012,18 @@ video.dealer-photo{ background:#000; }
   .cc-strip-r { right:10px; }
   .cc-strip-l,.cc-strip-r { top:14px; bottom:14px; width:4px; }
 
-  /* Bet slots — keep 3-col layout, just tighten */
-  .bet-slot .sname { font-size:0.55rem; }
-  .bet-slot .sodds { font-size:0.46rem; }
-  .bet-slot .samt  { font-size:0.95rem; }
-  .bet-slot        { padding:4px 4px; }
+  /* Casino table bets — mobile */
+  .main-bet { min-height:72px; padding:7px 4px 6px; }
+  .main-bet .sname { font-size:0.58rem; letter-spacing:1.5px; }
+  .main-bet .sodds { font-size:0.42rem; }
+  .bet-circle { width:36px; height:36px; margin-top:4px; }
+  .bet-circle .samt { font-size:0.8rem; }
+  .ez-strip { width:46px; }
+  .ez-strip .bet-slot .sname { font-size:0.44rem; }
+  .ez-strip .bet-slot .samt  { font-size:0.75rem; }
+  .tiger-row .bet-slot { padding:5px 3px; }
+  .tiger-row .bet-slot .sname { font-size:0.5rem; }
+  .tiger-row .bet-slot .samt  { font-size:0.85rem; }
 
   /* Side bets */
   .side-bets-row .bet-slot { min-width:70px; }
@@ -1932,7 +2042,7 @@ video.dealer-photo{ background:#000; }
   .third-slot { border-left:1px dashed rgba(201,168,76,0.22); padding-left:6px; margin-left:4px; }
 
   /* Roads */
-  .roads-row1 { grid-template-columns:1fr 1fr; }
+  .roads-row2 { grid-template-columns:1fr 1fr; }
   .roads-row2 { grid-template-columns:1fr 1fr; }
 
   /* Mode rules */
@@ -2839,57 +2949,63 @@ video.dealer-photo{ background:#000; }
   <!-- third-card-zone kept as empty anchor for JS classList calls -->
   <div id="third-card-zone"></div>
 
-  <!-- MAIN BETS -->
-  <div class="bet-section">
-    <div class="bet-slot" id="slot-player" onclick="selectSlot('player')">
-      <div class="sname">Player</div>
-      <div class="sodds">1:1</div>
-      <div class="samt"  id="amt-player">$0</div>
-    </div>
-    <div class="bet-slot tie-slot" id="slot-tie" onclick="selectSlot('tie')">
-      <div class="sname">Tie</div>
-      <div class="sodds">8:1</div>
-      <div class="samt"  id="amt-tie">$0</div>
-    </div>
-    <div class="bet-slot active" id="slot-banker" onclick="selectSlot('banker')">
-      <div class="sname">Banker</div>
-      <div class="sodds" id="banker-odds">0.95:1</div>
-      <div class="samt"  id="amt-banker">$0</div>
-    </div>
-  </div>
+  <!-- ═══ CASINO TABLE BETTING LAYOUT ═══ -->
+  <div id="table-betting">
 
-  <!-- EZ SIDE BETS -->
-  <div class="side-bets-wrap side-bets-panel" id="ez-side-panel">
-    <div class="side-bets-label">🐉🐼 Dragon &amp; Panda Bonuses</div>
-    <div class="side-bets-row">
+    <!-- Dragon 7 — left strip, EZ mode only -->
+    <div class="ez-strip side-bets-panel" id="ez-dragon-strip">
       <div class="bet-slot dragon-slot" id="slot-dragon7" onclick="selectSlot('dragon7')">
-        <div class="sname">Dragon 7</div>
-        <div class="sodds">Banker 3-card 7 · 40:1</div>
+        <div class="sname">🐉<br>Dragon 7</div>
+        <div class="sodds">40:1</div>
         <div class="samt" id="amt-dragon7">$0</div>
       </div>
+    </div>
+
+    <!-- Main 3 bets — unified casino table row -->
+    <div class="main-bets-row">
+      <div class="bet-slot main-bet" id="slot-player" onclick="selectSlot('player')">
+        <div class="sname">Player</div>
+        <div class="sodds">Pays 1:1</div>
+        <div class="bet-circle"><span class="samt" id="amt-player">$0</span></div>
+      </div>
+      <div class="bet-slot main-bet" id="slot-tie" onclick="selectSlot('tie')">
+        <div class="sname">Tie</div>
+        <div class="sodds">Pays 8:1</div>
+        <div class="bet-circle"><span class="samt" id="amt-tie">$0</span></div>
+      </div>
+      <div class="bet-slot main-bet active" id="slot-banker" onclick="selectSlot('banker')">
+        <div class="sname">Banker</div>
+        <div class="sodds" id="banker-odds">Pays 0.95:1</div>
+        <div class="bet-circle"><span class="samt" id="amt-banker">$0</span></div>
+      </div>
+    </div>
+
+    <!-- Panda 8 — right strip, EZ mode only -->
+    <div class="ez-strip side-bets-panel" id="ez-panda-strip">
       <div class="bet-slot panda-slot" id="slot-panda8" onclick="selectSlot('panda8')">
-        <div class="sname">Panda 8</div>
-        <div class="sodds">Player 3-card 8 · 25:1</div>
+        <div class="sname">🐼<br>Panda 8</div>
+        <div class="sodds">25:1</div>
         <div class="samt" id="amt-panda8">$0</div>
       </div>
     </div>
-  </div>
 
-  <!-- TIGER SIDE BETS -->
-  <div class="side-bets-wrap side-bets-panel" id="tiger-side-panel">
-    <div class="side-bets-label">Tiger Side Bets</div>
-    <div class="side-bets-row">
+  </div><!-- /#table-betting -->
+
+  <!-- Tiger side bets — below the table, Tiger mode only -->
+  <div class="tiger-row-wrap side-bets-panel" id="tiger-side-panel">
+    <div class="tiger-row-label">Tiger Side Bets</div>
+    <div class="tiger-row">
       <div class="bet-slot tiger-slot" id="slot-smallTiger" onclick="selectSlot('smallTiger')">
         <div class="sname">Small Tiger</div>
         <div class="sodds">Banker 2-card 6 · 22:1</div>
         <div class="samt" id="amt-smallTiger">$0</div>
       </div>
-      <div class="bet-slot tiger-slot" id="slot-bigTiger"   onclick="selectSlot('bigTiger')">
+      <div class="bet-slot tiger-slot" id="slot-bigTiger" onclick="selectSlot('bigTiger')">
         <div class="sname">Big Tiger</div>
         <div class="sodds">Banker 3-card 6 · 50:1</div>
         <div class="samt" id="amt-bigTiger">$0</div>
       </div>
-      <div class="bet-slot tiger-slot" id="slot-tigerTie"   onclick="selectSlot('tigerTie')">
+      <div class="bet-slot tiger-slot" id="slot-tigerTie" onclick="selectSlot('tigerTie')">
         <div class="sname">Tiger Tie</div>
         <div class="sodds">Both 6 · 35:1</div>
         <div class="samt" id="amt-tigerTie">$0</div>
@@ -3026,17 +3142,19 @@ video.dealer-photo{ background:#000; }
 <!-- ═══════ SCOREBOARDS ═══════ -->
 <div class="scoreboards">
   <div class="boards-label">SCOREBOARDS — LIVE ROAD TRACKING</div>
-  <div class="roads-row1">
-    <div class="road-panel">
-      <div class="road-hdr"><span class="road-name">BEAD ROAD</span><span class="road-count" id="bead-count">0 hands</span></div>
-      <div class="road-scroll" id="beadScroll"><canvas id="beadCanvas"></canvas></div>
-    </div>
+  <!-- BIG ROAD — prominent full-width -->
+  <div class="roads-big">
     <div class="road-panel">
       <div class="road-hdr"><span class="road-name">BIG ROAD</span><span class="road-count" id="big-count">0 streaks</span></div>
       <div class="road-scroll" id="bigScroll"><canvas id="bigCanvas"></canvas></div>
     </div>
   </div>
+  <!-- Secondary roads — compact 4-up -->
   <div class="roads-row2">
+    <div class="road-panel">
+      <div class="road-hdr"><span class="road-name">BEAD ROAD</span><span class="road-count" id="bead-count">0 hands</span></div>
+      <div class="road-scroll" id="beadScroll"><canvas id="beadCanvas"></canvas></div>
+    </div>
     <div class="road-panel">
       <div class="road-hdr"><span class="road-name">BIG EYE BOY</span><span class="road-count" id="beb-count">—</span></div>
       <div class="road-scroll" id="bebScroll"><canvas id="bebCanvas"></canvas></div>
@@ -3107,8 +3225,8 @@ video.dealer-photo{ background:#000; }
 'use strict';
 
 // ── CONSTANTS ──────────────────────────────────────────────────
-const ROWS=6, BIG_CELL=30, SM_CELL=22;
-const MIN_BEAD_COLS=10, MIN_BIG_COLS=22, MIN_SM_COLS=12;
+const ROWS=6, BIG_CELL=30, BEAD_CELL=20, SM_CELL=16;
+const MIN_BEAD_COLS=10, MIN_BIG_COLS=22, MIN_SM_COLS=10;
 // Casino scoreboard colors (on light cream background)
 const BANKER_C='#cc1111', PLAYER_C='#1540cc', TIE_C='#0f8f2e';
 const RED_D='#cc1111', BLUE_D='#1540cc';
@@ -4123,7 +4241,8 @@ function setMode(m){
   if(phase!=='betting') return;
   gameMode=m;
   ['standard','ez','tiger'].forEach(t=>document.getElementById('tab-'+t).classList.toggle('active',t===m));
-  document.getElementById('ez-side-panel').classList.toggle('visible',m==='ez');
+  document.getElementById('ez-dragon-strip').classList.toggle('visible',m==='ez');
+  document.getElementById('ez-panda-strip').classList.toggle('visible',m==='ez');
   document.getElementById('tiger-side-panel').classList.toggle('visible',m==='tiger');
   document.getElementById('banker-odds').textContent=m==='standard'?'0.95:1':m==='tiger'?'1:1 (½ on 6)':'1:1';
   document.getElementById('mode-subtitle').textContent=MODE_RULES[m].sub;
@@ -5194,8 +5313,9 @@ function deal(){
   document.getElementById('player-val').textContent='?';
 
   lastHandStake=totalBet();
-  bets={banker:0,player:0,tie:0,dragon7:0,panda8:0,bigTiger:0,smallTiger:0,tigerTie:0};
-  refreshUI();
+  // bets kept until resolveHand() so circles stay visible during reveal
+  // Update balance display only (bets not zeroed yet)
+  document.getElementById('bal-display').textContent=balance.toLocaleString();
   dealerPhaseAnnounced = false;
   setMsg('🎴 Click your cards to squeeze! Ask the dealer to reveal banker cards.');
 }
@@ -5405,6 +5525,10 @@ function resolveHand(){
     if(b.smallTiger>0){ if(r.isSmallTiger){ const w=b.smallTiger*22; balance+=b.smallTiger+w; netChange+=w; msgs.push(`🐯 Small Tiger! +$${w}`); } else netChange-=b.smallTiger; }
     if(b.bigTiger>0)  { if(r.isBigTiger)  { const w=b.bigTiger*50;   balance+=b.bigTiger+w;   netChange+=w; msgs.push(`🐯 Big Tiger! +$${w}`); }   else netChange-=b.bigTiger; }
   }
+
+  // Clear bet circles now that result is in
+  bets={banker:0,player:0,tie:0,dragon7:0,panda8:0,bigTiger:0,smallTiger:0,tigerTie:0};
+  refreshUI();
 
   // ── Natural detection (for animation/feed only)
   const winScore = r.winner==='B'?r.bT : r.winner==='P'?r.pT : r.pT;
@@ -5774,7 +5898,7 @@ function slash(ctx,cx,cy,size,color,alpha){
 function renderBeadRoad(res){
   const canvas=document.getElementById('beadCanvas');
   const scroll=document.getElementById('beadScroll');
-  const cell=BIG_CELL;
+  const cell=BEAD_CELL;
   const cells=computeBeadRoad(res);
   const numCols=Math.max(MIN_BEAD_COLS, Math.ceil(res.length/ROWS)+2);
   canvas.width=numCols*cell; canvas.height=ROWS*cell;
