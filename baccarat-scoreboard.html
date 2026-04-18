@@ -2682,6 +2682,11 @@ video.dealer-photo{ background:#000; }
     <div class="audio-ctl">
       <button id="btn-sound" onclick="toggleSFX()"  title="Toggle SFX"   class="audio-btn"><svg width="15" height="15" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-sound"/></svg></button>
       <button id="btn-music" onclick="toggleMusic()" title="Toggle Music" class="audio-btn"><svg width="15" height="15" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-music"/></svg></button>
+      <button id="btn-lang" onclick="toggleLang()" title="Switch language"
+        style="font-family:'Cinzel',serif;font-size:0.6rem;font-weight:700;letter-spacing:0.5px;
+               background:rgba(201,168,76,0.12);border:1px solid rgba(201,168,76,0.35);
+               color:rgba(201,168,76,0.85);border-radius:4px;padding:3px 7px;cursor:pointer;
+               transition:all 0.2s;">中文</button>
     </div>
     <div>
       <div style="font-size:0.56rem;color:rgba(140,220,255,0.82);" id="hdr-premium">Gems: 50 · LVL 1 Recruit</div>
@@ -3054,8 +3059,8 @@ video.dealer-photo{ background:#000; }
   </div>
   <div id="bb-actions">
     <div class="bal-info">
-      Credits: <span id="bal-display">1,000</span>
-      &nbsp;·&nbsp; Stake: <span id="bet-display">0</span>
+      <span id="lbl-credits">Credits</span>: <span id="bal-display">1,000</span>
+      &nbsp;·&nbsp; <span id="lbl-stake">Stake</span>: <span id="bet-display">0</span>
     </div>
     <button class="btn btn-clear" id="btn-clear" onclick="clearBets()">Clear</button>
     <button class="btn btn-repeat" id="btn-repeat" onclick="repeatLastBet()" title="Repeat last bet">↺ Repeat</button>
@@ -3087,7 +3092,7 @@ video.dealer-photo{ background:#000; }
 <!-- ═══════ LIVE FEED ═══════ -->
 <div class="feed-panel" id="feed-panel">
   <div class="feed-header">
-    <span class="feed-title"><svg width="12" height="12" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:4px;color:#f0d060" aria-hidden="true"><use href="#ico-broadcast"/></svg>LIVE FEED</span>
+    <span class="feed-title"><svg width="12" height="12" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:4px;color:#f0d060" aria-hidden="true"><use href="#ico-broadcast"/></svg><span id="lbl-live-feed">LIVE FEED</span></span>
     <button class="feed-clear-btn" onclick="clearFeed()">Clear</button>
   </div>
   <div class="feed-scroll" id="feed-scroll">
@@ -3102,19 +3107,19 @@ video.dealer-photo{ background:#000; }
 <!-- ═══════ TOURNAMENT PANEL ═══════ -->
 <div id="tournament-panel">
   <div class="tourn-header">
-    <span class="tourn-title"><svg width="14" height="14" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:5px" aria-hidden="true"><use href="#ico-swords"/></svg>GLADIATOR TOURNAMENT</span>
+    <span class="tourn-title"><svg width="14" height="14" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:5px" aria-hidden="true"><use href="#ico-swords"/></svg><span id="lbl-tourn-title">GLADIATOR TOURNAMENT</span></span>
     <span class="tourn-badge">LIVE</span>
   </div>
   <div class="tourn-body">
     <div class="tourn-prize">
-      <div class="tourn-prize-label">Grand Prize</div>
+      <div class="tourn-prize-label" id="lbl-grand-prize">Grand Prize</div>
       <div class="tourn-prize-val" id="tourn-prize-val"><svg width="14" height="14" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:5px" aria-hidden="true"><use href="#ico-hotel"/></svg>Casino Stay + 500,000 Chips</div>
     </div>
     <div class="tourn-timer-wrap">
-      <div class="tourn-timer-label">Ends In</div>
+      <div class="tourn-timer-label" id="lbl-ends-in">Ends In</div>
       <div class="tourn-timer" id="tourn-timer">--:--:--</div>
     </div>
-    <button class="tourn-enter-btn" onclick="openTournamentModal()">ENTER FREE</button>
+    <button class="tourn-enter-btn" id="btn-tourn-enter" onclick="openTournamentModal()">ENTER FREE</button>
   </div>
   <div class="tourn-body" style="padding-top:0;">
     <div class="tourn-rank-strip" id="tourn-rank-strip">
@@ -3128,8 +3133,8 @@ video.dealer-photo{ background:#000; }
 <!-- ═══════ GLOBAL LEADERBOARD ═══════ -->
 <div class="leaderboard-panel">
   <div class="leaderboard-header">
-    <span class="leaderboard-title"><svg width="14" height="14" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:5px;color:#f0d060" aria-hidden="true"><use href="#ico-trophy"/></svg>GLOBAL LEADERBOARD</span>
-    <button class="leaderboard-refresh" onclick="fetchGlobalLeaderboard()">Refresh</button>
+    <span class="leaderboard-title"><svg width="14" height="14" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:5px;color:#f0d060" aria-hidden="true"><use href="#ico-trophy"/></svg><span id="lbl-leaderboard">GLOBAL LEADERBOARD</span></span>
+    <button class="leaderboard-refresh" id="btn-lb-refresh" onclick="fetchGlobalLeaderboard()">Refresh</button>
   </div>
   <div class="leaderboard-body" id="leaderboard-body">
     <div class="leaderboard-empty" id="leaderboard-empty">Sign in to submit scores. Top players will appear here.</div>
@@ -3141,41 +3146,41 @@ video.dealer-photo{ background:#000; }
 
 <!-- ═══════ SCOREBOARDS ═══════ -->
 <div class="scoreboards">
-  <div class="boards-label">SCOREBOARDS — LIVE ROAD TRACKING</div>
+  <div class="boards-label" id="lbl-boards">SCOREBOARDS — LIVE ROAD TRACKING</div>
   <!-- BIG ROAD — prominent full-width -->
   <div class="roads-big">
     <div class="road-panel">
-      <div class="road-hdr"><span class="road-name">BIG ROAD</span><span class="road-count" id="big-count">0 streaks</span></div>
+      <div class="road-hdr"><span class="road-name" id="road-name-big">BIG ROAD</span><span class="road-count" id="big-count">0 streaks</span></div>
       <div class="road-scroll" id="bigScroll"><canvas id="bigCanvas"></canvas></div>
     </div>
   </div>
   <!-- Secondary roads — compact 4-up -->
   <div class="roads-row2">
     <div class="road-panel">
-      <div class="road-hdr"><span class="road-name">BEAD ROAD</span><span class="road-count" id="bead-count">0 hands</span></div>
+      <div class="road-hdr"><span class="road-name" id="road-name-bead">BEAD ROAD</span><span class="road-count" id="bead-count">0 hands</span></div>
       <div class="road-scroll" id="beadScroll"><canvas id="beadCanvas"></canvas></div>
     </div>
     <div class="road-panel">
-      <div class="road-hdr"><span class="road-name">BIG EYE BOY</span><span class="road-count" id="beb-count">—</span></div>
+      <div class="road-hdr"><span class="road-name" id="road-name-beb">BIG EYE BOY</span><span class="road-count" id="beb-count">—</span></div>
       <div class="road-scroll" id="bebScroll"><canvas id="bebCanvas"></canvas></div>
     </div>
     <div class="road-panel">
-      <div class="road-hdr"><span class="road-name">SMALL ROAD</span><span class="road-count" id="sr-count">—</span></div>
+      <div class="road-hdr"><span class="road-name" id="road-name-sr">SMALL ROAD</span><span class="road-count" id="sr-count">—</span></div>
       <div class="road-scroll" id="srScroll"><canvas id="srCanvas"></canvas></div>
     </div>
     <div class="road-panel">
-      <div class="road-hdr"><span class="road-name">COCKROACH PIG</span><span class="road-count" id="cp-count">—</span></div>
+      <div class="road-hdr"><span class="road-name" id="road-name-cp">COCKROACH PIG</span><span class="road-count" id="cp-count">—</span></div>
       <div class="road-scroll" id="cpScroll"><canvas id="cpCanvas"></canvas></div>
     </div>
   </div>
   <div class="stats-bar">
-    <div class="stat-item b"><span class="sv" id="stat-b">0</span><span class="sl">Banker</span></div>
-    <div class="stat-item p"><span class="sv" id="stat-p">0</span><span class="sl">Player</span></div>
-    <div class="stat-item t"><span class="sv" id="stat-t">0</span><span class="sl">Tie</span></div>
-    <div class="stat-item"><span class="sv" id="stat-nat" style="color:#ffd700;">0</span><span class="sl">Naturals</span></div>
-    <div class="stat-item"><span class="sv" id="stat-rounds">0</span><span class="sl">Rounds</span></div>
-    <div class="stat-item"><span class="sv" id="stat-streak">—</span><span class="sl">Streak</span></div>
-    <div class="stat-item"><span class="sv" id="stat-shoe">312</span><span class="sl">Shoe left</span></div>
+    <div class="stat-item b"><span class="sv" id="stat-b">0</span><span class="sl" id="lbl-stat-banker">Banker</span></div>
+    <div class="stat-item p"><span class="sv" id="stat-p">0</span><span class="sl" id="lbl-stat-player">Player</span></div>
+    <div class="stat-item t"><span class="sv" id="stat-t">0</span><span class="sl" id="lbl-stat-tie">Tie</span></div>
+    <div class="stat-item"><span class="sv" id="stat-nat" style="color:#ffd700;">0</span><span class="sl" id="lbl-stat-nat">Naturals</span></div>
+    <div class="stat-item"><span class="sv" id="stat-rounds">0</span><span class="sl" id="lbl-stat-rounds">Rounds</span></div>
+    <div class="stat-item"><span class="sv" id="stat-streak">—</span><span class="sl" id="lbl-stat-streak">Streak</span></div>
+    <div class="stat-item"><span class="sv" id="stat-shoe">312</span><span class="sl" id="lbl-stat-shoe">Shoe left</span></div>
   </div>
   <!-- B/P/T PERCENTAGE DISTRIBUTION CHART -->
   <div class="pct-chart" id="pct-chart" style="display:none;">
@@ -3209,7 +3214,7 @@ video.dealer-photo{ background:#000; }
 </div>
 
 <div class="store-footer">
-  <div>For entertainment only · Simulated play · Virtual credits only · Outcomes are random · No real-money gambling</div>
+  <div id="lbl-footer">For entertainment only · Simulated play · Virtual credits only · Outcomes are random · No real-money gambling</div>
   <div class="store-links">
     <a href="#" id="privacy-link">Privacy Policy</a>
     <a href="#" id="terms-link">Terms of Use</a>
@@ -3223,6 +3228,9 @@ video.dealer-photo{ background:#000; }
 <!-- ═══════ SCRIPT ═══════ -->
 <script>
 'use strict';
+
+// Language — initialise before any function references it
+window.BG_LANG = window.BG_LANG || 'en';
 
 // ── CONSTANTS ──────────────────────────────────────────────────
 const ROWS=6, BIG_CELL=30, BEAD_CELL=20, SM_CELL=16;
@@ -3248,25 +3256,41 @@ const RED_S=new Set(['♥','♦']);
 const MODE_RULES={
   standard:{
     sub:'STANDARD · 5% COMMISSION · ALL 5 ROADS',
+    sub_zh:'标准 · 5%佣金 · 全5路',
     html:`<strong>Standard Baccarat</strong> — Classic rules with Third Card Rules auto-applied.
     <div class="rules-grid">
       <div class="rule-item"><div class="payout">0.95:1</div>Banker win (5% commission)</div>
       <div class="rule-item"><div class="payout">1:1</div>Player win</div>
       <div class="rule-item"><div class="payout">8:1</div>Tie</div>
+    </div>`,
+    html_zh:`<strong>标准百家乐</strong> — 经典规则，第三张牌规则自动执行。
+    <div class="rules-grid">
+      <div class="rule-item"><div class="payout">0.95:1</div>庄家赢（5%佣金）</div>
+      <div class="rule-item"><div class="payout">1:1</div>闲家赢</div>
+      <div class="rule-item"><div class="payout">8:1</div>和局</div>
     </div>`
   },
   ez:{
     sub:'NO COMMISSION · DRAGON 7 · PANDA 8',
+    sub_zh:'无佣金 · 龙7 · 熊猫8',
     html:`<strong>🐉🐼 Panda &amp; Dragon Baccarat</strong> — No commission. Dragon 7 banker wins push. Dragon &amp; Panda bonus bets available.
     <div class="rules-grid">
       <div class="rule-item"><div class="payout">1:1</div>Banker win (no commission)</div>
       <div class="rule-item"><div class="payout">PUSH</div>Banker wins on 3-card 7 (Dragon 7 triggers)</div>
       <div class="rule-item"><div class="payout">40:1</div>🐉 Dragon 7 — Banker 3-card total of 7</div>
       <div class="rule-item"><div class="payout">25:1</div>🐼 Panda 8 — Player 3-card total of 8</div>
+    </div>`,
+    html_zh:`<strong>🐉🐼 熊猫龙百家乐</strong> — 无佣金。龙7庄赢推注。龙7/熊猫8边注可选。
+    <div class="rules-grid">
+      <div class="rule-item"><div class="payout">1:1</div>庄家赢（无佣金）</div>
+      <div class="rule-item"><div class="payout">PUSH</div>庄家三张7点赢（龙7触发，推注）</div>
+      <div class="rule-item"><div class="payout">40:1</div>🐉 龙7 — 庄家三张合计7点</div>
+      <div class="rule-item"><div class="payout">25:1</div>🐼 熊猫8 — 闲家三张合计8点</div>
     </div>`
   },
   tiger:{
     sub:'TIGER BACCARAT · NO COMMISSION · SMALL 22:1 · BIG 50:1',
+    sub_zh:'老虎百家乐 · 无佣金 · 小虎22:1 · 大虎50:1',
     html:`<strong>🐯 Tiger Baccarat</strong> — No commission. Banker 6 pays half. Tiger bonus side bets available.
     <div class="rules-grid">
       <div class="rule-item"><div class="payout">½:1</div>Banker wins with total 6 (half pay)</div>
@@ -3274,6 +3298,14 @@ const MODE_RULES={
       <div class="rule-item"><div class="payout">22:1</div>🐯 Small Tiger — Banker 2-card 6</div>
       <div class="rule-item"><div class="payout">50:1</div>🐯 Big Tiger — Banker 3-card 6</div>
       <div class="rule-item"><div class="payout">35:1</div>🐯 Tiger Tie — Both P &amp; B total 6</div>
+    </div>`,
+    html_zh:`<strong>🐯 老虎百家乐</strong> — 无佣金。庄6点半赔。老虎边注可选。
+    <div class="rules-grid">
+      <div class="rule-item"><div class="payout">½:1</div>庄家以6点赢（半赔）</div>
+      <div class="rule-item"><div class="payout">1:1</div>其他庄家赢（无佣金）</div>
+      <div class="rule-item"><div class="payout">22:1</div>🐯 小虎 — 庄家两张合计6点</div>
+      <div class="rule-item"><div class="payout">50:1</div>🐯 大虎 — 庄家三张合计6点</div>
+      <div class="rule-item"><div class="payout">35:1</div>🐯 虎和 — 庄闲均为6点</div>
     </div>`
   }
 };
@@ -3514,20 +3546,23 @@ function canClaimDaily(){
 function claimDailyReward(){
   const t=todayKey();
   if(lastDailyClaim===t){
-    setMsg('Daily reward already claimed today. Come back tomorrow.');
+    setMsg('Daily reward already claimed today. Come back tomorrow!');
     return;
   }
+  openDailyGamePicker();
+}
+
+function _grantDailyReward(chips){
+  const t=todayKey();
   const gap=lastDailyClaim?dayDiff(t,lastDailyClaim):1;
   dailyStreak = (gap===1) ? (dailyStreak+1) : 1;
   if(dailyStreak>7) dailyStreak=1;
-  const reward=DAILY_REWARDS[dailyStreak-1];
-  balance += reward;
+  balance += chips;
   if(dailyStreak===7) hardGems += 5;
   lastDailyClaim=t;
-  setMsg('Daily reward claimed: +' + reward.toLocaleString() + ' chips' + (dailyStreak===7?' and +5 gems!':''));
-  postFeedMsg('🎁 Daily reward Day ' + dailyStreak + ' claimed: +' + reward.toLocaleString() + ' chips.', 'info');
-  refreshUI();
-  saveEconomy();
+  setMsg('Daily reward: +' + chips.toLocaleString() + ' chips' + (dailyStreak===7?' and +5 gems!':'') + ' 🎉');
+  postFeedMsg('🎁 Daily reward claimed: +' + chips.toLocaleString() + ' chips.', 'info');
+  refreshUI(); saveEconomy();
   if(typeof updateStreakDisplay==='function') updateStreakDisplay();
   if(typeof updateNextRewardCountdown==='function') updateNextRewardCountdown();
 }
@@ -4245,18 +4280,25 @@ function setMode(m){
   document.getElementById('ez-panda-strip').classList.toggle('visible',m==='ez');
   document.getElementById('tiger-side-panel').classList.toggle('visible',m==='tiger');
   document.getElementById('banker-odds').textContent=m==='standard'?'0.95:1':m==='tiger'?'1:1 (½ on 6)':'1:1';
-  document.getElementById('mode-subtitle').textContent=MODE_RULES[m].sub;
+  const isZh = window.BG_LANG === 'zh';
+  document.getElementById('mode-subtitle').textContent = isZh ? MODE_RULES[m].sub_zh : MODE_RULES[m].sub;
   applyVenueTheme();
   if(rulesOpen) showRules();
   clearBets();
-  setMsg('Mode: '+(m==='standard'?'Standard':m==='ez'?'Panda & Dragon Baccarat':'Tiger Baccarat')+' — Place your bets!');
+  if(isZh){
+    const modeNames={standard:'标准',ez:'龙龟百家乐',tiger:'老虎百家乐'};
+    setMsg('模式：'+(modeNames[m]||m)+' — 请下注！');
+  } else {
+    setMsg('Mode: '+(m==='standard'?'Standard':m==='ez'?'Panda & Dragon Baccarat':'Tiger Baccarat')+' — Place your bets!');
+  }
 }
 function toggleRules(){ rulesOpen=!rulesOpen; document.getElementById('mode-rules-panel').classList.toggle('open',rulesOpen); if(rulesOpen) showRules(); }
 function showRules(){
+  const isZh = window.BG_LANG === 'zh';
   const safety = STORE_SAFE_MODE
-    ? '<div style="margin-top:8px;font-size:0.56rem;color:rgba(250,232,184,0.82);line-height:1.5;">Simulated gameplay only. Virtual credits only. Outcomes are random and not predictable.</div>'
+    ? '<div style="margin-top:8px;font-size:0.56rem;color:rgba(250,232,184,0.82);line-height:1.5;">'+(isZh?'仅供模拟娱乐。仅限虚拟筹码。结果随机，不可预测。':'Simulated gameplay only. Virtual credits only. Outcomes are random and not predictable.')+'</div>'
     : '';
-  document.getElementById('mode-rules-panel').innerHTML=MODE_RULES[gameMode].html + safety;
+  document.getElementById('mode-rules-panel').innerHTML=(isZh ? MODE_RULES[gameMode].html_zh : MODE_RULES[gameMode].html) + safety;
 }
 
 // ── BETTING ──────────────────────────────────────────────────────
@@ -7655,7 +7697,724 @@ setTimeout(scheduleWaitress, 500);
   border-right:12px solid transparent;
   border-top:12px solid rgba(201,168,76,0.7);
 }
+/* ─── LANGUAGE TOGGLE ─── */
+#btn-lang:hover { background:rgba(201,168,76,0.22)!important; border-color:var(--gold)!important; color:var(--gold)!important; }
+
+/* ─── DAILY MINI-GAME MODAL ─── */
+#daily-game-modal {
+  position:fixed; inset:0; z-index:10500;
+  background:rgba(0,0,0,0.82);
+  display:none; align-items:center; justify-content:center; padding:16px;
+}
+#daily-game-modal.open { display:flex; }
+.dgm-box {
+  background:linear-gradient(160deg,#1a1228 0%,#0e0a18 100%);
+  border:1px solid rgba(201,168,76,0.5);
+  border-radius:16px; padding:24px 20px 20px;
+  max-width:480px; width:100%; position:relative;
+  box-shadow:0 0 60px rgba(120,60,200,0.25), 0 8px 40px rgba(0,0,0,0.7);
+}
+.dgm-title {
+  font-family:'Cinzel',serif; font-size:1.1rem; font-weight:700;
+  color:var(--gold); text-align:center; letter-spacing:2px; margin-bottom:4px;
+}
+.dgm-sub {
+  font-size:0.62rem; color:rgba(240,220,160,0.55); text-align:center;
+  margin-bottom:18px; letter-spacing:1px;
+}
+.dgm-close {
+  position:absolute; top:10px; right:14px;
+  background:none; border:none; color:rgba(201,168,76,0.5);
+  font-size:1.2rem; cursor:pointer; line-height:1; padding:2px 6px;
+}
+.dgm-close:hover { color:var(--gold); }
+/* Picker — two game cards */
+.dgm-picker { display:flex; gap:12px; }
+.dgm-game-card {
+  flex:1; cursor:pointer;
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(201,168,76,0.28);
+  border-radius:12px; padding:18px 12px 14px;
+  text-align:center; transition:all 0.2s;
+}
+.dgm-game-card:hover {
+  background:rgba(201,168,76,0.08);
+  border-color:var(--gold);
+  transform:translateY(-2px);
+  box-shadow:0 6px 20px rgba(201,168,76,0.15);
+}
+.dgm-game-icon { font-size:2.8rem; display:block; margin-bottom:8px; line-height:1; }
+.dgm-game-name {
+  font-family:'Cinzel',serif; font-size:0.72rem; font-weight:700;
+  color:var(--gold); letter-spacing:1.5px; margin-bottom:4px;
+}
+.dgm-game-desc { font-size:0.56rem; color:rgba(240,220,160,0.55); line-height:1.5; }
+
+/* ── Slot Machine ── */
+#dgm-spin-screen, #dgm-soccer-screen { display:none; }
+#dgm-spin-screen.active, #dgm-soccer-screen.active { display:block; }
+.slot-machine {
+  background:linear-gradient(160deg,#1a0800 0%,#2a1000 100%);
+  border:3px solid rgba(201,168,76,0.7);
+  border-radius:16px; padding:14px 16px 12px;
+  max-width:340px; margin:0 auto 12px;
+  box-shadow:0 0 30px rgba(201,168,76,0.2), inset 0 0 20px rgba(0,0,0,0.5);
+}
+.slot-machine-top {
+  font-family:'Cinzel',serif; font-size:0.62rem; font-weight:700;
+  color:rgba(201,168,76,0.8); text-align:center; letter-spacing:3px;
+  margin-bottom:10px;
+}
+.slot-reels-wrap {
+  display:flex; gap:6px; justify-content:center; margin-bottom:10px;
+}
+.slot-reel-outer {
+  width:82px; height:90px; overflow:hidden;
+  background:#0a0500; border:2px solid rgba(201,168,76,0.5);
+  border-radius:8px;
+  box-shadow:inset 0 0 12px rgba(0,0,0,0.8), inset 0 2px 4px rgba(201,168,76,0.15);
+  position:relative;
+}
+/* Fade top/bottom */
+.slot-reel-outer::before, .slot-reel-outer::after {
+  content:''; position:absolute; left:0; right:0; height:22px; z-index:2; pointer-events:none;
+}
+.slot-reel-outer::before { top:0;    background:linear-gradient(to bottom, #0a0500, transparent); }
+.slot-reel-outer::after  { bottom:0; background:linear-gradient(to top,   #0a0500, transparent); }
+/* Gold win-line */
+.slot-reels-wrap::after {
+  content:''; position:absolute; left:0; right:0;
+  top:50%; transform:translateY(-50%);
+  height:2px; background:rgba(201,168,76,0.5);
+  pointer-events:none;
+}
+.slot-reels-wrap { position:relative; }
+.slot-reel-strip {
+  display:flex; flex-direction:column; align-items:center;
+  transition:transform 0.05s linear;
+  will-change:transform;
+}
+.slot-symbol {
+  width:82px; height:90px; display:flex; align-items:center; justify-content:center;
+  font-size:2.4rem; line-height:1; flex-shrink:0; user-select:none;
+}
+.dgm-spin-btn {
+  display:block; margin:0 auto 10px;
+  font-family:'Cinzel',serif; font-size:0.8rem; font-weight:700;
+  letter-spacing:2px; background:linear-gradient(135deg,#c9a84c,#a0782a);
+  color:#1a0a00; border:none; border-radius:8px;
+  padding:10px 32px; cursor:pointer;
+  box-shadow:0 3px 12px rgba(201,168,76,0.35);
+  transition:opacity 0.2s;
+}
+.dgm-spin-btn:disabled { opacity:0.4; cursor:default; }
+.dgm-spin-result {
+  font-family:'Cinzel',serif; font-size:1rem; font-weight:700;
+  color:#fff; text-align:center; min-height:28px;
+}
+.slot-paytable {
+  display:flex; flex-wrap:wrap; gap:4px 10px; justify-content:center;
+  font-size:0.48rem; color:rgba(240,220,160,0.5);
+  margin-bottom:6px; line-height:1.8;
+}
+
+/* ── Soccer ── */
+#dgm-soccer-canvas {
+  display:block; margin:0 auto;
+  border-radius:10px;
+  background:#3a7a3a;
+  cursor:crosshair;
+}
+.dgm-soccer-instructions {
+  font-size:0.58rem; color:rgba(240,220,160,0.6);
+  text-align:center; margin:8px 0 4px; line-height:1.6;
+}
+.dgm-soccer-result {
+  font-family:'Cinzel',serif; font-size:0.95rem; font-weight:700;
+  color:#fff; text-align:center; min-height:26px;
+}
+.dgm-back-btn {
+  display:block; margin:10px auto 0;
+  background:none; border:1px solid rgba(201,168,76,0.3);
+  color:rgba(201,168,76,0.6); font-size:0.58rem;
+  border-radius:6px; padding:4px 14px; cursor:pointer;
+  font-family:'Cinzel',serif; letter-spacing:1px;
+}
+.dgm-back-btn:hover { border-color:var(--gold); color:var(--gold); }
 </style>
+
+<!-- ═══════ DAILY MINI-GAME MODAL ═══════ -->
+<div id="daily-game-modal">
+  <div class="dgm-box">
+    <button class="dgm-close" onclick="closeDailyGameModal()">✕</button>
+    <div class="dgm-title">Daily Reward</div>
+    <div class="dgm-sub" id="dgm-sub-label">Choose your game to claim today's chips</div>
+
+    <!-- Picker -->
+    <div class="dgm-picker" id="dgm-picker">
+      <div class="dgm-game-card" onclick="openSlotMachine()">
+        <span class="dgm-game-icon">🎰</span>
+        <div class="dgm-game-name">Slot Machine</div>
+        <div class="dgm-game-desc">Pull the lever — match symbols for big chips. 7️⃣7️⃣7️⃣ = JACKPOT!</div>
+      </div>
+      <div class="dgm-game-card" onclick="openSoccerGame()">
+        <span class="dgm-game-icon">⚽</span>
+        <div class="dgm-game-name">Penalty Kick</div>
+        <div class="dgm-game-desc">Click to aim your shot and beat the goalie. Score = big chips!</div>
+      </div>
+    </div>
+
+    <!-- Slot Machine Screen -->
+    <div id="dgm-spin-screen">
+      <div class="slot-machine">
+        <div class="slot-machine-top">🎰 GLADIATOR SLOTS 🎰</div>
+        <div class="slot-reels-wrap" id="slot-reels-wrap">
+          <div class="slot-reel-outer"><div class="slot-reel-strip" id="slot-reel-0"></div></div>
+          <div class="slot-reel-outer"><div class="slot-reel-strip" id="slot-reel-1"></div></div>
+          <div class="slot-reel-outer"><div class="slot-reel-strip" id="slot-reel-2"></div></div>
+        </div>
+        <div class="slot-paytable" id="slot-paytable">
+          <span>7️⃣7️⃣7️⃣ JACKPOT</span><span>🃏🃏🃏 ×40</span><span>🪙🪙🪙 ×20</span>
+          <span>⭐⭐⭐ ×10</span><span>🎴🎴🎴 ×5</span><span>Any pair ×1.5</span>
+        </div>
+      </div>
+      <button class="dgm-spin-btn" id="dgm-spin-btn" onclick="doSpin()">🎰 PULL</button>
+      <div class="dgm-spin-result" id="dgm-spin-result"></div>
+      <button class="dgm-back-btn" id="dgm-spin-back" onclick="showDailyPicker()" style="display:none">← Pick another game</button>
+    </div>
+
+    <!-- Soccer Screen -->
+    <div id="dgm-soccer-screen">
+      <div class="dgm-soccer-instructions" id="dgm-soccer-inst">Click anywhere on the goal to take your shot!</div>
+      <canvas id="dgm-soccer-canvas" width="380" height="220"></canvas>
+      <div class="dgm-soccer-result" id="dgm-soccer-result"></div>
+      <button class="dgm-back-btn" id="dgm-soccer-back" onclick="showDailyPicker()" style="display:none">← Pick another game</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+//  DAILY MINI-GAMES
+// ═══════════════════════════════════════════════════════════
+
+(function(){
+
+// ── Helpers ──────────────────────────────────────────────
+function getStreakMultiplier(){
+  const s = Math.min(window.dailyStreak||0, 6);
+  return [1, 1.25, 1.5, 2, 2.5, 3, 5][s];
+}
+
+function openDailyGamePicker(){
+  const modal = document.getElementById('daily-game-modal');
+  const t = typeof todayKey === 'function' ? todayKey() : '';
+  if(typeof lastDailyClaim !== 'undefined' && lastDailyClaim === t){
+    if(typeof setMsg === 'function') setMsg('Daily reward already claimed today. Come back tomorrow!');
+    return;
+  }
+  showDailyPicker();
+  modal.classList.add('open');
+}
+window.openDailyGamePicker = openDailyGamePicker;
+
+function closeDailyGameModal(){
+  document.getElementById('daily-game-modal').classList.remove('open');
+  _spinDone = false; _soccerDone = false;
+}
+window.closeDailyGameModal = closeDailyGameModal;
+
+function showDailyPicker(){
+  document.getElementById('dgm-picker').style.display='flex';
+  document.getElementById('dgm-spin-screen').classList.remove('active');
+  document.getElementById('dgm-soccer-screen').classList.remove('active');
+  // Update streak label
+  const next = window.DAILY_REWARDS ? window.DAILY_REWARDS[Math.min((window.dailyStreak||0), 6)] : 10000;
+  const multi = getStreakMultiplier();
+  document.getElementById('dgm-sub-label').textContent =
+    'Day ' + ((window.dailyStreak||0)+1) + ' streak · up to ' +
+    Math.round(next * multi).toLocaleString() + ' chips at stake!';
+}
+window.showDailyPicker = showDailyPicker;
+
+// ── Shared grant (called by both games) ──────────────────
+let _spinDone = false, _soccerDone = false;
+
+function grantAndClose(chips, delay){
+  setTimeout(function(){
+    if(typeof _grantDailyReward === 'function') _grantDailyReward(chips);
+    setTimeout(closeDailyGameModal, 1200);
+  }, delay || 0);
+}
+
+// ════════════════════════════════════════════════════════
+//  SLOT MACHINE
+// ════════════════════════════════════════════════════════
+const SLOT_SYMBOLS = ['7️⃣','🃏','🪙','⭐','🎴','🍀','💎','🎲'];
+// Reel strips — 7 appears rarely, others more common
+const REEL_STRIP = ['🎴','🍀','🪙','⭐','🎲','🎴','🃏','🪙','🍀','⭐','🎴','🎲','🪙','🃏','💎','🎴','⭐','🍀','🎲','🪙','7️⃣','🎴','🃏','⭐'];
+const SYMBOL_H = 90; // matches .slot-symbol height
+let _slotSpinning = false;
+let _reelOffsets = [0, 0, 0];
+
+// Payout multipliers — applied to streak-scaled base reward
+const SLOT_PAYOUTS = {
+  '7️⃣7️⃣7️⃣': 100, // JACKPOT — 100× base
+  '💎💎💎':    60,
+  '🃏🃏🃏':    40,
+  '🪙🪙🪙':    20,
+  '⭐⭐⭐':    10,
+  '🎴🎴🎴':     5,
+  '🍀🍀🍀':     4,
+  '🎲🎲🎲':     3,
+  '_pair':       1.5,  // any two matching = 1.5×
+  '_miss':       0.5,  // consolation
+};
+
+function buildReelStrip(reelEl){
+  reelEl.innerHTML = '';
+  // repeat strip 4× for seamless scroll illusion
+  const long = [...REEL_STRIP,...REEL_STRIP,...REEL_STRIP,...REEL_STRIP];
+  long.forEach(sym=>{
+    const d = document.createElement('div');
+    d.className = 'slot-symbol';
+    d.textContent = sym;
+    reelEl.appendChild(d);
+  });
+}
+
+function openSlotMachine(){
+  document.getElementById('dgm-picker').style.display='none';
+  document.getElementById('dgm-spin-screen').classList.add('active');
+  document.getElementById('dgm-spin-btn').disabled = false;
+  document.getElementById('dgm-spin-result').textContent = '';
+  document.getElementById('dgm-spin-back').style.display = 'none';
+  for(let i=0;i<3;i++){
+    const strip = document.getElementById('slot-reel-'+i);
+    buildReelStrip(strip);
+    const startRow = Math.floor(Math.random() * REEL_STRIP.length);
+    _reelOffsets[i] = startRow * SYMBOL_H;
+    strip.style.transition = 'none';
+    strip.style.transform = 'translateY(-'+_reelOffsets[i]+'px)';
+  }
+}
+window.openSlotMachine = openSlotMachine;
+
+function doSpin(){
+  if(_spinDone || _slotSpinning) return;
+  _slotSpinning = true;
+  document.getElementById('dgm-spin-btn').disabled = true;
+  document.getElementById('dgm-spin-result').textContent = '';
+
+  const multi = getStreakMultiplier();
+  const base  = window.DAILY_REWARDS ? window.DAILY_REWARDS[Math.min((window.dailyStreak||0),6)] : 10000;
+
+  // Decide final symbols — weighted
+  function pickSym(){
+    // 7 = 1/40, 💎=1/25, others roughly equal
+    const r = Math.random();
+    if(r < 0.025) return '7️⃣';
+    if(r < 0.06)  return '💎';
+    if(r < 0.14)  return '🃏';
+    if(r < 0.26)  return '🪙';
+    if(r < 0.42)  return '⭐';
+    if(r < 0.58)  return '🎴';
+    if(r < 0.74)  return '🍀';
+    return '🎲';
+  }
+  const finalSyms = [pickSym(), pickSym(), pickSym()];
+  // Ensure symbol exists in REEL_STRIP
+  function findRow(sym){ return REEL_STRIP.indexOf(sym); }
+
+  const totalRows = REEL_STRIP.length * 4;
+  const spinCounts = [18, 22, 26]; // reels stop at slightly different times for cascade effect
+
+  let done = 0;
+  function stopReel(reelIdx){
+    const strip = document.getElementById('slot-reel-'+reelIdx);
+    const sym = finalSyms[reelIdx];
+    const row = findRow(sym);
+    // Land on 2nd copy of strip to give visible spin travel
+    const targetRow = REEL_STRIP.length + row;
+    const targetPx  = targetRow * SYMBOL_H;
+    // How many full loops to spin before landing
+    const loops = spinCounts[reelIdx];
+    const totalPx = loops * REEL_STRIP.length * SYMBOL_H + targetPx;
+    const duration = 1200 + reelIdx * 600; // cascade: 1.2s, 1.8s, 2.4s
+
+    strip.style.transition = `transform ${duration}ms cubic-bezier(0.25,0.1,0.25,1)`;
+    strip.style.transform  = 'translateY(-'+totalPx+'px)';
+    _reelOffsets[reelIdx]  = totalPx;
+
+    setTimeout(function(){
+      done++;
+      if(done === 3) resolveSlot(finalSyms, base, multi);
+    }, duration + 80);
+  }
+
+  for(let i=0;i<3;i++){
+    const strip = document.getElementById('slot-reel-'+i);
+    strip.style.transition = 'none'; // snap reset position
+    strip.style.transform  = 'translateY(0)';
+    _reelOffsets[i] = 0;
+    // Tiny delay before triggering CSS transition
+    (function(idx){ setTimeout(function(){ stopReel(idx); }, 30); })(i);
+  }
+}
+window.doSpin = doSpin;
+
+function resolveSlot(syms, base, multi){
+  _slotSpinning = false;
+  _spinDone = true;
+  const key = syms.join('');
+  let payMult = SLOT_PAYOUTS[key];
+  let label = '', isJackpot = false;
+
+  if(!payMult){
+    // check pair
+    const hasPair = syms[0]===syms[1] || syms[1]===syms[2] || syms[0]===syms[2];
+    payMult = hasPair ? SLOT_PAYOUTS['_pair'] : SLOT_PAYOUTS['_miss'];
+    label   = hasPair ? '✨ Pair! ' : '🎲 Better luck next time! ';
+  } else {
+    isJackpot = syms[0]==='7️⃣';
+    label = isJackpot ? '🎰🎰🎰 JACKPOT!!! ' : '🎉 Three of a kind! ';
+  }
+
+  const chips = Math.round(base * multi * payMult);
+  const resultEl = document.getElementById('dgm-spin-result');
+  resultEl.innerHTML =
+    label +
+    '<span style="color:#f0d060;font-size:1.15rem">+'+chips.toLocaleString()+' chips</span>' +
+    (multi > 1 ? ' <span style="font-size:0.55rem;color:rgba(200,180,100,0.6)">(×'+multi+' streak)</span>' : '');
+
+  if(isJackpot){
+    // Flash the machine
+    const machine = document.querySelector('.slot-machine');
+    let flashes = 0;
+    const fl = setInterval(function(){
+      machine.style.borderColor = (flashes%2===0) ? '#ff0' : 'rgba(201,168,76,0.7)';
+      if(++flashes > 7){ clearInterval(fl); machine.style.borderColor=''; }
+    }, 150);
+  }
+  document.getElementById('dgm-spin-back').style.display = 'block';
+  grantAndClose(chips, 900);
+}
+
+// ════════════════════════════════════════════════════════
+//  SOCCER PENALTY KICK
+// ════════════════════════════════════════════════════════
+let _soccerPhase = 'aim'; // 'aim' | 'flying' | 'done'
+let _soccerAimX = 190, _soccerAimY = 90;
+let _ballX, _ballY, _ballVX, _ballVY, _ballR = 10;
+let _goalieX, _goalieY, _goalieTargetX;
+let _soccerAnimId = null;
+const SC_W = 380, SC_H = 220;
+// Goal dimensions (top bar at y=35, posts at x=100 and x=280, bar at y=120)
+const GOAL = { x1:100, x2:280, top:35, bot:120 };
+const BALL_START = { x:190, y:185 };
+
+function drawSoccer(aimX, aimY, ballX, ballY, goalieX, goalieH, phase, scored, blocked){
+  const canvas = document.getElementById('dgm-soccer-canvas');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0,0,SC_W,SC_H);
+
+  // Pitch
+  const pitch = ctx.createLinearGradient(0,0,0,SC_H);
+  pitch.addColorStop(0,'#2d6b2d');
+  pitch.addColorStop(1,'#1e4a1e');
+  ctx.fillStyle = pitch;
+  ctx.fillRect(0,0,SC_W,SC_H);
+
+  // Pitch lines
+  ctx.strokeStyle = 'rgba(255,255,255,0.18)';
+  ctx.lineWidth = 1;
+  // Centre circle
+  ctx.beginPath(); ctx.arc(SC_W/2, SC_H/2+20, 38, 0, Math.PI*2); ctx.stroke();
+  // Penalty arc
+  ctx.beginPath(); ctx.arc(SC_W/2, SC_H, 55, Math.PI, Math.PI*2); ctx.stroke();
+
+  // Goal net background
+  ctx.fillStyle = 'rgba(240,240,240,0.08)';
+  ctx.fillRect(GOAL.x1, GOAL.top, GOAL.x2-GOAL.x1, GOAL.bot-GOAL.top);
+  // Net grid
+  ctx.strokeStyle = 'rgba(255,255,255,0.12)'; ctx.lineWidth = 0.8;
+  for(let gx=GOAL.x1; gx<=GOAL.x2; gx+=18){
+    ctx.beginPath(); ctx.moveTo(gx,GOAL.top); ctx.lineTo(gx,GOAL.bot); ctx.stroke();
+  }
+  for(let gy=GOAL.top; gy<=GOAL.bot; gy+=14){
+    ctx.beginPath(); ctx.moveTo(GOAL.x1,gy); ctx.lineTo(GOAL.x2,gy); ctx.stroke();
+  }
+  // Goal posts
+  ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 4;
+  ctx.beginPath();
+  ctx.moveTo(GOAL.x1, GOAL.bot); ctx.lineTo(GOAL.x1, GOAL.top);
+  ctx.lineTo(GOAL.x2, GOAL.top); ctx.lineTo(GOAL.x2, GOAL.bot);
+  ctx.stroke();
+
+  // Aim crosshair (aim phase only)
+  if(phase === 'aim'){
+    ctx.strokeStyle = 'rgba(255,220,60,0.7)'; ctx.lineWidth = 1.5;
+    ctx.setLineDash([4,3]);
+    ctx.beginPath(); ctx.moveTo(aimX-14,aimY); ctx.lineTo(aimX+14,aimY); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(aimX,aimY-14); ctx.lineTo(aimX,aimY+14); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.beginPath(); ctx.arc(aimX,aimY,6,0,Math.PI*2);
+    ctx.strokeStyle='rgba(255,220,60,0.9)'; ctx.lineWidth=2; ctx.stroke();
+  }
+
+  // Goalie
+  const gH = goalieH || 55;
+  const gW = 22;
+  const gTop = GOAL.top + (GOAL.bot - GOAL.top)/2 - gH/2;
+  // Body
+  ctx.fillStyle = '#e84040';
+  ctx.fillRect(goalieX - gW/2, gTop, gW, gH * 0.65);
+  // Shorts
+  ctx.fillStyle = '#1a1a8a';
+  ctx.fillRect(goalieX - gW/2, gTop + gH*0.65, gW, gH*0.2);
+  // Head
+  ctx.beginPath(); ctx.arc(goalieX, gTop - 10, 10, 0, Math.PI*2);
+  ctx.fillStyle = '#f5c5a0'; ctx.fill();
+  // Arms up
+  ctx.strokeStyle = '#e84040'; ctx.lineWidth = 5; ctx.lineCap = 'round';
+  ctx.beginPath(); ctx.moveTo(goalieX - gW/2, gTop + 14); ctx.lineTo(goalieX - gW/2 - 14, gTop - 2); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(goalieX + gW/2, gTop + 14); ctx.lineTo(goalieX + gW/2 + 14, gTop - 2); ctx.stroke();
+  ctx.lineCap = 'butt';
+
+  // Ball
+  const bx = (ballX !== undefined) ? ballX : BALL_START.x;
+  const by = (ballY !== undefined) ? ballY : BALL_START.y;
+  ctx.beginPath(); ctx.arc(bx, by, _ballR, 0, Math.PI*2);
+  const ballGrad = ctx.createRadialGradient(bx-3,by-3,1,bx,by,_ballR);
+  ballGrad.addColorStop(0,'#fff'); ballGrad.addColorStop(1,'#ccc');
+  ctx.fillStyle = ballGrad; ctx.fill();
+  ctx.strokeStyle = '#333'; ctx.lineWidth = 1; ctx.stroke();
+  // Ball pentagon pattern
+  ctx.fillStyle = 'rgba(30,30,30,0.4)';
+  ctx.beginPath(); ctx.arc(bx+2, by+2, _ballR*0.38, 0, Math.PI*2); ctx.fill();
+
+  // Result overlay
+  if(phase === 'done'){
+    ctx.fillStyle = scored ? 'rgba(20,180,60,0.82)' : 'rgba(180,20,20,0.78)';
+    ctx.fillRect(0, SC_H/2-24, SC_W, 48);
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 22px Cinzel, serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(scored ? '⚽ GOAL!' : blocked ? '🧤 SAVED!' : '✗ MISS!', SC_W/2, SC_H/2);
+    ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+  }
+}
+
+function openSoccerGame(){
+  document.getElementById('dgm-picker').style.display = 'none';
+  document.getElementById('dgm-soccer-screen').classList.add('active');
+  document.getElementById('dgm-soccer-result').textContent = '';
+  document.getElementById('dgm-soccer-back').style.display = 'none';
+  document.getElementById('dgm-soccer-inst').textContent = 'Click anywhere on the goal to take your shot!';
+  _soccerPhase = 'aim';
+  _soccerAimX = 190; _soccerAimY = 77;
+  _goalieX = 190; _goalieY = 77;
+  if(_soccerAnimId){ cancelAnimationFrame(_soccerAnimId); _soccerAnimId = null; }
+  drawSoccer(_soccerAimX, _soccerAimY, BALL_START.x, BALL_START.y, _goalieX, 55, 'aim');
+
+  const canvas = document.getElementById('dgm-soccer-canvas');
+  canvas.onmousemove = function(e){
+    if(_soccerPhase !== 'aim') return;
+    const r = canvas.getBoundingClientRect();
+    const scaleX = SC_W / r.width;
+    const scaleY = SC_H / r.height;
+    _soccerAimX = Math.max(GOAL.x1+6, Math.min(GOAL.x2-6, (e.clientX-r.left)*scaleX));
+    _soccerAimY = Math.max(GOAL.top+6, Math.min(GOAL.bot-6, (e.clientY-r.top)*scaleY));
+    drawSoccer(_soccerAimX, _soccerAimY, BALL_START.x, BALL_START.y, _goalieX, 55, 'aim');
+  };
+  canvas.ontouchmove = function(e){
+    if(_soccerPhase !== 'aim') return;
+    e.preventDefault();
+    const r = canvas.getBoundingClientRect();
+    const scaleX = SC_W / r.width;
+    const scaleY = SC_H / r.height;
+    _soccerAimX = Math.max(GOAL.x1+6, Math.min(GOAL.x2-6, (e.touches[0].clientX-r.left)*scaleX));
+    _soccerAimY = Math.max(GOAL.top+6, Math.min(GOAL.bot-6, (e.touches[0].clientY-r.top)*scaleY));
+    drawSoccer(_soccerAimX, _soccerAimY, BALL_START.x, BALL_START.y, _goalieX, 55, 'aim');
+  };
+  canvas.onclick = function(e){
+    if(_soccerPhase !== 'aim') return;
+    const r = canvas.getBoundingClientRect();
+    const scaleX = SC_W / r.width;
+    const scaleY = SC_H / r.height;
+    const clickX = (e.clientX-r.left)*scaleX;
+    const clickY = (e.clientY-r.top)*scaleY;
+    // Only register click if within goal
+    if(clickX < GOAL.x1 || clickX > GOAL.x2 || clickY < GOAL.top || clickY > GOAL.bot) return;
+    kickBall(clickX, clickY);
+  };
+}
+window.openSoccerGame = openSoccerGame;
+
+function kickBall(targetX, targetY){
+  _soccerPhase = 'flying';
+  document.getElementById('dgm-soccer-inst').textContent = '⚽ Shot taken!';
+  _ballX = BALL_START.x; _ballY = BALL_START.y;
+  const frames = 28;
+  const dx = (targetX - _ballX) / frames;
+  const dy = (targetY - _ballY) / frames;
+
+  // Goalie dives to a random side
+  const goalieTarget = (Math.random() < 0.5) ? GOAL.x1 + 30 : GOAL.x2 - 30;
+  const goalieSpeed = 5.5 + Math.random() * 3;
+  let f = 0;
+
+  function animate(){
+    f++;
+    _ballX += dx; _ballY += dy;
+    // Goalie moves toward dive target
+    const gdiff = goalieTarget - _goalieX;
+    _goalieX += Math.sign(gdiff) * Math.min(goalieSpeed, Math.abs(gdiff));
+
+    drawSoccer(_soccerAimX, _soccerAimY, _ballX, _ballY, _goalieX, 55, 'flying');
+    if(f < frames){
+      _soccerAnimId = requestAnimationFrame(animate);
+    } else {
+      // Determine outcome
+      const goalieHalfW = 26; // goalie block zone
+      const blocked = Math.abs(_ballX - _goalieX) < goalieHalfW &&
+                      _ballY > GOAL.top && _ballY < GOAL.bot;
+      const inGoal  = _ballX > GOAL.x1 && _ballX < GOAL.x2 &&
+                      _ballY > GOAL.top && _ballY < GOAL.bot;
+      const scored  = inGoal && !blocked;
+
+      _soccerPhase = 'done';
+      drawSoccer(_soccerAimX, _soccerAimY, _ballX, _ballY, _goalieX, 55, 'done', scored, blocked);
+
+      const multi = getStreakMultiplier();
+      const base  = window.DAILY_REWARDS ? window.DAILY_REWARDS[Math.min((window.dailyStreak||0), 6)] : 10000;
+      const chips = scored
+        ? Math.round(base * multi)
+        : Math.round(base * multi * 0.25);  // consolation 25% for miss/save
+
+      const resultEl = document.getElementById('dgm-soccer-result');
+      if(scored){
+        resultEl.innerHTML = '⚽ GOAL! <span style="color:#f0d060">+' + chips.toLocaleString() + ' chips</span>';
+      } else {
+        resultEl.innerHTML = (blocked ? '🧤 Saved by the goalie! ' : '✗ Just missed! ') +
+          '<span style="color:#f0d060">+' + chips.toLocaleString() + ' chips</span>' +
+          ' <span style="font-size:0.55rem;color:rgba(200,180,100,0.6)">(consolation)</span>';
+      }
+      document.getElementById('dgm-soccer-back').style.display = 'block';
+      _soccerDone = true;
+      grantAndClose(chips, 600);
+    }
+  }
+  requestAnimationFrame(animate);
+}
+
+})(); // end IIFE
+</script>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+//  LANGUAGE TOGGLE — English ↔ 中文
+// ═══════════════════════════════════════════════════════════
+
+const LANG_STRINGS = {
+  en: {
+    'lbl-credits':       'Credits',
+    'lbl-stake':         'Stake',
+    'lbl-live-feed':     'LIVE FEED',
+    'lbl-tourn-title':   'GLADIATOR TOURNAMENT',
+    'lbl-grand-prize':   'Grand Prize',
+    'lbl-ends-in':       'Ends In',
+    'btn-tourn-enter':   'ENTER FREE',
+    'lbl-leaderboard':   'GLOBAL LEADERBOARD',
+    'btn-lb-refresh':    'Refresh',
+    'lbl-boards':        'SCOREBOARDS — LIVE ROAD TRACKING',
+    'road-name-big':     'BIG ROAD',
+    'road-name-bead':    'BEAD ROAD',
+    'road-name-beb':     'BIG EYE BOY',
+    'road-name-sr':      'SMALL ROAD',
+    'road-name-cp':      'COCKROACH PIG',
+    'lbl-stat-banker':   'Banker',
+    'lbl-stat-player':   'Player',
+    'lbl-stat-tie':      'Tie',
+    'lbl-stat-nat':      'Naturals',
+    'lbl-stat-rounds':   'Rounds',
+    'lbl-stat-streak':   'Streak',
+    'lbl-stat-shoe':     'Shoe left',
+    'lbl-footer':        'For entertainment only · Simulated play · Virtual credits only · Outcomes are random · No real-money gambling',
+  },
+  zh: {
+    'lbl-credits':       '筹码',
+    'lbl-stake':         '下注',
+    'lbl-live-feed':     '实时动态',
+    'lbl-tourn-title':   '角斗士锦标赛',
+    'lbl-grand-prize':   '大奖',
+    'lbl-ends-in':       '结束时间',
+    'btn-tourn-enter':   '免费参赛',
+    'lbl-leaderboard':   '全球排行榜',
+    'btn-lb-refresh':    '刷新',
+    'lbl-boards':        '路单 — 实时追踪',
+    'road-name-big':     '大路',
+    'road-name-bead':    '珠盘路',
+    'road-name-beb':     '大眼路',
+    'road-name-sr':      '小路',
+    'road-name-cp':      '蟑螂路',
+    'lbl-stat-banker':   '庄',
+    'lbl-stat-player':   '闲',
+    'lbl-stat-tie':      '和',
+    'lbl-stat-nat':      '天牌',
+    'lbl-stat-rounds':   '局数',
+    'lbl-stat-streak':   '连胜',
+    'lbl-stat-shoe':     '剩余牌',
+    'lbl-footer':        '仅供娱乐 · 模拟游戏 · 仅限虚拟筹码 · 结果随机 · 非真实赌博',
+  },
+};
+
+// Bet slot names — targets are .sname inside each #slot-*
+const BET_NAMES = {
+  en: { player:'Player', tie:'Tie', banker:'Banker', dragon7:'🐉<br>Dragon 7', panda8:'🐼<br>Panda 8' },
+  zh: { player:'闲家',   tie:'和局', banker:'庄家',  dragon7:'🐉<br>龙7',      panda8:'🐼<br>熊猫8' },
+};
+
+function applyLang() {
+  const lang = window.BG_LANG;
+  const strings = LANG_STRINGS[lang];
+
+  // Static label swaps
+  Object.entries(strings).forEach(([id, text]) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.textContent = text;
+  });
+
+  // Bet slot names (contain HTML)
+  const names = BET_NAMES[lang];
+  ['player','tie','banker','dragon7','panda8'].forEach(key => {
+    const slot = document.getElementById('slot-' + key);
+    if (!slot) return;
+    const sname = slot.querySelector('.sname');
+    if (sname) sname.innerHTML = names[key];
+  });
+
+  // Language toggle button
+  const btn = document.getElementById('btn-lang');
+  if (btn) btn.textContent = lang === 'zh' ? 'EN' : '中文';
+
+  // html lang attribute
+  document.documentElement.lang = lang === 'zh' ? 'zh-Hans' : 'en';
+
+  // Refresh mode subtitle & rules panel
+  if (typeof gameMode !== 'undefined' && typeof setMode === 'function') {
+    setMode(gameMode);
+  }
+}
+
+function toggleLang() {
+  window.BG_LANG = window.BG_LANG === 'zh' ? 'en' : 'zh';
+  applyLang();
+}
+window.toggleLang = toggleLang;
+</script>
 
 </body>
 </html>
