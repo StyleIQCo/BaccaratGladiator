@@ -658,10 +658,41 @@ body {
   background:radial-gradient(120% 85% at 50% 0%, var(--venue-bg1) 0%, var(--venue-bg2) 65%);
   font-family:'Raleway',sans-serif;
   color:#f0e6c8;
-  min-height:100vh;
-  overflow-x:hidden;
+  height:100dvh; overflow:hidden;
+}
+
+/* ─── TWO-COLUMN APP LAYOUT ─── */
+#app-layout {
+  display:grid;
+  grid-template-columns: 1fr 320px;
+  height:100dvh;
+  overflow:hidden;
+}
+#game-col {
+  display:flex; flex-direction:column;
+  height:100dvh; overflow:hidden;
   position:relative;
-  padding-bottom:calc(155px + env(safe-area-inset-bottom,0px));
+}
+#side-col {
+  display:flex; flex-direction:column;
+  height:100dvh; overflow-y:auto;
+  border-left:1px solid rgba(201,168,76,0.18);
+  background:rgba(0,0,0,0.25);
+  scrollbar-width:thin; scrollbar-color:rgba(201,168,76,0.2) transparent;
+}
+/* Game area — fills remaining height between header/modebar and bottom-bar */
+#game-area {
+  flex:1; overflow-y:auto; overflow-x:hidden;
+  scrollbar-width:thin; scrollbar-color:rgba(201,168,76,0.15) transparent;
+}
+
+/* Mobile — single column, side panel becomes bottom accordion */
+@media (max-width:860px){
+  body { height:auto; overflow:auto; }
+  #app-layout { grid-template-columns:1fr; height:auto; overflow:visible; }
+  #game-col   { height:auto; overflow:visible; }
+  #side-col   { height:auto; border-left:none; border-top:1px solid rgba(201,168,76,0.2); }
+  #game-area  { overflow:visible; }
 }
 body::before{
   content:'';
@@ -967,8 +998,13 @@ header h1 {
 .game-section {
   display:grid; grid-template-columns:1fr 1fr;
   gap:8px; padding:8px 12px;
-  background:var(--dark);
+  /* Woven felt texture over deep baize */
+  background:
+    repeating-linear-gradient(45deg,  rgba(255,255,255,0.013) 0px,rgba(255,255,255,0.013) 1px,transparent 1px,transparent 9px),
+    repeating-linear-gradient(-45deg, rgba(255,255,255,0.013) 0px,rgba(255,255,255,0.013) 1px,transparent 1px,transparent 9px),
+    linear-gradient(180deg, #0c1c0e 0%, #07110a 100%);
   border-bottom:1px solid rgba(201,168,76,0.25);
+  position:relative;
 }
 
 .hands-area {
@@ -978,14 +1014,27 @@ header h1 {
 }
 
 .hand-box {
-  background:rgba(26,92,42,0.25);
-  border:1px solid rgba(201,168,76,0.2);
-  border-radius:8px; padding:6px 10px;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(40,110,55,0.35) 0%, rgba(4,12,6,0.55) 100%);
+  border:1px solid rgba(201,168,76,0.32);
+  border-radius:12px; padding:8px 10px;
   text-align:center; min-height:100px;
+  box-shadow:
+    inset 0 1px 0 rgba(201,168,76,0.18),
+    inset 0 -1px 0 rgba(0,0,0,0.4),
+    0 3px 12px rgba(0,0,0,0.5);
+  position:relative;
+}
+/* Embossed table-felt inner edge */
+.hand-box::before {
+  content:''; position:absolute; inset:3px; border-radius:9px;
+  border:1px solid rgba(201,168,76,0.1);
+  pointer-events:none;
 }
 .hand-box h4 {
   font-family:'Cinzel',serif; font-size:0.62rem;
-  color:var(--gold); letter-spacing:2px; margin-bottom:5px;
+  color:var(--gold); letter-spacing:3px; margin-bottom:6px;
+  text-shadow:0 0 8px rgba(201,168,76,0.4);
 }
 .cards-row {
   display:flex; justify-content:center; gap:5px;
@@ -1309,25 +1358,220 @@ header h1 {
 }
 
 
-/* ─── CHIPS (used in bottom bar) ─── */
-.chip {
-  width:48px; height:48px; border-radius:50%;
-  border:3px dashed rgba(255,255,255,0.55);
-  cursor:pointer; font-family:'Cinzel',serif;
-  font-size:0.72rem; font-weight:900; color:#fff;
-  display:flex; align-items:center; justify-content:center;
-  transition:transform 0.15s, box-shadow 0.15s;
-  user-select:none; box-shadow:0 3px 8px rgba(0,0,0,0.5);
-  text-shadow:0 1px 2px rgba(0,0,0,0.7);
-  flex-shrink:0;
+/* ─── CHIPS (casino-grade) ─── */
+@keyframes chip-hover-glow {
+  0%,100% { filter:brightness(1); }
+  50%     { filter:brightness(1.18); }
 }
-.chip:active { transform:scale(0.92); }
-.chip:hover  { transform:scale(1.12); box-shadow:0 6px 18px rgba(0,0,0,0.6); }
-.c1   { background:radial-gradient(circle at 35% 35%,#ccc 0%,#777 100%); }
-.c5   { background:radial-gradient(circle at 35% 35%,#ff5555 0%,#aa1111 100%); }
-.c25  { background:radial-gradient(circle at 35% 35%,#55cc55 0%,#227722 100%); }
-.c100 { background:radial-gradient(circle at 35% 35%,#5577ee 0%,#224499 100%); }
-.c500 { background:radial-gradient(circle at 35% 35%,#bb44ee 0%,#661199 100%); }
+.chip {
+  width:52px; height:52px; border-radius:50%;
+  cursor:pointer; font-family:'Cinzel',serif;
+  font-size:0.62rem; font-weight:900; color:#fff;
+  display:flex; align-items:center; justify-content:center;
+  transition:transform 0.12s cubic-bezier(.34,1.56,.64,1), box-shadow 0.15s, filter 0.15s;
+  user-select:none;
+  text-shadow:0 1px 3px rgba(0,0,0,0.95);
+  flex-shrink:0; position:relative;
+  /* Outer rim edge */
+  outline:3px solid transparent; outline-offset:1px;
+}
+/* Inner dashed ring — casino inlay edge spots */
+.chip::before {
+  content:''; position:absolute; inset:5px; border-radius:50%;
+  border:2px dashed rgba(255,255,255,0.48);
+  pointer-events:none;
+}
+/* Centre glare spot */
+.chip::after {
+  content:''; position:absolute;
+  top:9px; left:13px; width:12px; height:7px;
+  background:rgba(255,255,255,0.18);
+  border-radius:50%;
+  transform:rotate(-30deg);
+  pointer-events:none;
+}
+.chip:active { transform:scale(0.88) translateY(1px); }
+.chip:hover  {
+  transform:scale(1.16) translateY(-4px);
+  animation:chip-hover-glow 0.8s ease-in-out infinite;
+}
+/* $1 — white/silver */
+.c1 {
+  background:radial-gradient(circle at 38% 32%, #e8e8e8 0%, #8c8c8c 100%);
+  box-shadow:0 5px 16px rgba(0,0,0,0.65),inset 0 2px 4px rgba(255,255,255,0.3),inset 0 -2px 4px rgba(0,0,0,0.35);
+  outline-color:rgba(160,160,160,0.45);
+}
+.c1::before { border-color:rgba(90,90,90,0.65); }
+/* $5 — casino red */
+.c5 {
+  background:radial-gradient(circle at 38% 32%, #ff6868 0%, #960f0f 100%);
+  box-shadow:0 5px 16px rgba(160,0,0,0.55),inset 0 2px 4px rgba(255,160,160,0.2),inset 0 -2px 4px rgba(0,0,0,0.4);
+  outline-color:rgba(200,0,0,0.45);
+}
+/* $25 — casino green */
+.c25 {
+  background:radial-gradient(circle at 38% 32%, #44dd44 0%, #0e6010 100%);
+  box-shadow:0 5px 16px rgba(0,140,0,0.5),inset 0 2px 4px rgba(120,255,120,0.15),inset 0 -2px 4px rgba(0,0,0,0.4);
+  outline-color:rgba(0,150,0,0.45);
+}
+/* $100 — casino black with gold edge */
+.c100 {
+  background:radial-gradient(circle at 38% 32%, #2a2a2a 0%, #060606 100%);
+  box-shadow:0 5px 16px rgba(0,0,0,0.85),inset 0 2px 4px rgba(255,255,255,0.07),inset 0 -2px 4px rgba(0,0,0,0.7);
+  outline-color:rgba(201,168,76,0.55);
+}
+.c100::before { border-color:rgba(201,168,76,0.75); }
+/* $500 — purple */
+.c500 {
+  background:radial-gradient(circle at 38% 32%, #b044ee 0%, #530080 100%);
+  box-shadow:0 5px 16px rgba(100,0,160,0.55),inset 0 2px 4px rgba(210,110,255,0.2),inset 0 -2px 4px rgba(0,0,0,0.45);
+  outline-color:rgba(140,40,200,0.45);
+}
+/* $1000 — burnt orange / high roller */
+.c1k {
+  background:radial-gradient(circle at 38% 32%, #ffaa22 0%, #a84400 100%);
+  box-shadow:0 5px 16px rgba(180,80,0,0.55),inset 0 2px 4px rgba(255,200,100,0.25),inset 0 -2px 4px rgba(0,0,0,0.45);
+  outline-color:rgba(200,100,0,0.45);
+}
+.c1k::before { border-color:rgba(255,200,80,0.6); }
+
+/* ─── WIN PARTICLES & AMBIENT DUST ─── */
+@keyframes particle-rise {
+  0%   { transform:translateY(0)      rotate(0deg)   scale(1);    opacity:1; }
+  80%  { opacity:0.7; }
+  100% { transform:translateY(-75vh)  rotate(600deg) scale(0.25); opacity:0; }
+}
+@keyframes ambient-float {
+  0%,100% { transform:translateY(0)   translateX(0)   opacity:0; }
+  10%,90% { opacity:0.35; }
+  50%      { transform:translateY(-40px) translateX(8px); }
+}
+#particle-container {
+  position:fixed; inset:0; pointer-events:none; z-index:8500; overflow:hidden;
+}
+.win-particle {
+  position:absolute; bottom:18%;
+  animation:particle-rise linear forwards;
+  will-change:transform,opacity;
+  line-height:1; pointer-events:none;
+}
+.ambient-particle {
+  position:absolute; border-radius:50%;
+  background:rgba(201,168,76,0.6);
+  animation:ambient-float ease-in-out infinite;
+  pointer-events:none;
+}
+
+/* ─── ACHIEVEMENT TOAST ─── */
+@keyframes achieve-in {
+  0%   { transform:translateX(120%); opacity:0; }
+  15%  { transform:translateX(-8px); opacity:1; }
+  85%  { transform:translateX(0);    opacity:1; }
+  100% { transform:translateX(120%); opacity:0; }
+}
+#achieve-container {
+  position:fixed; bottom:90px; right:16px;
+  display:flex; flex-direction:column; gap:8px; align-items:flex-end;
+  pointer-events:none; z-index:9000;
+}
+.achieve-toast {
+  background:linear-gradient(135deg,#0d1a08,#182f10);
+  border:1px solid rgba(201,168,76,0.6);
+  border-radius:10px; padding:10px 16px;
+  color:#fff; font-size:0.78rem; font-weight:600;
+  box-shadow:0 4px 20px rgba(0,0,0,0.6), 0 0 20px rgba(201,168,76,0.15);
+  animation:achieve-in 3.8s cubic-bezier(.22,1,.36,1) forwards;
+  white-space:nowrap;
+  font-family:'Cinzel',serif; letter-spacing:0.5px;
+}
+.achieve-toast .achieve-icon { font-size:1.1rem; margin-right:6px; }
+
+/* ─── TOURNAMENT PANEL ─── */
+@keyframes tourn-pulse {
+  0%,100% { box-shadow:0 0 12px 2px rgba(201,168,76,0.2), inset 0 0 20px rgba(201,168,76,0.04); }
+  50%      { box-shadow:0 0 28px 8px rgba(201,168,76,0.4), inset 0 0 32px rgba(201,168,76,0.1); }
+}
+@keyframes tourn-shimmer {
+  0%   { background-position:-200% center; }
+  100% { background-position: 200% center; }
+}
+#tournament-panel {
+  margin:8px 12px;
+  background:linear-gradient(160deg,#0e0a1a 0%,#160f28 60%,#0a0715 100%);
+  border:1px solid rgba(201,168,76,0.5);
+  border-radius:10px; overflow:hidden;
+  animation:tourn-pulse 3s ease-in-out infinite;
+  position:relative;
+}
+#tournament-panel::before {
+  content:''; position:absolute; inset:0; pointer-events:none; border-radius:10px;
+  background:linear-gradient(105deg,transparent 35%,rgba(201,168,76,0.06) 50%,transparent 65%);
+  background-size:200% 100%;
+  animation:tourn-shimmer 4s linear infinite;
+}
+.tourn-header {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:7px 12px;
+  background:linear-gradient(90deg,rgba(201,168,76,0.2) 0%,rgba(201,168,76,0.06) 100%);
+  border-bottom:1px solid rgba(201,168,76,0.28);
+}
+.tourn-title {
+  font-family:'Cinzel',serif; font-size:0.72rem; font-weight:700; letter-spacing:0.1em;
+  background:linear-gradient(90deg,#f0d060,#c9a84c,#ffe882,#c9a84c);
+  background-size:200% auto;
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  animation:tourn-shimmer 3s linear infinite;
+}
+.tourn-badge {
+  font-size:0.52rem; font-weight:700; letter-spacing:1px; text-transform:uppercase;
+  background:#c9a84c; color:#000; padding:2px 8px; border-radius:10px;
+}
+.tourn-body { padding:8px 12px 10px; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+.tourn-prize {
+  flex:1; min-width:120px;
+}
+.tourn-prize-label {
+  font-size:0.52rem; color:rgba(201,168,76,0.6); letter-spacing:2px; text-transform:uppercase; margin-bottom:2px;
+}
+.tourn-prize-val {
+  font-family:'Cinzel',serif; font-size:0.9rem; color:#f0d060;
+  text-shadow:0 0 10px rgba(240,208,96,0.5);
+}
+.tourn-timer-wrap { text-align:center; }
+.tourn-timer-label { font-size:0.5rem; color:rgba(201,168,76,0.55); letter-spacing:2px; text-transform:uppercase; margin-bottom:2px; }
+.tourn-timer { font-family:'Cinzel',serif; font-size:1.1rem; color:#fff; letter-spacing:3px; }
+.tourn-enter-btn {
+  font-family:'Cinzel',serif; font-size:0.7rem; font-weight:700; letter-spacing:1px;
+  background:linear-gradient(135deg,#c9a84c,#f0d080,#c9a84c); background-size:200% auto;
+  color:#000; border:none; border-radius:6px; padding:7px 16px; cursor:pointer;
+  animation:tourn-shimmer 2s linear infinite;
+  box-shadow:0 3px 12px rgba(201,168,76,0.4);
+  transition:transform 0.12s, box-shadow 0.12s;
+  white-space:nowrap;
+}
+.tourn-enter-btn:hover { transform:scale(1.05); box-shadow:0 5px 20px rgba(201,168,76,0.6); }
+.tourn-rank-strip {
+  width:100%; font-size:0.56rem;
+  color:rgba(220,210,180,0.7); padding-top:5px;
+  border-top:1px solid rgba(201,168,76,0.12);
+  display:flex; gap:16px; flex-wrap:wrap;
+}
+.tourn-rank-strip span { color:#f0d060; font-weight:700; }
+
+/* ─── RETENTION: streak flames & countdown ─── */
+.streak-flame {
+  display:inline-block;
+  animation:streak-flicker 0.9s ease-in-out infinite alternate;
+}
+@keyframes streak-flicker {
+  0%   { transform:scale(1)    rotate(-2deg); filter:brightness(1); }
+  100% { transform:scale(1.15) rotate(2deg);  filter:brightness(1.3); }
+}
+#next-reward-countdown {
+  font-family:'Cinzel',serif; font-size:0.58rem;
+  color:rgba(201,168,76,0.7); letter-spacing:1px;
+  text-align:center; padding:3px 0 1px;
+}
 
 /* ─── ACTIONS ─── */
 .bal-info {
@@ -1365,23 +1609,24 @@ header h1 {
   opacity:0; transition:opacity 0.18s ease;
 }
 .dealer-caption.show { opacity:1; }
-/* ── Dealer portrait section ── */
+/* ── Dealer portrait section — compact horizontal layout ── */
 #dealer-section{
-  display:flex; flex-direction:column; align-items:center;
-  padding:14px 0 6px; position:relative; overflow:visible;
+  display:flex; flex-direction:row; align-items:center;
+  gap:10px; padding:6px 12px; position:relative; overflow:visible;
+  border-bottom:1px solid rgba(201,168,76,0.12);
+  flex-shrink:0;
 }
 #dealer-section::before{
-  content:''; position:absolute; top:0; left:50%; transform:translateX(-50%);
-  width:280px; height:260px; pointer-events:none;
-  background:radial-gradient(ellipse at 50% 30%, rgba(201,168,76,0.11) 0%, transparent 68%);
+  content:''; position:absolute; top:0; left:0; right:0; bottom:0; pointer-events:none;
+  background:radial-gradient(ellipse at 20% 50%, rgba(201,168,76,0.07) 0%, transparent 70%);
 }
-#dealer-portrait-wrap{position:relative; display:inline-block;}
+#dealer-portrait-wrap{position:relative; display:inline-block; flex-shrink:0;}
 .dealer-photo{
-  width:150px; height:200px;
+  width:64px; height:88px;
   object-fit:cover; object-position:top center;
-  border-radius:50% 50% 14px 14px;
+  border-radius:50% 50% 8px 8px;
   border:2px solid rgba(201,168,76,0.55);
-  box-shadow:0 0 32px rgba(201,168,76,0.13), 0 10px 30px rgba(0,0,0,0.85);
+  box-shadow:0 0 18px rgba(201,168,76,0.13), 0 4px 14px rgba(0,0,0,0.85);
   animation:dealerBreathe 5s ease-in-out infinite;
   transition:opacity 0.18s ease, box-shadow 0.4s ease;
   display:block; overflow:hidden;
@@ -1425,33 +1670,45 @@ video.dealer-photo{ background:#000; }
   border:6px solid transparent; border-top-color:rgba(6,6,18,0.96);
 }
 #dealer-bubble.show{opacity:1; transform:translateX(-50%) translateY(0)}
-/* Nameplate */
-#dealer-nameplate{margin-top:8px; text-align:center; line-height:1.3;}
+/* Nameplate — beside portrait */
+#dealer-nameplate{ line-height:1.3; flex:1; min-width:0; }
 #dealer-nameplate .d-name{
-  font-family:'Cinzel',serif; font-size:0.82rem; letter-spacing:4px;
-  color:var(--gold); text-shadow:0 0 10px rgba(201,168,76,0.45);
+  font-family:'Cinzel',serif; font-size:0.78rem; letter-spacing:3px;
+  color:var(--gold); text-shadow:0 0 8px rgba(201,168,76,0.4); display:block;
 }
 #dealer-nameplate .d-role{
-  font-family:'Cinzel',serif; font-size:0.42rem; letter-spacing:2.5px;
+  font-family:'Cinzel',serif; font-size:0.4rem; letter-spacing:2px;
   color:rgba(201,168,76,0.48); display:block; margin-top:1px;
 }
+/* Dealer speech bubble repositioned for horizontal layout */
+#dealer-bubble{
+  bottom:auto !important; top:50%; left:80px !important;
+  transform:translateY(-50%) translateX(4px) !important;
+}
+#dealer-bubble.show{ transform:translateY(-50%) translateX(0) !important; }
+#dealer-bubble::after{ display:none; }
+#dealer-bubble::before{
+  content:''; position:absolute; left:-12px; top:50%;
+  transform:translateY(-50%);
+  border:6px solid transparent; border-right-color:rgba(201,168,76,0.8);
+}
 @media(max-width:480px){
-  .dealer-photo{width:120px; height:160px;}
-  #dealer-section::before{width:200px; height:190px;}
+  .dealer-photo{width:54px; height:74px;}
   #dealer-bubble{font-size:0.78rem; min-width:140px; max-width:230px; padding:7px 13px;}
 }
 .msg-win  { color:#80ff80; }
 .msg-lose { color:#ff8080; }
 .msg-tie  { color:var(--gold); }
 
-/* ─── FIXED BOTTOM CONTROL BAR ─── */
+/* ─── BOTTOM CONTROL BAR — sticky within game column ─── */
 #bottom-bar {
-  position:fixed; bottom:0; left:0; right:0; z-index:9000;
+  position:sticky; bottom:0; z-index:9000;
   background:linear-gradient(0deg,#050c06 0%,#091408 100%);
   border-top:1px solid rgba(201,168,76,0.4);
   box-shadow:0 -4px 28px rgba(0,0,0,0.75);
   padding:5px 10px calc(5px + env(safe-area-inset-bottom,0px));
   display:flex; flex-direction:column; gap:5px;
+  flex-shrink:0;
 }
 #bb-status { text-align:center; line-height:1.2; }
 #bb-chips  {
@@ -1466,17 +1723,23 @@ video.dealer-photo{ background:#000; }
 }
 
 /* ─── THIRD CARD REVEAL ZONE ─── */
-.third-card-zone {
-  display:none; grid-column:1/-1;
-  border-top:1px dashed rgba(201,168,76,0.2);
-  padding-top:6px; margin-top:2px;
+/* third-card-zone kept in DOM for JS compat but never shown visually */
+#third-card-zone { display:none !important; }
+
+/* ── Inline third-card layout ── */
+.cards-area {
+  display:flex; align-items:flex-start; justify-content:center; gap:0;
 }
-.third-card-zone.visible { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.third-slot {
+  display:none; /* JS sets to 'block' */
+  border-left:1px dashed rgba(201,168,76,0.28);
+  padding-left:10px; margin-left:8px;
+  text-align:center;
+}
 .third-label {
-  font-size:0.55rem; color:rgba(201,168,76,0.5);
+  font-size:0.5rem; color:rgba(201,168,76,0.55);
   letter-spacing:2px; text-align:center; margin-bottom:4px; text-transform:uppercase;
 }
-.third-slot { text-align:center; }
 
 /* ─── SCOREBOARDS ─── */
 .scoreboards {
@@ -1665,8 +1928,8 @@ video.dealer-photo{ background:#000; }
   .bal-info span { font-size:1rem; }
   .msg-bar { font-size:0.72rem; }
 
-  /* Third card zone */
-  .third-card-zone.visible { grid-template-columns:1fr 1fr; }
+  /* Third cards now inline — no zone grid needed */
+  .third-slot { border-left:1px dashed rgba(201,168,76,0.22); padding-left:6px; margin-left:4px; }
 
   /* Roads */
   .roads-row1 { grid-template-columns:1fr 1fr; }
@@ -1768,6 +2031,206 @@ video.dealer-photo{ background:#000; }
   }
 })();
 </script>
+
+<!-- ═══════ SVG ICON SPRITE ═══════ -->
+<svg id="svg-sprite" xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+  <!-- Crossed swords — tournament, header accent -->
+  <symbol id="ico-swords" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="5" y1="4" x2="19" y2="20" stroke-width="1.5"/>
+    <polyline points="15,4 19,4 19,9" stroke-width="1.4"/>
+    <line x1="19" y1="20" x2="21" y2="22" stroke-width="1.2"/>
+    <line x1="19" y1="4" x2="5" y2="20" stroke-width="1.5"/>
+    <polyline points="9,4 5,4 5,9" stroke-width="1.4"/>
+    <line x1="5" y1="20" x2="3" y2="22" stroke-width="1.2"/>
+    <circle cx="12" cy="12" r="1.1" fill="currentColor" stroke="none"/>
+  </symbol>
+  <!-- Crown — #1 rank, Emperor achievement -->
+  <symbol id="ico-crown" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M3 19h18M3 19V14l4-6 5 7 5-8 4 7v6" stroke-width="1.4"/>
+    <circle cx="12" cy="7" r="1" fill="currentColor" stroke="none"/>
+    <circle cx="4.5" cy="14" r="0.8" fill="currentColor" stroke="none"/>
+    <circle cx="19.5" cy="14" r="0.8" fill="currentColor" stroke="none"/>
+  </symbol>
+  <!-- Flame — win streak -->
+  <symbol id="ico-flame" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 22C8 22 5 18.5 5 15c0-4 3-6 4-9 1 3 2 4 3 4 1-3 1-6 3-8 1 3 4 6 4 11 0 4.5-3 8-7 8Z" stroke-width="1.3"/>
+    <path d="M12 22c-1.5 0-3-1.5-3-3.5 0-2 1.5-3 3-3s3 1 3 3c0 2-1.5 3.5-3 3.5Z" fill="currentColor" opacity="0.45" stroke="none"/>
+  </symbol>
+  <!-- Diamond gem — Rising Star achievement -->
+  <symbol id="ico-diamond" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <polygon points="12,2 22,10 12,22 2,10" stroke-width="1.3"/>
+    <line x1="2" y1="10" x2="22" y2="10" stroke-width="0.9" opacity="0.5"/>
+    <line x1="12" y1="2" x2="7" y2="10" stroke-width="0.8" opacity="0.4"/>
+    <line x1="12" y1="2" x2="17" y2="10" stroke-width="0.8" opacity="0.4"/>
+  </symbol>
+  <!-- Gold coin — win particles -->
+  <symbol id="ico-coin" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+    <circle cx="12" cy="12" r="9" stroke-width="1.5"/>
+    <circle cx="12" cy="12" r="6.5" stroke-width="0.8" opacity="0.4"/>
+    <path d="M12 8v1m0 6v1m-2.5-4.5h5m-5 2h5" stroke-width="1.3" stroke-linecap="round"/>
+  </symbol>
+  <!-- Trophy chalice — leaderboard -->
+  <symbol id="ico-trophy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M7 3h10v8c0 3.3-2.2 5-5 5s-5-1.7-5-5V3Z" stroke-width="1.3"/>
+    <path d="M4 4c0 0-1 1-1 3s.8 3 2 3M20 4c0 0 1 1 1 3s-.8 3-2 3" stroke-width="1.2"/>
+    <line x1="12" y1="16" x2="12" y2="20" stroke-width="1.4"/>
+    <line x1="8" y1="20" x2="16" y2="20" stroke-width="1.8"/>
+    <line x1="9" y1="7" x2="15" y2="7" stroke-width="0.8" opacity="0.45"/>
+  </symbol>
+  <!-- Dragon head — Dragon 7 / EZ mode -->
+  <symbol id="ico-dragon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 18s0-6 4-9c2-1.5 4-2 6-2l4-3-1 4c2 1 3 3 3 6s-2 5-5 6c-2 1-5 1-8 0-2-.5-3-2-3-2Z" stroke-width="1.3"/>
+    <circle cx="15" cy="11.5" r="1.1" fill="currentColor" stroke="none"/>
+    <path d="M17 8l2-3 1 2" stroke-width="1" fill="none"/>
+    <path d="M8 20c-1 2-3 3-4 2" stroke-width="1"/>
+    <path d="M11 14c0 0-1 2 0 3 1-1 2-2 1-3Z" fill="currentColor" opacity="0.5" stroke="none"/>
+  </symbol>
+  <!-- Panda face — Panda 8 -->
+  <symbol id="ico-panda" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+    <circle cx="12" cy="13.5" r="7.5" stroke-width="1.3"/>
+    <circle cx="7" cy="8.5" r="3" stroke-width="1.2"/>
+    <circle cx="17" cy="8.5" r="3" stroke-width="1.2"/>
+    <ellipse cx="9" cy="12" rx="2.2" ry="2" fill="currentColor" opacity="0.75" stroke="none"/>
+    <ellipse cx="15" cy="12" rx="2.2" ry="2" fill="currentColor" opacity="0.75" stroke="none"/>
+    <circle cx="9" cy="12" r="0.75" fill="white" stroke="none"/>
+    <circle cx="15" cy="12" r="0.75" fill="white" stroke="none"/>
+    <ellipse cx="12" cy="15.5" rx="1.5" ry="1" fill="currentColor" opacity="0.45" stroke="none"/>
+  </symbol>
+  <!-- Tiger head — Tiger mode -->
+  <symbol id="ico-tiger" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <ellipse cx="12" cy="13.5" rx="8.5" ry="7.5" stroke-width="1.3"/>
+    <path d="M5 8l-2-4 3 3M19 8l2-4-3 3" stroke-width="1.2"/>
+    <line x1="8" y1="10" x2="10" y2="9" stroke-width="1"/>
+    <line x1="16" y1="10" x2="14" y2="9" stroke-width="1"/>
+    <path d="M10 7.5c.5-1 1.5-1 2 0 .5-1 1.5-1 2 0" stroke-width="1" fill="none"/>
+    <ellipse cx="12" cy="15" rx="3" ry="2" stroke-width="0.8" opacity="0.5"/>
+    <circle cx="12" cy="13.5" r="0.9" fill="currentColor" opacity="0.5" stroke="none"/>
+  </symbol>
+  <!-- Shield — Player hand label -->
+  <symbol id="ico-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 3L4 6.5v6.5c0 4.4 3.6 8 8 8.5 4.4-.5 8-4.1 8-8.5V6.5L12 3Z" stroke-width="1.3"/>
+    <path d="M9 12l2 2 4-4" stroke-width="1.3"/>
+  </symbol>
+  <!-- Columns / pillar — Banker hand label -->
+  <symbol id="ico-pillar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="3" y1="6" x2="21" y2="6" stroke-width="1.6"/>
+    <line x1="3" y1="20" x2="21" y2="20" stroke-width="1.6"/>
+    <line x1="7" y1="6" x2="7" y2="20" stroke-width="1.3"/>
+    <line x1="12" y1="6" x2="12" y2="20" stroke-width="1.3"/>
+    <line x1="17" y1="6" x2="17" y2="20" stroke-width="1.3"/>
+    <path d="M4 3h16" stroke-width="1.1" opacity="0.6"/>
+  </symbol>
+  <!-- Lightning bolt — Auto play -->
+  <symbol id="ico-bolt" viewBox="0 0 24 24">
+    <path d="M13 2L4 14h7L9 22l11-13h-7L13 2Z" fill="currentColor" fill-opacity="0.85" stroke="currentColor" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <!-- Circuit bot face — AI player -->
+  <symbol id="ico-bot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="4" y="8" width="16" height="13" rx="2" stroke-width="1.3"/>
+    <circle cx="9" cy="14" r="2" stroke-width="1.2"/>
+    <circle cx="15" cy="14" r="2" stroke-width="1.2"/>
+    <circle cx="9" cy="14" r="0.7" fill="currentColor" stroke="none"/>
+    <circle cx="15" cy="14" r="0.7" fill="currentColor" stroke="none"/>
+    <line x1="12" y1="4" x2="12" y2="8" stroke-width="1.5"/>
+    <circle cx="12" cy="3.5" r="1.5" stroke-width="1.2"/>
+    <line x1="9" y1="18" x2="15" y2="18" stroke-width="1.3"/>
+    <line x1="4" y1="12" x2="2" y2="12" stroke-width="1.1"/>
+    <line x1="20" y1="12" x2="22" y2="12" stroke-width="1.1"/>
+  </symbol>
+  <!-- Speaker — SFX on -->
+  <symbol id="ico-sound" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M11 5L6 9H3v6h3l5 4V5Z" stroke-width="1.3"/>
+    <path d="M15.5 8.5c1.5 1.5 2 3 2 3.5s-.5 2-2 3.5" stroke-width="1.3"/>
+    <path d="M18.5 6c2.5 2.5 3 5 3 6s-.5 3.5-3 6" stroke-width="1.3"/>
+  </symbol>
+  <!-- Speaker muted -->
+  <symbol id="ico-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M11 5L6 9H3v6h3l5 4V5Z" stroke-width="1.3"/>
+    <line x1="16" y1="9" x2="22" y2="15" stroke-width="1.5"/>
+    <line x1="22" y1="9" x2="16" y2="15" stroke-width="1.5"/>
+  </symbol>
+  <!-- Music note -->
+  <symbol id="ico-music" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M9 18V6l11-3v12" stroke-width="1.4"/>
+    <circle cx="6" cy="18" r="3" stroke-width="1.3"/>
+    <circle cx="17" cy="15" r="3" stroke-width="1.3"/>
+  </symbol>
+  <!-- Music off -->
+  <symbol id="ico-music-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M9 18V6l11-3v12" stroke-width="1.3" opacity="0.45"/>
+    <circle cx="6" cy="18" r="3" stroke-width="1.2" opacity="0.45"/>
+    <circle cx="17" cy="15" r="3" stroke-width="1.2" opacity="0.45"/>
+    <line x1="3" y1="3" x2="21" y2="21" stroke-width="1.5"/>
+  </symbol>
+  <!-- Dagger — Natural 8 achievement -->
+  <symbol id="ico-dagger" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 3l2.5 7h-5L12 3Z" stroke-width="1.2"/>
+    <rect x="8.5" y="10" width="7" height="2" rx="0.5" stroke-width="1.2"/>
+    <line x1="12" y1="12" x2="12" y2="21" stroke-width="2"/>
+    <line x1="10" y1="16" x2="14" y2="16" stroke-width="1.2"/>
+  </symbol>
+  <!-- Medal — 50 hands -->
+  <symbol id="ico-medal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="15.5" r="5.5" stroke-width="1.3"/>
+    <path d="M9 3l2 5.5h2L15 3" stroke-width="1.2"/>
+    <circle cx="12" cy="15.5" r="3" stroke-width="0.8" opacity="0.4"/>
+    <line x1="12" y1="13" x2="12" y2="17" stroke-width="1.1" opacity="0.7"/>
+    <line x1="10" y1="15.5" x2="14" y2="15.5" stroke-width="1.1" opacity="0.7"/>
+  </symbol>
+  <!-- Scroll — Gladiator achievement -->
+  <symbol id="ico-scroll" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M6 3C4 3 3 4 3 5.5S4 8 6 8h12c2 0 3-1 3-2.5S19 3 18 3H6Z" stroke-width="1.2"/>
+    <path d="M6 16c-2 0-3 1-3 2.5S4 21 6 21h12c2 0 3-1 3-2.5S20 16 18 16H6Z" stroke-width="1.2"/>
+    <line x1="6" y1="8" x2="6" y2="16" stroke-width="1.2"/>
+    <line x1="18" y1="8" x2="18" y2="16" stroke-width="1.2"/>
+    <line x1="9" y1="11" x2="15" y2="11" stroke-width="0.9" opacity="0.55"/>
+    <line x1="9" y1="13" x2="15" y2="13" stroke-width="0.7" opacity="0.4"/>
+  </symbol>
+  <!-- 5-point star — win particles -->
+  <symbol id="ico-star" viewBox="0 0 24 24">
+    <polygon points="12,2 14.5,9.5 22,9.5 16,14.5 18.3,22 12,17.5 5.7,22 8,14.5 2,9.5 9.5,9.5" fill="currentColor" fill-opacity="0.9" stroke="currentColor" stroke-width="0.6" stroke-linejoin="round"/>
+  </symbol>
+  <!-- Hotel building — tournament prize -->
+  <symbol id="ico-hotel" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="3" y="7" width="18" height="15" rx="0.5" stroke-width="1.3"/>
+    <path d="M3 7L12 2l9 5" stroke-width="1.3"/>
+    <rect x="9" y="15" width="6" height="7" stroke-width="1"/>
+    <rect x="5" y="10" width="3" height="3" stroke-width="0.9" opacity="0.65"/>
+    <rect x="16" y="10" width="3" height="3" stroke-width="0.9" opacity="0.65"/>
+    <rect x="5" y="15" width="3" height="3" stroke-width="0.9" opacity="0.65"/>
+    <rect x="16" y="15" width="3" height="3" stroke-width="0.9" opacity="0.65"/>
+  </symbol>
+  <!-- Trident — Legend achievement -->
+  <symbol id="ico-trident" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="12" y1="5" x2="12" y2="22" stroke-width="1.6"/>
+    <path d="M5 5v5c0 0 2 3 7 3s7-3 7-3V5" stroke-width="1.3"/>
+    <path d="M5 5l1.5 3L5 10M19 5l-1.5 3L19 10" stroke-width="1" fill="none"/>
+    <path d="M10 5L12 3l2 2" stroke-width="1.3"/>
+  </symbol>
+  <!-- Broadcast dot — live feed title -->
+  <symbol id="ico-broadcast" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round">
+    <circle cx="12" cy="12" r="2.5" fill="currentColor" stroke="none"/>
+    <path d="M7.5 7.5c-1.2 1.2-2 2.8-2 4.5s.8 3.3 2 4.5" stroke-width="1.3"/>
+    <path d="M16.5 7.5c1.2 1.2 2 2.8 2 4.5s-.8 3.3-2 4.5" stroke-width="1.3"/>
+    <path d="M5 5c-1.8 1.8-3 4.3-3 7s1.2 5.2 3 7" stroke-width="1.2"/>
+    <path d="M19 5c1.8 1.8 3 4.3 3 7s-1.2 5.2-3 7" stroke-width="1.2"/>
+  </symbol>
+  <!-- Gift box — daily reward ready -->
+  <symbol id="ico-gift" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="3" y="9" width="18" height="13" rx="1" stroke-width="1.3"/>
+    <path d="M3 9h18v3H3z" stroke-width="1.2"/>
+    <line x1="12" y1="9" x2="12" y2="22" stroke-width="1.2"/>
+    <path d="M12 9C12 9 10 6 8 6s-2 2-2 2 0 2 6 1ZM12 9c0 0 2-3 4-3s2 2 2 2-0 2-6 1Z" stroke-width="1.1" fill="none"/>
+  </symbol>
+  <!-- Scales of justice — WA law notice -->
+  <symbol id="ico-scales" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="12" y1="3" x2="12" y2="20" stroke-width="1.4"/>
+    <line x1="6" y1="20" x2="18" y2="20" stroke-width="1.7"/>
+    <line x1="5" y1="7" x2="19" y2="7" stroke-width="1.1"/>
+    <path d="M5 7L3 12c0 0 .5 2 3 2s3-2 3-2L5 7Z" stroke-width="1"/>
+    <path d="M19 7l2 5c0 0-.5 2-3 2s-3-2-3-2L19 7Z" stroke-width="1"/>
+  </symbol>
+</svg>
 
 <!-- ═══════ SPLASH FLASH ═══════ -->
 <div id="splash-flash"></div>
@@ -2092,6 +2555,9 @@ video.dealer-photo{ background:#000; }
   </div>
 </div>
 
+<!-- ═══════ TWO-COLUMN APP LAYOUT ═══════ -->
+<div id="app-layout"><div id="game-col">
+
 <!-- hidden elements kept for JS compatibility (no null-checks in those call sites) -->
 <span id="hdr-balance" style="display:none"></span>
 <span id="hdr-rounds"  style="display:none"></span>
@@ -2104,8 +2570,8 @@ video.dealer-photo{ background:#000; }
   </div>
   <div style="text-align:right;display:flex;align-items:center;gap:8px;">
     <div class="audio-ctl">
-      <button id="btn-sound" onclick="toggleSFX()"  title="Toggle SFX"   class="audio-btn">🔊</button>
-      <button id="btn-music" onclick="toggleMusic()" title="Toggle Music" class="audio-btn">🎵</button>
+      <button id="btn-sound" onclick="toggleSFX()"  title="Toggle SFX"   class="audio-btn"><svg width="15" height="15" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-sound"/></svg></button>
+      <button id="btn-music" onclick="toggleMusic()" title="Toggle Music" class="audio-btn"><svg width="15" height="15" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-music"/></svg></button>
     </div>
     <div>
       <div style="font-size:0.56rem;color:rgba(140,220,255,0.82);" id="hdr-premium">Gems: 50 · LVL 1 Recruit</div>
@@ -2271,8 +2737,8 @@ video.dealer-photo{ background:#000; }
 <div class="mode-bar">
   <div class="mode-pills">
     <button class="mode-pill" id="tab-standard" onclick="setMode('standard')">♠ 5% Comm</button>
-    <button class="mode-pill ez active" id="tab-ez" onclick="setMode('ez')">🐉🐼 EZ</button>
-    <button class="mode-pill tiger" id="tab-tiger" onclick="setMode('tiger')">🐯 Tiger</button>
+    <button class="mode-pill ez active" id="tab-ez" onclick="setMode('ez')"><svg width="12" height="12" viewBox="0 0 24 24" style="vertical-align:middle" aria-hidden="true"><use href="#ico-dragon"/></svg><svg width="12" height="12" viewBox="0 0 24 24" style="vertical-align:middle;margin-left:2px" aria-hidden="true"><use href="#ico-panda"/></svg> EZ</button>
+    <button class="mode-pill tiger" id="tab-tiger" onclick="setMode('tiger')"><svg width="12" height="12" viewBox="0 0 24 24" style="vertical-align:middle" aria-hidden="true"><use href="#ico-tiger"/></svg> Tiger</button>
   </div>
   <button class="mode-info-btn" onclick="toggleRules()">Rules ▾</button>
 </div>
@@ -2287,7 +2753,12 @@ video.dealer-photo{ background:#000; }
 <span id="eco-streak" style="display:none"></span>
 <span id="eco-venue-theme" style="display:none"></span>
 
+<!-- ── scrollable game area ── -->
+<div id="game-area">
+
 <div class="economy-panel">
+  <div id="streak-display" style="text-align:center;font-family:'Cinzel',serif;font-size:0.7rem;color:var(--gold);margin-bottom:4px;letter-spacing:1px;min-height:18px;"></div>
+  <div id="next-reward-countdown"></div>
   <div class="eco-actions">
     <button class="eco-btn" id="btn-daily-claim" onclick="claimDailyReward()">Claim Daily</button>
     <button class="eco-btn" onclick="exchangeGemsForChips(5, 25000)">5 Gems → 25,000 Chips</button>
@@ -2323,8 +2794,14 @@ video.dealer-photo{ background:#000; }
 
     <!-- PLAYER -->
     <div class="hand-box">
-      <h4>🛡 PLAYER</h4>
-      <div class="cards-row" id="player-cards"></div>
+      <h4><svg width="13" height="13" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:4px" aria-hidden="true"><use href="#ico-shield"/></svg>PLAYER</h4>
+      <div class="cards-area">
+        <div class="cards-row" id="player-cards"></div>
+        <div class="third-slot" id="player-third-slot">
+          <div class="third-label">3rd</div>
+          <div class="cards-row" id="player-third-cards"></div>
+        </div>
+      </div>
       <div class="hand-val" id="player-val">—</div>
       <div id="player-badge"></div>
       <!-- Player reveal controls -->
@@ -2341,8 +2818,14 @@ video.dealer-photo{ background:#000; }
 
     <!-- BANKER -->
     <div class="hand-box">
-      <h4>🏦 BANKER</h4>
-      <div class="cards-row" id="banker-cards"></div>
+      <h4><svg width="13" height="13" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:4px" aria-hidden="true"><use href="#ico-pillar"/></svg>BANKER</h4>
+      <div class="cards-area">
+        <div class="cards-row" id="banker-cards"></div>
+        <div class="third-slot" id="banker-third-slot">
+          <div class="third-label">3rd</div>
+          <div class="cards-row" id="banker-third-cards"></div>
+        </div>
+      </div>
       <div class="hand-val" id="banker-val">—</div>
       <div id="banker-badge"></div>
       <!-- Dealer reveal controls (visible after deal) -->
@@ -2353,18 +2836,8 @@ video.dealer-photo{ background:#000; }
     </div>
   </div>
 
-  <!-- THIRD CARD ZONE (shown after initial reveal if third cards exist) -->
-  <div class="third-card-zone" id="third-card-zone">
-    <div class="third-slot" id="player-third-slot">
-      <div class="third-label">Player 3rd Card</div>
-      <div class="cards-row" id="player-third-cards"></div>
-    </div>
-    <div class="third-slot" id="banker-third-slot">
-      <div class="third-label">Banker 3rd Card</div>
-      <div class="cards-row" id="banker-third-cards"></div>
-    </div>
-  </div>
-  <!-- Note: third-card slots kept in same DOM order; CSS flex handles visual alignment -->
+  <!-- third-card-zone kept as empty anchor for JS classList calls -->
+  <div id="third-card-zone"></div>
 
   <!-- MAIN BETS -->
   <div class="bet-section">
@@ -2427,7 +2900,7 @@ video.dealer-photo{ background:#000; }
   <!-- AI PLAYER PANEL -->
   <div class="ai-panel" id="ai-panel">
     <div class="ai-panel-header">
-      <span class="ai-name" id="ai-name">🤖 GLADIATOR BOT</span>
+      <span class="ai-name" id="ai-name"><svg width="13" height="13" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:4px" aria-hidden="true"><use href="#ico-bot"/></svg>GLADIATOR BOT</span>
       <span class="ai-strategy-tag" id="ai-strategy-tag">Trend Tracker</span>
       <span class="ai-balance" id="ai-balance">$1,000</span>
     </div>
@@ -2447,6 +2920,8 @@ video.dealer-photo{ background:#000; }
 
 </div>
 
+</div><!-- /#game-area -->
+
 <!-- ═══════ FIXED BOTTOM CONTROL BAR ═══════ -->
 <div id="bottom-bar">
   <div id="bb-status">
@@ -2459,6 +2934,7 @@ video.dealer-photo{ background:#000; }
     <div class="chip c25"  onclick="addChip(25)">$25</div>
     <div class="chip c100" onclick="addChip(100)">$100</div>
     <div class="chip c500" onclick="addChip(500)">$500</div>
+    <div class="chip c1k"  onclick="addChip(1000)">$1K</div>
   </div>
   <div id="bb-actions">
     <div class="bal-info">
@@ -2469,7 +2945,7 @@ video.dealer-photo{ background:#000; }
     <button class="btn btn-repeat" id="btn-repeat" onclick="repeatLastBet()" title="Repeat last bet">↺ Repeat</button>
     <button class="btn btn-deal"  id="btn-deal"  onclick="deal()">DEAL</button>
     <button class="btn btn-new"   id="btn-new"   onclick="newRound()" style="visibility:hidden">New Round</button>
-    <button class="btn btn-auto"  id="btn-auto"  onclick="startAutoPlay()" title="Auto-deal next 5 hands with current bets">⚡ Auto ×5</button>
+    <button class="btn btn-auto"  id="btn-auto"  onclick="startAutoPlay()" title="Auto-deal next 5 hands with current bets"><svg width="12" height="12" viewBox="0 0 24 24" style="vertical-align:middle" aria-hidden="true"><use href="#ico-bolt"/></svg> Auto ×5</button>
   </div>
   <div class="auto-progress" id="auto-progress"></div>
 </div>
@@ -2487,10 +2963,15 @@ video.dealer-photo{ background:#000; }
   </div>
 </div>
 
+</div><!-- /#game-col -->
+
+<!-- ─── RIGHT SIDEBAR ─── -->
+<div id="side-col">
+
 <!-- ═══════ LIVE FEED ═══════ -->
 <div class="feed-panel" id="feed-panel">
   <div class="feed-header">
-    <span class="feed-title">📢 LIVE FEED</span>
+    <span class="feed-title"><svg width="12" height="12" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:4px;color:#f0d060" aria-hidden="true"><use href="#ico-broadcast"/></svg>LIVE FEED</span>
     <button class="feed-clear-btn" onclick="clearFeed()">Clear</button>
   </div>
   <div class="feed-scroll" id="feed-scroll">
@@ -2498,17 +2979,47 @@ video.dealer-photo{ background:#000; }
   </div>
 </div>
 
+<!-- ═══════ WIN PARTICLES & ACHIEVEMENT CONTAINERS ═══════ -->
+<div id="particle-container"></div>
+<div id="achieve-container"></div>
+
+<!-- ═══════ TOURNAMENT PANEL ═══════ -->
+<div id="tournament-panel">
+  <div class="tourn-header">
+    <span class="tourn-title"><svg width="14" height="14" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:5px" aria-hidden="true"><use href="#ico-swords"/></svg>GLADIATOR TOURNAMENT</span>
+    <span class="tourn-badge">LIVE</span>
+  </div>
+  <div class="tourn-body">
+    <div class="tourn-prize">
+      <div class="tourn-prize-label">Grand Prize</div>
+      <div class="tourn-prize-val" id="tourn-prize-val"><svg width="14" height="14" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:5px" aria-hidden="true"><use href="#ico-hotel"/></svg>Casino Stay + 500,000 Chips</div>
+    </div>
+    <div class="tourn-timer-wrap">
+      <div class="tourn-timer-label">Ends In</div>
+      <div class="tourn-timer" id="tourn-timer">--:--:--</div>
+    </div>
+    <button class="tourn-enter-btn" onclick="openTournamentModal()">ENTER FREE</button>
+  </div>
+  <div class="tourn-body" style="padding-top:0;">
+    <div class="tourn-rank-strip" id="tourn-rank-strip">
+      <div>Your Rank: <span id="tourn-my-rank">—</span></div>
+      <div>Players: <span id="tourn-player-count">—</span></div>
+      <div>Your Best: <span id="tourn-my-best">—</span></div>
+    </div>
+  </div>
+</div>
+
 <!-- ═══════ GLOBAL LEADERBOARD ═══════ -->
 <div class="leaderboard-panel">
   <div class="leaderboard-header">
-    <span class="leaderboard-title">🏆 GLOBAL LEADERBOARD</span>
+    <span class="leaderboard-title"><svg width="14" height="14" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:5px;color:#f0d060" aria-hidden="true"><use href="#ico-trophy"/></svg>GLOBAL LEADERBOARD</span>
     <button class="leaderboard-refresh" onclick="fetchGlobalLeaderboard()">Refresh</button>
   </div>
   <div class="leaderboard-body" id="leaderboard-body">
     <div class="leaderboard-empty" id="leaderboard-empty">Sign in to submit scores. Top players will appear here.</div>
   </div>
   <div id="wa-lb-notice" style="display:none;text-align:center;padding:6px 8px;font-size:0.58rem;color:rgba(200,180,100,0.7);font-style:italic;border-top:1px solid rgba(201,168,76,0.15);margin-top:4px;">
-    ⚖️ WA state law — leaderboard not available in Washington
+    <svg width="11" height="11" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:4px" aria-hidden="true"><use href="#ico-scales"/></svg>WA state law — leaderboard not available in Washington
   </div>
 </div>
 
@@ -2587,6 +3098,9 @@ video.dealer-photo{ background:#000; }
     <a href="#" id="support-link">Support</a>
   </div>
 </div>
+
+</div><!-- /#side-col -->
+</div><!-- /#app-layout -->
 
 <!-- ═══════ SCRIPT ═══════ -->
 <script>
@@ -2896,6 +3410,8 @@ function claimDailyReward(){
   postFeedMsg('🎁 Daily reward Day ' + dailyStreak + ' claimed: +' + reward.toLocaleString() + ' chips.', 'info');
   refreshUI();
   saveEconomy();
+  if(typeof updateStreakDisplay==='function') updateStreakDisplay();
+  if(typeof updateNextRewardCountdown==='function') updateNextRewardCountdown();
 }
 
 function watchAdForChips(){
@@ -4994,6 +5510,9 @@ function resolveHand(){
   if(r.winner==='T' && b.tie>0) dealerCall('paying_tie', {}, {feed:true, caption:true});
   if(r.winner==='B' && gameMode==='standard' && b.banker>0) dealerCall('commission_banker', {}, {feed:true, caption:true});
   if(netChange>=200) dealerCall('big_win', {}, {feed:false, caption:true});
+  if(netChange>0) spawnWinParticles(netChange);
+  checkAchievements(r, netChange);
+  updateTournamentRank();
 
   // ── AI player resolution
   let aiSpecialNote = feedSpecial.trim() || null;
@@ -5057,6 +5576,8 @@ function newRound(){
   document.getElementById('player-badge').innerHTML='';
   document.getElementById('banker-badge').innerHTML='';
   document.getElementById('third-card-zone').classList.remove('visible');
+  document.getElementById('player-third-slot').style.display='none';
+  document.getElementById('banker-third-slot').style.display='none';
   document.getElementById('dealer-controls').style.display='none';
   document.getElementById('player-controls').style.display='none';
   // only show Deal btn when not in auto-play mode
@@ -5561,6 +6082,14 @@ function applyVenueAudioTheme(){
   }
 }
 
+// ── SVG ICON HELPER ───────────────────────────────────────────────
+// Returns an inline <svg> that references a sprite symbol.
+// color defaults to currentColor (inherits CSS color).
+function svgIcon(id, size, color){
+  const s=size||16, c=color||'currentColor';
+  return `<svg width="${s}" height="${s}" viewBox="0 0 24 24" style="vertical-align:middle;color:${c}" aria-hidden="true"><use href="#ico-${id}"/></svg>`;
+}
+
 // ── INIT ──────────────────────────────────────────────────────────
 loadEconomy();
 if(!VENUES.some(v=>v.id===currentVenue)) currentVenue='vegas';
@@ -5612,6 +6141,256 @@ window.addEventListener('resize', function(){
 });
 
 // ══════════════════════════════════════════════════════════════════
+//  WIN PARTICLES
+// ══════════════════════════════════════════════════════════════════
+function spawnWinParticles(netChange){
+  const container=document.getElementById('particle-container');
+  if(!container) return;
+  const count = netChange>=5000?40 : netChange>=1000?25 : netChange>=200?14 : netChange>=50?8 : 4;
+  // SVG particle types with their colors — no emoji
+  const particleTypes=[
+    {id:'coin',   color:'#f0d060'}, {id:'star',   color:'#ffe066'},
+    {id:'diamond',color:'#88eeff'}, {id:'crown',  color:'#c9a84c'},
+    {id:'trophy', color:'#f0d060'}, {id:'star',   color:'#fff7aa'},
+    {id:'coin',   color:'#ffd700'}, {id:'diamond',color:'#a0f0ff'},
+  ];
+  for(let i=0;i<count;i++){
+    setTimeout(()=>{
+      const t=particleTypes[Math.floor(Math.random()*particleTypes.length)];
+      const sz=16+Math.floor(Math.random()*14);
+      const p=document.createElement('div');
+      p.className='win-particle';
+      p.innerHTML=`<svg width="${sz}" height="${sz}" viewBox="0 0 24 24" style="color:${t.color}" aria-hidden="true"><use href="#ico-${t.id}"/></svg>`;
+      const dur=(0.9+Math.random()*0.9).toFixed(2);
+      p.style.cssText=`left:${8+Math.random()*84}%;animation-duration:${dur}s;`;
+      container.appendChild(p);
+      p.addEventListener('animationend',()=>p.remove());
+    }, i*55);
+  }
+}
+
+// Ambient floating gold dust in the background
+(function spawnAmbientDust(){
+  const container=document.getElementById('particle-container');
+  if(!container) return;
+  for(let i=0;i<12;i++){
+    const d=document.createElement('div');
+    d.className='ambient-particle';
+    const sz=(2+Math.random()*3).toFixed(1);
+    const dur=(6+Math.random()*8).toFixed(1);
+    const delay=(Math.random()*8).toFixed(1);
+    d.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${20+Math.random()*60}%;animation-duration:${dur}s;animation-delay:${delay}s;`;
+    container.appendChild(d);
+  }
+})();
+
+// ══════════════════════════════════════════════════════════════════
+//  ACHIEVEMENT SYSTEM
+// ══════════════════════════════════════════════════════════════════
+const _achieveUnlocked = new Set(JSON.parse(localStorage.getItem('bg_achievements_v1')||'[]'));
+
+function saveAchievements(){ try{ localStorage.setItem('bg_achievements_v1', JSON.stringify([..._achieveUnlocked])); }catch(e){} }
+
+function showAchievement(iconId, iconColor, title){
+  const container=document.getElementById('achieve-container');
+  if(!container) return;
+  const toast=document.createElement('div');
+  toast.className='achieve-toast';
+  toast.innerHTML=`<span class="achieve-icon"><svg width="18" height="18" viewBox="0 0 24 24" style="vertical-align:middle;color:${iconColor||'#f0d060'}" aria-hidden="true"><use href="#ico-${iconId}"/></svg></span>ACHIEVEMENT — ${title}`;
+  container.appendChild(toast);
+  toast.addEventListener('animationend',()=>toast.remove());
+}
+
+function checkAchievements(r, netChange){
+  const unlock=(key, iconId, iconColor, title)=>{
+    if(_achieveUnlocked.has(key)) return;
+    _achieveUnlocked.add(key); saveAchievements();
+    setTimeout(()=>showAchievement(iconId, iconColor, title), 800);
+  };
+  if((r.pT===9&&r.pH.length===2)||(r.bT===9&&r.bH.length===2)) unlock('natural9','swords','#c9a84c','Natural 9 — The Iron Hand');
+  if((r.pT===8&&r.pH.length===2)||(r.bT===8&&r.bH.length===2)) unlock('natural8','dagger','#aaccff','Natural 8 — The Silver Blade');
+  if(r.isDragon7) unlock('dragon7','dragon','#ff8844','Dragon 7 — Breath of Fire');
+  if(r.isPanda8)  unlock('panda8','panda','#aaddaa','Panda 8 — The Silent Strike');
+  if(netChange>=1000) unlock('bigwin1k','coin','#f0d060','High Roller — Won 1,000+ in one hand');
+  if(netChange>=5000) unlock('bigwin5k','crown','#f0d060','Emperor — Won 5,000+ in one hand');
+  if(scores.B+scores.P+scores.T>=50)  unlock('50hands','medal','#c0c0c0','Veteran — 50 Hands Played');
+  if(scores.B+scores.P+scores.T>=200) unlock('200hands','scroll','#c9a84c','Gladiator — 200 Hands Played');
+  if(balance>=10000)  unlock('bal10k','diamond','#88eeff','Rising Star — Reached 10,000 Chips');
+  if(balance>=100000) unlock('bal100k','trident','#f0d060','Legend — Reached 100,000 Chips');
+}
+
+// ══════════════════════════════════════════════════════════════════
+//  TOURNAMENT ENGINE
+// ══════════════════════════════════════════════════════════════════
+// Tournament end date — set 14 days from now, persisted in localStorage
+(function initTournament(){
+  let endMs = Number(localStorage.getItem('bg_tourn_end_v1')||0);
+  if(!endMs || endMs < Date.now()){
+    endMs = Date.now() + 14*24*60*60*1000;
+    localStorage.setItem('bg_tourn_end_v1', String(endMs));
+  }
+  // Player count seeded for feel (real count = leaderboard items)
+  const playerCount = 47 + Math.floor(balance/500);
+  const el=document.getElementById('tourn-player-count');
+  if(el) el.textContent=playerCount;
+
+  // Countdown ticker
+  function tick(){
+    const diff = endMs - Date.now();
+    const el=document.getElementById('tourn-timer');
+    if(!el) return;
+    if(diff<=0){ el.textContent='ENDED'; return; }
+    const d=Math.floor(diff/86400000);
+    const h=Math.floor((diff%86400000)/3600000);
+    const m=Math.floor((diff%3600000)/60000);
+    const s=Math.floor((diff%60000)/1000);
+    el.textContent = d>0
+      ? `${d}d ${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`
+      : `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  }
+  tick();
+  setInterval(tick,1000);
+})();
+
+// Update tournament "my best" whenever balance changes
+function updateTournamentRank(){
+  const el=document.getElementById('tourn-my-best');
+  if(el) el.textContent='$'+balance.toLocaleString();
+}
+
+function openTournamentModal(){
+  const existing=document.getElementById('tourn-modal');
+  if(existing) existing.remove();
+  const modal=document.createElement('div');
+  modal.id='tourn-modal';
+  modal.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.82);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px;';
+  modal.innerHTML=`
+    <div style="background:linear-gradient(160deg,#0e0a1a,#160f28);border:1px solid rgba(201,168,76,0.55);border-radius:14px;max-width:500px;width:100%;padding:28px;position:relative;color:#fff;">
+      <button onclick="document.getElementById('tourn-modal').remove()" style="position:absolute;top:12px;right:16px;background:none;border:none;color:#888;font-size:22px;cursor:pointer;">✕</button>
+      <h2 style="font-family:'Cinzel',serif;text-align:center;color:#f0d060;margin:0 0 4px;letter-spacing:2px;">${svgIcon('swords',18,'#f0d060')} GLADIATOR TOURNAMENT</h2>
+      <p style="text-align:center;color:rgba(201,168,76,0.6);font-size:0.68rem;margin:0 0 20px;letter-spacing:1px;">COMPETE FOR THE GRAND PRIZE</p>
+
+      <div style="background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.25);border-radius:8px;padding:14px;margin-bottom:20px;text-align:center;">
+        <div style="font-size:0.55rem;color:rgba(201,168,76,0.6);letter-spacing:2px;margin-bottom:4px;">GRAND PRIZE</div>
+        <div style="font-family:'Cinzel',serif;font-size:1.1rem;color:#f0d060;text-shadow:0 0 12px rgba(240,208,96,0.4);" id="tourn-modal-prize">${svgIcon('hotel',16,'#f0d060')} Casino Hotel Stay + 500,000 Chips</div>
+        <div style="font-size:0.58rem;color:rgba(220,200,160,0.6);margin-top:4px;">Sponsored by a featured casino partner</div>
+      </div>
+
+      <p style="font-size:0.65rem;color:rgba(220,210,180,0.8);line-height:1.6;margin-bottom:18px;">
+        Reach the highest chip balance before the timer runs out. Your current balance is your tournament score — keep playing to climb the leaderboard.
+      </p>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px;">
+        <div style="background:rgba(0,0,0,0.35);border:1px solid rgba(201,168,76,0.3);border-radius:8px;padding:14px;text-align:center;">
+          <div style="font-size:0.55rem;color:rgba(201,168,76,0.6);letter-spacing:2px;margin-bottom:6px;">ENTER WITH CHIPS</div>
+          <div style="font-size:0.75rem;color:#fff;margin-bottom:10px;">Use your existing balance.<br>Your score updates live.</div>
+          <button onclick="enterTournamentWithChips()" style="font-family:'Cinzel',serif;font-size:0.68rem;font-weight:700;background:linear-gradient(135deg,#c9a84c,#f0d080);color:#000;border:none;border-radius:6px;padding:8px 16px;cursor:pointer;width:100%;">ENTER NOW</button>
+        </div>
+        <div style="background:rgba(0,0,0,0.35);border:1px solid rgba(201,168,76,0.3);border-radius:8px;padding:14px;text-align:center;">
+          <div style="font-size:0.55rem;color:rgba(201,168,76,0.6);letter-spacing:2px;margin-bottom:6px;">FREE ENTRY</div>
+          <div style="font-size:0.75rem;color:#fff;margin-bottom:10px;">No purchase needed.<br>Request free entry chips.</div>
+          <button onclick="openAMOEForm()" style="font-family:'Cinzel',serif;font-size:0.68rem;font-weight:700;background:transparent;color:#f0d060;border:1px solid rgba(201,168,76,0.5);border-radius:6px;padding:8px 16px;cursor:pointer;width:100%;">FREE ENTRY</button>
+        </div>
+      </div>
+
+      <p style="font-size:0.52rem;color:rgba(180,160,120,0.5);text-align:center;line-height:1.6;border-top:1px solid rgba(201,168,76,0.12);padding-top:12px;">
+        NO PURCHASE NECESSARY. A purchase does not improve your chances of winning.<br>
+        Open to legal US residents 18+. Void where prohibited by law.<br>
+        Sponsor provides prize at their discretion. Winners notified by email.
+      </p>
+    </div>`;
+  document.body.appendChild(modal);
+  modal.addEventListener('click',e=>{ if(e.target===modal) modal.remove(); });
+}
+
+function enterTournamentWithChips(){
+  document.getElementById('tourn-modal')?.remove();
+  const el=document.getElementById('tourn-my-rank');
+  if(el) el.textContent='Entered';
+  updateTournamentRank();
+  showAchievement('swords','#c9a84c','Tournament Entrant — The Games Begin');
+  setMsg('You\'ve entered the Gladiator Tournament! Your balance is your score.');
+  postFeedMsg('⚔️ You entered the Gladiator Tournament — highest balance wins!', 'info');
+}
+
+function openAMOEForm(){
+  document.getElementById('tourn-modal')?.remove();
+  const modal=document.createElement('div');
+  modal.id='amoe-modal';
+  modal.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:10000;display:flex;align-items:center;justify-content:center;padding:16px;';
+  modal.innerHTML=`
+    <div style="background:linear-gradient(160deg,#0e0a1a,#160f28);border:1px solid rgba(201,168,76,0.55);border-radius:14px;max-width:420px;width:100%;padding:28px;position:relative;color:#fff;">
+      <button onclick="document.getElementById('amoe-modal').remove()" style="position:absolute;top:12px;right:16px;background:none;border:none;color:#888;font-size:22px;cursor:pointer;">✕</button>
+      <h2 style="font-family:'Cinzel',serif;text-align:center;color:#f0d060;margin:0 0 6px;font-size:1rem;">FREE TOURNAMENT ENTRY</h2>
+      <p style="font-size:0.62rem;color:rgba(220,200,160,0.7);text-align:center;margin:0 0 18px;">No purchase required. We'll grant you free tournament chips.</p>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <input id="amoe-name" placeholder="Your name" style="background:rgba(255,255,255,0.06);border:1px solid rgba(201,168,76,0.3);border-radius:6px;padding:10px 14px;color:#fff;font-size:0.78rem;outline:none;" />
+        <input id="amoe-email" type="email" placeholder="Email address" style="background:rgba(255,255,255,0.06);border:1px solid rgba(201,168,76,0.3);border-radius:6px;padding:10px 14px;color:#fff;font-size:0.78rem;outline:none;" />
+        <button onclick="submitAMOE()" style="font-family:'Cinzel',serif;font-size:0.72rem;font-weight:700;background:linear-gradient(135deg,#c9a84c,#f0d080);color:#000;border:none;border-radius:6px;padding:10px;cursor:pointer;letter-spacing:1px;">REQUEST FREE ENTRY</button>
+      </div>
+      <p style="font-size:0.5rem;color:rgba(180,160,120,0.45);text-align:center;margin-top:14px;line-height:1.6;">
+        NO PURCHASE NECESSARY. Void where prohibited. 18+ only.<br>One free entry per person. Entry chips are for tournament use only.
+      </p>
+    </div>`;
+  document.body.appendChild(modal);
+  modal.addEventListener('click',e=>{ if(e.target===modal) modal.remove(); });
+}
+
+function submitAMOE(){
+  const name=(document.getElementById('amoe-name')?.value||'').trim();
+  const email=(document.getElementById('amoe-email')?.value||'').trim();
+  if(!name||!email){ alert('Please enter your name and email.'); return; }
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ alert('Please enter a valid email address.'); return; }
+  // In production: POST to an API endpoint. For now, grant chips locally + log.
+  console.log('AMOE entry:', {name, email, timestamp:new Date().toISOString()});
+  document.getElementById('amoe-modal')?.remove();
+  // Grant free tournament starting chips
+  const freeChips=5000;
+  balance+=freeChips;
+  refreshUI(); saveEconomy();
+  postFeedMsg(`🎟️ Free entry granted to ${name} — +${freeChips.toLocaleString()} tournament chips!`, 'info');
+  setMsg(`Welcome, ${name}! You've entered the tournament with ${freeChips.toLocaleString()} free chips.`);
+  const el=document.getElementById('tourn-my-rank');
+  if(el) el.textContent='Entered';
+  updateTournamentRank();
+}
+
+// ══════════════════════════════════════════════════════════════════
+//  RETENTION HOOKS — streak flames, next-reward countdown
+// ══════════════════════════════════════════════════════════════════
+function updateStreakDisplay(){
+  const el=document.getElementById('streak-display');
+  if(!el) return;
+  if(dailyStreak<=0){ el.textContent=''; return; }
+  // Build SVG flame icons — more flames + crown at day 7
+  const flameSvg=`<svg width="14" height="14" viewBox="0 0 24 24" style="color:#ff7733;vertical-align:middle" aria-hidden="true"><use href="#ico-flame"/></svg>`;
+  const boltSvg=`<svg width="14" height="14" viewBox="0 0 24 24" style="color:#ffe066;vertical-align:middle" aria-hidden="true"><use href="#ico-bolt"/></svg>`;
+  const crownSvg=`<svg width="14" height="14" viewBox="0 0 24 24" style="color:#f0d060;vertical-align:middle" aria-hidden="true"><use href="#ico-crown"/></svg>`;
+  const count=Math.min(dailyStreak,5);
+  const flames=flameSvg.repeat(count);
+  const prefix=dailyStreak>=7 ? crownSvg+flames+crownSvg : dailyStreak>=5 ? boltSvg+flames+boltSvg : flames;
+  el.innerHTML=`<span class="streak-flame">${prefix}</span> Day ${dailyStreak} Streak — Next: +${(DAILY_REWARDS[Math.min(dailyStreak,6)]).toLocaleString()} chips`;
+}
+
+function updateNextRewardCountdown(){
+  const el=document.getElementById('next-reward-countdown');
+  if(!el) return;
+  if(canClaimDaily()){ el.innerHTML=svgIcon('gift',12,'#f0d060')+' Daily reward ready!'; el.style.color='#f0d060'; return; }
+  // Next midnight UTC
+  const now=new Date();
+  const tomorrow=new Date(Date.UTC(now.getUTCFullYear(),now.getUTCMonth(),now.getUTCDate()+1));
+  const diff=tomorrow-now;
+  const h=Math.floor(diff/3600000);
+  const m=Math.floor((diff%3600000)/60000);
+  const s=Math.floor((diff%60000)/1000);
+  el.style.color='rgba(201,168,76,0.65)';
+  el.textContent=`Next reward in ${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+}
+setInterval(updateNextRewardCountdown,1000);
+updateNextRewardCountdown();
+updateStreakDisplay();
+
+// ══════════════════════════════════════════════════════════════════
 //  SOUND ENGINE  (Web Audio API — fully synthesized, no files)
 // ══════════════════════════════════════════════════════════════════
 // Declared here (after buildShoe call site) — functions use them via closure
@@ -5638,7 +6417,9 @@ function toggleSFX(){
   soundEnabled = !soundEnabled;
   if(_sfxGain) _sfxGain.gain.value = soundEnabled ? 1 : 0;
   const btn = document.getElementById('btn-sound');
-  btn.textContent = soundEnabled ? '🔊' : '🔇';
+  btn.innerHTML = soundEnabled
+    ? '<svg width="15" height="15" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-sound"/></svg>'
+    : '<svg width="15" height="15" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-muted"/></svg>';
   btn.classList.toggle('muted', !soundEnabled);
 }
 function toggleMusic(){
@@ -5646,7 +6427,9 @@ function toggleMusic(){
   const profile=getVenueAudioProfile();
   if(_musicGain) _musicGain.gain.value = musicEnabled ? profile.musicGain : 0;
   const btn = document.getElementById('btn-music');
-  btn.textContent = musicEnabled ? '🎵' : '🔕';
+  btn.innerHTML = musicEnabled
+    ? '<svg width="15" height="15" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-music"/></svg>'
+    : '<svg width="15" height="15" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-music-off"/></svg>';
   btn.classList.toggle('muted', !musicEnabled);
   if(musicEnabled){
     applyVenueAudioTheme();
@@ -6226,8 +7009,20 @@ function renderThirdCardsAuto(){
   const bTRow=document.getElementById('banker-third-cards');
   const pTRow=document.getElementById('player-third-cards');
   bTRow.innerHTML=''; pTRow.innerHTML='';
-  if(pendingHand.bThird){ bTRow.appendChild(makeFaceUpCardEl(pendingHand.bThird,'bc2')); revealState.bankerThird=true; }
-  if(pendingHand.pThird){ pTRow.appendChild(makeFaceUpCardEl(pendingHand.pThird,'pc2')); revealState.playerThird=true; }
+  if(pendingHand.bThird){
+    bTRow.appendChild(makeFaceUpCardEl(pendingHand.bThird,'bc2'));
+    revealState.bankerThird=true;
+    document.getElementById('banker-third-slot').style.display='block';
+  } else {
+    document.getElementById('banker-third-slot').style.display='none';
+  }
+  if(pendingHand.pThird){
+    pTRow.appendChild(makeFaceUpCardEl(pendingHand.pThird,'pc2'));
+    revealState.playerThird=true;
+    document.getElementById('player-third-slot').style.display='block';
+  } else {
+    document.getElementById('player-third-slot').style.display='none';
+  }
   revealState.thirdDealt=true;
   zone.classList.add('visible');
 }
