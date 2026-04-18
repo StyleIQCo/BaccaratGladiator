@@ -956,7 +956,8 @@ function nextHand() {
   state = 'betting';
   dealerCards = []; hands = []; activeIdx = 0;
   mainBet = 0; mtdBet = 0;
-  if(balance <= 0) { balance = 1000; postFeed('💰 Reloaded $1,000.', 'info'); }
+  if(_waCompliance && balance < WA_CHIP_FLOOR){ balance = WA_CHIP_FLOOR; postFeed('💰 Free chips topped up.', 'info'); }
+  else if(balance <= 0) { balance = 1000; postFeed('💰 Reloaded $1,000.', 'info'); }
   refreshBetUI(); renderCards();
   document.getElementById('d-score').textContent = '';
   document.getElementById('p-score').textContent = '';
@@ -1028,6 +1029,25 @@ function authGuest() {
   g.style.display = 'flex'; g.style.flexDirection = 'column';
   init();
 }
+
+// ── Washington State Compliance ───────────────────────────────────────────
+// WA users must never be blocked from playing; chips are always free to them.
+let _waCompliance = false;
+const WA_CHIP_FLOOR = 5000;
+(async function detectWARegion(){
+  try{
+    const r = await fetch('https://ipapi.co/json/', { signal: AbortSignal.timeout(3000) });
+    const d = await r.json();
+    if(d.country_code === 'US' && d.region_code === 'WA'){
+      _waCompliance = true;
+      if(typeof balance !== 'undefined' && balance < WA_CHIP_FLOOR){
+        balance = WA_CHIP_FLOOR;
+        const el = document.getElementById('bal');
+        if(el) el.textContent = '$' + balance.toLocaleString();
+      }
+    }
+  }catch(e){}
+})();
 
 // ── Chip Store ────────────────────────────────────────────────────────────
 const CHIP_STORE_URL = 'https://rtynrkj9l4.execute-api.us-east-1.amazonaws.com/prod/create-checkout';

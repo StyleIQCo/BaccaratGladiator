@@ -345,45 +345,90 @@ html[data-skip-splash='1'] #splash-flash{
 .hdr-auth-btn:hover { border-color:#88bbff; background:rgba(80,120,220,0.38); color:#e8f4ff; }
 
 /* ─── GLOBAL LEADERBOARD ─── */
+@keyframes lb-shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+@keyframes lb-pulse-glow {
+  0%,100% { box-shadow: 0 0 10px 2px rgba(201,168,76,0.25), inset 0 0 18px rgba(201,168,76,0.06); }
+  50%      { box-shadow: 0 0 22px 6px rgba(201,168,76,0.45), inset 0 0 28px rgba(201,168,76,0.12); }
+}
 .leaderboard-panel {
   margin:8px 12px;
-  background:rgba(0,0,0,0.35);
-  border:1px solid rgba(120,170,255,0.25);
-  border-radius:8px;
+  background: linear-gradient(160deg, #0a0f1e 0%, #0d1628 60%, #080d1a 100%);
+  border:1px solid rgba(201,168,76,0.45);
+  border-radius:10px;
   overflow:hidden;
+  animation: lb-pulse-glow 3.5s ease-in-out infinite;
+  position:relative;
+}
+.leaderboard-panel::before {
+  content:'';
+  position:absolute; inset:0; pointer-events:none;
+  border-radius:10px;
+  background: linear-gradient(105deg,
+    transparent 35%,
+    rgba(201,168,76,0.07) 50%,
+    transparent 65%);
+  background-size:200% 100%;
+  animation: lb-shimmer 4s linear infinite;
 }
 .leaderboard-header {
   display:flex; align-items:center; justify-content:space-between;
-  padding:6px 10px;
-  background:rgba(0,8,25,0.45);
-  border-bottom:1px solid rgba(120,170,255,0.2);
+  padding:7px 10px;
+  background: linear-gradient(90deg, rgba(201,168,76,0.18) 0%, rgba(201,168,76,0.06) 100%);
+  border-bottom:1px solid rgba(201,168,76,0.3);
+  position:relative;
 }
 .leaderboard-title {
-  font-size:0.7rem; font-weight:700; letter-spacing:0.08em;
-  color:#9ed1ff;
+  font-family:'Cinzel',serif;
+  font-size:0.72rem; font-weight:700; letter-spacing:0.1em;
+  background: linear-gradient(90deg, #f0d060, #c9a84c, #ffe882, #c9a84c);
+  background-size:200% auto;
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  background-clip:text;
+  animation: lb-shimmer 3s linear infinite;
 }
 .leaderboard-refresh {
-  border:1px solid rgba(120,170,255,0.3); background:transparent;
-  color:rgba(180,220,255,0.8); border-radius:4px;
-  font-size:0.56rem; padding:2px 7px; cursor:pointer;
+  border:1px solid rgba(201,168,76,0.4); background:transparent;
+  color:rgba(240,208,96,0.8); border-radius:4px;
+  font-size:0.56rem; padding:2px 8px; cursor:pointer;
+  transition: background 0.2s, color 0.2s;
 }
-.leaderboard-refresh:hover { background:rgba(120,170,255,0.12); }
-.leaderboard-body { padding:4px 6px; }
+.leaderboard-refresh:hover {
+  background:rgba(201,168,76,0.15); color:#f0d060;
+}
+.leaderboard-body { padding:5px 6px; }
 .leaderboard-empty {
   text-align:center; padding:12px 6px;
-  font-size:0.6rem; color:rgba(200,220,240,0.5); font-style:italic;
+  font-size:0.6rem; color:rgba(200,180,100,0.45); font-style:italic;
 }
 .lb-row {
-  display:grid; grid-template-columns:26px 1fr auto auto;
-  gap:8px; align-items:center;
-  padding:4px 6px;
-  border-bottom:1px solid rgba(255,255,255,0.03);
+  display:grid; grid-template-columns:28px 1fr auto auto;
+  gap:6px; align-items:center;
+  padding:5px 6px;
+  border-radius:5px;
+  margin-bottom:2px;
+  border:1px solid transparent;
   font-size:0.62rem;
+  transition: background 0.2s;
 }
-.lb-rank { color:var(--gold-lt); font-family:'Cinzel',serif; text-align:center; }
-.lb-name { color:#d7eaff; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.lb-score { color:#7dffa4; font-family:'Cinzel',serif; }
-.lb-meta { color:rgba(190,210,230,0.62); font-size:0.54rem; }
+.lb-row:hover { background:rgba(201,168,76,0.07); }
+/* Top-3 medal rows */
+.lb-row.lb-gold   { background:linear-gradient(90deg,rgba(201,168,76,0.18) 0%,rgba(0,0,0,0) 100%); border-color:rgba(201,168,76,0.35); }
+.lb-row.lb-silver { background:linear-gradient(90deg,rgba(180,190,200,0.14) 0%,rgba(0,0,0,0) 100%); border-color:rgba(180,190,200,0.28); }
+.lb-row.lb-bronze { background:linear-gradient(90deg,rgba(180,110,60,0.14) 0%,rgba(0,0,0,0) 100%); border-color:rgba(180,110,60,0.28); }
+.lb-rank {
+  font-family:'Cinzel',serif; text-align:center; font-weight:700;
+  font-size:0.68rem;
+}
+.lb-rank.medal-gold   { color:#f0d060; text-shadow:0 0 6px rgba(240,208,96,0.7); }
+.lb-rank.medal-silver { color:#c8d8e8; text-shadow:0 0 6px rgba(180,200,220,0.6); }
+.lb-rank.medal-bronze { color:#d4884a; text-shadow:0 0 6px rgba(200,120,60,0.6); }
+.lb-rank.medal-rest   { color:rgba(201,168,76,0.55); }
+.lb-name { color:#e8f0ff; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.lb-score { color:#7dffa4; font-family:'Cinzel',serif; font-size:0.63rem; white-space:nowrap; }
+.lb-meta { color:rgba(190,210,230,0.5); font-size:0.52rem; white-space:nowrap; }
 .economy-panel{
   margin:8px 12px 6px;
   border:1px solid rgba(201,168,76,0.3);
@@ -2462,6 +2507,9 @@ video.dealer-photo{ background:#000; }
   <div class="leaderboard-body" id="leaderboard-body">
     <div class="leaderboard-empty" id="leaderboard-empty">Sign in to submit scores. Top players will appear here.</div>
   </div>
+  <div id="wa-lb-notice" style="display:none;text-align:center;padding:6px 8px;font-size:0.58rem;color:rgba(200,180,100,0.7);font-style:italic;border-top:1px solid rgba(201,168,76,0.15);margin-top:4px;">
+    ⚖️ WA state law — leaderboard not available in Washington
+  </div>
 </div>
 
 <!-- ═══════ SCOREBOARDS ═══════ -->
@@ -2795,6 +2843,37 @@ function saveEconomy(){
   }catch(e){}
 }
 
+// ── WASHINGTON STATE COMPLIANCE ─────────────────────────────────────────────
+// Under the 2018 Big Fish ruling, WA law treats purchasable virtual chips as
+// "things of value." Fix: WA users never hit a paywall — chips are always free.
+let _waCompliance = false;
+const WA_CHIP_FLOOR = 5000; // free top-up floor for WA users
+
+function ensureWAChipFloor(){
+  if(_waCompliance && balance < WA_CHIP_FLOOR){
+    balance = WA_CHIP_FLOOR;
+    refreshUI();
+    saveEconomy();
+  }
+}
+
+(async function detectWARegion(){
+  try{
+    const r = await fetch('https://ipapi.co/json/', { signal: AbortSignal.timeout(3000) });
+    const d = await r.json();
+    if(d.country_code === 'US' && d.region_code === 'WA'){
+      _waCompliance = true;
+      // Show WA leaderboard notice; leaderboard scores are not submitted for WA users
+      const notice = document.getElementById('wa-lb-notice');
+      if(notice) notice.style.display = 'block';
+      const empty = document.getElementById('leaderboard-empty');
+      if(empty) empty.style.display = 'none';
+      ensureWAChipFloor();
+    }
+  }catch(e){}
+})();
+// ───────────────────────────────────────────────────────────────────────────
+
 function canClaimDaily(){
   const t=todayKey();
   return lastDailyClaim!==t;
@@ -2903,6 +2982,8 @@ function selectVenue(id){
 }
 
 function showEconomyFriction(msg){
+  // WA compliance: silently restore chips so the game is always free to play
+  if(_waCompliance){ ensureWAChipFloor(); return; }
   const o=document.getElementById('economy-friction');
   const m=document.getElementById('eco-friction-msg');
   if(m && msg) m.textContent=msg;
@@ -3394,6 +3475,7 @@ function makeHandEventPayload(r, b){
 
 async function submitHandEventToCloud(r, b, retry){
   if(!authLocked) return;
+  if(_waCompliance) return; // WA: leaderboard not available; play freely without score submission
   if(CLOUD_CONFIG.apiBaseUrl.includes('YOUR_HTTP_API_ID')) return;
   const attemptRetry = !!retry;
   try{
@@ -3429,13 +3511,19 @@ function renderLeaderboardRows(items){
     body.innerHTML='<div class="leaderboard-empty" id="leaderboard-empty">No leaderboard entries yet.</div>';
     return;
   }
+  const medalRow  = ['lb-gold','lb-silver','lb-bronze'];
+  const medalRank = ['medal-gold','medal-silver','medal-bronze'];
+  const medalIcon = ['🥇','🥈','🥉'];
   items.forEach(function(it, idx){
     const row=document.createElement('div');
-    row.className='lb-row';
+    const isTop3 = idx < 3;
+    row.className = 'lb-row' + (isTop3 ? ' ' + medalRow[idx] : '');
     const nm = it.username || it.userName || 'Player';
     const sc = Number(it.topScore || it.score || 0);
     const rounds = Number(it.rounds || 0);
-    row.innerHTML = `<div class="lb-rank">#${idx+1}</div><div class="lb-name">${nm}</div><div class="lb-score">$${sc.toLocaleString()}</div><div class="lb-meta">${rounds} rounds</div>`;
+    const rankClass = isTop3 ? medalRank[idx] : 'medal-rest';
+    const rankLabel = isTop3 ? medalIcon[idx] : `#${idx+1}`;
+    row.innerHTML = `<div class="lb-rank ${rankClass}">${rankLabel}</div><div class="lb-name">${nm}</div><div class="lb-score">$${sc.toLocaleString()}</div><div class="lb-meta">${rounds} rounds</div>`;
     body.appendChild(row);
   });
   if(empty) empty.remove();
@@ -3468,6 +3556,8 @@ async function fetchGlobalLeaderboard(){
     renderLeaderboardRows(LEADERBOARD_SEEDS.map(s=>({...s,_seed:true})));
   }
 }
+// Auto-refresh leaderboard every 6 hours while the tab is open
+setInterval(fetchGlobalLeaderboard, 6 * 60 * 60 * 1000);
 
 // Reveal tracking: which cards are face-up
 // 'initial' = first 4 cards; 'third' = third cards
