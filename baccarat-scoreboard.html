@@ -7753,70 +7753,202 @@ setTimeout(scheduleWaitress, 500);
 /* ── Slot Machine ── */
 #dgm-spin-screen, #dgm-soccer-screen { display:none; }
 #dgm-spin-screen.active, #dgm-soccer-screen.active { display:block; }
+
+/* Cabinet wrapper — body + handle side by side */
+.slot-cabinet {
+  display:flex; align-items:center; justify-content:center;
+  gap:0; max-width:380px; margin:0 auto 10px;
+}
 .slot-machine {
-  background:linear-gradient(160deg,#1a0800 0%,#2a1000 100%);
-  border:3px solid rgba(201,168,76,0.7);
-  border-radius:16px; padding:14px 16px 12px;
-  max-width:340px; margin:0 auto 12px;
-  box-shadow:0 0 30px rgba(201,168,76,0.2), inset 0 0 20px rgba(0,0,0,0.5);
+  flex:1;
+  background:linear-gradient(175deg,#2a0a00 0%,#1a0500 40%,#0e0300 100%);
+  border:3px solid #8b6914;
+  border-right:none;
+  border-radius:18px 0 0 18px;
+  padding:12px 14px 10px;
+  box-shadow:-4px 0 0 0 #c9a84c, 0 0 40px rgba(201,168,76,0.25),
+             inset 0 0 30px rgba(0,0,0,0.6), inset 0 1px 0 rgba(201,168,76,0.2);
+  position:relative; overflow:visible;
 }
-.slot-machine-top {
-  font-family:'Cinzel',serif; font-size:0.62rem; font-weight:700;
-  color:rgba(201,168,76,0.8); text-align:center; letter-spacing:3px;
-  margin-bottom:10px;
-}
-.slot-reels-wrap {
-  display:flex; gap:6px; justify-content:center; margin-bottom:10px;
-}
-.slot-reel-outer {
-  width:82px; height:90px; overflow:hidden;
-  background:#0a0500; border:2px solid rgba(201,168,76,0.5);
-  border-radius:8px;
-  box-shadow:inset 0 0 12px rgba(0,0,0,0.8), inset 0 2px 4px rgba(201,168,76,0.15);
-  position:relative;
-}
-/* Fade top/bottom */
-.slot-reel-outer::before, .slot-reel-outer::after {
-  content:''; position:absolute; left:0; right:0; height:22px; z-index:2; pointer-events:none;
-}
-.slot-reel-outer::before { top:0;    background:linear-gradient(to bottom, #0a0500, transparent); }
-.slot-reel-outer::after  { bottom:0; background:linear-gradient(to top,   #0a0500, transparent); }
-/* Gold win-line */
-.slot-reels-wrap::after {
-  content:''; position:absolute; left:0; right:0;
-  top:50%; transform:translateY(-50%);
-  height:2px; background:rgba(201,168,76,0.5);
+/* Chrome top edge trim */
+.slot-machine::before {
+  content:''; position:absolute; top:-3px; left:-3px; right:0;
+  height:6px; border-radius:18px 0 0 0;
+  background:linear-gradient(to bottom, rgba(255,255,255,0.18), transparent);
   pointer-events:none;
 }
-.slot-reels-wrap { position:relative; }
+/* Marquee lights row */
+.slot-lights {
+  display:flex; justify-content:center; gap:9px; margin-bottom:9px;
+}
+.slot-lights span {
+  width:9px; height:9px; border-radius:50%;
+  background:#c9a84c;
+  box-shadow:0 0 6px 2px rgba(201,168,76,0.8);
+  animation:slotBlink 0.9s infinite;
+}
+.slot-lights span:nth-child(2n) { animation-delay:0.45s; background:#ff5050; box-shadow:0 0 6px 2px rgba(255,80,80,0.8); }
+.slot-lights span:nth-child(3n) { animation-delay:0.15s; background:#50aaff; box-shadow:0 0 6px 2px rgba(80,170,255,0.8); }
+@keyframes slotBlink {
+  0%,49%  { opacity:1; transform:scale(1.1); }
+  50%,100%{ opacity:0.25; transform:scale(0.85); }
+}
+.slot-machine.jackpot-flash .slot-lights span { animation:jackpotBlink 0.12s infinite !important; }
+@keyframes jackpotBlink {
+  0%,49%  { opacity:1; transform:scale(1.3); }
+  50%,100%{ opacity:0.1; transform:scale(0.7); }
+}
+.slot-machine-top {
+  font-family:'Cinzel',serif; font-size:0.68rem; font-weight:900;
+  color:#ffd060; text-align:center; letter-spacing:4px;
+  text-shadow:0 0 10px rgba(255,200,60,0.9), 0 0 20px rgba(255,200,60,0.5);
+  margin-bottom:10px;
+}
+/* Win line indicators — left/right arrows */
+.slot-winline-row {
+  display:flex; align-items:center; gap:4px; margin-bottom:4px;
+}
+.slot-winline-arrow {
+  width:12px; height:12px; flex-shrink:0;
+  border-top:5px solid transparent; border-bottom:5px solid transparent;
+  opacity:0.35; transition:opacity 0.2s;
+}
+.slot-winline-arrow.left  { border-right:10px solid #c9a84c; }
+.slot-winline-arrow.right { border-left:10px solid #c9a84c; }
+.slot-winline-row.lit .slot-winline-arrow { opacity:1; filter:drop-shadow(0 0 4px #ffd060); }
+/* Reels container */
+.slot-reels-wrap {
+  flex:1; display:flex; gap:5px; justify-content:center;
+  position:relative;
+}
+.slot-reel-outer {
+  width:80px; height:270px; overflow:hidden;
+  background:linear-gradient(to bottom, #060200, #0a0400, #060200);
+  border:2px solid rgba(201,168,76,0.6);
+  border-radius:8px;
+  box-shadow:inset 0 0 18px rgba(0,0,0,0.9), inset 0 2px 4px rgba(255,200,60,0.1);
+  position:relative;
+}
+/* Top/bottom fade */
+.slot-reel-outer::before, .slot-reel-outer::after {
+  content:''; position:absolute; left:0; right:0; height:60px; z-index:2; pointer-events:none;
+}
+.slot-reel-outer::before { top:0;    background:linear-gradient(to bottom, rgba(6,2,0,0.95), transparent); }
+.slot-reel-outer::after  { bottom:0; background:linear-gradient(to top,   rgba(6,2,0,0.95), transparent); }
+/* Horizontal win-line across center symbol */
+.slot-reels-wrap::after {
+  content:''; position:absolute; left:-4px; right:-4px;
+  top:50%; transform:translateY(-50%);
+  height:3px;
+  background:linear-gradient(to right, transparent, rgba(201,168,76,0.9) 15%, #ffd060 50%, rgba(201,168,76,0.9) 85%, transparent);
+  box-shadow:0 0 8px rgba(255,200,60,0.7);
+  pointer-events:none; z-index:3;
+  transition:box-shadow 0.2s;
+}
+.slot-reels-wrap.winning::after {
+  box-shadow:0 0 20px 4px rgba(255,200,60,1);
+  animation:winLinePulse 0.4s infinite alternate;
+}
+@keyframes winLinePulse {
+  from { box-shadow:0 0 10px 2px rgba(255,200,60,0.7); }
+  to   { box-shadow:0 0 28px 8px rgba(255,200,60,1); }
+}
 .slot-reel-strip {
   display:flex; flex-direction:column; align-items:center;
-  transition:transform 0.05s linear;
   will-change:transform;
 }
 .slot-symbol {
-  width:82px; height:90px; display:flex; align-items:center; justify-content:center;
-  font-size:2.4rem; line-height:1; flex-shrink:0; user-select:none;
+  width:80px; height:90px; display:flex; align-items:center; justify-content:center;
+  font-size:2.5rem; line-height:1; flex-shrink:0; user-select:none;
+  transition:filter 0.3s;
 }
-.dgm-spin-btn {
-  display:block; margin:0 auto 10px;
-  font-family:'Cinzel',serif; font-size:0.8rem; font-weight:700;
-  letter-spacing:2px; background:linear-gradient(135deg,#c9a84c,#a0782a);
-  color:#1a0a00; border:none; border-radius:8px;
-  padding:10px 32px; cursor:pointer;
-  box-shadow:0 3px 12px rgba(201,168,76,0.35);
-  transition:opacity 0.2s;
-}
-.dgm-spin-btn:disabled { opacity:0.4; cursor:default; }
-.dgm-spin-result {
-  font-family:'Cinzel',serif; font-size:1rem; font-weight:700;
-  color:#fff; text-align:center; min-height:28px;
-}
+/* Dim non-center symbols slightly while spinning */
+.slot-reel-outer.spinning .slot-symbol { filter:blur(1px) brightness(0.7); }
+/* Paytable */
 .slot-paytable {
-  display:flex; flex-wrap:wrap; gap:4px 10px; justify-content:center;
-  font-size:0.48rem; color:rgba(240,220,160,0.5);
-  margin-bottom:6px; line-height:1.8;
+  display:flex; flex-wrap:wrap; gap:3px 8px; justify-content:center;
+  font-size:0.46rem; color:rgba(240,220,160,0.45);
+  margin-top:8px; line-height:1.9;
 }
+/* Result area */
+.dgm-spin-result {
+  font-family:'Cinzel',serif; font-size:0.95rem; font-weight:700;
+  color:#fff; text-align:center; min-height:28px; margin-top:4px;
+}
+/* Shake animation on spin */
+@keyframes slotShake {
+  0%,100%{ transform:translateX(0); }
+  20%    { transform:translateX(-3px) rotate(-0.5deg); }
+  40%    { transform:translateX(3px) rotate(0.5deg); }
+  60%    { transform:translateX(-2px); }
+  80%    { transform:translateX(2px); }
+}
+.slot-machine.shaking { animation:slotShake 0.35s ease-out; }
+/* Jackpot explosion overlay */
+#slot-jackpot-flash {
+  position:fixed; inset:0; z-index:99999;
+  background:radial-gradient(ellipse at center, rgba(255,220,0,0.55) 0%, rgba(255,100,0,0.3) 50%, transparent 75%);
+  pointer-events:none; opacity:0;
+  transition:opacity 0.1s;
+}
+#slot-jackpot-flash.active { opacity:1; }
+
+/* ── Handle side ── */
+.slot-handle-side {
+  width:44px; flex-shrink:0;
+  display:flex; flex-direction:column; align-items:center;
+  padding-top:24px;
+  background:linear-gradient(175deg,#1e0800,#120400);
+  border:3px solid #8b6914;
+  border-left:none;
+  border-radius:0 18px 18px 0;
+  box-shadow:4px 0 0 0 #c9a84c, 0 0 40px rgba(201,168,76,0.15);
+  position:relative; cursor:pointer;
+}
+.slot-handle-side::before {
+  content:''; position:absolute;
+  left:0; top:8px; bottom:8px; width:2px;
+  background:linear-gradient(to bottom, transparent, rgba(201,168,76,0.3), transparent);
+}
+/* The arm itself — pivots from the mount at top */
+.slot-handle-mount {
+  width:16px; height:16px; border-radius:50%;
+  background:radial-gradient(circle at 40% 35%, #ddd, #888, #555);
+  box-shadow:0 2px 6px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.3);
+  position:relative; z-index:2; flex-shrink:0;
+}
+.slot-handle-arm {
+  transform-origin:top center;
+  display:flex; flex-direction:column; align-items:center;
+  cursor:pointer;
+  margin-top:-2px;
+}
+.slot-handle-arm.pulling { animation:handlePull 0.55s cubic-bezier(0.25,0.1,0.25,1); }
+@keyframes handlePull {
+  0%  { transform:rotate(0deg); }
+  28% { transform:rotate(38deg); }
+  58% { transform:rotate(38deg); }
+  100%{ transform:rotate(0deg); }
+}
+.slot-handle-bar {
+  width:11px; height:108px;
+  background:linear-gradient(to right, #666, #e0e0e0 45%, #bbb 60%, #666);
+  border-radius:6px;
+}
+.slot-handle-knob {
+  width:28px; height:28px; border-radius:50%;
+  background:radial-gradient(circle at 38% 32%, #ff9090, #dd0000 55%, #880000);
+  box-shadow:0 3px 10px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.25),
+             0 0 8px rgba(255,60,60,0.5);
+  margin-top:-2px;
+}
+.slot-handle-label {
+  font-family:'Cinzel',serif; font-size:0.36rem; color:rgba(201,168,76,0.45);
+  letter-spacing:1px; margin-top:10px; writing-mode:vertical-rl;
+  text-orientation:mixed; transform:rotate(180deg);
+}
+/* Disabled handle look */
+.slot-handle-side.disabled { opacity:0.35; cursor:default; pointer-events:none; }
 
 /* ── Soccer ── */
 #dgm-soccer-canvas {
@@ -7866,22 +7998,42 @@ setTimeout(scheduleWaitress, 500);
 
     <!-- Slot Machine Screen -->
     <div id="dgm-spin-screen">
-      <div class="slot-machine">
-        <div class="slot-machine-top">🎰 GLADIATOR SLOTS 🎰</div>
-        <div class="slot-reels-wrap" id="slot-reels-wrap">
-          <div class="slot-reel-outer"><div class="slot-reel-strip" id="slot-reel-0"></div></div>
-          <div class="slot-reel-outer"><div class="slot-reel-strip" id="slot-reel-1"></div></div>
-          <div class="slot-reel-outer"><div class="slot-reel-strip" id="slot-reel-2"></div></div>
+      <div class="slot-cabinet">
+        <div class="slot-machine" id="slot-machine-body">
+          <div class="slot-lights" id="slot-lights">
+            <span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span>
+          </div>
+          <div class="slot-machine-top">🎰 GLADIATOR SLOTS 🎰</div>
+          <div class="slot-winline-row" id="slot-winline-row">
+            <div class="slot-winline-arrow left"></div>
+            <div class="slot-reels-wrap" id="slot-reels-wrap">
+              <div class="slot-reel-outer" id="slot-reel-outer-0"><div class="slot-reel-strip" id="slot-reel-0"></div></div>
+              <div class="slot-reel-outer" id="slot-reel-outer-1"><div class="slot-reel-strip" id="slot-reel-1"></div></div>
+              <div class="slot-reel-outer" id="slot-reel-outer-2"><div class="slot-reel-strip" id="slot-reel-2"></div></div>
+            </div>
+            <div class="slot-winline-arrow right"></div>
+          </div>
+          <div class="slot-paytable">
+            <span>7️⃣7️⃣7️⃣ JACKPOT×100</span><span>💎💎💎 ×60</span><span>🃏🃏🃏 ×40</span>
+            <span>🪙🪙🪙 ×20</span><span>⭐⭐⭐ ×10</span><span>Any pair ×1.5</span>
+          </div>
         </div>
-        <div class="slot-paytable" id="slot-paytable">
-          <span>7️⃣7️⃣7️⃣ JACKPOT</span><span>🃏🃏🃏 ×40</span><span>🪙🪙🪙 ×20</span>
-          <span>⭐⭐⭐ ×10</span><span>🎴🎴🎴 ×5</span><span>Any pair ×1.5</span>
+        <!-- Old-school handle -->
+        <div class="slot-handle-side" id="slot-handle-side" onclick="doSpin()">
+          <div class="slot-handle-mount"></div>
+          <div class="slot-handle-arm" id="slot-handle-arm">
+            <div class="slot-handle-bar"></div>
+            <div class="slot-handle-knob"></div>
+          </div>
+          <div class="slot-handle-label">PULL</div>
         </div>
       </div>
-      <button class="dgm-spin-btn" id="dgm-spin-btn" onclick="doSpin()">🎰 PULL</button>
       <div class="dgm-spin-result" id="dgm-spin-result"></div>
       <button class="dgm-back-btn" id="dgm-spin-back" onclick="showDailyPicker()" style="display:none">← Pick another game</button>
     </div>
+    <!-- Jackpot flash overlay -->
+    <div id="slot-jackpot-flash"></div>
 
     <!-- Soccer Screen -->
     <div id="dgm-soccer-screen">
