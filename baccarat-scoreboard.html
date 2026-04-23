@@ -9588,31 +9588,47 @@ setTimeout(scheduleWaitress, 500);
 #dgm-d-roll:disabled { opacity:0.35; cursor:not-allowed; }
 
 /* Mini roulette betting UI */
-.dgm-r-bets { display:grid; grid-template-columns:repeat(3,1fr); gap:5px; margin:8px 0 5px; }
+.dgm-r-bets { display:grid; grid-template-columns:repeat(3,1fr); gap:4px; margin:5px 0 3px; }
 .dgm-r-btn {
-  font-family:'Cinzel',serif; font-size:0.58rem; letter-spacing:1px;
-  padding:8px 4px; border-radius:5px; cursor:pointer; text-align:center;
+  font-family:'Cinzel',serif; font-size:0.55rem; letter-spacing:0.5px;
+  padding:7px 3px; border-radius:5px; cursor:pointer; text-align:center;
   border:1px solid rgba(255,255,255,0.12); background:rgba(0,0,0,0.35);
-  color:rgba(232,223,192,0.6); transition:all 0.13s;
+  color:rgba(232,223,192,0.6); transition:all 0.13s; line-height:1.3;
 }
 .dgm-r-btn:hover { border-color:rgba(201,168,76,0.5); background:rgba(201,168,76,0.08); }
 .dgm-r-btn.dgm-r-sel { border-color:var(--gold); background:rgba(201,168,76,0.16); color:var(--gold-lt); }
-.dgm-r-pick-label { font-size:0.52rem; color:rgba(201,168,76,0.35); text-align:center; letter-spacing:2px; margin:4px 0 3px; }
-#dgm-r-numgrid { display:grid; grid-template-columns:repeat(13,1fr); gap:2px; margin-bottom:6px; }
+.dgm-r-section-label {
+  font-size:0.46rem; color:rgba(201,168,76,0.4); text-align:center;
+  letter-spacing:2px; margin:5px 0 2px; font-family:'Cinzel',serif;
+}
+.dgm-r-pick-label { font-size:0.46rem; color:rgba(201,168,76,0.35); text-align:center; letter-spacing:2px; margin:5px 0 2px; }
+#dgm-r-numgrid { display:grid; grid-template-columns:repeat(12,1fr); gap:2px; margin-bottom:5px; }
 .dgm-r-num {
-  font-size:0.46rem; font-weight:700; border-radius:2px; cursor:pointer;
+  font-size:0.42rem; font-weight:700; border-radius:2px; cursor:pointer;
   padding:4px 0; text-align:center; border:1px solid transparent; transition:all 0.1s; line-height:1;
 }
-.dgm-r-num.rn { background:rgba(140,16,16,0.55); color:#ffbbbb; }
-.dgm-r-num.bn { background:rgba(28,28,28,0.75); color:#ccc; }
-.dgm-r-num.gn { background:rgba(18,110,35,0.65); color:#9fefb0; }
-.dgm-r-num:hover { border-color:var(--gold); transform:scale(1.1); }
+.dgm-r-num.rn { background:rgba(140,16,16,0.6); color:#ffbbbb; }
+.dgm-r-num.bn { background:rgba(30,30,30,0.8); color:#ccc; }
+.dgm-r-num.gn { background:rgba(18,110,35,0.7); color:#9fefb0; }
+.dgm-r-num:hover { border-color:var(--gold); transform:scale(1.12); }
 .dgm-r-num.dgm-r-nsel { border-color:var(--gold-lt); box-shadow:0 0 5px rgba(201,168,76,0.5); }
+.dgm-r-num.dgm-r-winner { box-shadow:0 0 10px 2px #f0d080; border-color:#f0d080; animation:drWinPulse 0.4s ease infinite alternate; }
+@keyframes drWinPulse { from{opacity:1} to{opacity:0.55} }
+#dgm-r-announce {
+  min-height:16px; text-align:center; font-family:'Cinzel',serif;
+  font-size:0.62rem; color:#c9a84c; letter-spacing:2px;
+  margin:3px 0 1px; transition:opacity 0.3s;
+}
+#dgm-r-flash {
+  position:absolute; inset:0; border-radius:16px; pointer-events:none;
+  opacity:0; background:radial-gradient(circle,rgba(255,220,80,0.35),transparent 70%);
+  transition:opacity 0.08s;
+}
 #dgm-r-spin {
-  font-family:'Cinzel',serif; font-size:0.78rem; letter-spacing:3px;
-  padding:10px 36px; background:linear-gradient(135deg,#f0d080,#c9a84c,#a07830);
+  font-family:'Cinzel',serif; font-size:0.75rem; letter-spacing:3px;
+  padding:10px 32px; background:linear-gradient(135deg,#f0d080,#c9a84c,#a07830);
   border:none; border-radius:4px; cursor:pointer; color:#000; font-weight:700;
-  box-shadow:0 0 18px rgba(201,168,76,0.35); transition:all 0.2s; display:block; margin:6px auto 4px;
+  box-shadow:0 0 18px rgba(201,168,76,0.35); transition:all 0.2s; display:block; margin:5px auto 4px;
 }
 #dgm-r-spin:disabled { opacity:0.35; cursor:not-allowed; }
 
@@ -9921,21 +9937,37 @@ setTimeout(scheduleWaitress, 500);
     </div>
 
     <!-- Roulette Screen -->
-    <div id="dgm-roulette-screen">
-      <div style="display:flex;justify-content:center;margin:6px 0 2px;">
-        <canvas id="dgm-roulette-canvas" width="180" height="180" style="border-radius:50%;"></canvas>
+    <div id="dgm-roulette-screen" style="position:relative;">
+      <div id="dgm-r-flash"></div>
+      <div style="display:flex;justify-content:center;margin:4px 0 2px;">
+        <canvas id="dgm-roulette-canvas" width="220" height="220" style="border-radius:50%;"></canvas>
       </div>
-      <div id="dgm-roulette-result" style="min-height:22px;text-align:center;font-family:'Cinzel',serif;font-size:0.82rem;margin:4px 0;"></div>
+      <div id="dgm-r-announce"></div>
+      <div id="dgm-roulette-result" style="min-height:20px;text-align:center;font-family:'Cinzel',serif;font-size:0.8rem;margin:2px 0;"></div>
+
+      <div class="dgm-r-section-label">— EVEN MONEY 1:1 —</div>
       <div class="dgm-r-bets">
-        <button class="dgm-r-btn" id="drb-red"   onclick="roulBet('red',this)"  style="color:#ff9999;border-color:rgba(204,34,34,0.3);">🔴 RED</button>
-        <button class="dgm-r-btn" id="drb-black" onclick="roulBet('black',this)" style="color:#bbb;">⚫ BLACK</button>
-        <button class="dgm-r-btn" id="drb-odd"   onclick="roulBet('odd',this)">ODD</button>
-        <button class="dgm-r-btn" id="drb-even"  onclick="roulBet('even',this)">EVEN</button>
-        <button class="dgm-r-btn" id="drb-low"   onclick="roulBet('low',this)">LOW 1–18</button>
-        <button class="dgm-r-btn" id="drb-high"  onclick="roulBet('high',this)">HIGH 19–36</button>
+        <button class="dgm-r-btn" onclick="roulBet('red',this)"   style="color:#ff8888;border-color:rgba(180,20,20,0.3);">🔴 RED</button>
+        <button class="dgm-r-btn" onclick="roulBet('black',this)" style="color:#bbb;">⚫ BLACK</button>
+        <button class="dgm-r-btn" onclick="roulBet('odd',this)">ODD</button>
+        <button class="dgm-r-btn" onclick="roulBet('even',this)">EVEN</button>
+        <button class="dgm-r-btn" onclick="roulBet('low',this)">1 – 18</button>
+        <button class="dgm-r-btn" onclick="roulBet('high',this)">19 – 36</button>
       </div>
-      <div class="dgm-r-pick-label">— or pick a number for 35:1 payout —</div>
+
+      <div class="dgm-r-section-label">— COLUMNS & DOZENS 2:1 —</div>
+      <div class="dgm-r-bets">
+        <button class="dgm-r-btn" onclick="roulBet('col1',this)">COL 1<br><span style="font-size:0.4rem;opacity:0.5">1·4·7…34</span></button>
+        <button class="dgm-r-btn" onclick="roulBet('col2',this)">COL 2<br><span style="font-size:0.4rem;opacity:0.5">2·5·8…35</span></button>
+        <button class="dgm-r-btn" onclick="roulBet('col3',this)">COL 3<br><span style="font-size:0.4rem;opacity:0.5">3·6·9…36</span></button>
+        <button class="dgm-r-btn" onclick="roulBet('doz1',this)">1st 12<br><span style="font-size:0.4rem;opacity:0.5">1 – 12</span></button>
+        <button class="dgm-r-btn" onclick="roulBet('doz2',this)">2nd 12<br><span style="font-size:0.4rem;opacity:0.5">13 – 24</span></button>
+        <button class="dgm-r-btn" onclick="roulBet('doz3',this)">3rd 12<br><span style="font-size:0.4rem;opacity:0.5">25 – 36</span></button>
+      </div>
+
+      <div class="dgm-r-pick-label">— STRAIGHT UP 8:1 —</div>
       <div id="dgm-r-numgrid"></div>
+
       <button id="dgm-r-spin" onclick="doRouletteSpin()" disabled>SPIN THE WHEEL</button>
       <button class="dgm-back-btn" id="dgm-roulette-back" onclick="showDailyPicker()" style="display:none">← Pick another game</button>
     </div>
@@ -10420,83 +10452,191 @@ function kickBall(targetX, targetY){
 
 <script>
 // ═══════════════════════════════════════════════════════════
-//  DAILY ROULETTE MINI-GAME
+//  DAILY ROULETTE MINI-GAME  (American — 38 pockets)
 // ═══════════════════════════════════════════════════════════
 (function(){
-const DGR_WHEEL = [0,32,15,19,4,21,2,25,17,34,6,27,13,36,11,30,8,23,10,5,24,16,33,1,20,14,31,9,22,18,29,7,28,12,35,3,26];
+// Standard American roulette wheel order. 37 = "00"
+const DGR_WHEEL = [0,28,9,26,30,11,7,20,32,17,5,22,34,15,3,24,36,13,1,37,27,10,25,29,12,8,19,31,18,6,21,33,16,4,23,35,14,2];
 const DGR_RED   = new Set([1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36]);
-const DGR_N     = 37;
+const DGR_COL1  = new Set([1,4,7,10,13,16,19,22,25,28,31,34]);
+const DGR_COL2  = new Set([2,5,8,11,14,17,20,23,26,29,32,35]);
+const DGR_COL3  = new Set([3,6,9,12,15,18,21,24,27,30,33,36]);
+const DGR_N     = 38;
 const DGR_SEC   = 2*Math.PI/DGR_N;
-const DGR_CX = 90, DGR_CY = 90, DGR_WR = 86;
-const DGR_TRACK = DGR_WR*0.88, DGR_SETTLE = DGR_WR*0.73;
+const DGR_CX = 110, DGR_CY = 110, DGR_WR = 104;
+const DGR_TRACK = DGR_WR*0.89, DGR_SETTLE = DGR_WR*0.74;
 
 let _drWheelAngle = 0, _drBallAngle = -Math.PI/2, _drBallR = DGR_TRACK;
 let _drBet = null, _drSpinning = false, _drDone = false;
+let _drHighlightIdx = -1; // sector to glow after landing
 
-function drawDGRWheel(wA, bA, bR){
+function drFlash(intensity){
+  const el=document.getElementById('dgm-r-flash');
+  if(!el) return;
+  el.style.opacity = intensity;
+  setTimeout(()=>{ el.style.opacity=0; }, 120);
+}
+
+function drAnnounce(txt, color){
+  const el=document.getElementById('dgm-r-announce');
+  if(!el) return;
+  el.style.color = color||'#c9a84c';
+  el.textContent = txt;
+}
+
+function drLaunchSound(){
+  try{
+    const ac=new(window.AudioContext||window.webkitAudioContext)();
+    // Dramatic whoosh sweep upward
+    const osc=ac.createOscillator(); const g=ac.createGain();
+    osc.connect(g); g.connect(ac.destination);
+    osc.type='sawtooth';
+    osc.frequency.setValueAtTime(60,ac.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(600,ac.currentTime+0.6);
+    g.gain.setValueAtTime(0.35,ac.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001,ac.currentTime+0.65);
+    osc.start(); osc.stop(ac.currentTime+0.7);
+    // High click
+    const o2=ac.createOscillator(); const g2=ac.createGain();
+    o2.connect(g2); g2.connect(ac.destination);
+    o2.type='sine'; o2.frequency.value=1800;
+    g2.gain.setValueAtTime(0.25,ac.currentTime+0.55);
+    g2.gain.exponentialRampToValueAtTime(0.001,ac.currentTime+0.75);
+    o2.start(ac.currentTime+0.55); o2.stop(ac.currentTime+0.8);
+  }catch(e){}
+}
+
+function drBounceSound(){
+  try{
+    const ac=new(window.AudioContext||window.webkitAudioContext)();
+    const o=ac.createOscillator(); const g=ac.createGain();
+    o.connect(g); g.connect(ac.destination);
+    o.type='sine'; o.frequency.value=900+Math.random()*400;
+    g.gain.setValueAtTime(0.22,ac.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001,ac.currentTime+0.06);
+    o.start(); o.stop(ac.currentTime+0.07);
+  }catch(e){}
+}
+
+function drLandSound(){
+  try{
+    const ac=new(window.AudioContext||window.webkitAudioContext)();
+    // Thunk
+    const o=ac.createOscillator(); const g=ac.createGain();
+    o.connect(g); g.connect(ac.destination);
+    o.type='sine'; o.frequency.setValueAtTime(220,ac.currentTime);
+    o.frequency.exponentialRampToValueAtTime(80,ac.currentTime+0.2);
+    g.gain.setValueAtTime(0.5,ac.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001,ac.currentTime+0.25);
+    o.start(); o.stop(ac.currentTime+0.3);
+  }catch(e){}
+}
+
+function drawDGRWheel(wA, bA, bR, highlightIdx){
   const canvas = document.getElementById('dgm-roulette-canvas');
   if(!canvas) return;
   const ctx = canvas.getContext('2d');
   const WR = DGR_WR, CX = DGR_CX, CY = DGR_CY;
-  ctx.clearRect(0, 0, 180, 180);
+  const W = 220;
+  ctx.clearRect(0, 0, W, W);
 
-  // Gold ring
-  ctx.beginPath(); ctx.arc(CX, CY, WR+3, 0, 2*Math.PI);
-  const gr = ctx.createLinearGradient(0,0,180,180);
+  // Outer bezel
+  const gr = ctx.createLinearGradient(0,0,W,W);
   gr.addColorStop(0,'#f5e090'); gr.addColorStop(0.5,'#c9a84c'); gr.addColorStop(1,'#7a5820');
-  ctx.strokeStyle=gr; ctx.lineWidth=6; ctx.stroke();
+  ctx.beginPath(); ctx.arc(CX, CY, WR+5, 0, 2*Math.PI);
+  ctx.strokeStyle=gr; ctx.lineWidth=8; ctx.stroke();
 
   // Sectors
   for(let i=0; i<DGR_N; i++){
     const n = DGR_WHEEL[i];
     const sa = wA + i*DGR_SEC - Math.PI/2;
     const ea = sa + DGR_SEC;
+    const isWinner = (i === highlightIdx);
     ctx.beginPath(); ctx.moveTo(CX,CY); ctx.arc(CX,CY,WR,sa,ea); ctx.closePath();
-    ctx.fillStyle = n===0 ? '#165c22' : DGR_RED.has(n) ? '#8f1212' : '#141414';
+    let fill;
+    if(n===0||n===37){ fill = isWinner ? '#2aaa44' : '#165c22'; }
+    else if(DGR_RED.has(n)){ fill = isWinner ? '#d42222' : '#7a0e0e'; }
+    else { fill = isWinner ? '#444' : '#111'; }
+    ctx.fillStyle=fill;
     ctx.fill();
-    ctx.strokeStyle='rgba(201,168,76,0.22)'; ctx.lineWidth=0.5; ctx.stroke();
-    const mid=sa+DGR_SEC/2, tr=WR*0.76;
-    ctx.save(); ctx.translate(CX+Math.cos(mid)*tr, CY+Math.sin(mid)*tr); ctx.rotate(mid+Math.PI/2);
-    ctx.fillStyle='#fff'; ctx.font='bold 5.5px Arial'; ctx.textAlign='center'; ctx.textBaseline='middle';
-    ctx.fillText(n,0,0); ctx.restore();
+    // Winner glow
+    if(isWinner){
+      ctx.save();
+      ctx.strokeStyle='#f0d080'; ctx.lineWidth=1.5;
+      ctx.shadowColor='#f0d080'; ctx.shadowBlur=10;
+      ctx.stroke(); ctx.restore();
+    } else {
+      ctx.strokeStyle='rgba(201,168,76,0.18)'; ctx.lineWidth=0.5; ctx.stroke();
+    }
+    // Number label
+    const mid=sa+DGR_SEC/2, tr=WR*0.77;
+    ctx.save();
+    ctx.translate(CX+Math.cos(mid)*tr, CY+Math.sin(mid)*tr);
+    ctx.rotate(mid+Math.PI/2);
+    ctx.fillStyle = isWinner ? '#ffee80' : '#fff';
+    ctx.font = 'bold '+(DGR_N<=38?'5px':'5.5px')+' Arial';
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText(n===37?'00':String(n), 0, 0);
+    ctx.restore();
   }
 
   // Ball track groove
   ctx.beginPath(); ctx.arc(CX,CY,DGR_TRACK,0,2*Math.PI);
-  ctx.strokeStyle='rgba(0,0,0,0.4)'; ctx.lineWidth=4; ctx.stroke();
+  ctx.strokeStyle='rgba(0,0,0,0.5)'; ctx.lineWidth=5; ctx.stroke();
 
-  // Inner ring
-  ctx.beginPath(); ctx.arc(CX,CY,WR*0.55,0,2*Math.PI);
-  ctx.strokeStyle='rgba(201,168,76,0.2)'; ctx.lineWidth=1.2; ctx.stroke();
+  // Separator ring
+  ctx.beginPath(); ctx.arc(CX,CY,WR*0.54,0,2*Math.PI);
+  ctx.strokeStyle='rgba(201,168,76,0.18)'; ctx.lineWidth=1.5; ctx.stroke();
 
   // Hub
-  const hR=WR*0.14, hg=ctx.createRadialGradient(CX-1,CY-1,0.5,CX,CY,hR);
+  const hR=WR*0.13;
+  const hg=ctx.createRadialGradient(CX-1,CY-1,0.5,CX,CY,hR);
   hg.addColorStop(0,'#f5e090'); hg.addColorStop(1,'#6b4a0a');
   ctx.beginPath(); ctx.arc(CX,CY,hR,0,2*Math.PI); ctx.fillStyle=hg; ctx.fill();
 
-  // Pointer
-  ctx.save(); ctx.fillStyle='#f0d080'; ctx.shadowColor='rgba(201,168,76,0.8)'; ctx.shadowBlur=4;
-  ctx.beginPath(); ctx.moveTo(CX,CY-WR-1); ctx.lineTo(CX-5,CY-WR+9); ctx.lineTo(CX+5,CY-WR+9);
+  // Pointer triangle at top
+  ctx.save();
+  ctx.fillStyle='#f0d080';
+  ctx.shadowColor='rgba(201,168,76,0.9)'; ctx.shadowBlur=6;
+  ctx.beginPath();
+  ctx.moveTo(CX, CY-WR-2);
+  ctx.lineTo(CX-6, CY-WR+10);
+  ctx.lineTo(CX+6, CY-WR+10);
   ctx.closePath(); ctx.fill(); ctx.restore();
 
   // Ball
   const bx=CX+Math.cos(bA)*bR, by=CY+Math.sin(bA)*bR;
-  const bg=ctx.createRadialGradient(bx-1.5,by-1.5,0.5,bx,by,4);
-  bg.addColorStop(0,'#fff'); bg.addColorStop(1,'#bbb');
-  ctx.beginPath(); ctx.arc(bx,by,4,0,2*Math.PI); ctx.fillStyle=bg; ctx.fill();
-  ctx.strokeStyle='rgba(0,0,0,0.3)'; ctx.lineWidth=0.6; ctx.stroke();
+  // Shadow under ball
+  ctx.beginPath(); ctx.arc(bx+1,by+1,4.5,0,2*Math.PI);
+  ctx.fillStyle='rgba(0,0,0,0.4)'; ctx.fill();
+  // Ball body
+  const bg=ctx.createRadialGradient(bx-1.5,by-1.8,0.5,bx,by,5);
+  bg.addColorStop(0,'#ffffff'); bg.addColorStop(0.5,'#e0e0e0'); bg.addColorStop(1,'#909090');
+  ctx.beginPath(); ctx.arc(bx,by,4.5,0,2*Math.PI);
+  ctx.fillStyle=bg; ctx.fill();
+  ctx.strokeStyle='rgba(0,0,0,0.25)'; ctx.lineWidth=0.5; ctx.stroke();
 }
 
 function buildDGRNumGrid(){
   const g = document.getElementById('dgm-r-numgrid');
   if(!g || g.childElementCount > 0) return;
-  const z = document.createElement('div');
-  z.className='dgm-r-num gn'; z.style.gridColumn='1/3'; z.style.padding='4px 0';
-  z.textContent='0'; z.onclick=()=>roulBetNum(0,z); g.appendChild(z);
+  // 0 and 00 — each span 6 of the 12 columns
+  [0,37].forEach(n=>{
+    const c=document.createElement('div');
+    c.className='dgm-r-num gn';
+    c.style.gridColumn='span 6'; c.style.padding='5px 0';
+    c.textContent = n===37?'00':'0';
+    c.dataset.val=n;
+    c.onclick=()=>roulBetNum(n,c);
+    g.appendChild(c);
+  });
+  // 1-36 in rows of 12
   for(let i=1; i<=36; i++){
     const c=document.createElement('div');
     c.className='dgm-r-num '+(DGR_RED.has(i)?'rn':'bn');
-    c.textContent=i; c.onclick=()=>roulBetNum(i,c); g.appendChild(c);
+    c.textContent=i; c.dataset.val=i;
+    c.onclick=()=>roulBetNum(i,c);
+    g.appendChild(c);
   }
 }
 
@@ -10505,13 +10645,14 @@ function openRouletteGame(){
   document.getElementById('dgm-roulette-screen').classList.add('active');
   document.getElementById('dgm-roulette-result').textContent='';
   document.getElementById('dgm-roulette-back').style.display='none';
-  _drBet=null; _drSpinning=false; _drDone=false;
+  drAnnounce('PLACE YOUR BETS');
+  _drBet=null; _drSpinning=false; _drDone=false; _drHighlightIdx=-1;
   document.querySelectorAll('.dgm-r-btn').forEach(b=>{b.classList.remove('dgm-r-sel'); b.style.pointerEvents='';});
-  document.querySelectorAll('.dgm-r-num').forEach(c=>{c.classList.remove('dgm-r-nsel'); c.style.pointerEvents='';});
+  document.querySelectorAll('.dgm-r-num').forEach(c=>{c.classList.remove('dgm-r-nsel','dgm-r-winner'); c.style.pointerEvents='';});
   document.getElementById('dgm-r-spin').disabled=true;
   _drWheelAngle=0; _drBallAngle=-Math.PI/2; _drBallR=DGR_TRACK;
   buildDGRNumGrid();
-  drawDGRWheel(0,-Math.PI/2,DGR_TRACK);
+  drawDGRWheel(0,-Math.PI/2,DGR_TRACK,-1);
 }
 window.openRouletteGame = openRouletteGame;
 
@@ -10542,78 +10683,157 @@ function doRouletteSpin(){
   document.getElementById('dgm-roulette-result').textContent='';
   document.querySelectorAll('.dgm-r-btn,.dgm-r-num').forEach(b=>b.style.pointerEvents='none');
 
+  // ── Launch theatrics ──────────────────────────────────────
+  drFlash(0.9);
+  drAnnounce('RIEN NE VA PLUS!', '#f0d080');
+  drLaunchSound();
+  if(window.dgmShake) dgmShake(3);
+
+  setTimeout(()=>{
+    drAnnounce('');
+    _startDGRSpin();
+  }, 600);
+}
+window.doRouletteSpin = doRouletteSpin;
+
+function _startDGRSpin(){
   const multi = typeof getStreakMultiplier==='function' ? getStreakMultiplier() : 1;
   const base  = window.DAILY_REWARDS ? window.DAILY_REWARDS[Math.min((window.dailyStreak||0),6)] : 10000;
-  const winner = DGR_WHEEL[Math.floor(Math.random()*DGR_N)];
+  const winIdx = Math.floor(Math.random()*DGR_N);
+  const winner = DGR_WHEEL[winIdx];
 
-  const idx      = DGR_WHEEL.indexOf(winner);
-  const tAngle   = -(idx*DGR_SEC + DGR_SEC/2);
-  const extraSpins = 4 + Math.random()*2;
+  // ── Compute final wheel angle: winning sector center at pointer (-π/2) ──
+  const extraSpins = 5 + Math.random()*3;
+  const tAngle     = -(winIdx*DGR_SEC + DGR_SEC/2);
   const finalWheel = tAngle - extraSpins*2*Math.PI;
-  const ballSpins  = 6 + Math.random()*3;
-  const ballStart  = _drBallAngle;
-  const ballFinal  = ballStart - ballSpins*2*Math.PI;
-  const dur = 3200 + Math.random()*600;
-  const t0  = performance.now();
-  const wStart = _drWheelAngle;
 
-  function ease(t){ return 1-Math.pow(1-t,3); }
-  let _lastTickAngle = _drBallAngle;
+  // ── Ball final angle: exact center of winning sector + small jitter ──
+  // The winning sector center in absolute coords at finalWheel = -π/2 (always)
+  // We compute it explicitly to be safe, then add jitter within ±30% of sector
+  const sectorCenter = finalWheel + (winIdx + 0.5)*DGR_SEC - Math.PI/2;
+  const jitter = (Math.random()-0.5)*DGR_SEC*0.45;
+  const finalBallAngle = sectorCenter + jitter;
+  const ballRevs = 9 + Math.random()*4;
+  const ballFinal = finalBallAngle - ballRevs*2*Math.PI;
+
+  const ballStart = _drBallAngle;
+  const wStart    = _drWheelAngle;
+  const dur = 4000 + Math.random()*800;
+  const t0  = performance.now();
+
+  function easeOut(t){ return 1-Math.pow(1-t,3); }
+  function easeOutStrong(t){ return 1-Math.pow(1-t,4); }
+
+  let _lastTickAngle = ballStart;
+  let _prevBallR = DGR_TRACK;
+  let _landedOnce = false;
 
   function frame(now){
-    const elapsed=now-t0, t=Math.min(elapsed/dur,1), e=ease(t);
-    _drWheelAngle = wStart+(finalWheel-wStart)*e;
-    const bt=Math.min(elapsed/(dur*0.82),1);
-    _drBallAngle  = ballStart+(ballFinal-ballStart)*ease(bt);
-    _drBallR = DGR_TRACK-(DGR_TRACK-DGR_SETTLE)*Math.max(0,(t-0.72)/0.28);
-    // Tick sound each sector crossing
-    if(window.DGMAudio && Math.abs(_drBallAngle-_lastTickAngle) > DGR_SEC){
-      DGMAudio.ballTick(); _lastTickAngle = _drBallAngle;
+    const elapsed = now - t0;
+    const t = Math.min(elapsed/dur, 1);
+
+    // Wheel eases to stop
+    _drWheelAngle = wStart + (finalWheel - wStart) * easeOut(t);
+
+    // Ball travels faster, eases more aggressively — both finish at t=1
+    const bt = Math.min(t * 1.08, 1); // ball arrives slightly before wheel
+    _drBallAngle = ballStart + (ballFinal - ballStart) * easeOutStrong(bt);
+
+    // Ball radius: stays on track, then spirals in with bounce in last 32%
+    if(t < 0.68){
+      _drBallR = DGR_TRACK;
+    } else {
+      const lp = (t - 0.68) / 0.32;
+      const bounce = Math.sin(lp * 22) * Math.exp(-lp * 5.5) * 11;
+      _drBallR = DGR_TRACK + (DGR_SETTLE - DGR_TRACK) * (lp*lp) + bounce;
+      // Play bounce click when ball "jumps" back up
+      if(bounce > 0 && _prevBallR < _drBallR){ drBounceSound(); }
     }
-    drawDGRWheel(_drWheelAngle, _drBallAngle, _drBallR);
-    if(t<1){ requestAnimationFrame(frame); }
-    else{
-      _drWheelAngle=finalWheel; _drBallAngle=-Math.PI/2; _drBallR=DGR_SETTLE;
-      drawDGRWheel(_drWheelAngle,_drBallAngle,_drBallR);
-      finishDGRSpin(winner, base, multi);
+    _prevBallR = _drBallR;
+
+    // Tick sound as ball crosses each sector
+    if(Math.abs(_drBallAngle - _lastTickAngle) > DGR_SEC){
+      if(window.DGMAudio) DGMAudio.ballTick();
+      _lastTickAngle = _drBallAngle;
+    }
+
+    drawDGRWheel(_drWheelAngle, _drBallAngle, _drBallR, -1);
+
+    if(t < 1){
+      requestAnimationFrame(frame);
+    } else {
+      // ── Final frame: ball in pocket ──────────────────────
+      _drBallR = DGR_SETTLE;
+      drawDGRWheel(finalWheel, finalBallAngle, DGR_SETTLE, winIdx);
+      drLandSound();
+      drFlash(0.7);
+      if(window.dgmShake) dgmShake(4);
+      // Brief pause then show result
+      setTimeout(()=>finishDGRSpin(winner, winIdx, base, multi), 500);
     }
   }
   requestAnimationFrame(frame);
 }
-window.doRouletteSpin = doRouletteSpin;
 
-function finishDGRSpin(winner, base, multi){
+function finishDGRSpin(winner, winIdx, base, multi){
   _drSpinning=false; _drDone=true;
+  _drHighlightIdx = winIdx;
+
   const isRed  = DGR_RED.has(winner);
-  const isOdd  = winner!==0 && winner%2===1;
-  const isEven = winner!==0 && winner%2===0;
+  const isBlack = winner!==0 && winner!==37 && !isRed;
+  const isOdd  = winner!==0 && winner!==37 && winner%2===1;
+  const isEven = winner!==0 && winner!==37 && winner%2===0;
   const isLow  = winner>=1 && winner<=18;
   const isHigh = winner>=19 && winner<=36;
+  const isCol1 = DGR_COL1.has(winner);
+  const isCol2 = DGR_COL2.has(winner);
+  const isCol3 = DGR_COL3.has(winner);
+  const isDoz1 = winner>=1 && winner<=12;
+  const isDoz2 = winner>=13 && winner<=24;
+  const isDoz3 = winner>=25 && winner<=36;
+
   const bet=_drBet;
-  let won=false, payMult=0.4;
-  if(bet.type==='red'    && isRed)            { won=true; payMult=1.0; }
-  if(bet.type==='black'  && winner!==0&&!isRed){ won=true; payMult=1.0; }
-  if(bet.type==='odd'    && isOdd)            { won=true; payMult=1.0; }
-  if(bet.type==='even'   && isEven)           { won=true; payMult=1.0; }
-  if(bet.type==='low'    && isLow)            { won=true; payMult=1.0; }
-  if(bet.type==='high'   && isHigh)           { won=true; payMult=1.0; }
-  if(bet.type==='number' && bet.value===winner){ won=true; payMult=2.5; }
+  let won=false, payMult=0.35;
+  if(bet.type==='red'    && isRed)   { won=true; payMult=1.0; }
+  if(bet.type==='black'  && isBlack) { won=true; payMult=1.0; }
+  if(bet.type==='odd'    && isOdd)   { won=true; payMult=1.0; }
+  if(bet.type==='even'   && isEven)  { won=true; payMult=1.0; }
+  if(bet.type==='low'    && isLow)   { won=true; payMult=1.0; }
+  if(bet.type==='high'   && isHigh)  { won=true; payMult=1.0; }
+  if(bet.type==='col1'   && isCol1)  { won=true; payMult=2.0; }
+  if(bet.type==='col2'   && isCol2)  { won=true; payMult=2.0; }
+  if(bet.type==='col3'   && isCol3)  { won=true; payMult=2.0; }
+  if(bet.type==='doz1'   && isDoz1)  { won=true; payMult=2.0; }
+  if(bet.type==='doz2'   && isDoz2)  { won=true; payMult=2.0; }
+  if(bet.type==='doz3'   && isDoz3)  { won=true; payMult=2.0; }
+  if(bet.type==='number' && bet.value===winner){ won=true; payMult=8.0; }
 
   const chips = Math.round(base*multi*payMult);
-  const icon  = winner===0?'🟢':isRed?'🔴':'⚫';
-  const res   = document.getElementById('dgm-roulette-result');
+  const label = winner===37?'00':String(winner);
+  const icon  = (winner===0||winner===37)?'🟢':isRed?'🔴':'⚫';
+
+  // Highlight the winning number in the grid
+  document.querySelectorAll('.dgm-r-num').forEach(c=>{
+    if(Number(c.dataset.val)===winner) c.classList.add('dgm-r-winner');
+  });
+
+  const res = document.getElementById('dgm-roulette-result');
   if(won){
     if(window.DGMAudio) DGMAudio.rouletteWin();
-    const pc = payMult>=2.5 ? ['#ffd700','#fff','#ff8c00','#c9a84c','#fff700'] : ['#c9a84c','#f0d080','#fff','#ffcc44'];
-    if(window.dgmParticles) dgmParticles(pc, payMult>=2.5?75:50);
-    if(window.dgmWinGlow) dgmWinGlow(isRed?'#cc2222':'#c9a84c');
-    res.innerHTML = icon+' <strong>'+winner+'</strong> — 🎉 <span style="color:#f0d060">+'+chips.toLocaleString()+' chips</span>'+(multi>1?' <span style="font-size:0.52rem;color:rgba(200,180,100,0.5)">(×'+multi+' streak)</span>':'');
+    const pc = payMult>=8 ? ['#ffd700','#fff','#ff8c00','#fff700','#ffcc00'] :
+               payMult>=2 ? ['#88ffaa','#f0d080','#fff','#c9a84c'] :
+                            ['#c9a84c','#f0d080','#fff'];
+    if(window.dgmParticles) dgmParticles(pc, payMult>=8?90:payMult>=2?65:50);
+    if(window.dgmWinGlow) dgmWinGlow(isRed?'#cc2222':payMult>=2?'#88ffaa':'#c9a84c');
+    drAnnounce('🎉 WINNER!', '#f0d080');
+    res.innerHTML = icon+' <strong>'+label+'</strong> — <span style="color:#f0d060">+'+chips.toLocaleString()+' chips</span>'+(multi>1?' <span style="font-size:0.5rem;color:rgba(200,180,100,0.45)">(×'+multi+')</span>':'');
   } else {
     if(window.DGMAudio) DGMAudio.consolation();
-    res.innerHTML = icon+' <strong>'+winner+'</strong> — <span style="color:#ff9999">+'+chips.toLocaleString()+' chips</span> <span style="font-size:0.52rem;color:rgba(200,180,100,0.5)">(consolation)</span>';
+    drAnnounce(icon+' '+label+' — better luck tomorrow', '#ff9999');
+    res.innerHTML = '<span style="color:#ff9999">+'+chips.toLocaleString()+' chips consolation</span>';
   }
   document.getElementById('dgm-roulette-back').style.display='block';
-  if(typeof window.grantAndClose==='function') window.grantAndClose(chips, 900);
+  if(typeof window.grantAndClose==='function') window.grantAndClose(chips, 1000);
 }
 
 })();
