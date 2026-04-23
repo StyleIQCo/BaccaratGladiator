@@ -3,3 +3,14 @@ Thumbs.db
 *.swp
 *.swo
 node_modules/
+
+# Runtime config — contains API endpoints, never commit
+config.js
+
+# Android keystore — never commit
+*.keystore
+*.jks
+google-services.json
+
+# iOS secrets
+AuthKey_*.p8

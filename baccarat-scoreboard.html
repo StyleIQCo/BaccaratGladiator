@@ -3046,6 +3046,8 @@ body.streamer-mode .seat-bet-chip { display:none; }
 .tw-enter-btn:hover { opacity:0.85; }
 .tw-week { font-size:0.58rem; color:rgba(232,223,192,0.3); text-align:center; margin-top:5px; letter-spacing:1px; }
 </style>
+<!-- Runtime config — loaded from config.js (gitignored). Injected by CI for deployments. -->
+<script src="config.js"></script>
 </head>
 <body>
 <script>
@@ -4581,12 +4583,12 @@ let currentUsername = '';
 let cognitoIdToken = '';
 let cognitoAccessToken = '';
 
-// ── CLOUD CONFIG (replace with deployed values) ─────────────────
-const CLOUD_CONFIG = {
-  apiBaseUrl: 'https://xr68waxn2h.execute-api.us-east-1.amazonaws.com',
-  cognitoDomain: 'https://baccaratgladiator-prod-henry-v2.auth.us-east-1.amazoncognito.com',
-  userPoolClientId: '20u4p2s42nr3hi1fsg9uhnlgdk',
-  redirectUri: 'https://www.baccaratgladiator.com/baccarat-scoreboard.html'
+// ── CLOUD CONFIG — loaded from config.js (gitignored), injected at build time ──
+const CLOUD_CONFIG = (window.BG_CONFIG && window.BG_CONFIG.apiBaseUrl) ? window.BG_CONFIG : {
+  apiBaseUrl: '',
+  cognitoDomain: '',
+  userPoolClientId: '',
+  redirectUri: window.location.origin + window.location.pathname
 };
 const AUTH_TOK_KEY = 'bg_cognito_tokens_v1';
 const AUTH_PROFILE_KEY = 'bg_auth_profile_v1';
