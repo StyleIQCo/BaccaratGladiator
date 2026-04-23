@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!-- Trust system CAs for all HTTPS connections -->
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+
+    <!-- Explicitly allow HTTPS to our domains -->
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="true">baccaratgladiator.com</domain>
+        <domain includeSubdomains="true">amazoncognito.com</domain>
+        <domain includeSubdomains="true">execute-api.us-east-1.amazonaws.com</domain>
+        <domain includeSubdomains="true">googleapis.com</domain>
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </domain-config>
+</network-security-config>

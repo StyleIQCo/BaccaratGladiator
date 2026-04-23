@@ -10,6 +10,12 @@
     "scrollEnabled": false,
     "limitsNavigationsToAppBoundDomains": true
   },
+  "android": {
+    "backgroundColor": "#080e08",
+    "allowMixedContent": false,
+    "captureInput": false,
+    "webContentsDebuggingEnabled": false
+  },
   "plugins": {
     "SplashScreen": {
       "launchShowDuration": 2500,
@@ -17,7 +23,11 @@
       "backgroundColor": "#080e08",
       "showSpinner": false,
       "iosSpinnerStyle": "small",
-      "spinnerColor": "#c9a84c"
+      "androidSpinnerStyle": "small",
+      "spinnerColor": "#c9a84c",
+      "androidScaleType": "CENTER_CROP",
+      "splashFullScreen": true,
+      "splashImmersive": true
     },
     "StatusBar": {
       "style": "Dark",

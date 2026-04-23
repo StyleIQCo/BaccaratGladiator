@@ -3751,6 +3751,12 @@ body.streamer-mode .seat-bet-chip { display:none; }
         <button class="auth-btn" onclick="cognitoStart('login')">SIGN IN</button>
         <button class="auth-btn alt" onclick="showAgeVerify()">CREATE ACCOUNT</button>
       </div>
+      <div class="auth-row" style="margin-top:2px;">
+        <button class="auth-btn siwa-btn" onclick="cognitoStartApple()" style="background:#000;color:#fff;border:none;display:flex;align-items:center;justify-content:center;gap:8px;font-family:-apple-system,'SF Pro Display','Helvetica Neue',sans-serif;font-size:0.75rem;font-weight:600;letter-spacing:0.5px;border-radius:6px;padding:12px 16px;width:100%;cursor:pointer;">
+          <svg viewBox="0 0 24 24" width="17" height="17" fill="#fff" xmlns="http://www.w3.org/2000/svg"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.7 9.05 7.4c1.36.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.39-1.32 2.76-2.53 3.99zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
+          Sign in with Apple
+        </button>
+      </div>
       <div class="auth-row">
         <button class="auth-btn alt" id="auth-trial-btn" onclick="startGuestTrial()">PLAY 10-HAND TRIAL</button>
       </div>
@@ -4686,6 +4692,9 @@ function saveEconomy(){
       balance, hardGems, playerXp, dailyStreak, lastDailyClaim, currentVenue
     }));
   }catch(e){}
+  if(authLocked && currentUsername && currentUsername !== 'Player'){
+    saveUserEconomy(currentUsername);
+  }
 }
 
 // ── WASHINGTON STATE COMPLIANCE ─────────────────────────────────────────────
@@ -5054,6 +5063,8 @@ function applyAuthFromTokens(){
   authLocked=true;
   setHeaderUser();
   hideAuthOverlay();
+  // Restore per-user economy (chips, xp, streak) so Apple login syncs progress
+  mergeUserEconomy(currentUsername);
   return true;
 }
 
@@ -5074,6 +5085,60 @@ function cognitoStart(mode){
   try{ sessionStorage.setItem('bg_auth_redirect_pending','1'); }catch(e){}
   try{ sessionStorage.setItem('bg_skip_splash_once','1'); }catch(e){}
   window.location.href = CLOUD_CONFIG.cognitoDomain.replace(/\/$/,'') + path + '?' + q.toString();
+}
+
+function cognitoStartApple(){
+  const hasDomain = /^https:\/\/.+\.auth\.[a-z0-9-]+\.amazoncognito\.com$/i.test(String(CLOUD_CONFIG.cognitoDomain||''));
+  const hasClientId = /^[a-z0-9]{10,}$/i.test(String(CLOUD_CONFIG.userPoolClientId||''));
+  if(!hasDomain || !hasClientId){
+    setAuthNote('Configure CLOUD_CONFIG with your Cognito domain/client ID first.', true);
+    return;
+  }
+  const q = new URLSearchParams({
+    client_id: CLOUD_CONFIG.userPoolClientId,
+    response_type: 'code',
+    scope: 'openid email profile',
+    redirect_uri: CLOUD_CONFIG.redirectUri,
+    identity_provider: 'SignInWithApple'
+  });
+  try{ sessionStorage.setItem('bg_auth_redirect_pending','1'); }catch(e){}
+  try{ sessionStorage.setItem('bg_skip_splash_once','1'); }catch(e){}
+  window.location.href = CLOUD_CONFIG.cognitoDomain.replace(/\/$/,'') + '/oauth2/authorize?' + q.toString();
+}
+
+// ── Per-user economy persistence (syncs chips/xp/streak across logins) ────────
+const USER_ECO_PREFIX = 'bg_eco_user_';
+
+function saveUserEconomy(username){
+  if(!username || username==='Player') return;
+  try{
+    const key = USER_ECO_PREFIX + username.toLowerCase().replace(/[^a-z0-9_]/g,'_');
+    localStorage.setItem(key, JSON.stringify({
+      balance, hardGems, playerXp, dailyStreak, lastDailyClaim, currentVenue,
+      savedAt: Date.now()
+    }));
+  }catch(e){}
+}
+
+function mergeUserEconomy(username){
+  if(!username || username==='Player') return;
+  try{
+    const key = USER_ECO_PREFIX + username.toLowerCase().replace(/[^a-z0-9_]/g,'_');
+    const raw = localStorage.getItem(key);
+    if(!raw) return;
+    const p = JSON.parse(raw);
+    // Take the more generous values so the user never loses chips on login
+    if(Number.isFinite(Number(p.balance))) balance = Math.max(balance, Number(p.balance));
+    if(Number.isFinite(Number(p.hardGems))) hardGems = Math.max(hardGems, Number(p.hardGems));
+    if(Number.isFinite(Number(p.playerXp))) playerXp = Math.max(playerXp, Number(p.playerXp));
+    if(p.dailyStreak && Number.isFinite(Number(p.dailyStreak))) dailyStreak = Number(p.dailyStreak);
+    if(p.lastDailyClaim) lastDailyClaim = p.lastDailyClaim;
+    if(p.currentVenue) currentVenue = p.currentVenue;
+    playerLevel = levelFromXp(playerXp);
+    playerTitle = titleFromLevel(playerLevel);
+    saveEconomy();
+    refreshUI();
+  }catch(e){}
 }
 
 function processCognitoCallbackHash(){
@@ -5197,6 +5262,7 @@ async function processCognitoCallbackCode(){
       try{ sessionStorage.removeItem('bg_skip_splash_once'); }catch(e){}
       hideAuthOverlay();
       updateTrialBadge();
+      mergeUserEconomy(currentUsername);
       refreshUI();
       fetchCloudProfile();
     }
@@ -5213,6 +5279,9 @@ async function processCognitoCallbackCode(){
 }
 
 function cognitoLogout(){
+  if(authLocked && currentUsername && currentUsername !== 'Player'){
+    saveUserEconomy(currentUsername);
+  }
   clearTokens();
   authLocked=false;
   currentUserEmail='';
@@ -10020,6 +10089,7 @@ function doSpin(){
   _slotSpinning = true;
   document.getElementById('dgm-spin-btn').disabled = true;
   document.getElementById('dgm-spin-result').textContent = '';
+  if(window.DGMAudio) DGMAudio.slotPull();
 
   const multi = getStreakMultiplier();
   const base  = window.DAILY_REWARDS ? window.DAILY_REWARDS[Math.min((window.dailyStreak||0),6)] : 10000;
@@ -10060,6 +10130,7 @@ function doSpin(){
     strip.style.transition = `transform ${duration}ms cubic-bezier(0.25,0.1,0.25,1)`;
     strip.style.transform  = 'translateY(-'+totalPx+'px)';
     _reelOffsets[reelIdx]  = totalPx;
+    if(window.DGMAudio) setTimeout(()=>DGMAudio.reelStop(reelIdx), duration);
 
     setTimeout(function(){
       done++;
@@ -10103,13 +10174,24 @@ function resolveSlot(syms, base, multi){
     (multi > 1 ? ' <span style="font-size:0.55rem;color:rgba(200,180,100,0.6)">(×'+multi+' streak)</span>' : '');
 
   if(isJackpot){
-    // Flash the machine
+    if(window.DGMAudio) DGMAudio.jackpot();
+    if(window.dgmParticles) dgmParticles(['#ffd700','#fff700','#ff8c00','#fff','#c9a84c'], 90);
+    if(window.dgmShake) dgmShake(8);
+    if(window.dgmWinGlow) dgmWinGlow('#ffd700');
     const machine = document.querySelector('.slot-machine');
     let flashes = 0;
     const fl = setInterval(function(){
       machine.style.borderColor = (flashes%2===0) ? '#ff0' : 'rgba(201,168,76,0.7)';
-      if(++flashes > 7){ clearInterval(fl); machine.style.borderColor=''; }
-    }, 150);
+      if(++flashes > 11){ clearInterval(fl); machine.style.borderColor=''; }
+    }, 120);
+  } else if(payMult >= SLOT_PAYOUTS['🪙🪙🪙']) {
+    if(window.DGMAudio) DGMAudio.bigWin();
+    if(window.dgmParticles) dgmParticles(['#c9a84c','#f0d080','#fff','#ffaa00'], 55);
+    if(window.dgmWinGlow) dgmWinGlow('#c9a84c');
+  } else if(payMult <= SLOT_PAYOUTS['_miss']) {
+    if(window.DGMAudio) DGMAudio.consolation();
+  } else {
+    if(window.DGMAudio) DGMAudio.bigWin();
   }
   document.getElementById('dgm-spin-back').style.display = 'block';
   grantAndClose(chips, 900);
@@ -10270,6 +10352,7 @@ window.openSoccerGame = openSoccerGame;
 function kickBall(targetX, targetY){
   _soccerPhase = 'flying';
   document.getElementById('dgm-soccer-inst').textContent = '⚽ Shot taken!';
+  if(window.DGMAudio) DGMAudio.kick();
   _ballX = BALL_START.x; _ballY = BALL_START.y;
   const frames = 28;
   const dx = (targetX - _ballX) / frames;
@@ -10310,8 +10393,14 @@ function kickBall(targetX, targetY){
 
       const resultEl = document.getElementById('dgm-soccer-result');
       if(scored){
+        if(window.DGMAudio) DGMAudio.goal();
+        if(window.dgmParticles) dgmParticles(['#22dd55','#fff','#f0d080','#44ff88','#ffcc00'], 70);
+        if(window.dgmShake) dgmShake(6);
+        if(window.dgmWinGlow) dgmWinGlow('#22dd55');
         resultEl.innerHTML = '⚽ GOAL! <span style="color:#f0d060">+' + chips.toLocaleString() + ' chips</span>';
       } else {
+        if(window.DGMAudio) DGMAudio.saved();
+        if(window.DGMAudio) setTimeout(()=>DGMAudio.consolation(),350);
         resultEl.innerHTML = (blocked ? '🧤 Saved by the goalie! ' : '✗ Just missed! ') +
           '<span style="color:#f0d060">+' + chips.toLocaleString() + ' chips</span>' +
           ' <span style="font-size:0.55rem;color:rgba(200,180,100,0.6)">(consolation)</span>';
@@ -10467,6 +10556,7 @@ function doRouletteSpin(){
   const wStart = _drWheelAngle;
 
   function ease(t){ return 1-Math.pow(1-t,3); }
+  let _lastTickAngle = _drBallAngle;
 
   function frame(now){
     const elapsed=now-t0, t=Math.min(elapsed/dur,1), e=ease(t);
@@ -10474,6 +10564,10 @@ function doRouletteSpin(){
     const bt=Math.min(elapsed/(dur*0.82),1);
     _drBallAngle  = ballStart+(ballFinal-ballStart)*ease(bt);
     _drBallR = DGR_TRACK-(DGR_TRACK-DGR_SETTLE)*Math.max(0,(t-0.72)/0.28);
+    // Tick sound each sector crossing
+    if(window.DGMAudio && Math.abs(_drBallAngle-_lastTickAngle) > DGR_SEC){
+      DGMAudio.ballTick(); _lastTickAngle = _drBallAngle;
+    }
     drawDGRWheel(_drWheelAngle, _drBallAngle, _drBallR);
     if(t<1){ requestAnimationFrame(frame); }
     else{
@@ -10507,8 +10601,13 @@ function finishDGRSpin(winner, base, multi){
   const icon  = winner===0?'🟢':isRed?'🔴':'⚫';
   const res   = document.getElementById('dgm-roulette-result');
   if(won){
+    if(window.DGMAudio) DGMAudio.rouletteWin();
+    const pc = payMult>=2.5 ? ['#ffd700','#fff','#ff8c00','#c9a84c','#fff700'] : ['#c9a84c','#f0d080','#fff','#ffcc44'];
+    if(window.dgmParticles) dgmParticles(pc, payMult>=2.5?75:50);
+    if(window.dgmWinGlow) dgmWinGlow(isRed?'#cc2222':'#c9a84c');
     res.innerHTML = icon+' <strong>'+winner+'</strong> — 🎉 <span style="color:#f0d060">+'+chips.toLocaleString()+' chips</span>'+(multi>1?' <span style="font-size:0.52rem;color:rgba(200,180,100,0.5)">(×'+multi+' streak)</span>':'');
   } else {
+    if(window.DGMAudio) DGMAudio.consolation();
     res.innerHTML = icon+' <strong>'+winner+'</strong> — <span style="color:#ff9999">+'+chips.toLocaleString()+' chips</span> <span style="font-size:0.52rem;color:rgba(200,180,100,0.5)">(consolation)</span>';
   }
   document.getElementById('dgm-roulette-back').style.display='block';
@@ -10580,8 +10679,8 @@ function rollBubbleDice(){
 
   const d0=document.getElementById('dgm-die-0'), d1=document.getElementById('dgm-die-1');
   d0.classList.add('rolling'); d1.classList.add('rolling');
+  if(window.DGMAudio) DGMAudio.diceRattle();
 
-  // Pick final values now, shuffle visuals for ~1.4s then snap
   const final0=randomFace(), final1=randomFace();
   let ticks=0; const totalTicks=18;
 
@@ -10593,6 +10692,8 @@ function rollBubbleDice(){
       clearInterval(_diceRollTimer); _diceRollTimer=null;
       d0.classList.remove('rolling'); d1.classList.remove('rolling');
       renderDie(d0, final0); renderDie(d1, final1);
+      if(window.DGMAudio) DGMAudio.diceLand();
+      if(window.dgmShake) dgmShake(4);
       finishDice(final0, final1);
     }
   }, 80);
@@ -10618,8 +10719,13 @@ function finishDice(d0, d1){
   const chips=Math.round(base*multi*payMult);
   const res=document.getElementById('dgm-dice-result');
   if(won){
+    if(window.DGMAudio) DGMAudio.diceWin();
+    const pc=payMult>=2?['#ffd700','#fff','#ffaa00','#c9a84c']:['#c9a84c','#f0d080','#fff'];
+    if(window.dgmParticles) dgmParticles(pc, payMult>=2?70:45);
+    if(window.dgmWinGlow) dgmWinGlow('#c9a84c');
     res.innerHTML='🎲 '+(_diceBet==='doubles'?'Doubles! ':'')+'🎉 <span style="color:#f0d060">+'+chips.toLocaleString()+' chips</span>'+(multi>1?' <span style="font-size:0.52rem;color:rgba(200,180,100,0.5)">(×'+multi+' streak)</span>':'');
   } else {
+    if(window.DGMAudio) setTimeout(()=>DGMAudio.consolation(),200);
     res.innerHTML='🎲 No luck this time — <span style="color:#ff9999">+'+chips.toLocaleString()+' chips</span> <span style="font-size:0.52rem;color:rgba(200,180,100,0.5)">(consolation)</span>';
   }
   document.getElementById('dgm-dice-back').style.display='block';
@@ -10814,6 +10920,7 @@ function startHydroplaneRace(){
   _raceDone=true;
   document.getElementById('dgm-race-btn').disabled=true;
   document.querySelectorAll('.dgm-boat-btn').forEach(b=>b.style.pointerEvents='none');
+  if(window.DGMAudio){ DGMAudio.raceStart(); setTimeout(()=>DGMAudio.engineRev(),300); }
 
   const multi=typeof getStreakMultiplier==='function'?getStreakMultiplier():1;
   const base=window.DAILY_REWARDS?window.DAILY_REWARDS[Math.min((window.dailyStreak||0),6)]:10000;
@@ -10848,8 +10955,13 @@ function finishRace(winnerId,userWins,base,multi){
     :Math.round(base*multi*0.35);
   const res=document.getElementById('dgm-race-result');
   if(userWins){
+    if(window.DGMAudio) DGMAudio.raceWin();
+    if(window.dgmParticles) dgmParticles([winBoat.trim,'#fff','#f0d080','#c9a84c','#ffee44'],75);
+    if(window.dgmShake) dgmShake(5);
+    if(window.dgmWinGlow) dgmWinGlow(winBoat.deck);
     res.innerHTML='🏆 '+winBoat.label+' WINS! 🎉 <span style="color:#f0d060">+'+chips.toLocaleString()+' chips</span>'+(multi>1?' <span style="font-size:0.52rem;color:rgba(200,180,100,0.5)">(×'+multi+' streak)</span>':'');
   } else {
+    if(window.DGMAudio) { setTimeout(()=>DGMAudio.consolation(),300); }
     res.innerHTML='🚤 '+winBoat.label+' wins the race — <span style="color:#ff9999">+'+chips.toLocaleString()+' chips</span> <span style="font-size:0.52rem;color:rgba(200,180,100,0.5)">(consolation)</span>';
   }
   document.getElementById('dgm-race-back').style.display='block';
@@ -10857,6 +10969,153 @@ function finishRace(winnerId,userWins,base,multi){
 }
 
 })();
+</script>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+//  DAILY MINI-GAME ARCADE ENGINE — sounds, particles, shake
+// ═══════════════════════════════════════════════════════════
+window.DGMAudio = (function(){
+  let _ctx = null;
+  function ctx(){
+    if(!_ctx) _ctx = new (window.AudioContext||window.webkitAudioContext)();
+    if(_ctx.state==='suspended') _ctx.resume();
+    return _ctx;
+  }
+
+  function tone(freq, type, dur, vol=0.28, delay=0, freqEnd=null){
+    try{
+      const c=ctx(), o=c.createOscillator(), g=c.createGain();
+      const t=c.currentTime+delay;
+      o.type=type; o.frequency.setValueAtTime(freq,t);
+      if(freqEnd) o.frequency.linearRampToValueAtTime(freqEnd, t+dur);
+      g.gain.setValueAtTime(0,t);
+      g.gain.linearRampToValueAtTime(vol, t+0.008);
+      g.gain.exponentialRampToValueAtTime(0.001, t+dur);
+      o.connect(g); g.connect(c.destination);
+      o.start(t); o.stop(t+dur+0.05);
+    }catch(e){}
+  }
+
+  function noise(dur, vol=0.18, freq=600, delay=0){
+    try{
+      const c=ctx();
+      const buf=c.createBuffer(1,Math.ceil(c.sampleRate*dur),c.sampleRate);
+      const d=buf.getChannelData(0); for(let i=0;i<d.length;i++) d[i]=Math.random()*2-1;
+      const src=c.createBufferSource(); src.buffer=buf;
+      const f=c.createBiquadFilter(); f.type='bandpass'; f.frequency.value=freq;
+      const g=c.createGain(); const t=c.currentTime+delay;
+      g.gain.setValueAtTime(vol,t); g.gain.exponentialRampToValueAtTime(0.001,t+dur);
+      src.connect(f); f.connect(g); g.connect(c.destination);
+      src.start(t); src.stop(t+dur+0.05);
+    }catch(e){}
+  }
+
+  return {
+    // Slot
+    slotPull(){ noise(0.1,0.25,300); tone(120,'sawtooth',0.12,0.22); },
+    reelTick(){ tone(700+Math.random()*200,'square',0.03,0.15); },
+    reelStop(i){ noise(0.09,0.3,400+i*80); tone(280-i*30,'sine',0.12,0.25); },
+    jackpot(){
+      [523,659,784,1047,1319].forEach((f,i)=>tone(f,'sine',0.5,0.4,i*0.11));
+      noise(0.8,0.25,1200,0.55);
+    },
+    bigWin(){ [440,554,659,880].forEach((f,i)=>tone(f,'sine',0.4,0.35,i*0.09)); },
+    consolation(){ tone(330,'sine',0.22,0.2); tone(220,'sine',0.28,0.2,0.22); },
+
+    // Soccer
+    kick(){ noise(0.14,0.55,180); tone(80,'sine',0.14,0.4); },
+    goal(){
+      noise(1.0,0.3,900); noise(0.6,0.2,400,0.3);
+      [523,659,784,1047].forEach((f,i)=>tone(f,'sawtooth',0.5,0.3,i*0.1));
+    },
+    saved(){ noise(0.25,0.2,350); tone(200,'sine',0.3,0.22); tone(160,'sine',0.3,0.15,0.25); },
+
+    // Roulette
+    ballTick(){ tone(1100+Math.random()*300,'sine',0.035,0.28); },
+    rouletteWin(){ [660,784,988,1319,1760].forEach((f,i)=>tone(f,'sine',0.45,0.35,i*0.1)); noise(0.5,0.15,1400,0.5); },
+
+    // Dice
+    diceRattle(){ for(let i=0;i<5;i++) noise(0.07,0.22,250+Math.random()*300,i*0.11); },
+    diceLand(){ noise(0.13,0.5,500); tone(180,'sine',0.12,0.3); },
+    diceWin(){ [392,494,587,784].forEach((f,i)=>tone(f,'sine',0.38,0.32,i*0.09)); },
+
+    // Hydroplane
+    engineRev(){
+      try{
+        const c=ctx(), o=c.createOscillator(), g=c.createGain();
+        o.type='sawtooth';
+        o.frequency.setValueAtTime(70,c.currentTime);
+        o.frequency.linearRampToValueAtTime(230,c.currentTime+2.8);
+        g.gain.setValueAtTime(0.14,c.currentTime);
+        g.gain.linearRampToValueAtTime(0.07,c.currentTime+2.8);
+        g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+3.2);
+        o.connect(g); g.connect(c.destination);
+        o.start(); o.stop(c.currentTime+3.3);
+      }catch(e){}
+    },
+    raceStart(){ noise(0.2,0.5,900); tone(440,'square',0.1,0.35); tone(550,'square',0.1,0.3,0.1); },
+    raceWin(){
+      [440,550,660,880,1100].forEach((f,i)=>tone(f,'sine',0.45,0.4,i*0.09));
+      noise(0.9,0.28,700,0.45);
+    },
+  };
+})();
+
+// ── Particle burst (gold confetti over the modal) ──────────────────
+window.dgmParticles = function(colors, count=55){
+  const box = document.querySelector('.dgm-box');
+  if(!box) return;
+  box.style.position='relative';
+  const cv=document.createElement('canvas');
+  cv.style.cssText='position:absolute;inset:0;pointer-events:none;z-index:20;border-radius:16px;';
+  cv.width=box.offsetWidth||440; cv.height=box.offsetHeight||560;
+  box.appendChild(cv);
+  const ctx2=cv.getContext('2d');
+  const CX=cv.width/2, CY=cv.height*0.38;
+  const pts=[];
+  for(let i=0;i<count;i++){
+    const a=Math.random()*Math.PI*2, sp=4+Math.random()*10;
+    pts.push({ x:CX,y:CY, vx:Math.cos(a)*sp, vy:Math.sin(a)*sp-5,
+      w:5+Math.random()*9, h:3+Math.random()*5,
+      color:colors[i%colors.length], life:1, rot:Math.random()*Math.PI*2, rv:(Math.random()-0.5)*0.25 });
+  }
+  function tick(){
+    ctx2.clearRect(0,0,cv.width,cv.height);
+    let any=false;
+    pts.forEach(p=>{
+      p.x+=p.vx; p.y+=p.vy; p.vy+=0.32; p.vx*=0.97; p.life-=0.018; p.rot+=p.rv;
+      if(p.life>0){ any=true;
+        ctx2.save(); ctx2.globalAlpha=p.life; ctx2.fillStyle=p.color;
+        ctx2.translate(p.x,p.y); ctx2.rotate(p.rot);
+        ctx2.fillRect(-p.w/2,-p.h/2,p.w,p.h); ctx2.restore(); }
+    });
+    if(any) requestAnimationFrame(tick); else cv.remove();
+  }
+  requestAnimationFrame(tick);
+};
+
+// ── Screen shake ──────────────────────────────────────────────────
+window.dgmShake = function(intensity=5){
+  const box=document.querySelector('.dgm-box');
+  if(!box||box._shaking) return;
+  box._shaking=true;
+  const seq=[[intensity,-intensity],[-intensity,intensity],[intensity*0.6,-intensity*0.6],[-intensity*0.6,intensity*0.6],[intensity*0.3,0],[0,0]];
+  let i=0;
+  const iv=setInterval(()=>{
+    if(i>=seq.length){ clearInterval(iv); box.style.transform=''; box._shaking=false; return; }
+    box.style.transform=`translate(${seq[i][0]}px,${seq[i][1]}px)`; i++;
+  },45);
+};
+
+// ── Win glow on modal border ───────────────────────────────────────
+window.dgmWinGlow = function(color='#c9a84c'){
+  const box=document.querySelector('.dgm-box');
+  if(!box) return;
+  box.style.transition='box-shadow 0.2s ease';
+  box.style.boxShadow=`0 0 0 2px ${color}, 0 0 60px ${color}55, 0 8px 40px rgba(0,0,0,0.7)`;
+  setTimeout(()=>{ box.style.boxShadow=''; },2200);
+};
 </script>
 
 <script>
