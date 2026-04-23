@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{width:1280px;height:720px;overflow:hidden;background:#000;}
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Raleway:wght@300;400;600&display=swap');
+
+.cover {
+  width:1280px;
+  height:720px;
+  position:relative;
+  background: radial-gradient(ellipse at 30% 40%, #1a4a28 0%, #0a1f0d 45%, #050d06 100%);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  font-family:'Cinzel','Georgia',serif;
+  overflow:hidden;
+}
+
+/* Felt texture overlay */
+.cover::before {
+  content:'';
+  position:absolute;
+  inset:0;
+  background-image:
+    repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.04) 2px, rgba(0,0,0,0.04) 4px),
+    repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+  pointer-events:none;
+  z-index:0;
+}
+
+/* Gold border frame */
+.frame {
+  position:absolute;
+  inset:18px;
+  border:1px solid rgba(201,168,76,0.35);
+  border-radius:4px;
+  z-index:1;
+  pointer-events:none;
+}
+.frame::before {
+  content:'';
+  position:absolute;
+  inset:6px;
+  border:1px solid rgba(201,168,76,0.15);
+  border-radius:2px;
+}
+
+/* Left: text content */
+.left {
+  position:relative;
+  z-index:2;
+  padding:72px 0 72px 80px;
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+
+.tag {
+  font-size:11px;
+  letter-spacing:5px;
+  color:rgba(201,168,76,0.55);
+  text-transform:uppercase;
+  margin-bottom:22px;
+}
+
+.title {
+  font-size:88px;
+  font-weight:900;
+  line-height:0.92;
+  color:#fff;
+  text-shadow:0 0 60px rgba(201,168,76,0.2), 0 4px 20px rgba(0,0,0,0.8);
+  margin-bottom:18px;
+  letter-spacing:-1px;
+}
+.title span {
+  display:block;
+  background: linear-gradient(135deg,#f5e090 0%,#c9a84c 50%,#a07830 100%);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+
+.subtitle {
+  font-size:18px;
+  font-weight:400;
+  color:rgba(232,223,192,0.7);
+  letter-spacing:4px;
+  text-transform:uppercase;
+  margin-bottom:40px;
+}
+
+.divider {
+  width:60px;
+  height:1px;
+  background:linear-gradient(90deg,rgba(201,168,76,0.6),transparent);
+  margin-bottom:32px;
+}
+
+.topics {
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  margin-bottom:48px;
+}
+.topic {
+  font-size:13px;
+  color:rgba(232,223,192,0.5);
+  letter-spacing:2px;
+  font-family:'Raleway','Georgia',sans-serif;
+  font-weight:400;
+}
+.topic::before {
+  content:'♦ ';
+  color:rgba(201,168,76,0.4);
+  font-size:9px;
+}
+
+.author {
+  font-size:13px;
+  letter-spacing:4px;
+  color:rgba(201,168,76,0.5);
+  text-transform:uppercase;
+}
+
+.url {
+  margin-top:8px;
+  font-size:11px;
+  letter-spacing:2px;
+  color:rgba(201,168,76,0.3);
+  font-family:'Raleway',sans-serif;
+}
+
+/* Right: card art */
+.right {
+  position:relative;
+  z-index:2;
+  width:480px;
+  height:720px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-shrink:0;
+}
+
+/* Background glow */
+.glow {
+  position:absolute;
+  width:360px;
+  height:500px;
+  background:radial-gradient(ellipse, rgba(201,168,76,0.12) 0%, transparent 70%);
+  border-radius:50%;
+}
+
+/* Big card */
+.big-card {
+  position:absolute;
+  width:210px;
+  height:295px;
+  background:linear-gradient(160deg,#fff 0%,#f8f4e8 100%);
+  border-radius:12px;
+  box-shadow:
+    0 0 0 1px rgba(201,168,76,0.3),
+    0 30px 80px rgba(0,0,0,0.85),
+    0 0 60px rgba(201,168,76,0.15);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  transform:rotate(-5deg) translateX(-20px);
+  z-index:3;
+}
+
+.card-rank-tl {
+  position:absolute;
+  top:12px;
+  left:14px;
+  font-size:28px;
+  font-weight:900;
+  color:#c9161a;
+  line-height:1;
+  font-family:'Cinzel',serif;
+}
+.card-suit-tl {
+  position:absolute;
+  top:40px;
+  left:16px;
+  font-size:20px;
+  color:#c9161a;
+}
+.card-rank-br {
+  position:absolute;
+  bottom:12px;
+  right:14px;
+  font-size:28px;
+  font-weight:900;
+  color:#c9161a;
+  line-height:1;
+  font-family:'Cinzel',serif;
+  transform:rotate(180deg);
+}
+.card-suit-br {
+  position:absolute;
+  bottom:40px;
+  right:16px;
+  font-size:20px;
+  color:#c9161a;
+  transform:rotate(180deg);
+}
+.card-center {
+  font-size:90px;
+  color:#c9161a;
+  line-height:1;
+  text-shadow:0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Second card behind */
+.back-card {
+  position:absolute;
+  width:210px;
+  height:295px;
+  background:linear-gradient(135deg,#1a5c2a 0%,#0d3318 100%);
+  border-radius:12px;
+  box-shadow:0 20px 60px rgba(0,0,0,0.7);
+  transform:rotate(8deg) translateX(30px) translateY(10px);
+  z-index:2;
+  border:1px solid rgba(201,168,76,0.25);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.back-card-inner {
+  width:180px;
+  height:265px;
+  border:1px solid rgba(201,168,76,0.2);
+  border-radius:8px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:48px;
+  color:rgba(201,168,76,0.3);
+}
+
+/* Third card behind-behind */
+.back-card2 {
+  position:absolute;
+  width:210px;
+  height:295px;
+  background:linear-gradient(135deg,#122018 0%,#080e08 100%);
+  border-radius:12px;
+  box-shadow:0 20px 60px rgba(0,0,0,0.7);
+  transform:rotate(18deg) translateX(75px) translateY(-5px);
+  z-index:1;
+  border:1px solid rgba(201,168,76,0.15);
+}
+
+/* Suit scatter */
+.suit {
+  position:absolute;
+  font-size:28px;
+  color:rgba(201,168,76,0.07);
+  z-index:0;
+  font-family:serif;
+}
+
+/* Bottom bar */
+.bottom-bar {
+  position:absolute;
+  bottom:0;
+  left:0;
+  right:0;
+  height:3px;
+  background:linear-gradient(90deg,transparent,rgba(201,168,76,0.4),rgba(201,168,76,0.6),rgba(201,168,76,0.4),transparent);
+  z-index:5;
+}
+
+/* Top stripe */
+.top-stripe {
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  height:3px;
+  background:linear-gradient(90deg,transparent,rgba(201,168,76,0.4),rgba(201,168,76,0.6),rgba(201,168,76,0.4),transparent);
+  z-index:5;
+}
+</style>
+</head>
+<body>
+<div class="cover">
+  <div class="top-stripe"></div>
+  <div class="frame"></div>
+
+  <!-- Scattered suits in background -->
+  <div class="suit" style="top:8%;left:5%;font-size:120px;transform:rotate(-15deg);">♠</div>
+  <div class="suit" style="bottom:5%;left:40%;font-size:90px;transform:rotate(10deg);">♣</div>
+  <div class="suit" style="top:10%;right:8%;font-size:60px;color:rgba(180,30,30,0.07);">♥</div>
+  <div class="suit" style="bottom:15%;right:5%;font-size:80px;color:rgba(180,30,30,0.06);">♦</div>
+
+  <!-- Left text block -->
+  <div class="left">
+    <div class="tag">The Complete Player's Guide</div>
+    <div class="title">
+      <span>Road</span>
+      <span>to Nine</span>
+    </div>
+    <div class="subtitle">A Baccarat Gladiator Guide</div>
+    <div class="divider"></div>
+    <div class="topics">
+      <div class="topic">All 5 Road Maps · Third-Card Rules</div>
+      <div class="topic">EZ & Tiger Baccarat · Side Bets</div>
+      <div class="topic">VIP Culture · The Squeeze Ritual</div>
+      <div class="topic">Casino Etiquette · Strategy Myths</div>
+    </div>
+    <div class="author">By Baccarat Gladiator</div>
+    <div class="url">BaccaratGladiator.com</div>
+  </div>
+
+  <!-- Right card art -->
+  <div class="right">
+    <div class="glow"></div>
+    <div class="back-card2"></div>
+    <div class="back-card">
+      <div class="back-card-inner">♠</div>
+    </div>
+    <div class="big-card">
+      <div class="card-rank-tl">9</div>
+      <div class="card-suit-tl">♥</div>
+      <div class="card-center">♥</div>
+      <div class="card-rank-br">9</div>
+      <div class="card-suit-br">♥</div>
+    </div>
+  </div>
+
+  <div class="bottom-bar"></div>
+</div>
+</body>
+</html>

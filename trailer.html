@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=1280"/>
+<title>Baccarat Gladiator — Trailer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Raleway:wght@300;400;600;700&display=swap">
+<style>
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+
+:root {
+  --gold:   #c9a84c;
+  --gold-lt:#f0d080;
+  --banker: #cc2222;
+  --player: #2244cc;
+  --tie:    #22aa44;
+  --felt:   #0d1f10;
+}
+
+html, body {
+  width:1280px; height:720px;
+  overflow:hidden;
+  background:#000;
+  font-family:'Raleway',sans-serif;
+  color:#f0e6c8;
+  cursor:none;
+}
+
+/* ── SCENE SYSTEM ── */
+.scene {
+  position:absolute; inset:0;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  opacity:0; pointer-events:none;
+  transition:opacity 0s;
+}
+.scene.active { opacity:1; pointer-events:auto; }
+
+/* ── GLOBAL FELT BG ── */
+#felt-bg {
+  position:fixed; inset:0; z-index:0;
+  background:
+    radial-gradient(ellipse 120% 80% at 50% 0%, #1a3a1c, #030a05 60%),
+    repeating-linear-gradient(45deg,  rgba(255,255,255,0.009) 0px,rgba(255,255,255,0.009) 1px,transparent 1px,transparent 10px),
+    repeating-linear-gradient(-45deg, rgba(255,255,255,0.009) 0px,rgba(255,255,255,0.009) 1px,transparent 1px,transparent 10px),
+    #030a05;
+  transition:background 1.2s ease;
+}
+#felt-bg.vegas {
+  background:
+    radial-gradient(ellipse 120% 80% at 50% 0%, #3a0808, #090101 60%),
+    repeating-linear-gradient(45deg,  rgba(255,255,255,0.009) 0px,rgba(255,255,255,0.009) 1px,transparent 1px,transparent 10px),
+    repeating-linear-gradient(-45deg, rgba(255,255,255,0.009) 0px,rgba(255,255,255,0.009) 1px,transparent 1px,transparent 10px),
+    #090101;
+}
+#felt-bg.montecarlo {
+  background:
+    radial-gradient(ellipse 120% 80% at 50% 0%, #0a1640, #020408 60%),
+    repeating-linear-gradient(45deg,  rgba(255,255,255,0.009) 0px,rgba(255,255,255,0.009) 1px,transparent 1px,transparent 10px),
+    repeating-linear-gradient(-45deg, rgba(255,255,255,0.009) 0px,rgba(255,255,255,0.009) 1px,transparent 1px,transparent 10px),
+    #020408;
+}
+#felt-bg.modern {
+  background:
+    radial-gradient(ellipse 120% 80% at 50% 0%, #071220, #030408 60%),
+    repeating-linear-gradient(45deg,  rgba(0,200,180,0.015) 0px,rgba(0,200,180,0.015) 1px,transparent 1px,transparent 10px),
+    repeating-linear-gradient(-45deg, rgba(0,200,180,0.015) 0px,rgba(0,200,180,0.015) 1px,transparent 1px,transparent 10px),
+    #030408;
+}
+
+/* ── VIGNETTE ── */
+#vignette {
+  position:fixed; inset:0; z-index:1; pointer-events:none;
+  background:radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.72) 100%);
+}
+
+/* ── GOLD SHIMMER LINE ── */
+.shimmer-line {
+  position:absolute; left:0; right:0; height:1px;
+  background:linear-gradient(90deg, transparent, var(--gold), transparent);
+  opacity:0;
+}
+
+/* ── PARTICLES ── */
+#particles {
+  position:fixed; inset:0; z-index:2; pointer-events:none; overflow:hidden;
+}
+.particle {
+  position:absolute;
+  width:3px; height:3px; border-radius:50%;
+  background:var(--gold);
+  animation:particleDrift linear infinite;
+  opacity:0;
+}
+@keyframes particleDrift {
+  0%   { transform:translateY(0) scale(0); opacity:0; }
+  10%  { opacity:0.8; transform:translateY(-20px) scale(1); }
+  90%  { opacity:0.4; }
+  100% { transform:translateY(-500px) scale(0.2); opacity:0; }
+}
+
+/* ── FLASH ── */
+#flash {
+  position:fixed; inset:0; z-index:999;
+  background:#fff; opacity:0; pointer-events:none;
+  transition:opacity 0.08s ease;
+}
+#flash.on { opacity:0.85; }
+
+/* ── PROGRESS BAR ── */
+#progress-bar {
+  position:fixed; bottom:0; left:0; z-index:900;
+  height:3px;
+  background:linear-gradient(90deg, var(--gold), var(--gold-lt));
+  width:0%; transition:width linear;
+}
+
+/* ── SCENE 1: LOGO INTRO ── */
+#s1 { z-index:10; }
+.s1-swords {
+  font-size:4rem; opacity:0;
+  animation:none;
+  letter-spacing:20px; color:var(--gold);
+  text-shadow:0 0 40px rgba(201,168,76,0.6);
+}
+.s1-title {
+  font-family:'Cinzel',serif;
+  font-size:5.5rem; font-weight:900;
+  letter-spacing:12px; text-transform:uppercase;
+  color:var(--gold-lt);
+  text-shadow:0 0 60px rgba(240,208,128,0.5), 0 4px 30px rgba(0,0,0,0.8);
+  opacity:0; transform:scale(0.88);
+  line-height:1;
+}
+.s1-title span { color:var(--gold); }
+.s1-sub {
+  font-family:'Cinzel',serif;
+  font-size:1rem; letter-spacing:10px;
+  color:rgba(201,168,76,0.7);
+  margin-top:16px; opacity:0;
+}
+.s1-line {
+  width:0; height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  margin:20px auto; opacity:0;
+}
+.s1-tagline {
+  font-family:'Raleway',sans-serif;
+  font-size:1rem; letter-spacing:5px;
+  color:rgba(240,230,200,0.6); opacity:0;
+  text-transform:uppercase;
+}
+
+/* ── SCENE 2: TABLE REVEAL ── */
+#s2 { z-index:10; justify-content:flex-end; }
+.table-svg-wrap {
+  width:1280px; position:absolute; bottom:-380px;
+  opacity:0; transform:scale(0.9);
+}
+.s2-caption {
+  position:absolute; top:180px; text-align:center;
+  opacity:0;
+}
+.s2-caption h2 {
+  font-family:'Cinzel',serif; font-size:2.8rem; font-weight:900;
+  color:var(--gold-lt); letter-spacing:6px;
+  text-shadow:0 0 30px rgba(240,208,128,0.5);
+}
+.s2-caption p {
+  font-size:1rem; letter-spacing:4px; color:rgba(240,230,200,0.6);
+  margin-top:10px; text-transform:uppercase;
+}
+
+/* ── SCENE 3: CARD DEAL ── */
+#s3 { z-index:10; flex-direction:row; gap:60px; align-items:center; }
+.hand-showcase {
+  display:flex; flex-direction:column; align-items:center; gap:16px;
+  opacity:0; transform:translateY(30px);
+}
+.hand-label {
+  font-family:'Cinzel',serif; font-size:0.75rem; letter-spacing:5px;
+  color:var(--gold); text-transform:uppercase;
+}
+.cards-row-show {
+  display:flex; gap:12px;
+}
+.card-show {
+  width:80px; height:116px; border-radius:8px;
+  background:linear-gradient(135deg,#fff,#f4f4f4);
+  border:1px solid rgba(0,0,0,0.15);
+  box-shadow:0 8px 32px rgba(0,0,0,0.6), 0 2px 8px rgba(0,0,0,0.4);
+  display:flex; flex-direction:column;
+  align-items:flex-start; justify-content:flex-start;
+  padding:6px 8px; position:relative;
+  transform:rotateY(180deg);
+  transition:transform 0.55s cubic-bezier(0.4,0,0.2,1);
+  backface-visibility:visible;
+}
+.card-show.flipped { transform:rotateY(0deg); }
+.card-show.back {
+  background:url('bg-card.png') center/cover;
+  transform:rotateY(0deg);
+}
+.card-show.back.flipped { transform:rotateY(180deg); }
+.card-rank {
+  font-family:'Georgia',serif; font-size:1.4rem; font-weight:700;
+  line-height:1; color:#c00;
+}
+.card-rank.black { color:#111; }
+.card-suit { font-size:0.9rem; color:inherit; }
+.card-center {
+  position:absolute; inset:0; display:flex;
+  align-items:center; justify-content:center;
+  font-size:2rem;
+}
+.hand-score {
+  font-family:'Cinzel',serif; font-size:3rem; font-weight:900;
+  color:var(--gold-lt);
+  text-shadow:0 0 20px rgba(240,208,128,0.5);
+}
+.vs-divider {
+  font-family:'Cinzel',serif; font-size:1.5rem; color:rgba(201,168,76,0.5);
+  letter-spacing:3px; opacity:0;
+}
+
+/* ── SCENE 4: ROADS ── */
+#s4 { z-index:10; flex-direction:row; gap:30px; }
+.road-showcase {
+  display:flex; flex-direction:column; align-items:center; gap:10px;
+  opacity:0; transform:translateY(20px);
+}
+.road-title {
+  font-family:'Cinzel',serif; font-size:0.58rem; letter-spacing:4px;
+  color:var(--gold); text-transform:uppercase;
+}
+.road-grid {
+  display:grid; gap:2px;
+  background:rgba(0,0,0,0.5);
+  border:1px solid rgba(201,168,76,0.3);
+  border-radius:4px; padding:4px;
+}
+.road-cell {
+  width:22px; height:22px; border-radius:50%;
+  border:2px solid rgba(255,255,255,0.15);
+}
+.rc-b { background:radial-gradient(circle, #ee4444, #881111); border-color:rgba(238,68,68,0.5); }
+.rc-p { background:radial-gradient(circle, #4466ee, #112288); border-color:rgba(68,102,238,0.5); }
+.rc-t { background:none; border-color:rgba(34,170,68,0.7); }
+.rc-be-r { background:radial-gradient(circle, #ee4444, #881111); width:12px; height:12px; }
+.rc-be-b { background:radial-gradient(circle, #4466ee, #112288); width:12px; height:12px; }
+.rc-empty { background:transparent; border-color:transparent; }
+.s4-headline {
+  position:absolute; top:80px; text-align:center; width:100%; opacity:0;
+}
+.s4-headline h2 {
+  font-family:'Cinzel',serif; font-size:2.2rem; font-weight:900;
+  color:var(--gold-lt); letter-spacing:8px;
+}
+.s4-headline p {
+  font-size:0.85rem; letter-spacing:3px; color:rgba(240,230,200,0.5);
+  margin-top:8px; text-transform:uppercase;
+}
+
+/* ── SCENE 5: GAME MODES ── */
+#s5 { z-index:10; gap:30px; }
+.s5-headline { text-align:center; opacity:0; }
+.s5-headline h2 {
+  font-family:'Cinzel',serif; font-size:2.2rem; font-weight:900;
+  color:var(--gold-lt); letter-spacing:8px;
+}
+.mode-cards { display:flex; gap:24px; opacity:0; transform:translateY(30px); }
+.mode-card {
+  width:280px; padding:28px 24px;
+  background:rgba(0,0,0,0.55);
+  border-radius:12px; text-align:center;
+  position:relative; overflow:hidden;
+}
+.mode-card::before {
+  content:''; position:absolute; inset:0;
+  border-radius:12px; padding:1px;
+  -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor; mask-composite:exclude;
+}
+.mode-card.standard::before { background:linear-gradient(135deg,var(--gold),transparent); }
+.mode-card.ez::before       { background:linear-gradient(135deg,#ff6600,transparent); }
+.mode-card.tiger::before    { background:linear-gradient(135deg,#ff8c00,transparent); }
+.mode-icon { font-size:2.5rem; margin-bottom:10px; }
+.mode-name {
+  font-family:'Cinzel',serif; font-size:0.85rem; font-weight:700;
+  letter-spacing:4px; color:var(--gold-lt); margin-bottom:6px;
+}
+.mode-desc {
+  font-size:0.68rem; color:rgba(240,230,200,0.55); line-height:1.6;
+  letter-spacing:0.5px;
+}
+.mode-badge {
+  display:inline-block; margin-top:10px;
+  padding:3px 10px; border-radius:3px;
+  font-family:'Cinzel',serif; font-size:0.55rem; letter-spacing:2px;
+}
+.mode-card.standard .mode-badge { background:rgba(201,168,76,0.2); color:var(--gold); border:1px solid rgba(201,168,76,0.3); }
+.mode-card.ez .mode-badge       { background:rgba(255,102,0,0.15); color:#ff9944; border:1px solid rgba(255,102,0,0.3); }
+.mode-card.tiger .mode-badge    { background:rgba(255,140,0,0.15); color:#ffaa44; border:1px solid rgba(255,140,0,0.3); }
+
+/* ── SCENE 6: DRAGON 7 SPECIAL ── */
+#s6 { z-index:10; }
+.dragon-bg {
+  position:absolute; inset:0;
+  background:radial-gradient(ellipse 60% 50% at 50% 50%, rgba(180,40,0,0.3), transparent);
+  opacity:0;
+}
+.dragon-icon { font-size:8rem; opacity:0; transform:scale(0.5); filter:drop-shadow(0 0 40px #ff6600); }
+.dragon-title {
+  font-family:'Cinzel',serif; font-size:4rem; font-weight:900;
+  color:#ff6600; letter-spacing:8px; opacity:0;
+  text-shadow:0 0 40px rgba(255,100,0,0.7), 0 0 80px rgba(255,100,0,0.4);
+}
+.dragon-sub {
+  font-family:'Cinzel',serif; font-size:1.5rem;
+  color:var(--gold-lt); letter-spacing:6px; opacity:0; margin-top:10px;
+}
+.dragon-payout {
+  font-family:'Cinzel',serif; font-size:5rem; font-weight:900;
+  color:#44dd77; opacity:0; transform:scale(0.7);
+  text-shadow:0 0 40px rgba(68,221,119,0.6);
+}
+
+/* ── SCENE 7: THEMES ── */
+#s7 { z-index:10; }
+.themes-headline { text-align:center; opacity:0; margin-bottom:40px; }
+.themes-headline h2 {
+  font-family:'Cinzel',serif; font-size:2.2rem; font-weight:900;
+  color:var(--gold-lt); letter-spacing:8px;
+}
+.theme-cards { display:flex; gap:20px; opacity:0; transform:translateY(30px); }
+.theme-card {
+  width:270px; height:180px; border-radius:10px;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:12px; position:relative; overflow:hidden; cursor:default;
+  border:1px solid rgba(255,255,255,0.12);
+}
+.theme-card::after {
+  content:''; position:absolute; inset:0;
+  background:rgba(0,0,0,0.3);
+}
+.theme-card-felt {
+  position:absolute; inset:0;
+  background-image:
+    repeating-linear-gradient(45deg,  rgba(255,255,255,0.012) 0px,rgba(255,255,255,0.012) 1px,transparent 1px,transparent 10px),
+    repeating-linear-gradient(-45deg, rgba(255,255,255,0.012) 0px,rgba(255,255,255,0.012) 1px,transparent 1px,transparent 10px);
+}
+.theme-card.tc-macau      { background-color:#0a1f0c; border-color:rgba(201,168,76,0.45); }
+.theme-card.tc-vegas      { background-color:#1f0505; border-color:rgba(240,192,48,0.45); }
+.theme-card.tc-monte      { background-color:#050818; border-color:rgba(184,200,224,0.45); }
+.theme-card.tc-modern     { background-color:#050810; border-color:rgba(0,200,180,0.45); }
+.theme-card-label {
+  position:relative; z-index:2;
+  font-family:'Cinzel',serif; font-size:0.75rem; font-weight:700;
+  letter-spacing:5px; text-transform:uppercase;
+}
+.theme-card.tc-macau  .theme-card-label { color:#c9a84c; }
+.theme-card.tc-vegas  .theme-card-label { color:#f0c030; }
+.theme-card.tc-monte  .theme-card-label { color:#b8c8e0; }
+.theme-card.tc-modern .theme-card-label { color:#00c8b4; }
+.theme-card-dot {
+  position:relative; z-index:2;
+  width:40px; height:40px; border-radius:50%;
+}
+.theme-card.tc-macau  .theme-card-dot { background:radial-gradient(circle, #1e6b30, #071508); border:2px solid #c9a84c; }
+.theme-card.tc-vegas  .theme-card-dot { background:radial-gradient(circle, #701010, #1c0507); border:2px solid #f0c030; }
+.theme-card.tc-monte  .theme-card-dot { background:radial-gradient(circle, #0f1f5a, #020610); border:2px solid #b8c8e0; }
+.theme-card.tc-modern .theme-card-dot { background:radial-gradient(circle, #0d1622, #040810); border:2px solid #00c8b4; }
+.theme-card-sub {
+  position:relative; z-index:2;
+  font-size:0.58rem; letter-spacing:2px; color:rgba(240,230,200,0.45);
+  text-transform:uppercase;
+}
+
+/* ── SCENE 8: AI BOTS ── */
+#s8 { z-index:10; flex-direction:row; gap:48px; align-items:center; }
+.bots-left { text-align:center; opacity:0; }
+.bots-left h2 {
+  font-family:'Cinzel',serif; font-size:2.4rem; font-weight:900;
+  color:var(--gold-lt); letter-spacing:6px; line-height:1.2;
+}
+.bots-left p {
+  margin-top:14px; font-size:0.9rem; letter-spacing:2px;
+  color:rgba(240,230,200,0.5); max-width:320px;
+}
+.bot-cards { display:flex; flex-direction:column; gap:14px; opacity:0; transform:translateX(30px); }
+.bot-card {
+  display:flex; align-items:center; gap:16px;
+  padding:14px 20px; border-radius:8px;
+  background:rgba(0,0,0,0.55);
+  border:1px solid rgba(201,168,76,0.2);
+  width:360px;
+}
+.bot-avatar { width:44px; height:44px; border-radius:50%; font-size:1.6rem; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.bot-card.larry .bot-avatar { background:rgba(200,100,100,0.2); border:1px solid rgba(200,100,100,0.4); }
+.bot-card.nancy .bot-avatar { background:rgba(100,160,220,0.2); border:1px solid rgba(100,160,220,0.4); }
+.bot-card.steven .bot-avatar{ background:rgba(100,200,140,0.2); border:1px solid rgba(100,200,140,0.4); }
+.bot-name { font-family:'Cinzel',serif; font-size:0.75rem; font-weight:700; letter-spacing:3px; color:var(--gold); }
+.bot-role { font-size:0.62rem; letter-spacing:1px; color:rgba(240,230,200,0.45); margin-top:2px; }
+
+/* ── SCENE 9: CTA ── */
+#s9 { z-index:10; }
+.cta-eyebrow { font-size:0.8rem; letter-spacing:8px; color:rgba(201,168,76,0.6); text-transform:uppercase; opacity:0; }
+.cta-title {
+  font-family:'Cinzel',serif; font-size:4.5rem; font-weight:900;
+  color:var(--gold-lt); letter-spacing:10px;
+  text-shadow:0 0 60px rgba(240,208,128,0.4);
+  opacity:0; transform:scale(0.9);
+  text-align:center; line-height:1.1;
+}
+.cta-sub {
+  font-family:'Cinzel',serif; font-size:1.1rem; letter-spacing:6px;
+  color:rgba(240,230,200,0.5); opacity:0; margin-top:6px;
+}
+.cta-url {
+  font-family:'Cinzel',serif; font-size:1.6rem; font-weight:700;
+  letter-spacing:4px; color:var(--gold);
+  text-shadow:0 0 30px rgba(201,168,76,0.5);
+  opacity:0; margin-top:30px;
+  border:1px solid rgba(201,168,76,0.4);
+  padding:14px 48px; border-radius:4px;
+  background:rgba(201,168,76,0.08);
+}
+.cta-free {
+  font-size:0.7rem; letter-spacing:5px; color:rgba(240,230,200,0.3);
+  text-transform:uppercase; opacity:0; margin-top:14px;
+}
+.cta-shine {
+  position:absolute; inset:0;
+  background:radial-gradient(ellipse 50% 40% at 50% 50%, rgba(201,168,76,0.06), transparent);
+  pointer-events:none;
+}
+
+/* ── SCENE 10: END CARD ── */
+#s10 { z-index:10; background:#000; }
+.end-logo {
+  font-family:'Cinzel',serif; font-size:3.2rem; font-weight:900;
+  color:var(--gold-lt); letter-spacing:10px; opacity:0;
+  text-shadow:0 0 40px rgba(240,208,128,0.4);
+}
+.end-url {
+  font-family:'Raleway',sans-serif; font-size:1.1rem; letter-spacing:4px;
+  color:rgba(201,168,76,0.6); opacity:0; margin-top:12px;
+}
+.end-suits { font-size:2rem; letter-spacing:16px; color:rgba(201,168,76,0.3); opacity:0; margin-bottom:20px; }
+
+/* ── REUSABLE ANIMS ── */
+@keyframes fadeIn   { from{opacity:0} to{opacity:1} }
+@keyframes fadeUp   { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+@keyframes fadeDown { from{opacity:0;transform:translateY(-20px)} to{opacity:1;transform:translateY(0)} }
+@keyframes zoomIn   { from{opacity:0;transform:scale(0.8)} to{opacity:1;transform:scale(1)} }
+@keyframes slideRight { from{opacity:0;transform:translateX(-40px)} to{opacity:1;transform:translateX(0)} }
+@keyframes slideLeft  { from{opacity:0;transform:translateX(40px)}  to{opacity:1;transform:translateX(0)} }
+@keyframes pulseGold  { 0%,100%{text-shadow:0 0 20px rgba(201,168,76,0.4)} 50%{text-shadow:0 0 60px rgba(201,168,76,0.9),0 0 100px rgba(201,168,76,0.4)} }
+@keyframes lineExpand { from{width:0;opacity:0} to{width:600px;opacity:1} }
+@keyframes glowPulse  { 0%,100%{opacity:0.5} 50%{opacity:1} }
+@keyframes dragonShake {
+  0%,100%{transform:scale(1) rotate(0deg)}
+  25%{transform:scale(1.08) rotate(-2deg)}
+  75%{transform:scale(1.08) rotate(2deg)}
+}
+@keyframes tableRise { from{opacity:0;transform:translateY(80px) scale(0.95)} to{opacity:1;transform:translateY(0) scale(1)} }
+</style>
+</head>
+<body>
+
+<div id="felt-bg"></div>
+<div id="vignette"></div>
+<div id="particles"></div>
+<div id="flash"></div>
+<div id="progress-bar"></div>
+
+<!-- ═══════════════════════════════════════════
+     SCENE 1 — LOGO REVEAL (0–4.5s)
+═══════════════════════════════════════════ -->
+<div class="scene active" id="s1">
+  <div class="s1-swords" id="s1-swords">⚔</div>
+  <div style="height:16px"></div>
+  <div class="s1-title" id="s1-title">BACCARAT<br><span>GLADIATOR</span></div>
+  <div class="s1-sub" id="s1-sub">THE ARENA IS OPEN</div>
+  <div class="s1-line" id="s1-line"></div>
+  <div class="s1-tagline" id="s1-tagline">All 5 Roads · 3 Game Modes · Global Leaderboards</div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SCENE 2 — TABLE REVEAL (4.5–8.5s)
+═══════════════════════════════════════════ -->
+<div class="scene" id="s2">
+  <div class="s2-caption" id="s2-caption">
+    <h2>STEP INTO THE ARENA</h2>
+    <p>Authentic casino table · Immersive atmosphere · Zero downloads</p>
+  </div>
+  <div class="table-svg-wrap" id="s2-table">
+    <svg viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg" width="1280" height="720">
+      <defs>
+        <radialGradient id="tFelt" cx="50%" cy="60%" r="60%">
+          <stop offset="0%"   stop-color="#1e6b30"/>
+          <stop offset="60%"  stop-color="#0f4820"/>
+          <stop offset="100%" stop-color="#071508"/>
+        </radialGradient>
+        <radialGradient id="tGlow" cx="50%" cy="48%" r="28%">
+          <stop offset="0%"   stop-color="rgba(201,168,76,0.15)"/>
+          <stop offset="100%" stop-color="rgba(0,0,0,0)"/>
+        </radialGradient>
+      </defs>
+      <rect width="1280" height="720" fill="#030a05"/>
+      <ellipse cx="640" cy="620" rx="780" ry="420" fill="url(#tFelt)"/>
+      <ellipse cx="640" cy="620" rx="775" ry="415" fill="none" stroke="rgba(255,255,255,0.025)" stroke-width="1"/>
+      <ellipse cx="640" cy="620" rx="785" ry="428" fill="none" stroke="#2a1a0a" stroke-width="18"/>
+      <ellipse cx="640" cy="620" rx="785" ry="428" fill="none" stroke="#5a3a1a" stroke-width="10"/>
+      <ellipse cx="640" cy="620" rx="785" ry="428" fill="none" stroke="#c9a84c" stroke-width="2"/>
+      <ellipse cx="640" cy="360" rx="320" ry="200" fill="url(#tGlow)"/>
+      <path d="M 200 620 Q 640 220 1080 620" fill="none" stroke="rgba(201,168,76,0.5)" stroke-width="2"/>
+      <path d="M 260 620 Q 640 280 1020 620" fill="none" stroke="rgba(201,168,76,0.35)" stroke-width="1.5"/>
+      <path d="M 320 620 Q 640 330 960 620" fill="none" stroke="rgba(34,170,68,0.4)" stroke-width="1.5"/>
+      <text x="350" y="570" font-family="serif" font-size="20" fill="rgba(201,168,76,0.45)" text-anchor="middle" letter-spacing="4" transform="rotate(-18,350,570)">BANKER</text>
+      <text x="640" y="500" font-family="serif" font-size="18" fill="rgba(34,170,68,0.45)" text-anchor="middle" letter-spacing="4">TIE</text>
+      <text x="930" y="570" font-family="serif" font-size="20" fill="rgba(201,168,76,0.45)" text-anchor="middle" letter-spacing="4" transform="rotate(18,930,570)">PLAYER</text>
+    </svg>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SCENE 3 — CARD DEAL (8.5–12.5s)
+═══════════════════════════════════════════ -->
+<div class="scene" id="s3">
+  <div class="hand-showcase" id="s3-banker">
+    <div class="hand-label">BANKER</div>
+    <div class="cards-row-show">
+      <div class="card-show back" id="cb1"></div>
+      <div class="card-show back" id="cb2"></div>
+      <div class="card-show back" id="cb3"></div>
+    </div>
+    <div class="hand-score" id="s3-bscore" style="color:#cc2222">—</div>
+  </div>
+  <div class="vs-divider" id="s3-vs">VS</div>
+  <div class="hand-showcase" id="s3-player">
+    <div class="hand-label">PLAYER</div>
+    <div class="cards-row-show">
+      <div class="card-show back" id="cp1"></div>
+      <div class="card-show back" id="cp2"></div>
+    </div>
+    <div class="hand-score" id="s3-pscore" style="color:#2244cc">—</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SCENE 4 — ROADMAPS (12.5–16.5s)
+═══════════════════════════════════════════ -->
+<div class="scene" id="s4">
+  <div class="s4-headline" id="s4-headline">
+    <h2>ALL 5 CASINO ROAD MAPS</h2>
+    <p>Bead Road · Big Road · Big Eye Boy · Small Road · Cockroach Pig</p>
+  </div>
+  <!-- Big Road -->
+  <div class="road-showcase" id="rd1">
+    <div class="road-title">Big Road</div>
+    <div class="road-grid" style="grid-template-columns:repeat(12,22px)">
+      <div class="road-cell rc-b"></div><div class="road-cell rc-b"></div><div class="road-cell rc-b"></div><div class="road-cell rc-p"></div><div class="road-cell rc-p"></div><div class="road-cell rc-b"></div><div class="road-cell rc-b"></div><div class="road-cell rc-b"></div><div class="road-cell rc-b"></div><div class="road-cell rc-p"></div><div class="road-cell rc-b"></div><div class="road-cell rc-b"></div>
+      <div class="road-cell rc-empty"></div><div class="road-cell rc-b"></div><div class="road-cell rc-b"></div><div class="road-cell rc-empty"></div><div class="road-cell rc-p"></div><div class="road-cell rc-empty"></div><div class="road-cell rc-empty"></div><div class="road-cell rc-b"></div><div class="road-cell rc-empty"></div><div class="road-cell rc-empty"></div><div class="road-cell rc-empty"></div><div class="road-cell rc-b"></div>
+      <div class="road-cell rc-empty"></div><div class="road-cell rc-b"></div><div class="road-cell rc-empty"></div><div class="road-cell rc-empty"></div><div class="road-cell rc-empty"></div><div class="road-cell rc-empty"></div><div class="road-cell rc-empty"></div><div class="road-cell rc-p"></div><div class="road-cell rc-empty"></div><div class="road-cell rc-empty"></div><div class="road-cell rc-empty"></div><div class="road-cell rc-empty"></div>
+      <div class="road-cell rc-empty"></div><div class="road-cell rc-empty"></div><div class="road-cell rc-empty"></div><div class="road-cell rc-empty"></div><div class="road-cell rc-empty"></div><div class="road-cell rc-empty"></div><div class="road-cell rc-empty"></div><div class="road-cell rc-p"></div>
+    </div>
+  </div>
+  <!-- Bead Road -->
+  <div class="road-showcase" id="rd2">
+    <div class="road-title">Bead Road</div>
+    <div class="road-grid" style="grid-template-columns:repeat(6,22px)">
+      <div class="road-cell rc-b"></div><div class="road-cell rc-p"></div><div class="road-cell rc-b"></div><div class="road-cell rc-b"></div><div class="road-cell rc-p"></div><div class="road-cell rc-b"></div>
+      <div class="road-cell rc-b"></div><div class="road-cell rc-b"></div><div class="road-cell rc-p"></div><div class="road-cell rc-b"></div><div class="road-cell rc-b"></div><div class="road-cell rc-p"></div>
+      <div class="road-cell rc-b"></div><div class="road-cell rc-p"></div><div class="road-cell rc-b"></div><div class="road-cell rc-b"></div><div class="road-cell rc-b"></div><div class="road-cell rc-b"></div>
+      <div class="road-cell rc-p"></div><div class="road-cell rc-b"></div><div class="road-cell rc-b"></div><div class="road-cell rc-p"></div><div class="road-cell rc-p"></div><div class="road-cell rc-b"></div>
+    </div>
+  </div>
+  <!-- Big Eye Boy -->
+  <div class="road-showcase" id="rd3">
+    <div class="road-title">Big Eye Boy</div>
+    <div class="road-grid" style="grid-template-columns:repeat(8,16px)">
+      <div class="road-cell rc-be-r" style="border-radius:50%;border:2px solid rgba(238,68,68,0.6)"></div><div class="road-cell rc-be-b" style="border-radius:50%;border:2px solid rgba(68,102,238,0.6)"></div><div class="road-cell rc-be-r" style="border-radius:50%;border:2px solid rgba(238,68,68,0.6)"></div><div class="road-cell rc-be-b" style="border-radius:50%;border:2px solid rgba(68,102,238,0.6)"></div><div class="road-cell rc-be-r" style="border-radius:50%;border:2px solid rgba(238,68,68,0.6)"></div><div class="road-cell rc-be-r" style="border-radius:50%;border:2px solid rgba(238,68,68,0.6)"></div><div class="road-cell rc-be-b" style="border-radius:50%;border:2px solid rgba(68,102,238,0.6)"></div><div class="road-cell rc-be-r" style="border-radius:50%;border:2px solid rgba(238,68,68,0.6)"></div>
+      <div class="road-cell rc-be-b" style="border-radius:50%;border:2px solid rgba(68,102,238,0.6)"></div><div class="road-cell rc-be-r" style="border-radius:50%;border:2px solid rgba(238,68,68,0.6)"></div><div class="road-cell rc-be-b" style="border-radius:50%;border:2px solid rgba(68,102,238,0.6)"></div><div class="road-cell rc-be-r" style="border-radius:50%;border:2px solid rgba(238,68,68,0.6)"></div><div class="road-cell rc-be-b" style="border-radius:50%;border:2px solid rgba(68,102,238,0.6)"></div><div class="road-cell rc-be-r" style="border-radius:50%;border:2px solid rgba(238,68,68,0.6)"></div><div class="road-cell rc-be-r" style="border-radius:50%;border:2px solid rgba(238,68,68,0.6)"></div><div class="road-cell rc-be-b" style="border-radius:50%;border:2px solid rgba(68,102,238,0.6)"></div>
+    </div>
+  </div>
+  <!-- Small Road -->
+  <div class="road-showcase" id="rd4">
+    <div class="road-title">Small Road</div>
+    <div class="road-grid" style="grid-template-columns:repeat(8,16px)">
+      <div class="road-cell rc-be-r" style="border-radius:50%;border:2px solid rgba(238,68,68,0.6)"></div><div class="road-cell rc-be-r" style="border-radius:50%;border:2px solid rgba(238,68,68,0.6)"></div><div class="road-cell rc-be-b" style="border-radius:50%;border:2px solid rgba(68,102,238,0.6)"></div><div class="road-cell rc-be-r" style="border-radius:50%;border:2px solid rgba(238,68,68,0.6)"></div><div class="road-cell rc-be-b" style="border-radius:50%;border:2px solid rgba(68,102,238,0.6)"></div><div class="road-cell rc-be-r" style="border-radius:50%;border:2px solid rgba(238,68,68,0.6)"></div><div class="road-cell rc-be-r" style="border-radius:50%;border:2px solid rgba(238,68,68,0.6)"></div><div class="road-cell rc-be-b" style="border-radius:50%;border:2px solid rgba(68,102,238,0.6)"></div>
+      <div class="road-cell rc-be-r" style="border-radius:50%;border:2px solid rgba(238,68,68,0.6)"></div><div class="road-cell rc-be-b" style="border-radius:50%;border:2px solid rgba(68,102,238,0.6)"></div><div class="road-cell rc-be-r" style="border-radius:50%;border:2px solid rgba(238,68,68,0.6)"></div><div class="road-cell rc-be-r" style="border-radius:50%;border:2px solid rgba(238,68,68,0.6)"></div>
+    </div>
+  </div>
+  <!-- Cockroach Pig -->
+  <div class="road-showcase" id="rd5">
+    <div class="road-title">Cockroach Pig</div>
+    <div class="road-grid" style="grid-template-columns:repeat(8,16px)">
+      <div class="road-cell rc-be-b" style="border-radius:50%;border:2px solid rgba(68,102,238,0.6)"></div><div class="road-cell rc-be-r" style="border-radius:50%;border:2px solid rgba(238,68,68,0.6)"></div><div class="road-cell rc-be-r" style="border-radius:50%;border:2px solid rgba(238,68,68,0.6)"></div><div class="road-cell rc-be-b" style="border-radius:50%;border:2px solid rgba(68,102,238,0.6)"></div><div class="road-cell rc-be-r" style="border-radius:50%;border:2px solid rgba(238,68,68,0.6)"></div><div class="road-cell rc-be-b" style="border-radius:50%;border:2px solid rgba(68,102,238,0.6)"></div><div class="road-cell rc-be-r" style="border-radius:50%;border:2px solid rgba(238,68,68,0.6)"></div><div class="road-cell rc-be-r" style="border-radius:50%;border:2px solid rgba(238,68,68,0.6)"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SCENE 5 — GAME MODES (16.5–20.5s)
+═══════════════════════════════════════════ -->
+<div class="scene" id="s5">
+  <div class="s5-headline" id="s5-headline"><h2>THREE GAME MODES</h2></div>
+  <div class="mode-cards" id="s5-cards">
+    <div class="mode-card standard">
+      <div class="mode-icon">♠</div>
+      <div class="mode-name">Standard</div>
+      <div class="mode-desc">Classic baccarat with 5% commission on Banker wins. All 5 road maps.</div>
+      <div class="mode-badge">5% COMMISSION</div>
+    </div>
+    <div class="mode-card ez">
+      <div class="mode-icon">🐉</div>
+      <div class="mode-name">EZ Baccarat</div>
+      <div class="mode-desc">No commission. Dragon 7 pays 40:1. Panda 8 pays 25:1.</div>
+      <div class="mode-badge">NO COMMISSION</div>
+    </div>
+    <div class="mode-card tiger">
+      <div class="mode-icon">🐯</div>
+      <div class="mode-name">Tiger Baccarat</div>
+      <div class="mode-desc">Big Tiger 50:1. Small Tiger 22:1. Tiger Tie 35:1.</div>
+      <div class="mode-badge">50:1 MAX PAYOUT</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SCENE 6 — DRAGON 7 MOMENT (20.5–24s)
+═══════════════════════════════════════════ -->
+<div class="scene" id="s6">
+  <div class="dragon-bg" id="s6-bg"></div>
+  <div class="dragon-icon" id="s6-icon">🐉</div>
+  <div class="dragon-title" id="s6-title">DRAGON 7</div>
+  <div class="dragon-sub" id="s6-sub">BANKER WINS WITH A 3-CARD SEVEN</div>
+  <div style="height:20px"></div>
+  <div class="dragon-payout" id="s6-payout">40:1</div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SCENE 7 — 4 TABLE THEMES (24–28s)
+═══════════════════════════════════════════ -->
+<div class="scene" id="s7">
+  <div class="themes-headline" id="s7-headline">
+    <h2>4 TABLE ENVIRONMENTS</h2>
+  </div>
+  <div class="theme-cards" id="s7-cards">
+    <div class="theme-card tc-macau">
+      <div class="theme-card-felt"></div>
+      <div class="theme-card-dot"></div>
+      <div class="theme-card-label">Macau</div>
+      <div class="theme-card-sub">Forest Green · Gold</div>
+    </div>
+    <div class="theme-card tc-vegas">
+      <div class="theme-card-felt"></div>
+      <div class="theme-card-dot"></div>
+      <div class="theme-card-label">Las Vegas</div>
+      <div class="theme-card-sub">Crimson · Bright Gold</div>
+    </div>
+    <div class="theme-card tc-monte">
+      <div class="theme-card-felt"></div>
+      <div class="theme-card-dot"></div>
+      <div class="theme-card-label">Monte Carlo</div>
+      <div class="theme-card-sub">Navy · Silver</div>
+    </div>
+    <div class="theme-card tc-modern">
+      <div class="theme-card-felt"></div>
+      <div class="theme-card-dot"></div>
+      <div class="theme-card-label">Online Modern</div>
+      <div class="theme-card-sub">Charcoal · Cyan Neon</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SCENE 8 — AI BOTS (28–32s)
+═══════════════════════════════════════════ -->
+<div class="scene" id="s8">
+  <div class="bots-left" id="s8-left">
+    <h2>AI PLAYERS<br>AT YOUR TABLE</h2>
+    <p>Three unique personalities. Each with their own real strategy.</p>
+  </div>
+  <div class="bot-cards" id="s8-bots">
+    <div class="bot-card larry">
+      <div class="bot-avatar">⏰</div>
+      <div>
+        <div class="bot-name">LATE BET LARRY</div>
+        <div class="bot-role">Always last to bet · Never misses a hand</div>
+      </div>
+    </div>
+    <div class="bot-card nancy">
+      <div class="bot-avatar">💎</div>
+      <div>
+        <div class="bot-name">NANCY</div>
+        <div class="bot-role">Natural counter · Dragon hunter</div>
+      </div>
+    </div>
+    <div class="bot-card steven">
+      <div class="bot-avatar">📊</div>
+      <div>
+        <div class="bot-name">STEVEN</div>
+        <div class="bot-role">Bankroll manager · Flat bettor</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SCENE 9 — CTA (32–37s)
+═══════════════════════════════════════════ -->
+<div class="scene" id="s9">
+  <div class="cta-shine"></div>
+  <div class="cta-eyebrow" id="s9-eyebrow">FREE TO PLAY · NO DOWNLOAD · NO REAL MONEY</div>
+  <div style="height:20px"></div>
+  <div class="cta-title" id="s9-title">ENTER THE<br>ARENA</div>
+  <div class="cta-sub" id="s9-sub">The most complete baccarat simulator on the internet</div>
+  <div class="cta-url" id="s9-url">baccaratgladiator.com</div>
+  <div class="cta-free" id="s9-free">♠ PLAY FREE · NO ACCOUNT REQUIRED ♠</div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SCENE 10 — END CARD (37–40s)
+═══════════════════════════════════════════ -->
+<div class="scene" id="s10">
+  <div class="end-suits" id="s10-suits">♠ ♥ ♦ ♣</div>
+  <div class="end-logo" id="s10-logo">BACCARAT GLADIATOR</div>
+  <div class="end-url" id="s10-url">baccaratgladiator.com</div>
+</div>
+
+<script>
+// ── Particle system ──────────────────────────────────
+const pContainer = document.getElementById('particles');
+for (let i = 0; i < 28; i++) {
+  const p = document.createElement('div');
+  p.className = 'particle';
+  p.style.left = Math.random() * 100 + '%';
+  p.style.bottom = (Math.random() * 40) + '%';
+  p.style.animationDuration = (6 + Math.random() * 10) + 's';
+  p.style.animationDelay = (Math.random() * 8) + 's';
+  p.style.width = p.style.height = (2 + Math.random() * 3) + 'px';
+  p.style.opacity = (0.3 + Math.random() * 0.5);
+  pContainer.appendChild(p);
+}
+
+// ── Utility ──────────────────────────────────────────
+function anim(el, animStr, duration, delay = 0, fill = 'forwards') {
+  if (!el) return;
+  el.style.animation = `${animStr} ${duration}s ease ${delay}s ${fill}`;
+}
+function style(el, props) {
+  if (!el) return;
+  Object.assign(el.style, props);
+}
+function flash() {
+  const f = document.getElementById('flash');
+  f.classList.add('on');
+  setTimeout(() => f.classList.remove('on'), 120);
+}
+function switchScene(hideId, showId, cb) {
+  const hide = document.getElementById(hideId);
+  const show = document.getElementById(showId);
+  hide.style.transition = 'opacity 0.7s ease';
+  hide.style.opacity = 0;
+  setTimeout(() => {
+    hide.classList.remove('active');
+    hide.style.transition = '';
+    hide.style.opacity = '';
+    show.classList.add('active');
+    if (cb) cb();
+  }, 700);
+}
+function felt(cls) {
+  const fb = document.getElementById('felt-bg');
+  fb.className = cls ? cls : '';
+}
+
+// ── Progress bar ─────────────────────────────────────
+const TOTAL_DURATION = 40000;
+const pb = document.getElementById('progress-bar');
+pb.style.transition = `width ${TOTAL_DURATION / 1000}s linear`;
+setTimeout(() => pb.style.width = '100%', 100);
+
+// ══════════════════════════════════════════════════════
+//  TIMELINE
+// ══════════════════════════════════════════════════════
+
+// ── SCENE 1: Logo reveal (0–4500ms) ──────────────────
+(function s1() {
+  const swords = document.getElementById('s1-swords');
+  const title  = document.getElementById('s1-title');
+  const sub    = document.getElementById('s1-sub');
+  const line   = document.getElementById('s1-line');
+  const tag    = document.getElementById('s1-tagline');
+
+  setTimeout(() => anim(swords, 'fadeIn',   0.6, 0), 200);
+  setTimeout(() => style(swords, {opacity: 1}), 200);
+  setTimeout(() => {
+    anim(title, 'zoomIn', 0.8, 0);
+    anim(title, 'pulseGold 3s ease infinite', 3, 0.8, 'normal');
+  }, 600);
+  setTimeout(() => { style(line, {opacity:1}); anim(line, 'lineExpand', 0.7, 0); }, 1100);
+  setTimeout(() => anim(sub, 'fadeDown', 0.5, 0), 1400);
+  setTimeout(() => anim(tag, 'fadeIn',   0.6, 0), 1800);
+})();
+
+// ── SCENE 2: Table reveal (4500–8500ms) ──────────────
+setTimeout(() => {
+  switchScene('s1', 's2', () => {
+    const table   = document.getElementById('s2-table');
+    const caption = document.getElementById('s2-caption');
+    anim(caption, 'fadeDown', 0.7, 0);
+    style(caption, {opacity:1});
+    setTimeout(() => {
+      style(table, {animation:'tableRise 1.2s ease forwards'});
+      table.style.opacity = 1;
+    }, 300);
+  });
+}, 4500);
+
+// ── SCENE 3: Card deal (8500–12500ms) ────────────────
+setTimeout(() => {
+  switchScene('s2', 's3', () => {
+    const banker = document.getElementById('s3-banker');
+    const player = document.getElementById('s3-player');
+    const vs     = document.getElementById('s3-vs');
+    anim(banker, 'slideRight', 0.6, 0.1);
+    anim(player, 'slideLeft',  0.6, 0.1);
+    anim(vs,     'fadeIn',     0.4, 0.4);
+
+    // Flip cards sequentially
+    const cardData = [
+      { id:'cb1', delay:700  },
+      { id:'cp1', delay:1000 },
+      { id:'cb2', delay:1300 },
+      { id:'cp2', delay:1600 },
+      { id:'cb3', delay:1900 },
+    ];
+    const cards = { cb1:'7♥', cb2:'K♠', cb3:'7♣', cp1:'6♦', cp2:'A♥' };
+    const isRed = { '♥':true, '♦':true };
+
+    cardData.forEach(({ id, delay }) => {
+      const el = document.getElementById(id);
+      setTimeout(() => {
+        el.classList.remove('back');
+        const c = cards[id];
+        const suit = c.slice(-1);
+        const rank = c.slice(0,-1);
+        el.innerHTML = `<div class="card-rank ${isRed[suit]?'':'black'}">${rank}<div class="card-suit">${suit}</div></div>`;
+        el.classList.add('flipped');
+      }, delay);
+    });
+
+    // Show scores
+    setTimeout(() => {
+      document.getElementById('s3-bscore').textContent = '7';
+      document.getElementById('s3-pscore').textContent = '7';
+      document.getElementById('s3-bscore').style.animation = 'pulseGold 1.5s ease infinite';
+    }, 2200);
+  });
+}, 8500);
+
+// ── SCENE 4: Roads (12500–16500ms) ───────────────────
+setTimeout(() => {
+  switchScene('s3', 's4', () => {
+    const headline = document.getElementById('s4-headline');
+    anim(headline, 'fadeDown', 0.6, 0);
+    style(headline, {opacity:1});
+    ['rd1','rd2','rd3','rd4','rd5'].forEach((id, i) => {
+      const el = document.getElementById(id);
+      setTimeout(() => anim(el, 'fadeUp', 0.5, 0), 400 + i * 200);
+    });
+  });
+}, 12500);
+
+// ── SCENE 5: Game modes (16500–20500ms) ──────────────
+setTimeout(() => {
+  switchScene('s4', 's5', () => {
+    const hl    = document.getElementById('s5-headline');
+    const cards = document.getElementById('s5-cards');
+    anim(hl,    'fadeDown', 0.6, 0);
+    anim(cards, 'fadeUp',   0.7, 0.4);
+    style(hl, {opacity:1});
+  });
+}, 16500);
+
+// ── SCENE 6: Dragon 7 (20500–24000ms) ────────────────
+setTimeout(() => {
+  flash();
+  felt('');  // reset felt color
+  switchScene('s5', 's6', () => {
+    const bg     = document.getElementById('s6-bg');
+    const icon   = document.getElementById('s6-icon');
+    const title  = document.getElementById('s6-title');
+    const sub    = document.getElementById('s6-sub');
+    const payout = document.getElementById('s6-payout');
+
+    anim(bg, 'fadeIn', 0.5, 0);
+    style(bg, {opacity:1});
+
+    setTimeout(() => {
+      anim(icon, 'zoomIn', 0.5, 0);
+      style(icon, {opacity:1});
+      setTimeout(() => style(icon, {animation: 'dragonShake 0.4s ease infinite'}), 500);
+    }, 200);
+
+    setTimeout(() => {
+      anim(title, 'fadeUp', 0.4, 0);
+      style(title, {opacity:1});
+    }, 500);
+
+    setTimeout(() => {
+      anim(sub, 'fadeIn', 0.4, 0);
+      style(sub, {opacity:1});
+    }, 900);
+
+    setTimeout(() => {
+      flash();
+      anim(payout, 'zoomIn', 0.5, 0);
+      style(payout, {opacity:1});
+      setTimeout(() => style(payout, {animation: 'pulseGold 1s ease infinite'}), 500);
+    }, 1400);
+  });
+}, 20500);
+
+// ── SCENE 7: Themes (24000–28000ms) ──────────────────
+setTimeout(() => {
+  switchScene('s6', 's7', () => {
+    const hl    = document.getElementById('s7-headline');
+    const cards = document.getElementById('s7-cards');
+    anim(hl,    'fadeDown', 0.6, 0);
+    anim(cards, 'fadeUp',   0.7, 0.3);
+    style(hl,    {opacity:1});
+
+    // Animate felt bg through themes
+    const themes = ['','vegas','montecarlo','modern'];
+    themes.forEach((t, i) => {
+      setTimeout(() => felt(t), i * 900 + 600);
+    });
+  });
+}, 24000);
+
+// ── SCENE 8: AI Bots (28000–32000ms) ─────────────────
+setTimeout(() => {
+  felt('');
+  switchScene('s7', 's8', () => {
+    const left = document.getElementById('s8-left');
+    const bots = document.getElementById('s8-bots');
+    anim(left, 'slideRight', 0.6, 0.1);
+    anim(bots, 'slideLeft',  0.6, 0.3);
+    style(left, {opacity:1});
+  });
+}, 28000);
+
+// ── SCENE 9: CTA (32000–37000ms) ─────────────────────
+setTimeout(() => {
+  switchScene('s8', 's9', () => {
+    const eyebrow = document.getElementById('s9-eyebrow');
+    const title   = document.getElementById('s9-title');
+    const sub     = document.getElementById('s9-sub');
+    const url     = document.getElementById('s9-url');
+    const free    = document.getElementById('s9-free');
+
+    anim(eyebrow, 'fadeIn',  0.5, 0.1);
+    anim(title,   'zoomIn',  0.7, 0.4);
+    anim(sub,     'fadeUp',  0.5, 0.9);
+    anim(url,     'fadeUp',  0.6, 1.3);
+    anim(free,    'fadeIn',  0.5, 1.8);
+
+    style(eyebrow, {opacity:1});
+    setTimeout(() => style(title, {animation: 'pulseGold 2.5s ease infinite'}), 1200);
+  });
+}, 32000);
+
+// ── SCENE 10: End card (37000–40000ms) ───────────────
+setTimeout(() => {
+  switchScene('s9', 's10', () => {
+    const suits = document.getElementById('s10-suits');
+    const logo  = document.getElementById('s10-logo');
+    const url   = document.getElementById('s10-url');
+
+    anim(suits, 'fadeIn',  0.5, 0.1);
+    anim(logo,  'zoomIn',  0.7, 0.4);
+    anim(url,   'fadeIn',  0.5, 0.9);
+    style(suits, {opacity:1});
+    setTimeout(() => style(logo, {animation: 'pulseGold 2s ease infinite'}), 1200);
+  });
+}, 37000);
+
+// ── Restart after full loop ───────────────────────────
+setTimeout(() => location.reload(), 41000);
+</script>
+</body>
+</html>

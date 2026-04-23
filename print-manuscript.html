@@ -1,0 +1,1447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Road to Nine: A Baccarat Gladiator Guide</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap');
+  :root { --gold:#c9a84c; --gold-lt:#f0d080; --dark:#080e08; --felt:#0d3320; --red:#cc2222; --ink:#1a1a1a; --paper:#fffef8; }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'EB Garamond',Georgia,serif;font-size:11pt;color:var(--ink);background:#fff;line-height:1.6;}
+
+  .page{width:8.5in;min-height:11in;margin:.4in auto;background:var(--paper);position:relative;overflow:hidden;}
+
+  /* COVER */
+  .cover{background:var(--dark);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:1in .8in;min-height:11in;}
+  .cover-felt-bar{width:100%;height:8px;background:linear-gradient(90deg,transparent,var(--felt) 20%,var(--felt) 80%,transparent);margin-bottom:.4in;}
+  .cover-title{font-family:'Cinzel',serif;font-size:26pt;font-weight:900;color:var(--gold-lt);letter-spacing:.06em;line-height:1.15;margin-bottom:.08in;}
+  .cover-subtitle{font-family:'Cinzel',serif;font-size:10pt;color:rgba(201,168,76,.65);letter-spacing:.25em;text-transform:uppercase;margin-bottom:.4in;}
+  .cover-divider{width:3in;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:0 auto .4in;}
+  .cover-tagline{font-style:italic;font-size:12pt;color:rgba(255,255,255,.7);max-width:5in;line-height:1.7;margin-bottom:.4in;}
+  .cover-cta-box{border:1px solid rgba(201,168,76,.4);border-radius:8px;padding:.2in .4in;background:rgba(201,168,76,.07);margin-bottom:.4in;}
+  .cover-cta-url{font-family:'Cinzel',serif;font-size:14pt;font-weight:700;color:var(--gold-lt);}
+  .cover-cta-sub{font-size:9pt;color:rgba(255,255,255,.5);margin-top:4px;}
+  .cover-bottom{position:absolute;bottom:.35in;left:0;right:0;text-align:center;font-size:8pt;color:rgba(255,255,255,.2);letter-spacing:.1em;}
+
+  /* INNER PAGES */
+  .inner{padding:.65in .75in;}
+  .inner::before{content:'';display:block;height:4px;background:linear-gradient(90deg,var(--felt) 0%,var(--gold) 40%,var(--gold-lt) 50%,var(--gold) 60%,var(--felt) 100%);margin:0 -.75in .4in;}
+
+  .section-head{font-family:'Cinzel',serif;font-size:15pt;font-weight:700;color:var(--felt);border-bottom:1.5px solid var(--gold);padding-bottom:6px;margin-bottom:.2in;letter-spacing:.04em;}
+  .section-head .num{color:var(--gold);margin-right:8px;}
+  h3{font-family:'Cinzel',serif;font-size:10pt;font-weight:700;color:var(--felt);letter-spacing:.06em;margin:.2in 0 .1in;text-transform:uppercase;}
+  p{margin-bottom:.12in;}
+
+  .callout{background:linear-gradient(135deg,#f5f0e0,#faf7ed);border-left:3px solid var(--gold);padding:.14in .2in;border-radius:0 6px 6px 0;margin:.18in 0;font-size:10.5pt;}
+  .callout.red-callout{border-left-color:var(--red);background:#fff5f5;}
+  .callout.green-callout{border-left-color:#1a6b3a;background:#f0faf4;}
+  .callout strong{color:var(--felt);}
+
+  .pull-quote{font-family:'Cinzel',serif;font-size:13pt;font-style:italic;color:var(--felt);text-align:center;border-top:1px solid var(--gold);border-bottom:1px solid var(--gold);padding:.18in .3in;margin:.25in 0;line-height:1.5;}
+
+  table{width:100%;border-collapse:collapse;font-size:10pt;margin:.15in 0 .2in;}
+  thead tr{background:var(--felt);color:var(--gold-lt);font-family:'Cinzel',serif;font-size:8.5pt;letter-spacing:.06em;}
+  thead th{padding:7px 10px;text-align:left;font-weight:700;}
+  tbody tr:nth-child(even){background:#f5f2ea;}
+  tbody tr:nth-child(odd){background:#fffef8;}
+  tbody td{padding:6px 10px;border-bottom:1px solid #e0d8c8;}
+  td.center,th.center{text-align:center;}
+  td.bold{font-weight:700;color:var(--felt);}
+  td.good{color:#1a6b3a;font-weight:700;}
+  td.bad{color:var(--red);font-weight:700;}
+
+  /* Stats boxes */
+  .stat-row{display:flex;gap:.15in;margin:.15in 0;}
+  .stat-box{flex:1;border:1px solid #d0c8b0;border-radius:8px;padding:.12in .15in;text-align:center;background:#fffef8;}
+  .stat-val{font-family:'Cinzel',serif;font-size:18pt;font-weight:700;color:var(--felt);line-height:1;}
+  .stat-lbl{font-size:8pt;color:#888;letter-spacing:.08em;text-transform:uppercase;margin-top:4px;}
+  .stat-sub{font-size:8.5pt;color:#555;margin-top:3px;line-height:1.4;}
+
+  /* Flowchart */
+  .flow{display:flex;flex-direction:column;align-items:center;gap:0;margin:.2in 0;}
+  .flow-node{background:var(--felt);color:#fff;font-family:'Cinzel',serif;font-size:8.5pt;padding:8px 18px;border-radius:6px;text-align:center;width:2.8in;}
+  .flow-node.decision{background:var(--gold);color:#000;border-radius:50px;}
+  .flow-node.end-b{background:#1e5ac8;}
+  .flow-node.end-p{background:var(--red);}
+  .flow-node.end-n{background:#1a6b3a;}
+  .flow-arrow{color:var(--gold);font-size:14pt;line-height:1.2;text-align:center;}
+  .flow-split{display:flex;gap:.3in;align-items:flex-start;justify-content:center;margin:.05in 0;}
+  .flow-branch{display:flex;flex-direction:column;align-items:center;gap:0;}
+  .flow-lbl{font-size:8pt;color:#666;font-style:italic;margin-bottom:2px;}
+
+  /* Road dots */
+  .dot-row{display:flex;gap:4px;margin:5px 0;flex-wrap:wrap;}
+  .dot{width:14px;height:14px;border-radius:50%;border:1.5px solid;display:inline-block;flex-shrink:0;}
+  .dot.B{background:rgba(30,90,200,.12);border-color:#1e5ac8;}
+  .dot.P{background:rgba(180,20,20,.1);border-color:var(--red);}
+  .dot.T{background:rgba(20,140,60,.1);border-color:#1a8c3c;}
+
+  /* Betting system bars */
+  .bsys{margin:.5em 0;padding:.4em .8em;background:#f5f2e8;border-radius:4px;}
+  .bsys-name{font-weight:700;color:var(--felt);}
+  .bsys-seq{font-family:monospace;font-size:.9em;color:#444;}
+  .risk-low{color:#1a6b3a;font-weight:700;}
+  .risk-med{color:#8a5500;font-weight:700;}
+  .risk-high{color:var(--red);font-weight:700;}
+
+  /* Two column */
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:.25in;}
+
+  /* Story box */
+  .story-box{border:1px solid #d0c8b0;border-radius:8px;padding:.2in .25in;margin:.2in 0;background:#fdf9f0;}
+  .story-box-title{font-family:'Cinzel',serif;font-size:10pt;font-weight:700;color:var(--felt);border-bottom:1px solid var(--gold);padding-bottom:6px;margin-bottom:.1in;letter-spacing:.05em;}
+
+  /* Payout chips */
+  .payout-row{display:flex;gap:.1in;flex-wrap:wrap;margin:.1in 0;}
+  .payout-chip{border:1.5px solid;border-radius:20px;padding:4px 12px;font-family:'Cinzel',serif;font-size:8.5pt;font-weight:700;white-space:nowrap;}
+  .payout-chip.banker{border-color:#1e5ac8;color:#1e5ac8;}
+  .payout-chip.player{border-color:var(--red);color:var(--red);}
+  .payout-chip.tie{border-color:#1a8c3c;color:#1a8c3c;}
+
+  /* Page footer */
+  .page-footer{position:absolute;bottom:.25in;left:.75in;right:.75in;display:flex;justify-content:space-between;font-size:7.5pt;color:rgba(0,0,0,.3);border-top:1px solid rgba(0,0,0,.1);padding-top:5px;font-family:'Cinzel',serif;letter-spacing:.05em;}
+
+  /* TOC */
+  .toc-entry{display:flex;align-items:baseline;gap:6px;padding:5px 0;border-bottom:1px dotted #d0c8b0;}
+  .toc-num{font-family:'Cinzel',serif;font-size:9pt;color:var(--gold);font-weight:700;flex-shrink:0;}
+  .toc-title{font-family:'Cinzel',serif;font-size:9.5pt;color:var(--felt);font-weight:700;}
+  .toc-sub{font-size:8.5pt;color:#888;font-style:italic;}
+  .toc-pg{margin-left:auto;font-family:'Cinzel',serif;font-size:8.5pt;color:#aaa;flex-shrink:0;}
+
+
+  /* QR callout */
+  .qr-callout{display:flex;align-items:center;gap:.18in;border:1px solid #d0c8b0;border-radius:8px;padding:.12in .18in;background:#fdf9f0;margin:.2in 0;}
+  .qr-callout img{flex-shrink:0;border-radius:4px;border:1px solid #d0c8b0;}
+  .qr-callout-text strong{font-family:'Cinzel',serif;font-size:8.5pt;color:var(--felt);display:block;margin-bottom:2px;}
+  .qr-callout-text span{font-size:8pt;color:#888;font-style:italic;}
+
+  /* Glossary */
+  .gloss-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 .3in;}
+  .gloss-entry{padding:5px 0;border-bottom:1px dotted #d8d0c0;}
+  .gloss-term{font-family:'Cinzel',serif;font-size:8.5pt;font-weight:700;color:var(--felt);}
+  .gloss-def{font-size:9pt;color:#444;line-height:1.45;}
+
+  /* Mistakes list */
+  .mistake-item{display:flex;gap:.12in;padding:.1in 0;border-bottom:1px solid #ede8dc;}
+  .mistake-num{font-family:'Cinzel',serif;font-size:18pt;font-weight:900;color:rgba(204,34,34,.2);line-height:1;flex-shrink:0;width:.35in;text-align:right;}
+  .mistake-body strong{font-family:'Cinzel',serif;font-size:9pt;color:var(--red);display:block;margin-bottom:2px;}
+  .mistake-body p{font-size:9.5pt;color:#444;margin:0;line-height:1.45;}
+
+  /* Script boxes */
+  .script-box{background:#f5f2e8;border-left:3px solid var(--gold);border-radius:0 6px 6px 0;padding:.12in .18in;margin:.12in 0;}
+  .script-situation{font-family:'Cinzel',serif;font-size:8pt;color:#888;letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px;}
+  .script-line{font-size:10pt;color:var(--ink);font-style:italic;line-height:1.5;}
+  .script-line::before{content:'"';color:var(--gold);font-size:14pt;font-style:normal;line-height:0;vertical-align:-.2em;margin-right:2px;}
+  .script-line::after{content:'"';color:var(--gold);font-size:14pt;font-style:normal;line-height:0;vertical-align:-.2em;margin-left:2px;}
+  .script-note{font-size:8pt;color:#888;margin-top:4px;font-style:italic;}
+
+  /* Quick Reference Card */
+  .qrc-page{background:var(--paper);color:var(--ink);padding:.4in .55in;min-height:11in;}
+  .qrc-card{border:1.5px solid #bbb0a0;border-radius:8px;padding:.28in .32in;max-width:6in;margin:0 auto;background:#fff;}
+  .qrc-title{font-family:'Cinzel',serif;font-size:15pt;font-weight:900;color:var(--felt);text-align:center;letter-spacing:.1em;margin-bottom:.04in;}
+  .qrc-subtitle{font-family:'Cinzel',serif;font-size:7pt;color:#999;text-align:center;letter-spacing:.2em;text-transform:uppercase;margin-bottom:.18in;}
+  .qrc-divider{height:1.5px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:.15in 0;}
+  .qrc-section{margin:.1in 0;}
+  .qrc-section-title{font-family:'Cinzel',serif;font-size:7.5pt;color:var(--felt);letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px;border-bottom:1px solid #e8e0d0;padding-bottom:3px;}
+  .qrc-table{width:100%;border-collapse:collapse;font-size:8pt;}
+  .qrc-table th{background:var(--felt) !important;color:var(--gold-lt) !important;font-family:'Cinzel',serif;font-size:6.5pt;padding:5px 8px;text-align:left;letter-spacing:.05em;}
+  .qrc-table td{padding:4px 8px;border-bottom:1px solid #e8e0d0;color:var(--ink) !important;}
+  .qrc-table tbody tr:nth-child(even){background:#f7f4ee !important;}
+  .qrc-table tbody tr:nth-child(odd){background:#fff !important;}
+  .qrc-table td.g{color:#1a6b3a !important;font-weight:700;}
+  .qrc-table td.r{color:var(--red) !important;font-weight:700;}
+  .qrc-cut-note{text-align:center;font-size:7pt;color:#bbb;letter-spacing:.12em;text-transform:uppercase;margin-top:.22in;border-top:1px dashed #ccc;padding-top:.1in;}
+
+  /* Session Log */
+  .log-grid{display:grid;grid-template-columns:repeat(7,1fr);border-top:1.5px solid var(--felt);border-left:1.5px solid var(--felt);}
+  .log-cell{border-right:1.5px solid var(--felt);border-bottom:1.5px solid var(--felt);padding:5px 4px;font-size:8pt;min-height:24px;}
+  .log-head{background:var(--felt);color:var(--gold-lt);font-family:'Cinzel',serif;font-size:7pt;font-weight:700;letter-spacing:.04em;text-align:center;}
+  .log-meta{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.15in;margin:.15in 0;}
+  .log-field{border-bottom:1px solid #999;padding-bottom:3px;}
+  .log-field-label{font-size:7.5pt;color:#888;letter-spacing:.06em;text-transform:uppercase;}
+
+  /* Country guide */
+  .country-header{display:flex;align-items:center;gap:.12in;margin:.2in 0 .08in;}
+  .country-flag{font-size:22pt;line-height:1;}
+  .country-name{font-family:'Cinzel',serif;font-size:11pt;font-weight:700;color:var(--felt);}
+  .country-tagline{font-size:8.5pt;color:#888;font-style:italic;}
+
+  /* Game plan timeline */
+  .timeline{position:relative;margin:.15in 0 .15in .25in;}
+  .timeline::before{content:'';position:absolute;left:-.18in;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,var(--gold),var(--felt));}
+  .tl-item{position:relative;padding:.1in 0 .1in .12in;border-bottom:1px dotted #d8d0c0;}
+  .tl-item::before{content:'';position:absolute;left:calc(-.18in - 5px);top:.18in;width:10px;height:10px;border-radius:50%;background:var(--gold);border:2px solid var(--paper);}
+  .tl-time{font-family:'Cinzel',serif;font-size:8pt;color:var(--gold);font-weight:700;margin-bottom:3px;}
+  .tl-action{font-size:10pt;color:var(--ink);line-height:1.5;}
+
+  @media print{
+    body{background:none;}
+    .page{margin:0;box-shadow:none;page-break-after:always;}
+    .page:last-child{page-break-after:auto;}
+    @page{size:letter;margin:0;}
+  }
+
+/* ══ PRINT MANUSCRIPT OVERRIDES ══ */
+  .cover-bottom { position: static !important; margin-top: auto !important; padding-top: 0.2in !important; }
+  .cover { justify-content: flex-start !important; padding-top: 0.4in !important; }
+
+@page {
+  size: 6in 9in;
+  margin-top: 0.75in;
+  margin-bottom: 0.75in;
+}
+@page :left  { margin-left: 0.75in; margin-right: 0.5in; }
+@page :right { margin-left: 0.5in;  margin-right: 0.75in; }
+
+/* Page counter in footer */
+@page { @bottom-center { content: counter(page); font-family: Georgia, serif; font-size: 9pt; color: #666; } }
+
+body {
+  background: #fff !important;
+  font-size: 10.5pt !important;
+  line-height: 1.55 !important;
+}
+
+/* Each .page becomes a print page */
+.page {
+  width: 100% !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  page-break-after: always !important;
+  background: #fff !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  overflow: visible !important;
+}
+.page:last-child { page-break-after: avoid !important; }
+
+/* Cover — light version for print */
+.cover {
+  background: #fff !important;
+  color: #000 !important;
+  border: 2px solid #1a4a1a;
+  min-height: 0 !important;
+  height: 7.5in;
+  padding: 0.6in 0.7in !important;
+}
+.cover-title { color: #1a4a1a !important; }
+.cover-subtitle { color: #444 !important; }
+.cover-tagline { color: #333 !important; }
+.cover-cta-url { color: #1a4a1a !important; }
+.cover-cta-box { background: #f5f5f5 !important; border-color: #1a4a1a !important; }
+.cover-cta-sub { color: #555 !important; }
+.cover-bottom { color: #999 !important; position: static !important; margin-top: 0.3in; }
+.cover-felt-bar { background: #1a4a1a !important; height: 4px !important; }
+.cover-divider { background: linear-gradient(90deg, transparent, #1a4a1a, transparent) !important; }
+
+/* Inner pages */
+.inner { padding: 0.3in 0 !important; }
+.inner::before { background: #1a4a1a !important; margin: 0 0 0.3in !important; }
+
+/* Section heads — dark green instead of dark background */
+.section-head { color: #1a4a1a !important; border-color: #c9a84c !important; }
+.section-head .num { color: #c9a84c !important; }
+h3 { color: #1a4a1a !important; }
+
+/* Tables — light mode */
+thead tr { background: #1a4a1a !important; }
+thead th { color: #fff !important; }
+tbody tr:nth-child(even) { background: #f5f2ea !important; }
+tbody tr:nth-child(odd)  { background: #fff !important; }
+td.bold { color: #1a4a1a !important; }
+td.good { color: #1a6b3a !important; }
+td.bad  { color: #cc2222 !important; }
+
+/* QRC page — already light, just ensure white bg */
+.qrc-page { background: #fff !important; }
+.qrc-page * { color: inherit; }
+
+/* Stat boxes */
+.stat-box { background: #f9f7f0 !important; border-color: #c8bfa0 !important; }
+.stat-val  { color: #1a4a1a !important; }
+
+/* Callouts */
+.callout { background: #f9f7ee !important; }
+.callout.red-callout   { background: #fff5f5 !important; }
+.callout.green-callout { background: #f0faf4 !important; }
+
+/* Pull quote */
+.pull-quote { color: #1a4a1a !important; border-color: #c9a84c !important; }
+
+/* Story box */
+.story-box { background: #fdf9f0 !important; border-color: #c8bfa0 !important; }
+.story-box-title { color: #1a4a1a !important; border-color: #c9a84c !important; }
+
+/* Payout chips */
+.payout-chip.banker { border-color: #1e5ac8 !important; color: #1e5ac8 !important; }
+.payout-chip.player { border-color: #cc2222 !important; color: #cc2222 !important; }
+.payout-chip.tie    { border-color: #1a8c3c !important; color: #1a8c3c !important; }
+
+/* Footer */
+.page-footer { color: #888 !important; border-color: #ccc !important; }
+
+/* Hide watermark SVGs in print */
+.page > svg[aria-hidden] { display: none !important; }
+
+/* Session log — keep table borders */
+.log-grid th { background: #1a4a1a !important; color: #fff !important; }
+.log-grid td { background: #fff !important; border-color: #ccc !important; }
+
+/* Gloss grid */
+.gloss-term { color: #1a4a1a !important; }
+
+/* Country headers */
+.country-header { border-color: #1a4a1a !important; }
+.country-name   { color: #1a4a1a !important; }
+.country-flag   { filter: none !important; }
+
+/* Script boxes */
+.script-box { background: #f9f7f0 !important; border-color: #c9a84c !important; }
+.script-situation { color: #1a4a1a !important; }
+
+/* Timeline */
+.tl-time { color: #1a4a1a !important; }
+.tl-action { background: #f5f2ea !important; border-color: #c9a84c !important; }
+
+/* Mistake items */
+.mistake-num { color: #c9a84c !important; }
+.mistake-item { border-color: #e0d8c8 !important; }
+
+/* QRC table overrides — remove dark background rules */
+.qrc-table thead tr  { background: #1a4a1a !important; }
+.qrc-table tbody tr  { background: #fff !important; color: #222 !important; }
+.qrc-table tbody tr:nth-child(even) { background: #f5f2ea !important; }
+.qrc-table td, .qrc-table th { color: inherit !important; }
+
+/* Bsys bars */
+.bsys { background: #f5f2e8 !important; }
+
+/* Appendix labels */
+[style*="background:#1a4a1a"], [style*="background: #1a4a1a"],
+[style*="background:var(--felt)"], [style*="background: var(--felt)"] {
+  background: #1a4a1a !important;
+}
+
+/* TOC */
+.toc-num   { color: #c9a84c !important; }
+.toc-title { color: #1a4a1a !important; }
+.toc-sub   { color: #555 !important; }
+.toc-entry { border-color: #e0d8c8 !important; }
+
+/* Risk vs Reward SVG — keep as-is, it's already light-bg */
+
+/* Remove web-only elements */
+@media print {
+  a { color: inherit !important; text-decoration: none !important; }
+}
+
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="page cover">
+  <div class="cover-felt-bar"></div>
+  <img src="bg-card.png" alt="Baccarat Gladiator" style="width:155px;height:auto;border-radius:10px;box-shadow:0 8px 40px rgba(0,0,0,.7),0 0 30px rgba(201,168,76,.3);margin-bottom:.25in;">
+  <div class="cover-title">Road to Nine</div>
+  <div class="cover-subtitle">A Baccarat Gladiator Guide</div>
+  <div class="cover-divider"></div>
+  <div class="cover-tagline">"Baccarat is the only game where the house's advantage is so small that your biggest enemy isn't the casino — it's yourself."</div>
+  <div class="cover-cta-box">
+    <div style="font-family:'Cinzel',serif;font-size:8pt;letter-spacing:.2em;color:rgba(201,168,76,.6);margin-bottom:6px;text-transform:uppercase;">Practice free at</div>
+    <div class="cover-cta-url">BaccaratGladiator.com</div>
+    <div class="cover-cta-sub">All 5 roads · EZ &amp; Tiger modes · Card squeeze · No account needed</div>
+  </div>
+  <div style="font-family:'Cinzel',serif;font-size:8pt;letter-spacing:.15em;color:rgba(201,168,76,.35);text-transform:uppercase;">10 Chapters · Rules · Roads · Strategy · History · Famous Characters</div>
+  <div class="cover-bottom">© Baccarat Gladiator · BaccaratGladiator.com · 2026</div>
+</div>
+
+<!-- TABLE OF CONTENTS -->
+<div class="page inner" style="position:relative;">
+  <div class="section-head">Table of Contents</div>
+  <div class="toc-entry"><span class="toc-num">1</span><div><div class="toc-title">Why Baccarat?</div><div class="toc-sub">The story, the culture, the draw — and why the world's richest gamblers choose this game</div></div></div>
+  <div class="toc-entry"><span class="toc-num">2</span><div><div class="toc-title">The Rules</div><div class="toc-sub">Card values, payouts, house edge — everything you need before placing a chip</div></div></div>
+  <div class="toc-entry"><span class="toc-num">3</span><div><div class="toc-title">Third-Card Rules</div><div class="toc-sub">The fixed matrix that determines every draw — with a visual flowchart</div></div></div>
+  <div class="toc-entry"><span class="toc-num">4</span><div><div class="toc-title">Reading the Road Maps</div><div class="toc-sub">All 5 roads explained — plus what experienced players actually do with them</div></div></div>
+  <div class="toc-entry"><span class="toc-num">5</span><div><div class="toc-title">The Myth of Systems</div><div class="toc-sub">Honest math on why no system beats the house — and the one thing systems are actually good for</div></div></div>
+  <div class="toc-entry"><span class="toc-num">6</span><div><div class="toc-title">Bankroll &amp; Session Management</div><div class="toc-sub">How much to bring, when to walk, and the rules that separate disciplined players from everyone else</div></div></div>
+  <div class="toc-entry"><span class="toc-num">7</span><div><div class="toc-title">The Mental Game</div><div class="toc-sub">Tilt, the gambler's fallacy, loss aversion — the psychology that costs players more than the house edge</div></div></div>
+  <div class="toc-entry"><span class="toc-num">8</span><div><div class="toc-title">The Casino Experience</div><div class="toc-sub">Table selection, VIP culture, tipping, Macau vs. Vegas vs. online</div></div></div>
+  <div class="toc-entry"><span class="toc-num">9</span><div><div class="toc-title">Famous Hands &amp; Characters</div><div class="toc-sub">Phil Ivey, Akio Kashiwagi, Kerry Packer, James Bond — the legends who defined the game</div></div></div>
+  <div class="toc-entry"><span class="toc-num">10</span><div><div class="toc-title">Variants</div><div class="toc-sub">Chemin de Fer, Baccarat Banque, Mini-Baccarat, EZ, Tiger, online speed baccarat</div></div></div>
+  <div class="toc-entry"><span class="toc-num">11</span><div><div class="toc-title">Top 10 Mistakes</div><div class="toc-sub">The errors that cost players the most — and how to avoid every one</div></div></div>
+  <div class="toc-entry"><span class="toc-num">12</span><div><div class="toc-title">The One-Hour Game Plan</div><div class="toc-sub">You have 60 minutes and $500. Here is exactly what to do.</div></div></div>
+  <div class="toc-entry"><span class="toc-num">13</span><div><div class="toc-title">World Baccarat — Four Cities</div><div class="toc-sub">Macau, Las Vegas, Singapore, Monte Carlo — what's different at each</div></div></div>
+  <div class="toc-entry"><span class="toc-num">14</span><div><div class="toc-title">What to Say</div><div class="toc-sub">Exact scripts for comps, table reservations, free hands, and more</div></div></div>
+  <div class="toc-entry"><span class="toc-num" style="color:#888;font-size:8pt;">A</span><div><div class="toc-title">Glossary</div><div class="toc-sub">Every baccarat term defined — punto, banco, monkey, junket, and more</div></div></div>
+  <div class="toc-entry"><span class="toc-num" style="color:#888;font-size:8pt;">B</span><div><div class="toc-title">Quick Reference Card</div><div class="toc-sub">Cut out and bring to the casino — rules, edges, bankroll formula</div></div></div>
+  <div class="toc-entry"><span class="toc-num" style="color:#888;font-size:8pt;">C</span><div><div class="toc-title">Session Log</div><div class="toc-sub">Printable worksheet to track every session</div></div></div>
+  <div class="page-footer"><span>Road to Nine</span><span>BaccaratGladiator.com</span></div>
+</div>
+
+<!-- CHAPTER 1: WHY BACCARAT? -->
+<div class="page inner" style="position:relative;">
+  <div class="section-head"><span class="num">1</span>Why Baccarat?</div>
+
+  <p>In 1490, French soldiers returning from the Italian Wars brought a card game back to the court of King Charles VIII. It was simple — two hands, fixed rules, no decisions to make. The king was, by all accounts, a poor gambler. The game was designed so that even he couldn't make a costly mistake. The cards decided everything.</p>
+  <p>He played anyway. He lost.</p>
+  <p>Six hundred years later, in the high-limit rooms of Macau and Las Vegas, the same game is being played for tens of millions of dollars a session by some of the wealthiest people on the planet. The rules haven't changed. The house still wins in the long run. And the players keep coming back.</p>
+  <p>That's the paradox of baccarat: it is simultaneously the simplest game in the casino and the one that generates more money than any other. It requires no skill, no memory, no strategy — and yet it commands a loyalty and mystique that blackjack and poker, for all their complexity, can rarely match.</p>
+
+  <div class="pull-quote">"Baccarat is the only game where the house's advantage is so small that your biggest enemy isn't the casino — it's yourself."</div>
+
+  <h3>The Numbers</h3>
+  <div class="stat-row">
+    <div class="stat-box"><div class="stat-val">85%</div><div class="stat-lbl">Macau casino revenue</div><div class="stat-sub">Baccarat's share of total GGR in the world's largest casino market</div></div>
+    <div class="stat-box"><div class="stat-val">#1</div><div class="stat-lbl">Table game worldwide</div><div class="stat-sub">By total revenue generated globally — above blackjack, roulette, and poker</div></div>
+    <div class="stat-box"><div class="stat-val">1,400+</div><div class="stat-lbl">US baccarat tables</div><div class="stat-sub">Up from ~50 in 1990 — driven by Asian-American players and VIP tourism</div></div>
+  </div>
+
+  <h3>Why Americans Are Discovering It Now</h3>
+  <p>For decades, baccarat was seen in the United States as an Asian game — played in curtained-off VIP rooms by high rollers, invisible to most casino visitors. That is changing. The rise of online baccarat, streaming culture, and a generation of American players who grew up watching Macau content on YouTube has brought the game into the mainstream.</p>
+  <p>Baccarat now generates more revenue on the Las Vegas Strip than blackjack, despite having fewer tables. The average baccarat bet is larger, the pace is faster, and the ritual of the squeeze — slowly peeling back a card at the edge — has become one of the most-shared casino moments online.</p>
+
+  <h3>The Culture</h3>
+  <p>No other casino game has a ritual. Blackjack players signal with hand gestures. Roulette spins and settles. But baccarat has the squeeze — a theatrical, deliberate reveal of the card that turns a fraction of a second into a minute of suspended breath. In high-limit rooms, players are handed the card and allowed to bend it slowly, peek at the corner, pull back the edge. The whole table watches.</p>
+  <p>This is not incidental to the game. It is the game. The mathematics of baccarat are fixed and immovable, so the experience becomes the product — and the squeeze is the climax of that experience.</p>
+
+  <div class="callout green-callout"><strong>Practice the squeeze free:</strong> Baccarat Gladiator's theatrical card squeeze lets you peel the corner, pull the edge, and snap to full reveal — with sounds — before you ever set foot in a casino.</div>
+
+  <div class="page-footer"><span>Road to Nine</span><span>BaccaratGladiator.com</span><span>3</span></div>
+</div>
+
+<!-- CHAPTER 2: THE RULES -->
+<div class="page inner" style="position:relative;">
+
+  <!-- Dragon / Panda / Tiger watermarks -->
+  <svg xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden;" aria-hidden="true">
+    <!-- Dragon — top-right -->
+    <text x="93%" y="15%" font-size="88" text-anchor="middle" fill="rgba(13,51,32,0.055)" font-family="Georgia,serif" transform="rotate(-12,680,130)">🐉</text>
+    <!-- Panda — bottom-left -->
+    <text x="14%" y="84%" font-size="100" text-anchor="middle" fill="rgba(13,51,32,0.16)" font-family="Georgia,serif" transform="rotate(8,105,890)">🐼</text>
+    <!-- Tiger — center-right -->
+    <text x="88%" y="52%" font-size="70" text-anchor="middle" fill="rgba(13,51,32,0.048)" font-family="Georgia,serif" transform="rotate(-6,640,520)">🐯</text>
+  </svg>
+
+  <div class="section-head"><span class="num">2</span>The Rules</div>
+
+  <p>Two hands are dealt — <strong>Player</strong> and <strong>Banker</strong>. You bet on which will be closer to 9. That is the entire premise. No skill decides who wins; the cards fall by fixed rules every single time.</p>
+
+  <h3>Card Values</h3>
+  <table>
+    <thead><tr><th>Cards</th><th class="center">Value</th><th>Example</th></tr></thead>
+    <tbody>
+      <tr><td>Ace</td><td class="center">1</td><td>A♠ = 1</td></tr>
+      <tr><td>2 through 9</td><td class="center">Face value</td><td>7♦ = 7</td></tr>
+      <tr><td>10, Jack, Queen, King</td><td class="center">0</td><td>K♣ = 0 &nbsp;·&nbsp; 10♥ = 0</td></tr>
+    </tbody>
+  </table>
+  <div class="callout"><strong>Key rule:</strong> Only the last digit counts. 7 + 8 = 15 → scores <strong>5</strong>. &nbsp; 9 + 9 = 18 → scores <strong>8</strong>. &nbsp; K + 4 = 14 → scores <strong>4</strong>.</div>
+
+  <h3>How a Hand Plays Out</h3>
+  <p>Both Player and Banker receive two cards. A total of <strong>8 or 9</strong> on the first two cards is a <strong>Natural</strong> — the hand ends immediately. Otherwise, a third card may be drawn (see Chapter 3). The hand closest to 9 wins. On a tie, Tie bets pay; Banker and Player bets push.</p>
+
+  <h3>Payouts &amp; House Edge</h3>
+  <table>
+    <thead><tr><th>Bet</th><th class="center">Payout</th><th class="center">House Edge</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td class="bold">Banker</td><td class="center">0.95:1</td><td class="center good">1.06%</td><td>5% commission on wins</td></tr>
+      <tr><td class="bold">Player</td><td class="center">1:1</td><td class="center good">1.24%</td><td>Even money, no commission</td></tr>
+      <tr><td class="bold">Tie</td><td class="center">8:1</td><td class="center bad">14.36%</td><td>Banker/Player push on tie</td></tr>
+      <tr><td class="bold">Player Pair †</td><td class="center">11:1</td><td class="center bad">10.36%</td><td>First two Player cards match</td></tr>
+      <tr><td class="bold">Banker Pair †</td><td class="center">11:1</td><td class="center bad">10.36%</td><td>First two Banker cards match</td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:9pt;color:#888;font-style:italic;">† Pair bets pay 11:1 at most casinos, 10:1 at some. Confirm at your table.</p>
+
+  <!-- Risk vs Reward Map — inline SVG, positions hand-calculated -->
+  <!-- X: log(payout+1) scale. Range log(1.95)=0.668 to log(51)=3.932, span=3.264. Plot x: 65–585 (width=520) -->
+  <!-- Y: edge 0–16%, inverted (low=top). Plot y: 25–255 (height=230) -->
+  <svg viewBox="0 0 630 285" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;margin:.1in 0 0;border-radius:8px;border:1px solid #d0c8b0;">
+    <defs>
+      <linearGradient id="bgG" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#eef7f2"/>
+        <stop offset="55%" stop-color="#fffef8"/>
+        <stop offset="100%" stop-color="#fdeaea"/>
+      </linearGradient>
+      <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="1" dy="2" stdDeviation="2" flood-opacity="0.25"/>
+      </filter>
+    </defs>
+
+    <!-- Background -->
+    <rect width="630" height="285" rx="8" fill="url(#bgG)"/>
+
+    <!-- Sweet spot region -->
+    <rect x="65" y="25" width="130" height="75" rx="5" fill="rgba(26,107,58,0.09)" stroke="rgba(26,107,58,0.25)" stroke-width="1" stroke-dasharray="5,3"/>
+    <text x="74" y="40" font-family="Georgia,serif" font-size="7.5" fill="rgba(26,107,58,0.65)" font-weight="700" letter-spacing="1.2">SWEET SPOT</text>
+
+    <!-- Avoid zone -->
+    <rect x="65" y="205" width="520" height="52" rx="5" fill="rgba(180,20,20,0.07)" stroke="rgba(180,20,20,0.2)" stroke-width="1" stroke-dasharray="5,3"/>
+    <text x="577" y="263" font-family="Georgia,serif" font-size="7.5" fill="rgba(180,20,20,0.55)" font-weight="700" letter-spacing="1.2" text-anchor="end">AVOID ZONE</text>
+
+    <!-- Axes -->
+    <line x1="65" y1="25" x2="65" y2="258" stroke="#bbb0a0" stroke-width="1.2"/>
+    <line x1="65" y1="258" x2="585" y2="258" stroke="#bbb0a0" stroke-width="1.2"/>
+
+    <!-- Y-axis ticks and labels -->
+    <text x="58" y="28" font-family="Georgia,serif" font-size="7.5" fill="#999" text-anchor="end">0%</text>
+    <line x1="63" y1="25" x2="65" y2="25" stroke="#bbb0a0" stroke-width="1"/>
+    <text x="58" y="115" font-family="Georgia,serif" font-size="7.5" fill="#999" text-anchor="end">7%</text>
+    <line x1="63" y1="112" x2="65" y2="112" stroke="#bbb0a0" stroke-width="1"/>
+    <line x1="65" y1="112" x2="585" y2="112" stroke="#d0c8b0" stroke-width="0.5" stroke-dasharray="3,4"/>
+    <text x="58" y="212" font-family="Georgia,serif" font-size="7.5" fill="#999" text-anchor="end">14%</text>
+    <line x1="63" y1="209" x2="65" y2="209" stroke="#bbb0a0" stroke-width="1"/>
+    <line x1="65" y1="209" x2="585" y2="209" stroke="#d0c8b0" stroke-width="0.5" stroke-dasharray="3,4"/>
+
+    <!-- Y-axis title -->
+    <text x="12" y="145" font-family="Georgia,serif" font-size="9" fill="#777" text-anchor="middle" transform="rotate(-90,12,145)" font-style="italic">House Edge %</text>
+    <text x="8" y="30" font-family="Georgia,serif" font-size="7" fill="#1a6b3a" text-anchor="middle">Better</text>
+    <text x="8" y="255" font-family="Georgia,serif" font-size="7" fill="#cc2222" text-anchor="middle">Worse</text>
+
+    <!-- X-axis title -->
+    <text x="325" y="277" font-family="Georgia,serif" font-size="9" fill="#777" text-anchor="middle" font-style="italic">Payout Multiplier (log scale)  ·  Higher = Bigger Win</text>
+
+    <!-- Chart title -->
+    <text x="325" y="16" font-family="Georgia,serif" font-size="9.5" fill="rgba(10,50,30,0.55)" text-anchor="middle" letter-spacing="2.5" font-weight="700">RISK  vs.  REWARD</text>
+
+    <!-- ===== BUBBLES =====
+         X positions (plot width 65→585=520px):
+           Banker  log(1.95)=0.668 → (0.668-0.668)/3.264=0%   → x=65
+           Player  log(2.00)=0.693 → 0.8%                      → x=69  (offset to 105 to avoid overlap)
+           Tie     log(9)=2.197    → 46.9%                      → x=65+244=309
+           Pairs   log(12)=2.485   → 55.7%                      → x=65+289=354
+           SmTiger log(23)=3.135   → 75.6%                      → x=65+393=458
+           Panda8  log(26)=3.258   → 79.4%                      → x=65+413=478  (offset to 500)
+           Dragon7 log(41)=3.714   → 93.3%                      → x=65+485=550
+           BigTigr log(51)=3.932   → 100%                       → x=585         (offset to 570)
+
+         Y positions (plot height 25→258=233px, inverted):
+           edge% / 16 * 233, then y = 25 + result
+           Banker  1.06% → 15px  → y=40
+           Player  1.24% → 18px  → y=43  (offset to 62)
+           SmTiger 14.33% → 206px → y=231 (repositioned to avoid overlap w/Tie, offset slightly)
+           Dragon7 7.6%  → 111px → y=136
+           Panda8  10.2% → 148px → y=173
+           Pairs   10.36%→ 151px → y=176
+           BigTigr 13.0% → 189px → y=214
+           Tie     14.36%→ 209px → y=234
+    -->
+
+    <!-- Banker -->
+    <circle cx="80" cy="52" r="24" fill="rgba(30,90,200,0.88)" filter="url(#shadow)"/>
+    <text x="80" y="47" font-family="Georgia,serif" font-size="7.5" fill="white" font-weight="700" text-anchor="middle">BANKER</text>
+    <text x="80" y="59" font-family="Georgia,serif" font-size="7" fill="rgba(255,255,255,0.9)" text-anchor="middle">1.06%</text>
+
+    <!-- Player -->
+    <circle cx="118" cy="70" r="20" fill="rgba(180,20,20,0.86)" filter="url(#shadow)"/>
+    <text x="118" y="65" font-family="Georgia,serif" font-size="7.5" fill="white" font-weight="700" text-anchor="middle">PLAYER</text>
+    <text x="118" y="76" font-family="Georgia,serif" font-size="7" fill="rgba(255,255,255,0.9)" text-anchor="middle">1.24%</text>
+
+    <!-- Tie -->
+    <circle cx="309" cy="234" r="24" fill="rgba(200,15,15,0.90)" filter="url(#shadow)"/>
+    <text x="309" y="229" font-family="Georgia,serif" font-size="7.5" fill="white" font-weight="700" text-anchor="middle">TIE</text>
+    <text x="309" y="241" font-family="Georgia,serif" font-size="7" fill="rgba(255,255,255,0.9)" text-anchor="middle">14.36%</text>
+
+    <!-- Pairs -->
+    <circle cx="354" cy="176" r="19" fill="rgba(155,85,0,0.85)" filter="url(#shadow)"/>
+    <text x="354" y="171" font-family="Georgia,serif" font-size="7" fill="white" font-weight="700" text-anchor="middle">PAIRS</text>
+    <text x="354" y="182" font-family="Georgia,serif" font-size="6.5" fill="rgba(255,255,255,0.9)" text-anchor="middle">10.36%</text>
+
+    <!-- Small Tiger: 14.33% edge — repositioned near Tie zone -->
+    <circle cx="440" cy="220" r="18" fill="rgba(145,65,0,0.83)" filter="url(#shadow)"/>
+    <text x="440" y="214" font-family="Georgia,serif" font-size="6.5" fill="white" font-weight="700" text-anchor="middle">SM TIGER</text>
+    <text x="440" y="225" font-family="Georgia,serif" font-size="6.5" fill="rgba(255,255,255,0.9)" text-anchor="middle">14.3%</text>
+
+    <!-- Panda 8 -->
+    <circle cx="505" cy="173" r="18" fill="rgba(95,35,148,0.85)" filter="url(#shadow)"/>
+    <text x="505" y="167" font-family="Georgia,serif" font-size="6.5" fill="white" font-weight="700" text-anchor="middle">PANDA 8</text>
+    <text x="505" y="178" font-family="Georgia,serif" font-size="6.5" fill="rgba(255,255,255,0.9)" text-anchor="middle">10.2%</text>
+
+    <!-- Dragon 7 -->
+    <circle cx="548" cy="136" r="20" fill="rgba(75,25,138,0.87)" filter="url(#shadow)"/>
+    <text x="548" y="130" font-family="Georgia,serif" font-size="7" fill="white" font-weight="700" text-anchor="middle">DRAGON 7</text>
+    <text x="548" y="141" font-family="Georgia,serif" font-size="6.5" fill="rgba(255,255,255,0.9)" text-anchor="middle">7.6%</text>
+
+    <!-- Big Tiger -->
+    <circle cx="572" cy="214" r="18" fill="rgba(155,25,10,0.85)" filter="url(#shadow)"/>
+    <text x="572" y="208" font-family="Georgia,serif" font-size="6.5" fill="white" font-weight="700" text-anchor="middle">BIG TIGER</text>
+    <text x="572" y="219" font-family="Georgia,serif" font-size="6.5" fill="rgba(255,255,255,0.9)" text-anchor="middle">~15%</text>
+  </svg>
+  <p style="font-size:8.5pt;color:#888;text-align:center;margin-top:4px;margin-bottom:.15in;font-style:italic;">Each bubble = one bet. Top-left = best odds. Bottom = avoid. Side bets sit middle-right — exciting payouts, real costs.</p>
+
+  <div class="two-col" style="margin-top:.15in;">
+    <div class="callout green-callout"><strong>Best bet:</strong> Banker at 1.06% is one of the lowest house edges in any casino game. Over 1,000 hands at $10/hand, expected loss is just $106.</div>
+    <div class="callout red-callout"><strong>Worst bet:</strong> Tie at 14.36% loses nearly the same $10 every 7 hands on average. The 8:1 payout feels exciting — the math is brutal.</div>
+  </div>
+
+  <h3>EZ Baccarat Side Bets</h3>
+  <table>
+    <thead><tr><th>Bet</th><th>Trigger</th><th class="center">Payout</th></tr></thead>
+    <tbody>
+      <tr><td class="bold">Dragon 7 <span style="font-weight:400;color:#888;font-size:8.5pt;">(also: Sun)</span></td><td>Banker wins with 3-card total of 7</td><td class="center good">40:1</td></tr>
+      <tr><td class="bold">Panda 8 <span style="font-weight:400;color:#888;font-size:8.5pt;">(also: Moon)</span></td><td>Player wins with 3-card total of 8</td><td class="center good">25:1</td></tr>
+      <tr><td class="bold">Big Tiger</td><td>Banker wins with 3-card total of 6</td><td class="center good">50:1</td></tr>
+      <tr><td class="bold">Small Tiger</td><td>Banker wins with 2-card total of 6</td><td class="center good">22:1</td></tr>
+      <tr><td class="bold">Tiger Tie</td><td>Both hands total 6</td><td class="center good">35–45:1 ‡</td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:9pt;color:#888;font-style:italic;">‡ Tiger Tie payout varies by casino (35:1 to 45:1). Baccarat Gladiator pays 35:1.</p>
+
+  <div class="page-footer"><span>Road to Nine</span><span>BaccaratGladiator.com</span><span>4</span></div>
+</div>
+
+<!-- CHAPTER 3: THIRD CARD RULES -->
+<div class="page inner" style="position:relative;">
+  <div class="section-head"><span class="num">3</span>Third-Card Rules</div>
+
+  <p>No one chooses whether a third card is drawn — the rules are fixed and automatic. The dealer applies them the same way every hand, in every casino, in every country. You never need to memorize this table to play, but understanding it demystifies the hands that seem to defy logic.</p>
+
+  <h3>Player Third-Card Rule</h3>
+  <table>
+    <thead><tr><th>Player Total (first 2 cards)</th><th class="center">Action</th></tr></thead>
+    <tbody>
+      <tr><td>0 – 5</td><td class="center bad">Draws a third card</td></tr>
+      <tr><td>6 – 7</td><td class="center good">Stands</td></tr>
+      <tr><td>8 – 9</td><td class="center bold">Natural — no draw, hand ends</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Banker Third-Card Rule (when Player drew)</h3>
+  <table>
+    <thead><tr><th>Banker Total</th><th>Draws when Player's 3rd card is…</th><th class="center">Stands when…</th></tr></thead>
+    <tbody>
+      <tr><td class="bold">0, 1, 2</td><td>Always draws</td><td class="center">—</td></tr>
+      <tr><td class="bold">3</td><td>0, 1, 2, 3, 4, 5, 6, 7, 9</td><td class="center">8</td></tr>
+      <tr><td class="bold">4</td><td>2, 3, 4, 5, 6, 7</td><td class="center">0, 1, 8, 9</td></tr>
+      <tr><td class="bold">5</td><td>4, 5, 6, 7</td><td class="center">0, 1, 2, 3, 8, 9</td></tr>
+      <tr><td class="bold">6</td><td>6, 7 (only if Player drew)</td><td class="center">0–5, 8, 9</td></tr>
+      <tr><td class="bold">7</td><td colspan="2" class="center">Always stands</td></tr>
+      <tr><td class="bold">8 – 9</td><td colspan="2" class="center">Natural — hand ends</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout"><strong>Memory shortcut:</strong> Banker on 3 draws on everything except an 8. Banker on 6 only draws if Player's third card was 6 or 7. Otherwise: draw on low totals, stand on high.</div>
+
+  <h3>Visual Decision Flowchart</h3>
+  <svg viewBox="0 0 680 185" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;margin:.1in 0;">
+
+    <!-- ===== LEFT: PLAYER HAND ===== -->
+    <text x="170" y="13" font-family="Georgia,serif" font-size="8.5" fill="#555" text-anchor="middle" letter-spacing="2" font-weight="700">PLAYER HAND</text>
+
+    <!-- Decision pill -->
+    <rect x="72" y="19" width="196" height="28" rx="14" fill="#c9a84c"/>
+    <text x="170" y="37" font-family="Georgia,serif" font-size="8.5" fill="#1a1a1a" text-anchor="middle" font-weight="700">Player's 2-card total?</text>
+
+    <!-- Stem down -->
+    <line x1="170" y1="47" x2="170" y2="65" stroke="#c9a84c" stroke-width="1.8"/>
+    <!-- Horizontal branch -->
+    <line x1="52" y1="65" x2="288" y2="65" stroke="#c9a84c" stroke-width="1.5"/>
+    <!-- Three legs down -->
+    <line x1="52"  y1="65" x2="52"  y2="84" stroke="#c9a84c" stroke-width="1.5"/>
+    <line x1="170" y1="65" x2="170" y2="84" stroke="#c9a84c" stroke-width="1.5"/>
+    <line x1="288" y1="65" x2="288" y2="84" stroke="#c9a84c" stroke-width="1.5"/>
+
+    <!-- Branch labels -->
+    <text x="52"  y="79" font-family="Georgia,serif" font-size="7.5" fill="#666" text-anchor="middle" font-style="italic">8 or 9</text>
+    <text x="170" y="79" font-family="Georgia,serif" font-size="7.5" fill="#666" text-anchor="middle" font-style="italic">6 or 7</text>
+    <text x="288" y="79" font-family="Georgia,serif" font-size="7.5" fill="#666" text-anchor="middle" font-style="italic">0 – 5</text>
+
+    <!-- End nodes -->
+    <rect x="8"   y="88" width="88" height="38" rx="5" fill="#1a6b3a"/>
+    <text x="52"  y="103" font-family="Georgia,serif" font-size="7.5" fill="white" text-anchor="middle" font-weight="700">NATURAL</text>
+    <text x="52"  y="116" font-family="Georgia,serif" font-size="7"   fill="rgba(255,255,255,.85)" text-anchor="middle">Stand</text>
+
+    <rect x="126" y="88" width="88" height="38" rx="5" fill="#1a6b3a"/>
+    <text x="170" y="111" font-family="Georgia,serif" font-size="8"   fill="white" text-anchor="middle" font-weight="700">Stand</text>
+
+    <rect x="244" y="88" width="88" height="38" rx="5" fill="#cc2222"/>
+    <text x="288" y="103" font-family="Georgia,serif" font-size="7.5" fill="white" text-anchor="middle" font-weight="700">Draw</text>
+    <text x="288" y="116" font-family="Georgia,serif" font-size="7"   fill="rgba(255,255,255,.85)" text-anchor="middle">3rd Card</text>
+
+    <!-- ===== DIVIDER ===== -->
+    <line x1="340" y1="8" x2="340" y2="175" stroke="#d0c8b0" stroke-width="1" stroke-dasharray="4,3"/>
+
+    <!-- ===== RIGHT: BANKER HAND ===== -->
+    <text x="510" y="13" font-family="Georgia,serif" font-size="8.5" fill="#555" text-anchor="middle" letter-spacing="2" font-weight="700">BANKER HAND</text>
+    <text x="510" y="24" font-family="Georgia,serif" font-size="7"   fill="#999" text-anchor="middle" font-style="italic">(when Player stood)</text>
+
+    <!-- Decision pill -->
+    <rect x="412" y="30" width="196" height="28" rx="14" fill="#c9a84c"/>
+    <text x="510" y="48" font-family="Georgia,serif" font-size="8.5" fill="#1a1a1a" text-anchor="middle" font-weight="700">Banker's 2-card total?</text>
+
+    <!-- Stem down -->
+    <line x1="510" y1="58" x2="510" y2="65" stroke="#c9a84c" stroke-width="1.8"/>
+    <!-- Horizontal branch -->
+    <line x1="392" y1="65" x2="628" y2="65" stroke="#c9a84c" stroke-width="1.5"/>
+    <!-- Three legs down -->
+    <line x1="392" y1="65" x2="392" y2="84" stroke="#c9a84c" stroke-width="1.5"/>
+    <line x1="510" y1="65" x2="510" y2="84" stroke="#c9a84c" stroke-width="1.5"/>
+    <line x1="628" y1="65" x2="628" y2="84" stroke="#c9a84c" stroke-width="1.5"/>
+
+    <!-- Branch labels -->
+    <text x="392" y="79" font-family="Georgia,serif" font-size="7.5" fill="#666" text-anchor="middle" font-style="italic">0 – 5</text>
+    <text x="510" y="79" font-family="Georgia,serif" font-size="7.5" fill="#666" text-anchor="middle" font-style="italic">6 – 7</text>
+    <text x="628" y="79" font-family="Georgia,serif" font-size="7.5" fill="#666" text-anchor="middle" font-style="italic">8 – 9</text>
+
+    <!-- End nodes -->
+    <rect x="348" y="88" width="88" height="38" rx="5" fill="#1e5ac8"/>
+    <text x="392" y="111" font-family="Georgia,serif" font-size="8"   fill="white" text-anchor="middle" font-weight="700">Draw</text>
+
+    <rect x="466" y="88" width="88" height="38" rx="5" fill="#1a6b3a"/>
+    <text x="510" y="111" font-family="Georgia,serif" font-size="8"   fill="white" text-anchor="middle" font-weight="700">Stand</text>
+
+    <rect x="584" y="88" width="88" height="38" rx="5" fill="#1a6b3a"/>
+    <text x="628" y="103" font-family="Georgia,serif" font-size="7.5" fill="white" text-anchor="middle" font-weight="700">NATURAL</text>
+    <text x="628" y="116" font-family="Georgia,serif" font-size="7"   fill="rgba(255,255,255,.85)" text-anchor="middle">Stand</text>
+
+    <!-- ===== LEGEND ===== -->
+    <rect x="168" y="145" width="12" height="12" rx="3" fill="#1a6b3a"/>
+    <text x="184" y="155" font-family="Georgia,serif" font-size="7.5" fill="#666">Stand / Natural</text>
+    <rect x="300" y="145" width="12" height="12" rx="3" fill="#cc2222"/>
+    <text x="316" y="155" font-family="Georgia,serif" font-size="7.5" fill="#666">Player draws</text>
+    <rect x="415" y="145" width="12" height="12" rx="3" fill="#1e5ac8"/>
+    <text x="431" y="155" font-family="Georgia,serif" font-size="7.5" fill="#666">Banker draws</text>
+  </svg>
+
+  <div class="page-footer"><span>Road to Nine</span><span>BaccaratGladiator.com</span><span>5</span></div>
+</div>
+
+<!-- CHAPTER 4: ROAD MAPS -->
+<div class="page inner" style="position:relative;">
+  <div class="section-head"><span class="num">4</span>Reading the Road Maps</div>
+
+  <p>Every baccarat table displays five live tracking grids — the roads. They record the history of every hand in the current shoe. They do not predict the future. Baccarat has no memory; each hand is statistically independent. But the roads have a purpose that pure math misses: they are a shared language, a social tool, and a psychological anchor that experienced players use to pace their betting.</p>
+
+  <p><strong>Key:</strong> <span style="color:#1e5ac8;">● Blue = Banker</span> &nbsp;·&nbsp; <span style="color:#cc2222;">● Red = Player</span> &nbsp;·&nbsp; <span style="color:#1a8c3c;">● Green = Tie</span></p>
+
+  <h3>① Big Road — The Primary Scorecard</h3>
+  <p>Results fill columns left to right. A new column begins when the result changes. Ties mark the current cell without starting a new column. Tall columns = streaks. Short alternating columns = chops.</p>
+  <div class="dot-row"><div class="dot B"></div><div class="dot B"></div><div class="dot B"></div>&nbsp;<div class="dot P"></div><div class="dot P"></div>&nbsp;<div class="dot B"></div>&nbsp;<div class="dot P"></div><div class="dot P"></div><div class="dot P"></div><div class="dot P"></div></div>
+
+  <h3>② Bead Plate — Raw Results Grid</h3>
+  <p>A simple grid filling top-to-bottom, left-to-right. No grouping by streak. 36 results visible at once. Use it for a fast count of how many Banker vs. Player wins are in the current shoe.</p>
+
+  <h3>③④⑤ Derived Roads — Big Eye Boy, Small Road, Cockroach</h3>
+  <p>All three are derived from the Big Road by comparing columns at different offsets. They show whether the shoe is <strong style="color:#1e5ac8;">regular</strong> (repeating pattern, blue entries) or <strong style="color:#cc2222;">choppy</strong> (irregular, red entries).</p>
+  <table>
+    <thead><tr><th>Road</th><th>Starts from</th><th>What it shows</th></tr></thead>
+    <tbody>
+      <tr><td class="bold">Big Eye Boy</td><td>2nd column</td><td>Short-term regularity</td></tr>
+      <tr><td class="bold">Small Road</td><td>3rd column</td><td>Medium-term pattern</td></tr>
+      <tr><td class="bold">Cockroach</td><td>4th column</td><td>Long-range pattern</td></tr>
+    </tbody>
+  </table>
+
+  <h3>What Experienced Players Actually Do With the Roads</h3>
+  <p>Veteran players don't use the roads to predict outcomes — they use them to find <em>entry points</em> that feel consistent with recent patterns, and to manage session pacing. A player who sees a strong Banker streak on the Big Road might wait until it breaks before switching sides. A player watching all three derived roads flash red simultaneously might reduce bet size until the shoe settles.</p>
+  <p>None of this changes the house edge. But it creates a decision framework that prevents impulsive large bets in the middle of a chaotic shoe — and that discipline, over many sessions, is worth more than any system.</p>
+
+  <div class="callout"><strong>Road Prediction:</strong> Baccarat Gladiator shows what the next entry on each derived road would be for both a Banker and Player outcome — before cards are dealt. Tap 🔮 Predict to see live projections.</div>
+
+  <div class="page-footer"><span>Road to Nine</span><span>BaccaratGladiator.com</span><span>6</span></div>
+</div>
+
+<!-- CHAPTER 5: THE MYTH OF SYSTEMS -->
+<div class="page inner" style="position:relative;">
+  <div class="section-head"><span class="num">5</span>The Myth of Systems</div>
+
+  <p>Every casino in the world has a gift shop. Almost every gift shop sells a baccarat system booklet. Some casinos hand them out for free. That should tell you something.</p>
+  <p>No betting system can change the house edge. This is not an opinion — it is a mathematical certainty. The house edge is built into each individual hand. It does not matter what you bet on the previous hand, how many consecutive Bankers have appeared, or what the roads are showing. The next hand's probability is identical to every hand that came before it.</p>
+
+  <div class="pull-quote">"A system that tells you to double your bet after a loss doesn't change the odds — it changes how much of your money the house takes on bad runs."</div>
+
+  <h3>The Gambler's Fallacy</h3>
+  <p>After six consecutive Banker wins, many players feel that Player is "due." This feeling is universal, deeply human, and completely wrong. A coin does not remember its last flip. A shoe does not compensate for previous results. The probability of the next hand is approximately 45.8% Banker, 44.6% Player, 9.6% Tie — every single hand, regardless of what came before.</p>
+
+  <h3>System Comparison</h3>
+  <div class="bsys"><div class="bsys-name">Flat Bet <span class="risk-low">[Lowest Risk]</span></div><div class="bsys-seq">Same bet every hand. Slowest variance. Best for long sessions.</div></div>
+  <div class="bsys"><div class="bsys-name">Paroli <span class="risk-low">[Low Risk]</span></div><div class="bsys-seq">Win: double (max 3×), then reset. You only risk original stake on streaks.</div></div>
+  <div class="bsys"><div class="bsys-name">1-3-2-6 <span class="risk-med">[Medium Risk]</span></div><div class="bsys-seq">Bet 1→3→2→6 units, reset on any loss. Captures 4-win runs without deep exposure.</div></div>
+  <div class="bsys"><div class="bsys-name">Fibonacci <span class="risk-med">[Medium Risk]</span></div><div class="bsys-seq">1·1·2·3·5·8·13·21… Step back 2 on win. Slower escalation than Martingale.</div></div>
+  <div class="bsys"><div class="bsys-name">Martingale <span class="risk-high">[High Risk]</span></div><div class="bsys-seq">Double after every loss. Reset on win. 6 losses = 64× your base unit. Table limits make recovery impossible.</div></div>
+
+  <h3>What Systems Are Actually Good For</h3>
+  <p>Systems create structure. A player with a plan bets more consistently, chases less, and leaves the table on schedule. Flat betting or Paroli on Banker — with a fixed stop-loss and win goal — is not a winning strategy. But it is a <em>losing less badly</em> strategy, and over a lifetime of sessions, that gap compounds.</p>
+
+  <div class="callout green-callout"><strong>The one honest edge:</strong> Banker at 1.06% is genuinely the best bet at the table. Betting Banker flat every hand — no system, no switching — minimises expected losses more reliably than any other approach.</div>
+
+  <div class="page-footer"><span>Road to Nine</span><span>BaccaratGladiator.com</span><span>7</span></div>
+</div>
+
+<!-- CHAPTER 6: BANKROLL & SESSION MANAGEMENT -->
+<div class="page inner" style="position:relative;">
+  <div class="section-head"><span class="num">6</span>Bankroll &amp; Session Management</div>
+
+  <p>Baccarat's house edge is so small that how you manage your money matters more than almost any other decision you make at the table. A player who bets Banker every hand but manages sessions poorly will lose more than a player who occasionally makes suboptimal bets but leaves on schedule.</p>
+
+  <h3>How Much to Bring</h3>
+  <p>A standard rule: bring at least <strong>50× the table minimum</strong> as your session bankroll. At a $25 minimum table, that's $1,250. This gives you enough runway to weather normal variance without being forced out by a short losing run.</p>
+  <table>
+    <thead><tr><th>Table Minimum</th><th>Recommended Session Bankroll</th><th>Expected Loss (1hr, Banker only)</th></tr></thead>
+    <tbody>
+      <tr><td>$10</td><td>$500</td><td>~$6 – $12</td></tr>
+      <tr><td>$25</td><td>$1,250</td><td>~$15 – $30</td></tr>
+      <tr><td>$100</td><td>$5,000</td><td>~$60 – $120</td></tr>
+      <tr><td>$500</td><td>$25,000</td><td>~$300 – $600</td></tr>
+    </tbody>
+  </table>
+
+  <h3>The Four Session Rules</h3>
+  <table>
+    <thead><tr><th>Rule</th><th>Threshold</th><th>Why It Works</th></tr></thead>
+    <tbody>
+      <tr><td class="bold">Stop-loss</td><td>Lose 40% of session bankroll → leave</td><td>Prevents catastrophic single-session losses</td></tr>
+      <tr><td class="bold">Win goal</td><td>Up 30–50% → pocket the profit, play with winnings only</td><td>Locks in wins; you can't leave a winner a loser</td></tr>
+      <tr><td class="bold">Time limit</td><td>Set a hard end time before you sit down</td><td>Removes the "just one more hand" trap</td></tr>
+      <tr><td class="bold">Bet sizing</td><td>Single bet ≤ 2–5% of session bankroll</td><td>Prevents one hand from deciding the session</td></tr>
+    </tbody>
+  </table>
+
+  <h3>The Kelly Criterion — Simplified</h3>
+  <p>The Kelly Criterion is a bankroll formula used by professional gamblers and investors. In a negative-edge game like baccarat, it technically says bet zero. But adapted for recreational play, the insight is: <strong>bet a small, fixed fraction of your total bankroll</strong>, never a fixed dollar amount.</p>
+  <p>At $10,000 total bankroll, 1% per bet = $100. After losing $2,000, 1% = $80. This naturally reduces bet size during downswings and scales up during winning periods, extending your playing time and reducing ruin risk.</p>
+
+  <div class="callout red-callout"><strong>The cardinal sin:</strong> Increasing bet size to "win back" losses. Every hand is independent. A larger bet after a loss does not improve your odds — it only means you lose more on the next loss.</div>
+
+  <div class="page-footer"><span>Road to Nine</span><span>BaccaratGladiator.com</span><span>8</span></div>
+</div>
+
+<!-- CHAPTER 7: THE MENTAL GAME -->
+<div class="page inner" style="position:relative;">
+  <div class="section-head"><span class="num">7</span>The Mental Game</div>
+
+  <p>The casino is engineered for your psychological disadvantage. No clocks. No windows. Oxygen-rich air, free drinks, comfortable chairs, and a layout designed to make the exit feel far away. You don't need to beat the house edge to have a profitable session — you need to beat your own psychology first.</p>
+
+  <h3>Tilt</h3>
+  <p>Borrowed from poker, "tilt" describes the state where emotional frustration causes irrational betting. In baccarat, it typically looks like: a streak of losses → frustrated increase in bet size → more losses → maximum bet placed on Tie "to get it back." The Tie bet has a 14.36% house edge. Tilt doesn't create that bet; it removes the self-control that would otherwise prevent it.</p>
+  <div class="callout red-callout"><strong>Tilt signal:</strong> If you've increased your bet size because you're losing, you are on tilt. Stand up, walk away from the table, and do not return for at least 20 minutes.</div>
+
+  <h3>Loss Aversion</h3>
+  <p>Behavioural economists have found that losses feel roughly twice as painful as equivalent gains feel pleasurable. Losing $100 hurts more than winning $100 feels good. At the baccarat table, this creates a dangerous asymmetry: players take on more risk to avoid locking in a loss than they would to secure an equivalent gain. The stop-loss rule in Chapter 6 exists specifically to override this instinct.</p>
+
+  <h3>The Gambler's Fallacy in Practice</h3>
+  <p>After seven consecutive Banker wins, the most common bet in the room is Player. The logic: "it has to switch eventually." The reality: the shoe has no memory. The probability of the 8th hand being Banker is the same as the first. If anything, a long Banker streak slightly increases the probability of another Banker win, because the composition of remaining cards in the shoe is marginally Banker-favourable — but this effect is tiny and not actionable.</p>
+
+  <h3>Rules for the Mental Game</h3>
+  <table>
+    <thead><tr><th>Situation</th><th>Rule</th></tr></thead>
+    <tbody>
+      <tr><td>Down 40% of session bankroll</td><td class="bold">Leave. No exceptions.</td></tr>
+      <tr><td>Up significantly — feel invincible</td><td class="bold">Pocket 50% of winnings. Play with the rest.</td></tr>
+      <tr><td>Considering a Tie bet</td><td class="bold">Ask yourself if you're chasing. You probably are.</td></tr>
+      <tr><td>Considering a larger-than-normal bet</td><td class="bold">Why? If the answer involves recent losses, don't.</td></tr>
+      <tr><td>Feeling unlucky, frustrated, or angry</td><td class="bold">Leave now. Emotion and baccarat do not mix.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Urban Myths at the Table</h3>
+  <p>Every baccarat room has its folklore. These beliefs are passed between players as if they were strategy. None of them are true — but understanding why they feel true is part of mastering the mental game.</p>
+  <table>
+    <thead><tr><th>The Myth</th><th>What Players Believe</th><th>The Reality</th></tr></thead>
+    <tbody>
+      <tr><td class="bold">"Seven never wins"</td><td>A hand totaling 7 is cursed and loses more than it should</td><td>A total of 7 is the second-best hand in baccarat. It stands and wins against anything below it. No card value is cursed.</td></tr>
+      <tr><td class="bold">"New dealer means a tie"</td><td>When a fresh dealer rotates in, a Tie hand follows shortly</td><td>Dealer rotations happen on a fixed schedule with no connection to shoe outcomes. Coincidences are remembered; the 97% of rotations without a tie are forgotten.</td></tr>
+      <tr><td class="bold">"Touch the cards gently — squeeze hard if you need it"</td><td>How you bend the cards affects what they reveal</td><td>The cards are already printed. Squeezing slowly is theater, not influence. The outcome is fixed the moment the shoe was loaded.</td></tr>
+      <tr><td class="bold">"A cold table turns hot"</td><td>After many Player losses, Banker must be due</td><td>There is no "due." A shoe that has produced ten Banker wins in a row is no more likely to produce a Player win than at the start. The shoe has no memory.</td></tr>
+      <tr><td class="bold">"Bet against the winner"</td><td>If one side keeps winning, switch to the other</td><td>Known as the "fade the winner" strategy. Has no mathematical basis. Banker and Player do not take turns; streaks end randomly.</td></tr>
+      <tr><td class="bold">"A lucky player at the table changes the shoe"</td><td>Someone on a hot streak is "carrying energy" that affects everyone</td><td>Each hand is dealt from a fixed shoe. Another player's wins have no effect on your cards or outcomes. This belief survives because it is more comfortable than randomness.</td></tr>
+      <tr><td class="bold">"The roadmap predicts the next hand"</td><td>Patterns visible in the Big Road forecast what comes next</td><td>Roads record history — they do not predict futures. Professional players use them to pace their betting and manage psychology, not to "read" the shoe.</td></tr>
+      <tr><td class="bold">"Never bet against a natural"</td><td>After a natural 8 or 9, keep betting the same side</td><td>A natural ends the hand; the next hand is dealt fresh. There is no carry-over effect. The advice confuses ritual with probability.</td></tr>
+    </tbody>
+  </table>
+  <div class="callout"><strong>Why myths persist:</strong> The brain is a pattern-recognition machine optimised for survival, not probability. It finds patterns in randomness, remembers confirming events, and forgets disconfirming ones. The baccarat table is randomness with just enough pattern to be convincing. Knowing this does not make the myths disappear — but it makes them easier to ignore.</div>
+
+  <div class="pull-quote">"The most dangerous player at any baccarat table is the one who is almost even."</div>
+
+  <div class="page-footer"><span>Road to Nine</span><span>BaccaratGladiator.com</span><span>9</span></div>
+</div>
+
+<!-- CHAPTER 8: THE CASINO EXPERIENCE -->
+<div class="page inner" style="position:relative;">
+  <div class="section-head"><span class="num">8</span>The Casino Experience</div>
+
+  <h3>Table Types</h3>
+  <table>
+    <thead><tr><th>Format</th><th>Players</th><th>Minimums</th><th>Feel</th></tr></thead>
+    <tbody>
+      <tr><td class="bold">Full-size</td><td>Up to 14</td><td>$25–$500+</td><td>Formal, slower, squeeze allowed</td></tr>
+      <tr><td class="bold">Midi</td><td>Up to 9</td><td>$15–$100</td><td>More social, moderate pace</td></tr>
+      <tr><td class="bold">Mini</td><td>Up to 7</td><td>$5–$25</td><td>Fastest, no squeeze, dealer-only cards</td></tr>
+      <tr><td class="bold">VIP/High Limit</td><td>Private room</td><td>$500–$100,000+</td><td>Curtained rooms, personal hosts, full squeeze</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Table Selection</h3>
+  <p>Not all baccarat tables are equal. Look for: low commission (some tables offer 4% instead of 5%), fewer decks (6-deck shoes have marginally better odds than 8-deck), and EZ Baccarat if Dragon 7 appeals to you. Avoid tables with unusually high minimum bets relative to your bankroll.</p>
+
+  <h3>Macau vs. Las Vegas vs. Online</h3>
+  <div class="two-col">
+    <div><p><strong>Macau:</strong> The world capital of baccarat. Minimum bets start at HK$100 (~$13) but VIP rooms require junket introductions. The squeeze is standard. Roads are shown on every table. 85%+ of revenue from baccarat.</p></div>
+    <div><p><strong>Las Vegas:</strong> Baccarat rooms typically open late afternoon. Strip casinos have $25–$50 minimums, downtown as low as $5. Less ritual than Macau but the game is identical. High-limit rooms available at most major properties.</p></div>
+  </div>
+  <p><strong>Online:</strong> Live dealer baccarat streams from real casino studios with real cards and real dealers. The squeeze is shown on camera. Minimums as low as $1. No tips, no travel, no dress code — but also no room energy.</p>
+
+  <h3>VIP Culture &amp; Table Reservations</h3>
+  <p>VIP baccarat rooms operate differently from the main floor. In Macau, access typically requires a junket agent — a third party who fronts credit and arranges the introduction to the casino host. In Las Vegas, high-limit rooms are more accessible: a casino host can reserve a private table for you with a phone call, usually requiring proof of credit line or a recent play history. At top Strip properties, VIP players can <strong>reserve a specific table</strong> in advance — contact the casino's baccarat host (not the general concierge) at least 24 hours ahead for the best results.</p>
+
+  <h3>The Comp System — What Casinos Give VIPs</h3>
+  <p>Casinos track every bet you make. That data feeds into a <strong>comp (complimentary) system</strong> that rewards consistent, high-volume play with free goods and services. In baccarat, where bet sizes tend to be larger than other table games, the comps can be substantial.</p>
+  <p><strong>How comps are calculated:</strong> The standard formula is <em>Average Bet × Hands Per Hour × Hours Played × House Edge × Comp Rate</em>. Most casinos return 25–40% of your theoretical loss as comps. A player betting $500/hand for 3 hours at 60 hands/hour generates roughly $950 in theoretical loss — worth $238–$380 in comps.</p>
+  <table>
+    <thead><tr><th>Play Level</th><th>Typical Comps</th></tr></thead>
+    <tbody>
+      <tr><td class="bold">Casual ($25–$100/hand)</td><td>Buffet, show tickets, discounted room rate</td></tr>
+      <tr><td class="bold">Midlevel ($100–$500/hand)</td><td>Free room, meals at signature restaurants, concert tickets, spa credits</td></tr>
+      <tr><td class="bold">High Roller ($500–$5,000/hand)</td><td>Full suite comps, airfare reimbursement, private dining, limo transfer, golf rounds</td></tr>
+      <tr><td class="bold">Whale ($5,000+/hand)</td><td>Private jet, penthouse suite, personal host on call, international travel packages</td></tr>
+    </tbody>
+  </table>
+  <p><strong>How to access comps:</strong> Always play with a player's card inserted (or give your name to the pit boss before sitting). In Las Vegas, ask to be introduced to the <em>casino host</em> — not the host desk, but the host assigned to table games. In Macau, junket agents negotiate comp packages in advance, often including round-trip flights, hotel, and a credit line.</p>
+  <div class="callout"><strong>Practical tip:</strong> Ask your casino host about airfare reimbursement after any significant session. Many Vegas properties will reimburse flights for players averaging $300+/hand, even on first visits — but only if you ask.</div>
+
+  <h3>Free Hands</h3>
+  <p>Most casinos allow players to <strong>"sit out" a hand without betting</strong> — this is sometimes called a <em>free hand</em> or <em>open hand</em>. You watch the outcome without risking chips. This is useful when you want to observe a new shoe, track road patterns before committing, or take a mental break without leaving the table.</p>
+  <p>Free hands are typically limited: <strong>regular players can usually sit out up to 10 consecutive hands</strong> before a floor supervisor asks them to bet or vacate the seat. <strong>VIP and high-limit players often receive 20 or more free hands</strong> as a courtesy — especially in Macau, where long sessions and patient road-reading are part of the culture. If you plan to use free hands frequently, establish a relationship with the dealer or floor host first.</p>
+
+  <h3>Tipping</h3>
+  <p>In live baccarat, tipping the dealer is customary but not mandatory. Standard practice: tip after a natural 8 or 9, after winning a side bet, or at the end of a winning session. A common method is to place a "for the dealer" bet alongside your own — if it wins, so does the tip. In Macau, tipping is less common than in Las Vegas.</p>
+
+  <h3>Etiquette at a Glance</h3>
+  <div class="two-col">
+    <div><p>✅ Place bets before "no more bets"<br>✅ Handle squeeze cards with one hand<br>✅ Keep chips stacked in your zone<br>✅ Know table minimum before sitting</p></div>
+    <div><p>❌ Touch bet after "no more bets"<br>❌ Violently crease or damage cards<br>❌ Give unsolicited advice to others<br>❌ Blame the dealer for losing hands</p></div>
+  </div>
+
+  <div class="page-footer"><span>Road to Nine</span><span>BaccaratGladiator.com</span><span>10</span></div>
+</div>
+
+<!-- CHAPTER 9: FAMOUS HANDS & CHARACTERS -->
+<div class="page inner" style="position:relative;">
+  <div class="section-head"><span class="num">9</span>Famous Hands &amp; Characters</div>
+
+  <div class="story-box">
+    <div class="story-box-title">Phil Ivey — The $20 Million Edge-Sorting Case</div>
+    <p>Phil Ivey, widely considered the greatest poker player alive, won approximately $20 million across two baccarat sessions — $9.6M at Borgata Atlantic City and £7.7M at Crockfords London — using a technique called <strong>edge sorting</strong>. By identifying microscopic manufacturing defects in the card backs, Ivey's partner could identify high-value cards before they were turned over, giving him a significant advantage.</p>
+    <p>The casinos refused to pay. Ivey sued. The case went to the UK Supreme Court and the US District Court for New Jersey. Both courts ruled against Ivey — not because edge sorting was illegal per se, but because Ivey's method constituted cheating under casino contract law. The $20 million was never collected.</p>
+    <p>The case permanently changed how casinos handle card rotation and shuffling procedures worldwide.</p>
+  </div>
+
+  <div class="story-box">
+    <div class="story-box-title">Akio Kashiwagi — The $10 Million Session</div>
+    <p>In the early 1990s, Japanese real estate mogul Akio Kashiwagi flew to Trump Plaza in Atlantic City for a prearranged baccarat session. The terms were extraordinary: $250,000 per hand, play until either Kashiwagi won $12 million or lost $12 million. He lost $10 million over six days before leaving to attend to business.</p>
+    <p>Kashiwagi returned to finish the session later that year. He was murdered at his home in Japan before the rematch could take place. The case was never solved. The $10 million loss stood.</p>
+  </div>
+
+  <div class="story-box">
+    <div class="story-box-title">Kerry Packer — The Biggest Baccarat Player in History</div>
+    <p>Australian media billionaire Kerry Packer was the most feared high-roller casino operators ever encountered. His standard baccarat bet was $200,000–$250,000 per hand. He once reportedly won $20 million in a single Las Vegas session, and lost $28 million in another. MGM Grand is said to have lost $33 million to him over multiple visits in the 1990s.</p>
+    <p>Packer was also known for extraordinary generosity — tipping dealers $100,000+ after winning sessions and once allegedly paying off the mortgages of an entire casino staff shift after a big win.</p>
+  </div>
+
+  <div class="story-box">
+    <div class="story-box-title">James Bond — Baccarat's Most Famous Player</div>
+    <p>Ian Fleming's James Bond played Chemin de Fer — the original French variant — in the 1953 novel <em>Casino Royale</em> and in films from <em>Dr. No</em> (1962) through <em>GoldenEye</em> (1995). The game's aristocratic associations and fixed-odds structure suited Bond's character perfectly: elegant, controlled, fatalistic.</p>
+    <p>In the 2006 film reboot of <em>Casino Royale</em>, baccarat was replaced by Texas Hold'em poker — a reflection of the poker boom of the early 2000s, not a change in Bond's character. For 40 years, Bond at the baccarat table was one of cinema's defining images of cool under pressure.</p>
+  </div>
+
+  <div class="page-footer"><span>Road to Nine</span><span>BaccaratGladiator.com</span><span>11</span></div>
+</div>
+
+<!-- CHAPTER 10: VARIANTS -->
+<div class="page inner" style="position:relative;">
+  <div class="section-head"><span class="num">10</span>Variants</div>
+
+  <h3>Punto Banco — The Standard Game</h3>
+  <p>What this guide describes throughout — and what you find in virtually every casino in North America, Macau, and online. The casino banks every hand. Fixed rules apply automatically. Players have no decisions beyond where to bet. Also called North American Baccarat.</p>
+
+  <h3>Chemin de Fer — The Original</h3>
+  <p>The French variant brought to Charles VIII's court in the 1490s and immortalised by James Bond. Players take turns acting as Banker, betting against each other rather than the house. The Banker has limited discretion over whether to draw a third card. The casino takes a commission from the Banker's winnings.</p>
+  <p>Chemin de Fer has almost entirely disappeared from American casinos but remains available in some European establishments, particularly in France. It plays faster and feels more intimate — six to eight players around an oval table, passing the shoe.</p>
+
+  <h3>Baccarat Banque</h3>
+  <p>A variation of Chemin de Fer where one player acts as Banker for an entire session rather than passing the role. The Banker position goes to the player willing to stake the largest amount. Two Player hands are dealt simultaneously against the single Banker hand. Rare outside France and Monte Carlo.</p>
+
+  <h3>Mini-Baccarat</h3>
+  <p>The same Punto Banco rules at a blackjack-sized table. The dealer handles all cards — no squeeze, no player-touched cards. Faster pace (up to 200 hands per hour versus 40–60 at a full table). Lower minimums. The mathematically identical game in a more casual setting.</p>
+
+  <h3>EZ Baccarat</h3>
+  <p>Removes the 5% Banker commission. Instead, a Banker three-card total of 7 pushes. Dragon 7 (40:1) and Panda 8 (25:1) side bets are available. The no-commission structure appeals to casual players who find commission confusing. House edge is comparable to standard baccarat.</p>
+  <p style="font-size:9pt;color:#666;font-style:italic;">Note: At some casinos — particularly in Macau and Singapore — Dragon 7 and Panda 8 are marketed under alternate names. Dragon 7 is sometimes called <strong>Sun</strong> (representing daytime, yang energy) and Panda 8 is sometimes called <strong>Moon</strong> (representing nighttime, yin energy). The bets are mathematically identical regardless of name.</p>
+
+  <h3>Tiger Baccarat</h3>
+  <p>A commission-free variant with three additional side bets targeting Banker totals of 6: Big Tiger (3-card 6, 50:1), Small Tiger (2-card 6, 22:1), and Tiger Tie (both hands score 6, 35–45:1). Gaining popularity in Las Vegas and online.</p>
+
+  <h3>Golden Frog — Palms &amp; Red Rock Casino Side Bets</h3>
+  <p>The <strong>Golden Frog</strong> is a proprietary set of baccarat side bets first introduced at the Palms Casino in Las Vegas (also available at Red Rock Resort). Each bet wins when one hand's total beats another's by a specific combination of card count and value. Documented by Wizard of Odds in August 2019.</p>
+  <table>
+    <thead><tr><th>Bet</th><th>Trigger</th><th>Payout</th><th>House Edge</th></tr></thead>
+    <tbody>
+      <tr><td class="bold">Any 8 Beats Any 6</td><td>Either hand totals 8 and defeats a hand totaling 6</td><td class="good">25:1</td><td class="bad">21.79%</td></tr>
+      <tr><td class="bold">2-Card 9 Beats 2-Card 7</td><td>A two-card 9 hand defeats a two-card 7 hand</td><td class="good">50:1</td><td>8.10%</td></tr>
+      <tr><td class="bold">3-Card 9 Beats 3-Card 1</td><td>A three-card 9 hand defeats a three-card 1 hand</td><td class="good">150:1</td><td class="bad">13.87%</td></tr>
+      <tr><td class="bold">3-Card 9 Beats 3-Card 7</td><td>A three-card 9 hand defeats a three-card 7 hand</td><td class="good">200:1</td><td class="bad">11.89%</td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:0.85em;color:#888;font-style:italic;">Source: Wizard of Odds. Golden Frog bets are available at select casinos only. Always confirm current availability and payouts at your table.</p>
+  <p>The lesson: baccarat side bet menus vary significantly by property. High-traffic casinos frequently experiment with proprietary bets to differentiate their tables. The Golden Frog's "9 beats 7" bets have more reasonable edges (~8–12%) than flashier longshots, but still far exceed the 1.06% Banker house edge. Always check the posted odds sheet before sitting down.</p>
+
+  <h3>Online &amp; Speed Baccarat</h3>
+  <p>Live dealer online baccarat streams from professional studios with multiple camera angles and real cards. Speed Baccarat plays a hand in approximately 27 seconds rather than the standard 48 seconds — cards are dealt face-up with no squeeze. Some studios offer Squeeze Baccarat as a premium stream where the dealer performs the squeeze on camera for all players.</p>
+
+  <div class="callout green-callout">
+    <strong>Practice all variants free:</strong> Baccarat Gladiator includes Standard, EZ, and Tiger modes — all free, no account required. Practice the third-card rules, read the roads, and try the theatrical card squeeze at <strong>BaccaratGladiator.com</strong>
+  </div>
+
+  <p style="margin-top:.25in;font-size:8.5pt;color:#888;text-align:center;line-height:1.6;">
+    Baccarat Gladiator is for entertainment purposes. Please gamble responsibly.<br>
+    If you or someone you know has a gambling problem, call <strong>1-800-522-4700</strong> (National Problem Gambling Helpline).
+  </p>
+
+  <div class="page-footer"><span>Road to Nine</span><span>BaccaratGladiator.com</span><span>12</span></div>
+</div>
+
+
+<!-- CHAPTER 11: TOP 10 MISTAKES -->
+<div class="page inner" style="position:relative;">
+  <div class="section-head"><span class="num">11</span>Top 10 Mistakes</div>
+  <p style="margin-bottom:.15in;font-style:italic;color:#666;">These errors cost players more money than any strategy could recover. Most happen in the first hour. All are preventable.</p>
+
+  <div class="mistake-item">
+    <div class="mistake-num">1</div>
+    <div class="mistake-body"><strong>Betting the Tie</strong><p>A 14.36% house edge. You lose nearly $1 for every $7 wagered over time. The 8:1 payout feels exciting — it is not a bet, it is a tax on impatience. Banker or Player. Every time.</p></div>
+  </div>
+  <div class="mistake-item">
+    <div class="mistake-num">2</div>
+    <div class="mistake-body"><strong>Sitting Down Without a Stop-Loss</strong><p>Decide your maximum loss before your first chip hits the felt. Write it down. Without a number, emotion sets it — and emotion always sets it too high. The standard is 40% of your session buy-in.</p></div>
+  </div>
+  <div class="mistake-item">
+    <div class="mistake-num">3</div>
+    <div class="mistake-body"><strong>Chasing Losses with Larger Bets</strong><p>Doubling up after a loss is not strategy — it is tilt with math attached. The shoe does not owe you a win. Each hand is independent. Larger bets after losses simply mean larger losses faster.</p></div>
+  </div>
+  <div class="mistake-item">
+    <div class="mistake-num">4</div>
+    <div class="mistake-body"><strong>Playing Without a Player's Card</strong><p>Every hand you play without inserting your player's card is a hand the casino does not credit you for. No card = no comps, no host relationship, no airfare reimbursement. Takes 30 seconds to enrol.</p></div>
+  </div>
+  <div class="mistake-item">
+    <div class="mistake-num">5</div>
+    <div class="mistake-body"><strong>Buying In Short</strong><p>Sitting at a $25 table with $200 (8 units) gives variance almost no room. A normal losing streak of 5–6 hands forces you off the table. Minimum 20 units — ideally 50. At a $25 table, that is $500–$1,250.</p></div>
+  </div>
+  <div class="mistake-item">
+    <div class="mistake-num">6</div>
+    <div class="mistake-body"><strong>Mini-Baccarat When Emotional</strong><p>200 hands per hour means 200 opportunities for bad decisions. A single hour of emotional betting at mini-baccarat can do the damage of a full day at a regular table. Slow down or sit out.</p></div>
+  </div>
+  <div class="mistake-item">
+    <div class="mistake-num">7</div>
+    <div class="mistake-body"><strong>Switching Bets Randomly</strong><p>Jumping between Banker and Player with no system means you will often switch right before a streak. Flat-betting Banker for an entire shoe is boring. It also produces the best long-run results available.</p></div>
+  </div>
+  <div class="mistake-item">
+    <div class="mistake-num">8</div>
+    <div class="mistake-body"><strong>Not Confirming the Commission Rate</strong><p>Most tables charge 5% on Banker wins. Some charge 4%. On $1,000 in Banker wins, that is a $10 difference per session — real money over time. Ask before you sit. "Is this table 5% commission?"</p></div>
+  </div>
+  <div class="mistake-item">
+    <div class="mistake-num">9</div>
+    <div class="mistake-body"><strong>Playing Through Fatigue or Alcohol</strong><p>Baccarat requires very little skill — but it requires discipline. Fatigue and alcohol remove discipline. The casino provides free drinks for a reason. After two drinks, your session is over whether you leave or not.</p></div>
+  </div>
+  <div class="mistake-item">
+    <div class="mistake-num">10</div>
+    <div class="mistake-body"><strong>Leaving a Winning Session Without Pocketing Profit</strong><p>If you are up 30%, pocket half. Put those chips in your pocket — not your rail. They cannot be bet if they are in your pocket. Leaving even counts as leaving up. Most players who do not pocket profits leave down.</p></div>
+  </div>
+
+  <div class="qr-callout">
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=72x72&data=https%3A%2F%2Fbaccaratgladiator.com&color=0d3320&bgcolor=fdf9f0" width="72" height="72" alt="BaccaratGladiator.com QR Code">
+    <div class="qr-callout-text"><strong>Practice makes permanent — play free at BaccaratGladiator.com</strong><span>All variants · No account · Real road maps · Card squeeze included</span></div>
+  </div>
+
+  <div class="page-footer"><span>Road to Nine</span><span>BaccaratGladiator.com</span><span>13</span></div>
+</div>
+
+<!-- CHAPTER 12: THE ONE-HOUR GAME PLAN -->
+<div class="page inner" style="position:relative;">
+  <div class="section-head"><span class="num">12</span>The One-Hour Game Plan</div>
+  <p>You have <strong>60 minutes</strong>, <strong>$500</strong>, and a $25 minimum table. Here is the complete plan — before you sit, while you play, and when to leave.</p>
+
+  <div class="callout green-callout" style="margin:.1in 0 .15in;"><strong>The goal is not to win. The goal is to make good decisions for 60 minutes.</strong> If you make good decisions, the results take care of themselves over time. This session will not make or break you. Your habits will.</div>
+
+  <h3>Before You Sit — 5 Minutes</h3>
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-time">Step 1 — Set Your Numbers</div>
+      <div class="tl-action">Stop-loss: <strong>$200</strong> (8 units). Win goal: <strong>$200</strong> (8 units). Write both on your phone. These are not suggestions — they are commitments.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-time">Step 2 — Buy In and Insert Your Card</div>
+      <div class="tl-action">Exchange $500 for chips. Insert your player's card before your first bet. If you don't have one, ask the floor supervisor now — it takes 90 seconds.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-time">Step 3 — Watch One Full Round</div>
+      <div class="tl-action">Don't bet the first hand. Observe. Check the road. Is this a choppy shoe or a streaky shoe? Note the commission rate on the felt.</div>
+    </div>
+  </div>
+
+  <h3>Minutes 0–20 — Establish Your Baseline</h3>
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-time">Bet: Flat $25 Banker</div>
+      <div class="tl-action">No variation. No side bets. No Tie. Just Banker, $25, every hand. You are gathering information about this shoe's character, not trying to win.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-time">Decision point at $200 loss</div>
+      <div class="tl-action">Stop. Leave. Do not renegotiate with yourself. This is the stop-loss you set before emotion was involved. Trust that version of yourself.</div>
+    </div>
+  </div>
+
+  <h3>Minutes 20–40 — Adjust if Warranted</h3>
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-time">If up 4+ units: Pocket $100</div>
+      <div class="tl-action">Take four chips off the table and put them in your pocket. You now cannot lose them. Continue flat betting with the remainder.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-time">If the shoe shows a streak of 3+</div>
+      <div class="tl-action">You may follow the streak (bet Banker on a Banker streak, Player on a Player streak) but do not increase bet size. Pattern following is a pacing tool, not an edge.</div>
+    </div>
+  </div>
+
+  <h3>Minutes 40–60 — Play Out or Leave Early</h3>
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-time">If you've hit your win goal ($200 up)</div>
+      <div class="tl-action">Leave now. You've had a good session. There is no rule that says you must stay 60 minutes. The casino will be open tomorrow.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-time">At exactly 60 minutes</div>
+      <div class="tl-action">Rack up regardless. Don't negotiate for "just a few more hands." Your session is over. Count your chips, tip the dealer if it was a winning session, and walk.</div>
+    </div>
+  </div>
+
+  <div class="two-col" style="margin-top:.1in;">
+    <div class="callout green-callout"><strong>Best case:</strong> You leave with $700. You made $200 and had an enjoyable hour. You can do this again.</div>
+    <div class="callout red-callout"><strong>Worst case:</strong> You leave with $300. You lost $200. Your stop-loss worked exactly as designed. Try again tomorrow.</div>
+  </div>
+
+  <div class="page-footer"><span>Road to Nine</span><span>BaccaratGladiator.com</span><span>14</span></div>
+</div>
+
+<!-- CHAPTER 13: WORLD BACCARAT — FOUR CITIES -->
+<div class="page inner" style="position:relative;">
+  <div class="section-head"><span class="num">13</span>World Baccarat — Four Cities</div>
+
+  <div class="country-header"><div class="country-flag">🇲🇴</div><div><div class="country-name">Macau, China</div><div class="country-tagline">The world capital of baccarat — 85% of casino revenue comes from this single game</div></div></div>
+  <p>Macau handles more baccarat volume than every other gambling destination combined. The game is played differently here: the squeeze is standard at full-size tables, roads are displayed on every table, and player rituals are respected rather than rushed. Main floor minimums start at HK$200–$500 (~$25–$65). VIP rooms — accessible via junket agents — have minimums of HK$100,000+.</p>
+  <p><strong>Casinos to know:</strong> The Venetian Macao (largest gaming floor in the world), Grand Lisboa (historic, known for high-limit rooms), Galaxy Macau (premium suites, high-roller focus), MGM Cotai (modern, popular with mainland Chinese players). The Cotai Strip is Macau's answer to the Las Vegas Strip — all modern integrated resorts. The Macau Peninsula has older, more traditional rooms.</p>
+  <p><strong>Practical tips:</strong> Chips are in HKD. Tips are less common than in Vegas but appreciated at VIP rooms. Bring your passport — it is required for entry. Table opening hours are 24/7. Avoid Golden Week (Chinese national holidays) if you want a seat.</p>
+
+  <div class="country-header" style="margin-top:.18in;"><div class="country-flag">🇺🇸</div><div><div class="country-name">Las Vegas, Nevada</div><div class="country-tagline">The most accessible high-limit baccarat outside Asia</div></div></div>
+  <p>Baccarat rooms on the Las Vegas Strip typically open at 2–4pm and run until the early hours. The Bellagio, Aria, and MGM Grand have the busiest baccarat rooms. Minimums range from $25 at off-Strip properties to $500 at high-limit rooms. EZ Baccarat is increasingly common. The comp system is most aggressive here — American casino hosts actively court regular baccarat players.</p>
+  <p><strong>Best for beginners:</strong> Downtown casinos (Fremont Street) offer $5–$10 mini-baccarat. Learn the game here before moving to the Strip.</p>
+
+  <div class="country-header" style="margin-top:.15in;"><div class="country-flag">🇸🇬</div><div><div class="country-name">Singapore</div><div class="country-tagline">Asia's second-largest gaming market — sophisticated, strict, and surprisingly accessible</div></div></div>
+  <p>Singapore has two integrated resorts: <strong>Marina Bay Sands</strong> (iconic, three-tower hotel above the casino) and <strong>Resorts World Sentosa</strong> (Universal Studios on-site). Both offer full baccarat with squeeze. Entry requires a SGD$150 (~$110) levy for Singapore residents — tourists enter free with passport. Dress codes are enforced in VIP rooms. The clientele skews more international than Macau. Table minimums start at SGD$25.</p>
+
+  <div class="country-header" style="margin-top:.15in;"><div class="country-flag">🇲🇨</div><div><div class="country-name">Monte Carlo, Monaco</div><div class="country-tagline">Where baccarat was a game of aristocracy — and still feels like it</div></div></div>
+  <p>The <strong>Casino de Monte-Carlo</strong>, formally opened in 1865, is the spiritual home of European baccarat. Chemin de Fer — the variant James Bond played — is still available in the private rooms (Salles Privées). Dress code strictly enforced: jacket required after 8pm. Table minimums in the Salles Privées begin at €500. The main floor offers Punto Banco at €10 minimums. The experience is unlike any other casino on earth — chandeliers, Belle Époque architecture, and croupiers in bow ties.</p>
+  <p><strong>Practical tips:</strong> Passport required. No photos inside. The €10 tables are available to any visitor. The Salles Privées require a membership form and €10 annual fee.</p>
+
+  <div class="qr-callout">
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=72x72&data=https%3A%2F%2Fbaccaratgladiator.com&color=0d3320&bgcolor=fdf9f0" width="72" height="72" alt="BaccaratGladiator.com QR Code">
+    <div class="qr-callout-text"><strong>Practice before you travel — free at BaccaratGladiator.com</strong><span>Same rules as Macau, Las Vegas, Singapore, and Monte Carlo · No account needed</span></div>
+  </div>
+
+  <div class="page-footer"><span>Road to Nine</span><span>BaccaratGladiator.com</span><span>15</span></div>
+</div>
+
+<!-- CHAPTER 14: WHAT TO SAY -->
+<div class="page inner" style="position:relative;">
+  <div class="section-head"><span class="num">14</span>What to Say</div>
+  <p>Casino floors have their own social protocols. Knowing the right words gets you better service, more comps, and a smoother experience. These are real scripts — use them verbatim.</p>
+
+  <div class="script-box">
+    <div class="script-situation">Joining a table mid-shoe</div>
+    <div class="script-line">Is it alright if I join? Are you near the end of the shoe?</div>
+    <div class="script-note">Always ask before sitting mid-shoe. Some players consider it bad luck. The dealer will tell you where they are.</div>
+  </div>
+
+  <div class="script-box">
+    <div class="script-situation">Asking about the commission rate</div>
+    <div class="script-line">What's the commission on this table — five percent?</div>
+    <div class="script-note">Some tables offer 4%. Worth knowing before your first bet. Dealers appreciate that you know to ask.</div>
+  </div>
+
+  <div class="script-box">
+    <div class="script-situation">Requesting a free hand (sitting out)</div>
+    <div class="script-line">I'd like to watch a few hands if that's okay — no bet this round.</div>
+    <div class="script-note">Polite and sufficient. If the floor supervisor pushes back after 8–10 hands, bet a minimum or take a short break.</div>
+  </div>
+
+  <div class="script-box">
+    <div class="script-situation">Asking for a fresh shoe</div>
+    <div class="script-line">How far into the shoe are we? Any chance of starting fresh soon?</div>
+    <div class="script-note">You cannot demand a new shoe. This question signals you're experienced and gives the dealer an opening to tell you the cut card position.</div>
+  </div>
+
+  <div class="script-box">
+    <div class="script-situation">Getting introduced to a casino host</div>
+    <div class="script-line">I've been playing here a few times — is there a table games host I could be introduced to?</div>
+    <div class="script-note">Ask the floor supervisor, not the dealer. Do this after a session of $100+/hand play. Hosts are the gateway to comps, reserved tables, and VIP access.</div>
+  </div>
+
+  <div class="script-box">
+    <div class="script-situation">Requesting comp consideration</div>
+    <div class="script-line">I've been playing Banker at [amount] for about [hours] today. I'd love to get dinner comped if that's possible — who should I speak to?</div>
+    <div class="script-note">Be specific about your play level. Vague requests get denied. Specific ones get reviewed. The host needs a number to justify the comp.</div>
+  </div>
+
+  <div class="script-box">
+    <div class="script-situation">Reserving a VIP table in advance</div>
+    <div class="script-line">I'd like to reserve a baccarat table for [date and time]. I'm usually playing at [bet size]. Can you connect me with someone in the baccarat room?</div>
+    <div class="script-note">Call the casino's main number and ask for the table games host — not the concierge. Do this at least 24 hours ahead. Mention your average bet size upfront.</div>
+  </div>
+
+  <div class="script-box">
+    <div class="script-situation">Asking about airfare reimbursement</div>
+    <div class="script-line">I flew in from [city] for this trip. Is airfare reimbursement something I'd qualify for based on my play?</div>
+    <div class="script-note">Ask at the end of a session, not before. Many Vegas properties reimburse $300–$600 in flights for players averaging $300+/hand. Only ask once — the host will note it.</div>
+  </div>
+
+  <div class="script-box">
+    <div class="script-situation">Tipping the dealer</div>
+    <div class="script-line">[Place a chip beside your bet] — that one's for you if it wins.</div>
+    <div class="script-note">The standard method. The dealer bets alongside you. If you win, they win. No words needed beyond this gesture, but dealers will remember you warmly.</div>
+  </div>
+
+  <div class="page-footer"><span>Road to Nine</span><span>BaccaratGladiator.com</span><span>16</span></div>
+</div>
+
+<!-- APPENDIX A: GLOSSARY -->
+<div class="page inner" style="position:relative;">
+  <div class="section-head"><span class="num" style="color:#888;">A</span>Glossary</div>
+  <p style="margin-bottom:.15in;font-size:9.5pt;color:#666;font-style:italic;">Every term you will encounter at a baccarat table, defined plainly.</p>
+
+  <div class="gloss-grid">
+    <div class="gloss-entry"><div class="gloss-term">Baccarat</div><div class="gloss-def">Italian/French for "zero." Also the name of the game — named after the worst possible hand value.</div></div>
+    <div class="gloss-entry"><div class="gloss-term">Banco</div><div class="gloss-def">Spanish/Italian for "bank" or "banker." The Banker hand. In Chemin de Fer, shouted to match the full bank.</div></div>
+    <div class="gloss-entry"><div class="gloss-term">Bead Plate</div><div class="gloss-def">The first road map. A simple grid of raw results filling top-to-bottom, left-to-right. No streak grouping.</div></div>
+    <div class="gloss-entry"><div class="gloss-term">Big Eye Boy</div><div class="gloss-def">Third road map, derived from the Big Road with a one-column offset. Blue = regular shoe, red = choppy.</div></div>
+    <div class="gloss-entry"><div class="gloss-term">Big Road</div><div class="gloss-def">The primary scorecard. Results fill in columns that break each time the outcome changes.</div></div>
+    <div class="gloss-entry"><div class="gloss-term">Burn Cards</div><div class="gloss-def">Cards discarded face-down at the start of a new shoe or after a shuffle. Not in play.</div></div>
+    <div class="gloss-entry"><div class="gloss-term">Chemin de Fer</div><div class="gloss-def">French variant where players take turns banking. James Bond's game. Rare outside Europe.</div></div>
+    <div class="gloss-entry"><div class="gloss-term">Chop</div><div class="gloss-def">A shoe pattern where Banker and Player alternate frequently, producing short columns on the Big Road.</div></div>
+    <div class="gloss-entry"><div class="gloss-term">Cockroach Road</div><div class="gloss-def">Fifth road map, derived from the Big Road with a three-column offset. Also called Small Road Pig.</div></div>
+    <div class="gloss-entry"><div class="gloss-term">Commission</div><div class="gloss-def">The 5% fee charged on Banker wins (4% at some tables). What keeps Banker slightly below even money.</div></div>
+    <div class="gloss-entry"><div class="gloss-term">Cut Card</div><div class="gloss-def">A plastic card inserted into the shoe to mark the end of playable cards, triggering a reshuffle.</div></div>
+    <div class="gloss-entry"><div class="gloss-term">Dragon 7</div><div class="gloss-def">EZ Baccarat side bet paying 40:1 when Banker wins with a three-card total of 7.</div></div>
+    <div class="gloss-entry"><div class="gloss-term">Edge Sorting</div><div class="gloss-def">Technique of identifying cards by manufacturing defects in their backs. Used by Phil Ivey. Now illegal under casino contract law.</div></div>
+    <div class="gloss-entry"><div class="gloss-term">EZ Baccarat</div><div class="gloss-def">Commission-free variant where a Banker three-card 7 pushes instead of the casino charging 5%.</div></div>
+    <div class="gloss-entry"><div class="gloss-term">Junket</div><div class="gloss-def">An organised VIP trip to a casino, typically arranged by a third-party agent who fronts credit and earns a commission from player losses.</div></div>
+    <div class="gloss-entry"><div class="gloss-term">Mini-Baccarat</div><div class="gloss-def">Baccarat at a blackjack-sized table. Dealer handles all cards. Up to 200 hands/hour. No squeeze.</div></div>
+    <div class="gloss-entry"><div class="gloss-term">Monkey</div><div class="gloss-def">Casino slang for any 10-value card (10, J, Q, K). "Monkey!" is shouted when a player needs a face card.</div></div>
+    <div class="gloss-entry"><div class="gloss-term">Natural</div><div class="gloss-def">A two-card total of 8 or 9. The hand ends immediately — no third card is drawn for either side.</div></div>
+    <div class="gloss-entry"><div class="gloss-term">Panda 8</div><div class="gloss-def">EZ Baccarat side bet paying 25:1 when Player wins with a three-card total of 8.</div></div>
+    <div class="gloss-entry"><div class="gloss-term">Player</div><div class="gloss-def">One of the two hands dealt each round. You are not the Player — you bet on whether Player or Banker wins.</div></div>
+    <div class="gloss-entry"><div class="gloss-term">Punto</div><div class="gloss-def">Spanish/Italian for "point" or "player." The Player hand. Punto Banco = Player/Banker = the standard game.</div></div>
+    <div class="gloss-entry"><div class="gloss-term">Push</div><div class="gloss-def">A tie result. Banker and Player bets are returned. Neither wins nor loses. Also called a standoff.</div></div>
+    <div class="gloss-entry"><div class="gloss-term">Road</div><div class="gloss-def">One of five tracking grids displayed at every table showing the history of results in the current shoe.</div></div>
+    <div class="gloss-entry"><div class="gloss-term">Shoe</div><div class="gloss-def">The device holding 6 or 8 shuffled decks. Also the term for a single full dealing cycle until the cut card appears.</div></div>
+    <div class="gloss-entry"><div class="gloss-term">Small Road</div><div class="gloss-def">Fourth road map, derived from the Big Road with a two-column offset.</div></div>
+    <div class="gloss-entry"><div class="gloss-term">Squeeze</div><div class="gloss-def">The ritual slow reveal of cards — bending corners, peeling edges — performed by the player holding the highest bet. A theatrical tradition unique to baccarat.</div></div>
+    <div class="gloss-entry"><div class="gloss-term">Streak</div><div class="gloss-def">A run of consecutive same-result hands. Visible as a tall column on the Big Road.</div></div>
+    <div class="gloss-entry"><div class="gloss-term">Third Card</div><div class="gloss-def">An optional drawn card governed by fixed rules. Neither Player nor Banker has any choice in the matter.</div></div>
+    <div class="gloss-entry"><div class="gloss-term">Tiger Tie</div><div class="gloss-def">Side bet paying 35–45:1 (varies by casino) when both Player and Banker finish with a total of 6.</div></div>
+  </div>
+
+  <div class="page-footer"><span>Road to Nine</span><span>BaccaratGladiator.com</span><span>17</span></div>
+</div>
+
+<!-- APPENDIX B: QUICK REFERENCE CARD -->
+<div class="page qrc-page" style="position:relative;">
+  <div style="text-align:center;margin-bottom:.2in;">
+    <div style="font-family:'Cinzel',serif;font-size:8pt;letter-spacing:.25em;color:#aaa;text-transform:uppercase;margin-bottom:6px;">Appendix B</div>
+    <div style="font-family:'Cinzel',serif;font-size:9.5pt;color:#666;letter-spacing:.08em;">Cut out · fold · bring to the casino</div>
+  </div>
+
+  <div class="qrc-card">
+    <div class="qrc-title">ROAD TO NINE</div>
+    <div class="qrc-subtitle">Quick Reference Card · BaccaratGladiator.com</div>
+    <div class="qrc-divider"></div>
+
+    <div class="qrc-section">
+      <div class="qrc-section-title">House Edge</div>
+      <table class="qrc-table">
+        <tr><th>Bet</th><th>Payout</th><th>Edge</th><th>Verdict</th></tr>
+        <tr><td>Banker</td><td>0.95:1</td><td class="g">1.06%</td><td class="g">Best bet</td></tr>
+        <tr><td>Player</td><td>1:1</td><td class="g">1.24%</td><td class="g">Excellent</td></tr>
+        <tr><td>Dragon 7</td><td>40:1</td><td>7.6%</td><td>Side bet only</td></tr>
+        <tr><td>Pairs</td><td>11:1</td><td>10.36%</td><td>Occasional</td></tr>
+        <tr><td>Tie</td><td>8:1</td><td class="r">14.36%</td><td class="r">Avoid</td></tr>
+      </table>
+    </div>
+
+    <div class="qrc-divider"></div>
+
+    <div class="qrc-section">
+      <div class="qrc-section-title">Player Third-Card Rule</div>
+      <table class="qrc-table">
+        <tr><th>Player total</th><th>Action</th></tr>
+        <tr><td>8 or 9</td><td class="g">Natural — stand (hand ends)</td></tr>
+        <tr><td>6 or 7</td><td>Stand</td></tr>
+        <tr><td>0 – 5</td><td>Draw third card</td></tr>
+      </table>
+    </div>
+
+    <div class="qrc-divider"></div>
+
+    <div class="qrc-section">
+      <div class="qrc-section-title">Banker Third-Card Rule (simplified)</div>
+      <table class="qrc-table">
+        <tr><th>Banker total</th><th>If Player stood</th><th>If Player drew</th></tr>
+        <tr><td>8 – 9</td><td class="g">Natural — stand</td><td class="g">Natural — stand</td></tr>
+        <tr><td>7</td><td>Stand</td><td>Stand</td></tr>
+        <tr><td>6</td><td>Stand</td><td>Draw if Player drew 6 or 7</td></tr>
+        <tr><td>5</td><td>Draw</td><td>Draw if Player drew 4–7</td></tr>
+        <tr><td>4</td><td>Draw</td><td>Draw if Player drew 2–7</td></tr>
+        <tr><td>3</td><td>Draw</td><td>Draw unless Player drew 8</td></tr>
+        <tr><td>0 – 2</td><td>Draw</td><td>Always draw</td></tr>
+      </table>
+    </div>
+
+    <div class="qrc-divider"></div>
+
+    <div class="qrc-section">
+      <div class="qrc-section-title">Session Bankroll Formula</div>
+      <table class="qrc-table">
+        <tr><th>Table min</th><th>Bring (50 units)</th><th>Stop-loss (40%)</th><th>Win goal</th></tr>
+        <tr><td>$10</td><td>$500</td><td>$200</td><td>$200</td></tr>
+        <tr><td>$25</td><td>$1,250</td><td>$500</td><td>$500</td></tr>
+        <tr><td>$50</td><td>$2,500</td><td>$1,000</td><td>$1,000</td></tr>
+        <tr><td>$100</td><td>$5,000</td><td>$2,000</td><td>$2,000</td></tr>
+      </table>
+    </div>
+
+    <div class="qrc-divider"></div>
+
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.12in;">
+      <div>
+        <div style="font-family:'Cinzel',serif;font-size:7pt;color:var(--felt);letter-spacing:.1em;margin-bottom:4px;">REMEMBER</div>
+        <div style="font-size:8pt;color:#444;line-height:1.6;">Bet Banker · Set stop-loss before sitting<br>Pocket profits · Never bet the Tie</div>
+      </div>
+      <div style="text-align:center;">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=https%3A%2F%2Fbaccaratgladiator.com&color=0d3320&bgcolor=ffffff" width="80" height="80" alt="QR Code" style="border-radius:4px;border:1px solid #ddd;">
+        <div style="font-size:6pt;color:#999;margin-top:3px;letter-spacing:.08em;">PRACTICE FREE</div>
+      </div>
+    </div>
+
+    <div class="qrc-cut-note">✂ — cut here — ✂</div>
+  </div>
+
+  <div class="page-footer"><span>Road to Nine</span><span>BaccaratGladiator.com</span><span>18</span></div>
+</div>
+
+<!-- APPENDIX C: SESSION LOG -->
+<div class="page inner" style="position:relative;">
+  <div class="section-head"><span class="num" style="color:#888;">C</span>Session Log</div>
+  <p style="margin-bottom:.1in;font-size:9.5pt;color:#666;">Print this page. Track every session. Patterns in your own data reveal more than any system.</p>
+
+  <div class="log-meta">
+    <div class="log-field"><div class="log-field-label">Date</div></div>
+    <div class="log-field"><div class="log-field-label">Casino &amp; Table</div></div>
+    <div class="log-field"><div class="log-field-label">Variant (Std / EZ / Tiger)</div></div>
+    <div class="log-field"><div class="log-field-label">Buy-in $</div></div>
+    <div class="log-field"><div class="log-field-label">Table Minimum $</div></div>
+    <div class="log-field"><div class="log-field-label">Session Duration</div></div>
+  </div>
+
+  <div class="log-grid" style="margin:.1in 0;">
+    <div class="log-cell log-head">#</div>
+    <div class="log-cell log-head">Bet $</div>
+    <div class="log-cell log-head">On</div>
+    <div class="log-cell log-head">Result</div>
+    <div class="log-cell log-head">Running Total</div>
+    <div class="log-cell log-head">Road Note</div>
+    <div class="log-cell log-head">Emotion</div>
+    <!-- 20 rows -->
+    <div class="log-cell">1</div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div>
+    <div class="log-cell">2</div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div>
+    <div class="log-cell">3</div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div>
+    <div class="log-cell">4</div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div>
+    <div class="log-cell">5</div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div>
+    <div class="log-cell">6</div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div>
+    <div class="log-cell">7</div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div>
+    <div class="log-cell">8</div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div>
+    <div class="log-cell">9</div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div>
+    <div class="log-cell">10</div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div>
+    <div class="log-cell">11</div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div>
+    <div class="log-cell">12</div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div>
+    <div class="log-cell">13</div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div>
+    <div class="log-cell">14</div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div>
+    <div class="log-cell">15</div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div>
+    <div class="log-cell">16</div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div>
+    <div class="log-cell">17</div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div>
+    <div class="log-cell">18</div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div>
+    <div class="log-cell">19</div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div>
+    <div class="log-cell">20</div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div><div class="log-cell"></div>
+  </div>
+
+  <div class="log-meta" style="margin-top:.12in;">
+    <div class="log-field"><div class="log-field-label">Cash Out $</div></div>
+    <div class="log-field"><div class="log-field-label">Net Result $</div></div>
+    <div class="log-field"><div class="log-field-label">Left on own terms? Y / N</div></div>
+  </div>
+
+  <div style="margin-top:.15in;padding:.12in;border:1px solid #d0c8b0;border-radius:6px;background:#fdf9f0;">
+    <div style="font-family:'Cinzel',serif;font-size:7.5pt;color:var(--felt);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;">Session Notes</div>
+    <div style="height:.6in;border-bottom:1px solid #d0c8b0;margin-bottom:.1in;"></div>
+    <div style="height:.3in;"></div>
+  </div>
+
+  <p style="margin-top:.15in;font-size:8pt;color:#999;text-align:center;font-style:italic;">Print multiple copies at BaccaratGladiator.com · Practice free · No account required</p>
+
+  <div class="page-footer"><span>Road to Nine</span><span>BaccaratGladiator.com</span><span>19</span></div>
+</div>
+
+<!-- SOURCES & NOTES -->
+<div class="page inner" style="position:relative;">
+  <div class="section-head"><span class="num" style="color:#888;">D</span>Sources &amp; Notes</div>
+  <p style="font-size:9pt;color:#666;font-style:italic;margin-bottom:.15in;">All mathematical figures are sourced from peer-reviewed gambling analysis. All historical facts are sourced from primary news coverage, court documents, or verified encyclopaedic sources. Readers are encouraged to verify any figure independently.</p>
+
+  <h3>Mathematics &amp; House Edge</h3>
+  <div class="gloss-grid" style="margin-bottom:.15in;">
+    <div class="gloss-entry"><div class="gloss-term">Banker 1.06% / Player 1.24% / Tie 14.36%</div><div class="gloss-def">Shackleford, M. <em>Baccarat — House Edge</em>. Wizard of Odds. wizardofodds.com/games/baccarat/basics/ (8-deck, standard 5% commission)</div></div>
+    <div class="gloss-entry"><div class="gloss-term">Pairs 10.36% (at 11:1)</div><div class="gloss-def">Shackleford, M. <em>Baccarat Side Bets — Pair</em>. Wizard of Odds. wizardofodds.com/games/baccarat/side-bets/pair/</div></div>
+    <div class="gloss-entry"><div class="gloss-term">Dragon 7: 7.61% house edge</div><div class="gloss-def">Shackleford, M. <em>EZ Baccarat</em>. Wizard of Odds. wizardofodds.com/games/ez-baccarat/</div></div>
+    <div class="gloss-entry"><div class="gloss-term">Panda 8: 10.19% house edge</div><div class="gloss-def">Shackleford, M. <em>EZ Baccarat</em>. Wizard of Odds. wizardofodds.com/games/ez-baccarat/</div></div>
+    <div class="gloss-entry"><div class="gloss-term">Big Tiger ~15.25% / Small Tiger ~14.33% (at 50:1 / 22:1)</div><div class="gloss-def">Shackleford, M. <em>Tiger No-Commission Baccarat</em>. Wizard of Odds. wizardofodds.com/games/tiger-no-commission-baccarat/</div></div>
+    <div class="gloss-entry"><div class="gloss-term">Golden Frog side bets (Palms Casino)</div><div class="gloss-def">Shackleford, M. <em>Golden Frog Baccarat Side Bets</em>. Wizard of Odds. Documented at Palms Casino, Las Vegas, 8 Aug 2019. wizardofodds.com/games/baccarat/side-bets/golden-frog/</div></div>
+    <div class="gloss-entry"><div class="gloss-term">Speed Baccarat: 27 seconds per hand</div><div class="gloss-def">Evolution Gaming. <em>Speed Baccarat</em> product documentation. evolution.com</div></div>
+    <div class="gloss-entry"><div class="gloss-term">Mini-baccarat: up to 200 hands/hour</div><div class="gloss-def">Tangam Systems. <em>Table Game Pace Data</em>. Also corroborated by American Casino Guide, multiple editions.</div></div>
+  </div>
+
+  <h3>Phil Ivey — Edge Sorting</h3>
+  <p style="font-size:9pt;color:#444;line-height:1.6;">Borgata Hotel Casino &amp; Spa v. Ivey, 134 F.Supp.3d 741 (D.N.J. 2015). — US ruling against Ivey. &nbsp;|&nbsp; <em>Ivey v. Genting Casinos (UK) Ltd t/a Crockfords</em> [2017] UKSC 67. — UK Supreme Court unanimous ruling, October 2017. &nbsp;|&nbsp; Settlement between Borgata and Ivey confirmed July 2020 (PokerNews, 22 Jul 2020). Win amounts ($9.6M Borgata, £7.7M Crockfords) confirmed in both court filings.</p>
+
+  <h3>Akio Kashiwagi</h3>
+  <p style="font-size:9pt;color:#444;line-height:1.6;">Trump, D. with Schwartz, T. <em>The Art of the Deal</em> (1987) — describes Kashiwagi sessions. &nbsp;|&nbsp; Strom, S. "Gambler's Slaying Casts Light on World of Casinos." <em>New York Times</em>, 14 Jan 1992. — confirms murder, $10M loss over six days, $250,000/hand. &nbsp;|&nbsp; Wikipedia: <em>Akio Kashiwagi</em>.</p>
+
+  <h3>Kerry Packer</h3>
+  <p style="font-size:9pt;color:#444;line-height:1.6;">Colless, M. <em>The Rise and Rise of Kerry Packer</em> (2006). &nbsp;|&nbsp; Wynn, S. — quoted in multiple interviews describing Packer's bets. &nbsp;|&nbsp; Wikipedia: <em>Kerry Packer</em>. MGM Grand winnings reported as A$33 million (approx. USD $24–26 million at 1995 exchange rates) across multiple sessions.</p>
+
+  <h3>James Bond &amp; Casino Royale</h3>
+  <p style="font-size:9pt;color:#444;line-height:1.6;">Fleming, I. <em>Casino Royale</em>. Jonathan Cape, London, 13 April 1953. — novel features Chemin de Fer. &nbsp;|&nbsp; <em>Dr. No</em> (1962), dir. Terence Young. — Bond plays baccarat in opening scene. &nbsp;|&nbsp; <em>GoldenEye</em> (1995), dir. Martin Campbell. — last Bond film with baccarat scene. &nbsp;|&nbsp; <em>Casino Royale</em> (2006), dir. Martin Campbell. — baccarat replaced by Texas Hold'em.</p>
+
+  <h3>Industry Statistics</h3>
+  <p style="font-size:9pt;color:#444;line-height:1.6;">Macau 85% baccarat revenue: Gaming Inspection and Coordination Bureau (DICJ), Macau SAR. Annual gross gaming revenue reports, 2022–2024. &nbsp;|&nbsp; Baccarat as #1 table game by revenue: Nevada Gaming Control Board, <em>Nevada Gaming Abstract</em>, annual editions. American Gaming Association <em>State of the States</em> reports, 2022–2024.</p>
+
+  <h3>Casino de Monte-Carlo</h3>
+  <p style="font-size:9pt;color:#444;line-height:1.6;">Société des Bains de Mer (SBM). Official history. sbm.mc. &nbsp;|&nbsp; Wikipedia: <em>Monte Carlo Casino</em>. Permanent building completed 1863; formally opened under François Blanc's direction, 1865. Current main building (Charles Garnier wing) added 1878–1910.</p>
+
+  <h3>History of Baccarat</h3>
+  <p style="font-size:9pt;color:#444;line-height:1.6;">Schwartz, D. G. <em>Roll the Bones: The History of Gambling</em> (2006). Gotham Books. — documents baccarat's Italian origins and introduction to France circa 1495. &nbsp;|&nbsp; Wikipedia: <em>Baccarat (card game)</em>.</p>
+
+  <div class="callout" style="margin-top:.2in;"><strong>A note on house edge figures:</strong> All edges in this book assume standard 8-deck Punto Banco with 5% Banker commission unless noted. Edges vary slightly with 6-deck shoes and with 4% commission tables. For any side bet, always confirm current payouts at your specific table — casinos may adjust payouts without notice, which directly affects the house edge.</div>
+
+  <div class="page-footer"><span>Road to Nine</span><span>BaccaratGladiator.com</span><span>20</span></div>
+</div>
+
+</body>
+</html>

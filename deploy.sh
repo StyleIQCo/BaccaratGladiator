@@ -24,8 +24,9 @@ echo "════════════════════════�
 upload() {
   local src="$1"
   local dst="$2"
+  local ct="${3:-text/html}"
   echo "  Uploading $src → s3://$BUCKET/$dst"
-  aws s3 cp "$src" "s3://$BUCKET/$dst" --content-type "text/html"
+  aws s3 cp "$src" "s3://$BUCKET/$dst" --content-type "$ct"
   INVALIDATE_PATHS+=("/$dst")
 }
 
@@ -36,11 +37,18 @@ case "$TARGET" in
   baccarat)
     upload "baccarat-scoreboard.html" "baccarat-scoreboard.html"
     ;;
+  guide)
+    upload "baccarat-guide.html"  "baccarat-guide.html"
+    upload "guide-download.html"  "guide-download.html"
+    upload "Road_to_Nine.pdf"     "downloads/road-to-nine.pdf" "application/pdf"
+    ;;
   all|*)
     upload "index.html"                "index.html"
     upload "baccarat-scoreboard.html"  "baccarat-scoreboard.html"
     upload "bj/index.html"             "bj/index.html"
-    # Add more files here as needed
+    upload "baccarat-guide.html"       "baccarat-guide.html"
+    upload "guide-download.html"       "guide-download.html"
+    upload "Road_to_Nine.pdf"          "downloads/road-to-nine.pdf" "application/pdf"
     ;;
 esac
 

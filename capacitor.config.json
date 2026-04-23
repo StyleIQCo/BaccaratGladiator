@@ -1,0 +1,30 @@
+{
+  "appId": "app.baccaratgladiator",
+  "appName": "Baccarat Gladiator",
+  "webDir": "www",
+  "server": {
+    "url": "https://www.baccaratgladiator.com/baccarat-scoreboard.html",
+    "cleartext": false
+  },
+  "ios": {
+    "contentInset": "always",
+    "backgroundColor": "#080e08",
+    "preferredContentMode": "mobile"
+  },
+  "android": {
+    "backgroundColor": "#080e08",
+    "allowMixedContent": false
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 2000,
+      "backgroundColor": "#080e08",
+      "androidSplashResourceName": "splash",
+      "showSpinner": false
+    },
+    "StatusBar": {
+      "style": "Dark",
+      "backgroundColor": "#0d1f10"
+    }
+  }
+}

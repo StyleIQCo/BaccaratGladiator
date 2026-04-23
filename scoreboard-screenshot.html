@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #0d2b18;
+    display: inline-block;
+    padding: 14px;
+    font-family: Arial, sans-serif;
+  }
+  .board {
+    background: #0a1f10;
+    border: 2px solid #2a5a30;
+    border-radius: 8px;
+    overflow: hidden;
+    width: 680px;
+  }
+  .board-title {
+    background: #071510;
+    color: #c9a84c;
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    text-align: center;
+    padding: 5px;
+    border-bottom: 1px solid #2a5a30;
+    text-transform: uppercase;
+  }
+  .roads-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto auto;
+    gap: 1px;
+    background: #1a3a20;
+  }
+  .road {
+    background: #0d2b18;
+    padding: 6px 8px 8px;
+  }
+  .road-label {
+    font-size: 9px;
+    color: #8ab890;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  .road-grid {
+    display: grid;
+    gap: 1.5px;
+  }
+  .road-row {
+    display: flex;
+    gap: 1.5px;
+  }
+
+  /* Big Road */
+  .big-road .road-grid { grid-template-rows: repeat(6, 18px); }
+  .big-road .road-row { height: 18px; }
+
+  /* Bead Plate */
+  .bead-plate .road-grid { grid-template-rows: repeat(6, 18px); }
+  .bead-plate .road-row { height: 18px; }
+
+  /* Derived roads */
+  .derived .road-grid { grid-template-rows: repeat(3, 13px); }
+  .derived .road-row { height: 13px; }
+
+  .cell {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 8px; font-weight: bold; color: #fff;
+    flex-shrink: 0;
+    position: relative;
+  }
+  .cell-sm {
+    width: 13px; height: 13px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .cell.B {
+    background: radial-gradient(circle at 35% 35%, #4a7fd4, #1a4aaa);
+    border: 1.5px solid #6a9fe4;
+    box-shadow: inset 0 1px 2px rgba(255,255,255,0.25);
+  }
+  .cell.P {
+    background: radial-gradient(circle at 35% 35%, #e04444, #aa1a1a);
+    border: 1.5px solid #f06666;
+    box-shadow: inset 0 1px 2px rgba(255,255,255,0.25);
+  }
+  .cell.T {
+    background: radial-gradient(circle at 35% 35%, #3aaa5a, #1a7a3a);
+    border: 1.5px solid #5acc7a;
+    box-shadow: inset 0 1px 2px rgba(255,255,255,0.25);
+  }
+  .cell.empty { background: transparent; border: none; box-shadow: none; }
+
+  /* Tie slash on Big Road */
+  .cell.B.has-tie::after, .cell.P.has-tie::after {
+    content: '';
+    position: absolute;
+    width: 2px; height: 130%;
+    background: #3aaa5a;
+    transform: rotate(30deg);
+    border-radius: 1px;
+  }
+
+  /* Derived road cells */
+  .cell-sm.dB {
+    background: radial-gradient(circle at 35% 35%, #4a7fd4, #1a4aaa);
+    border: 1px solid #6a9fe4;
+  }
+  .cell-sm.dP {
+    background: radial-gradient(circle at 35% 35%, #e04444, #aa1a1a);
+    border: 1px solid #f06666;
+  }
+  .cell-sm.empty { background: transparent; border: none; }
+
+  /* Stats bar */
+  .stats-bar {
+    background: #071510;
+    border-top: 1px solid #1a3a20;
+    display: flex;
+    align-items: center;
+    gap: 0;
+  }
+  .stat {
+    flex: 1;
+    text-align: center;
+    padding: 6px 4px;
+    border-right: 1px solid #1a3a20;
+  }
+  .stat:last-child { border-right: none; }
+  .stat-val {
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 1;
+  }
+  .stat-lbl {
+    font-size: 8px;
+    color: #6a9a6a;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+  .stat-val.B { color: #5a8fe4; }
+  .stat-val.P { color: #f06666; }
+  .stat-val.T { color: #5acc7a; }
+  .stat-val.gold { color: #c9a84c; }
+</style>
+</head>
+<body>
+<div class="board">
+  <div class="board-title">🃏 &nbsp; Baccarat Gladiator &nbsp; — &nbsp; Live Scoreboard &nbsp; 🃏</div>
+
+  <div class="roads-grid">
+
+    <!-- BIG ROAD (spans full width) -->
+    <div class="road big-road" style="grid-column:1/3;">
+      <div class="road-label">① Big Road</div>
+      <div id="big-road-container"></div>
+    </div>
+
+    <!-- BEAD PLATE -->
+    <div class="road bead-plate">
+      <div class="road-label">② Bead Plate</div>
+      <div id="bead-container"></div>
+    </div>
+
+    <!-- BIG EYE BOY -->
+    <div class="road derived">
+      <div class="road-label">③ Big Eye Boy</div>
+      <div id="beb-container"></div>
+    </div>
+
+    <!-- SMALL ROAD -->
+    <div class="road derived">
+      <div class="road-label">④ Small Road</div>
+      <div id="sr-container"></div>
+    </div>
+
+    <!-- COCKROACH -->
+    <div class="road derived">
+      <div class="road-label">⑤ Cockroach Road</div>
+      <div id="cr-container"></div>
+    </div>
+
+  </div>
+
+  <div class="stats-bar" id="stats-bar"></div>
+</div>
+
+<script>
+// Realistic shoe sequence — a natural mix of streaks and chops
+const shoe = [
+  'B','B','B','P','B','P','P','B','B','B',
+  'P','P','B','P','B','B','P','T','B','B',
+  'P','P','P','B','B','P','B','P','P','B',
+  'B','B','B','B','P','P','B','P','T','B',
+  'P','B','B','P','P','P','B','B','P','B',
+  'P','P','B','P','B','B','B','P','B','P'
+];
+
+// ── BIG ROAD ─────────────────────────────────────────────────────
+function buildBigRoad(results) {
+  const COLS = 26, ROWS = 6;
+  const grid = Array.from({length: ROWS}, () => Array(COLS).fill(null));
+  let col = 0, row = 0, lastSide = null;
+
+  results.forEach(r => {
+    if (r === 'T') {
+      // Mark tie on current cell
+      if (lastSide && row > 0) {
+        const prev = grid[row-1][col] || (col > 0 ? grid[row-1][col] : null);
+        // find last non-null cell in current col
+        let trow = row - 1;
+        while (trow >= 0 && grid[trow][col] === null) trow--;
+        if (trow >= 0 && grid[trow][col]) grid[trow][col].tie = true;
+      }
+      return;
+    }
+    if (lastSide === null || r !== lastSide) {
+      if (lastSide !== null) { col++; if (col >= COLS) col = COLS - 1; }
+      row = 0;
+      lastSide = r;
+    } else {
+      row++;
+      if (row >= ROWS) { col++; row = ROWS - 1; if (col >= COLS) col = COLS - 1; }
+    }
+    if (!grid[row][col]) grid[row][col] = { side: r, tie: false };
+  });
+  return grid;
+}
+
+function renderBigRoad(grid) {
+  const COLS = 26, ROWS = 6;
+  const wrap = document.getElementById('big-road-container');
+  wrap.style.cssText = 'display:grid;gap:1.5px;';
+  for (let r = 0; r < ROWS; r++) {
+    const rowEl = document.createElement('div');
+    rowEl.style.cssText = 'display:flex;gap:1.5px;height:18px;';
+    for (let c = 0; c < COLS; c++) {
+      const cell = document.createElement('div');
+      const d = grid[r][c];
+      if (d) {
+        cell.className = 'cell ' + d.side + (d.tie ? ' has-tie' : '');
+      } else {
+        cell.className = 'cell empty';
+        cell.style.cssText = 'width:18px;height:18px;';
+      }
+      rowEl.appendChild(cell);
+    }
+    wrap.appendChild(rowEl);
+  }
+}
+
+// ── BEAD PLATE ─────────────────────────────────────────────────────
+function renderBeadPlate(results) {
+  const COLS = 12, ROWS = 6;
+  const wrap = document.getElementById('bead-container');
+  wrap.style.cssText = 'display:grid;gap:1.5px;';
+  for (let r = 0; r < ROWS; r++) {
+    const rowEl = document.createElement('div');
+    rowEl.style.cssText = 'display:flex;gap:1.5px;height:18px;';
+    for (let c = 0; c < COLS; c++) {
+      const idx = c * ROWS + r;
+      const cell = document.createElement('div');
+      if (idx < results.length) {
+        cell.className = 'cell ' + results[idx];
+      } else {
+        cell.className = 'cell empty';
+        cell.style.cssText = 'width:18px;height:18px;';
+      }
+      rowEl.appendChild(cell);
+    }
+    wrap.appendChild(rowEl);
+  }
+}
+
+// ── DERIVED ROADS ─────────────────────────────────────────────────
+function buildDerived(bigGrid, skipCols) {
+  const COLS = 26, ROWS = 6;
+  const out = [];
+  for (let c = skipCols; c < COLS; c++) {
+    for (let r = 0; r < ROWS; r++) {
+      const cur = bigGrid[r][c];
+      if (!cur) break;
+      const refC = c - skipCols;
+      const refR = r - 1;
+      let isRed = false;
+      if (r === 0) {
+        // Compare column lengths
+        const curLen = colLen(bigGrid, c);
+        const refLen = colLen(bigGrid, refC);
+        isRed = curLen !== refLen;
+      } else {
+        const above = refR >= 0 ? bigGrid[refR][refC] : null;
+        isRed = !above;
+      }
+      out.push(isRed ? 'dP' : 'dB');
+    }
+  }
+  return out;
+}
+
+function colLen(grid, c) {
+  let len = 0;
+  for (let r = 0; r < 6; r++) { if (grid[r][c]) len++; else break; }
+  return len;
+}
+
+function renderDerived(containerId, data) {
+  const COLS = 16, ROWS = 3;
+  const wrap = document.getElementById(containerId);
+  wrap.style.cssText = 'display:grid;gap:1.5px;';
+  for (let r = 0; r < ROWS; r++) {
+    const rowEl = document.createElement('div');
+    rowEl.style.cssText = 'display:flex;gap:1.5px;height:13px;';
+    for (let c = 0; c < COLS; c++) {
+      const idx = c * ROWS + r;
+      const cell = document.createElement('div');
+      if (idx < data.length) {
+        cell.className = 'cell-sm ' + data[idx];
+      } else {
+        cell.className = 'cell-sm empty';
+        cell.style.cssText = 'width:13px;height:13px;';
+      }
+      rowEl.appendChild(cell);
+    }
+    wrap.appendChild(rowEl);
+  }
+}
+
+// ── STATS ─────────────────────────────────────────────────────────
+function renderStats(results) {
+  const B = results.filter(r=>r==='B').length;
+  const P = results.filter(r=>r==='P').length;
+  const T = results.filter(r=>r==='T').length;
+  const total = results.length;
+  const bar = document.getElementById('stats-bar');
+  bar.innerHTML = `
+    <div class="stat"><div class="stat-val B">${B}</div><div class="stat-lbl">Banker</div></div>
+    <div class="stat"><div class="stat-val P">${P}</div><div class="stat-lbl">Player</div></div>
+    <div class="stat"><div class="stat-val T">${T}</div><div class="stat-lbl">Tie</div></div>
+    <div class="stat"><div class="stat-val gold">${total}</div><div class="stat-lbl">Hands</div></div>
+    <div class="stat"><div class="stat-val B">${Math.round(B/total*100)}%</div><div class="stat-lbl">B Rate</div></div>
+    <div class="stat"><div class="stat-val P">${Math.round(P/total*100)}%</div><div class="stat-lbl">P Rate</div></div>
+  `;
+}
+
+// ── RENDER ALL ────────────────────────────────────────────────────
+const bigGrid = buildBigRoad(shoe);
+renderBigRoad(bigGrid);
+renderBeadPlate(shoe);
+renderDerived('beb-container', buildDerived(bigGrid, 1));
+renderDerived('sr-container',  buildDerived(bigGrid, 2));
+renderDerived('cr-container',  buildDerived(bigGrid, 3));
+renderStats(shoe);
+</script>
+</body>
+</html>

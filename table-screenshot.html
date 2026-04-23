@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #1a0d05;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  canvas { display: block; }
+</style>
+</head>
+<body>
+<canvas id="c" width="900" height="560"></canvas>
+<script>
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+const W = 900, H = 560;
+
+// ── helpers ────────────────────────────────────────────────────
+function rRect(x,y,w,h,r,fill,stroke,lw){
+  ctx.beginPath();
+  ctx.moveTo(x+r,y); ctx.lineTo(x+w-r,y);
+  ctx.arcTo(x+w,y,x+w,y+r,r); ctx.lineTo(x+w,y+h-r);
+  ctx.arcTo(x+w,y+h,x+w-r,y+h,r); ctx.lineTo(x+r,y+h);
+  ctx.arcTo(x,y+h,x,y+h-r,r); ctx.lineTo(x,y+r);
+  ctx.arcTo(x,y,x+r,y,r); ctx.closePath();
+  if(fill){ctx.fillStyle=fill;ctx.fill();}
+  if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=lw||1;ctx.stroke();}
+}
+function txt(s,x,y,size,color,align,bold){
+  ctx.font=(bold?'bold ':'')+size+'px Arial';
+  ctx.fillStyle=color; ctx.textAlign=align||'center'; ctx.textBaseline='middle';
+  ctx.fillText(s,x,y);
+}
+function chip(x,y,r,color,border,label){
+  ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2);
+  const grad=ctx.createRadialGradient(x-r*0.3,y-r*0.3,0,x,y,r);
+  grad.addColorStop(0,lighten(color)); grad.addColorStop(1,color);
+  ctx.fillStyle=grad; ctx.fill();
+  ctx.strokeStyle=border||'rgba(255,255,255,0.5)'; ctx.lineWidth=1.5; ctx.stroke();
+  // notches
+  for(let i=0;i<8;i++){
+    const a=i/8*Math.PI*2;
+    ctx.beginPath(); ctx.arc(x+Math.cos(a)*(r*0.78),y+Math.sin(a)*(r*0.78),r*0.14,0,Math.PI*2);
+    ctx.fillStyle='rgba(255,255,255,0.25)'; ctx.fill();
+  }
+  if(label){ txt(label,x,y,r*0.72,'#fff','center',true); }
+}
+function lighten(hex){
+  const n=parseInt(hex.slice(1),16);
+  const r=Math.min(255,((n>>16)&255)+60);
+  const g=Math.min(255,((n>>8)&255)+60);
+  const b=Math.min(255,(n&255)+60);
+  return `rgb(${r},${g},${b})`;
+}
+
+// ── BACKGROUND ─────────────────────────────────────────────────
+const bgGrad=ctx.createLinearGradient(0,0,0,H);
+bgGrad.addColorStop(0,'#1a0d05'); bgGrad.addColorStop(1,'#0d0803');
+ctx.fillStyle=bgGrad; ctx.fillRect(0,0,W,H);
+
+// ── TABLE FELT ─────────────────────────────────────────────────
+ctx.save();
+ctx.shadowColor='rgba(0,0,0,0.8)'; ctx.shadowBlur=40;
+ctx.beginPath();
+ctx.ellipse(W/2, H/2+10, 410, 230, 0, 0, Math.PI*2);
+const feltGrad=ctx.createRadialGradient(W/2,H/2,80,W/2,H/2,430);
+feltGrad.addColorStop(0,'#1a5c30'); feltGrad.addColorStop(0.7,'#155228'); feltGrad.addColorStop(1,'#0e3a1c');
+ctx.fillStyle=feltGrad; ctx.fill();
+ctx.restore();
+
+// Rail
+ctx.beginPath(); ctx.ellipse(W/2,H/2+10,410,230,0,0,Math.PI*2);
+ctx.strokeStyle='#8B4513'; ctx.lineWidth=18; ctx.stroke();
+ctx.beginPath(); ctx.ellipse(W/2,H/2+10,410,230,0,0,Math.PI*2);
+ctx.strokeStyle='#5c2e0a'; ctx.lineWidth=22; ctx.stroke();
+ctx.beginPath(); ctx.ellipse(W/2,H/2+10,410,230,0,0,Math.PI*2);
+ctx.strokeStyle='#c9a84c'; ctx.lineWidth=2; ctx.stroke();
+
+// ── MAIN BETTING ZONES ─────────────────────────────────────────
+// Tie (center)
+rRect(W/2-48,H/2-22,96,44,8,'rgba(26,100,50,0.7)','#2aaa5a',1.5);
+txt('TIE',W/2,H/2-8,11,'#5aee8a','center',true);
+txt('8 : 1',W/2,H/2+8,10,'rgba(90,238,138,0.7)','center',false);
+
+// Player (left of center)
+rRect(W/2-178,H/2-24,120,48,8,'rgba(160,20,20,0.55)','#dd4444',1.5);
+txt('PLAYER',W/2-118,H/2-8,11,'#ff8888','center',true);
+txt('1 : 1',W/2-118,H/2+8,10,'rgba(255,136,136,0.7)','center',false);
+
+// Banker (right of center)
+rRect(W/2+58,H/2-24,120,48,8,'rgba(20,50,160,0.55)','#4466dd',1.5);
+txt('BANKER',W/2+118,H/2-8,11,'#8899ff','center',true);
+txt('0.95 : 1',W/2+118,H/2+8,10,'rgba(136,153,255,0.7)','center',false);
+
+// ── SIDE BET ZONES ─────────────────────────────────────────────
+// Player Pair (far left)
+rRect(W/2-330,H/2-18,80,36,6,'rgba(120,20,20,0.45)','#dd4444',1);
+txt('PLAYER',W/2-290,H/2-7,8,'#ff9999','center',true);
+txt('PAIR 11:1',W/2-290,H/2+7,8,'rgba(255,153,153,0.65)','center',false);
+
+// Dragon 7 (top-left area)
+rRect(W/2-220,H/2-80,85,30,6,'rgba(180,80,0,0.5)','#ff8833',1.2);
+txt('DRAGON 7',W/2-177,H/2-65,8,'#ffaa55','center',true);
+txt('40 : 1',W/2-177,H/2-53,8,'rgba(255,170,85,0.65)','center',false);
+
+// Panda 8 (top-right area)
+rRect(W/2+135,H/2-80,80,30,6,'rgba(30,120,60,0.5)','#33cc77',1.2);
+txt('PANDA 8',W/2+175,H/2-65,8,'#66ee99','center',true);
+txt('25 : 1',W/2+175,H/2-53,8,'rgba(102,238,153,0.65)','center',false);
+
+// Banker Pair (far right)
+rRect(W/2+250,H/2-18,80,36,6,'rgba(20,40,140,0.45)','#4466dd',1);
+txt('BANKER',W/2+290,H/2-7,8,'#9999ff','center',true);
+txt('PAIR 11:1',W/2+290,H/2+7,8,'rgba(153,153,255,0.65)','center',false);
+
+// Big Tiger (bottom left)
+rRect(W/2-195,H/2+42,74,28,5,'rgba(140,60,140,0.45)','#cc66cc',1);
+txt('BIG TIGER',W/2-158,H/2+53,8,'#dd88dd','center',true);
+txt('50 : 1',W/2-158,H/2+64,7,'rgba(221,136,221,0.6)','center',false);
+
+// Small Tiger (bottom right)
+rRect(W/2+121,H/2+42,84,28,5,'rgba(140,60,140,0.45)','#cc66cc',1);
+txt('SMALL TIGER',W/2+163,H/2+53,8,'#dd88dd','center',true);
+txt('22 : 1',W/2+163,H/2+64,7,'rgba(221,136,221,0.6)','center',false);
+
+// ── CARDS IN CENTER ─────────────────────────────────────────────
+function drawCard(x,y,w,h,rank,suit,faceUp){
+  const isRed=['♥','♦'].includes(suit);
+  ctx.shadowColor='rgba(0,0,0,0.6)'; ctx.shadowBlur=8; ctx.shadowOffsetX=2; ctx.shadowOffsetY=3;
+  rRect(x-w/2,y-h/2,w,h,4, faceUp?'#fffef8':'#2244aa', '#888',1);
+  ctx.shadowColor='transparent'; ctx.shadowBlur=0; ctx.shadowOffsetX=0; ctx.shadowOffsetY=0;
+  if(faceUp){
+    ctx.font='bold 11px Arial'; ctx.textAlign='left'; ctx.textBaseline='top';
+    ctx.fillStyle=isRed?'#cc2222':'#111';
+    ctx.fillText(rank,x-w/2+3,y-h/2+3);
+    ctx.font='bold 14px Arial'; ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText(suit,x,y);
+  } else {
+    // card back pattern
+    ctx.strokeStyle='rgba(100,160,255,0.3)'; ctx.lineWidth=1;
+    for(let i=-h;i<h;i+=5){
+      ctx.beginPath(); ctx.moveTo(x-w/2,y-h/2+i+h); ctx.lineTo(x+w/2,y-h/2+i);
+      ctx.stroke();
+    }
+  }
+}
+
+// Player cards (left)
+drawCard(W/2-80,H/2+2,36,50,'7','♠',true);
+drawCard(W/2-50,H/2-4,36,50,'K','♦',true);
+
+// Banker cards (right)
+drawCard(W/2+50,H/2+2,36,50,'9','♣',true);
+drawCard(W/2+80,H/2-4,36,50,'A','♥',true);
+
+// Score display
+rRect(W/2-112,H/2+28,44,20,4,'rgba(0,0,0,0.6)','#dd4444',1);
+txt('7',W/2-90,H/2+38,13,'#ff8888','center',true);
+
+rRect(W/2+68,H/2+28,44,20,4,'rgba(0,0,0,0.6)','#4466dd',1);
+txt('0',W/2+90,H/2+38,13,'#8899ff','center',true);
+
+// "PLAYER" / "BANKER" card zone labels
+txt('PLAYER HAND',W/2-80,H/2+58,8,'rgba(255,136,136,0.5)','center',false);
+txt('BANKER HAND',W/2+68,H/2+58,8,'rgba(136,153,255,0.5)','center',false);
+
+// ── PLAYER POSITIONS ───────────────────────────────────────────
+// 9 seats along the curved arc of the table
+const seats = [
+  // [x, y, betAmt, chipColor, chipLabel, name, hasSide]
+  [W/2-370, H/2+50,  500,  '#cc3333','5',  'Seat 1', true ],
+  [W/2-330, H/2-70,  200,  '#2244bb','2',  'Seat 2', false],
+  [W/2-240, H/2-170, 1000, '#228833','10', 'Seat 3', true ],
+  [W/2-110, H/2-210, 500,  '#cc3333','5',  'Seat 4', false],
+  [W/2+10,  H/2-215, 500,  '#884400','5',  'Seat 5', true ],
+  [W/2+130, H/2-210, 200,  '#2244bb','2',  'Seat 6', false],
+  [W/2+250, H/2-165, 500,  '#cc3333','5',  'Seat 7', true ],
+  [W/2+340, H/2-65,  1000, '#228833','10', 'Seat 8', false],
+  [W/2+375, H/2+55,  200,  '#884400','2',  'Seat 9', true ],
+];
+
+// Seat numbers skip 4 — unlucky in Chinese culture (四 sounds like 死, "death")
+const seatNums = [1,2,3,5,6,7,8,9,10];
+
+seats.forEach(([sx,sy,amt,color,label,name,side],i)=>{
+  const seatNum = seatNums[i];
+  // Seat circle
+  ctx.beginPath(); ctx.arc(sx,sy,22,0,Math.PI*2);
+  ctx.fillStyle='rgba(0,0,0,0.35)'; ctx.fill();
+  ctx.strokeStyle='rgba(201,168,76,0.3)'; ctx.lineWidth=1.5; ctx.stroke();
+
+  // Seat number
+  txt(String(seatNum),sx,sy,11,'rgba(201,168,76,0.6)','center',true);
+
+  // Main chip stack on Player or Banker zone (slightly inside table)
+  const dx = (W/2 - sx)*0.38, dy = (H/2+10 - sy)*0.38;
+  chip(sx+dx, sy+dy, 9, color, '#fff', label);
+  if(amt>=500){ chip(sx+dx+5, sy+dy-4, 9, color, '#fff', label); }
+
+  // Side bet chip (small, different color)
+  if(side){
+    chip(sx+dx+16, sy+dy+8, 6, '#aa8800', '#ffd700', '');
+  }
+
+  // Bet amount label
+  const bx=sx+dx, by=sy+dy+16;
+  ctx.fillStyle='rgba(0,0,0,0.5)';
+  ctx.beginPath(); ctx.roundRect(bx-14,by-7,28,14,3); ctx.fill();
+  txt('$'+amt,bx,by,7,'#f0d080','center',false);
+});
+
+// ── DEALER POSITION ────────────────────────────────────────────
+const dx=W/2, dy=H/2+185;
+ctx.beginPath(); ctx.arc(dx,dy,28,0,Math.PI*2);
+ctx.fillStyle='rgba(0,0,0,0.5)'; ctx.fill();
+ctx.strokeStyle='#c9a84c'; ctx.lineWidth=2; ctx.stroke();
+txt('DEALER',dx,dy-7,9,'#f0d080','center',true);
+txt('▲',dx,dy+8,10,'rgba(201,168,76,0.6)','center',false);
+
+// Shoe (card shoe on table)
+rRect(W/2+270,H/2-30,55,32,4,'#1a1a1a','#c9a84c',1.5);
+rRect(W/2+273,H/2-27,49,11,2,'#333','#555',1);
+txt('SHOE',W/2+297,H/2-10,8,'rgba(201,168,76,0.6)','center',true);
+txt('8 DECKS',W/2+297,H/2+2,7,'rgba(255,255,255,0.3)','center',false);
+
+// Discard tray
+rRect(W/2-325,H/2-30,45,32,4,'#2a1a0a','#8B4513',1.5);
+txt('DISCARD',W/2-302,H/2-13,7,'rgba(201,168,76,0.4)','center',false);
+
+// ── LEGEND ─────────────────────────────────────────────────────
+const lx=14, ly=H-110;
+rRect(lx,ly,190,100,6,'rgba(0,0,0,0.6)','rgba(201,168,76,0.2)',1);
+txt('LEGEND',lx+95,ly+12,9,'rgba(201,168,76,0.6)','center',true);
+
+const items=[
+  ['#cc3333','Main Bet — Player'],
+  ['#2244bb','Main Bet — Banker'],
+  ['#228833','Main Bet (higher)'],
+  ['#aa8800','Side Bet (Dragon 7 / Pair)'],
+];
+items.forEach(([c,label],i)=>{
+  chip(lx+16, ly+30+i*18, 7, c, '#fff', '');
+  txt(label, lx+28, ly+30+i*18, 8, 'rgba(255,255,255,0.6)', 'left', false);
+});
+
+// ── TITLE ──────────────────────────────────────────────────────
+rRect(W/2-200,8,400,30,6,'rgba(0,0,0,0.55)','rgba(201,168,76,0.3)',1);
+txt('BACCARAT TABLE LAYOUT  —  9 PLAYERS, LIVE SHOE',W/2,23,10,'rgba(201,168,76,0.8)','center',true);
+
+// EZ mode tag
+rRect(W-115,8,105,20,4,'rgba(20,80,40,0.7)','#2aaa5a',1);
+txt('EZ BACCARAT MODE',W-62,18,7.5,'#5aee8a','center',true);
+</script>
+</body>
+</html>

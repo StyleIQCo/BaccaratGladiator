@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+  <title>Chapter 4 — Reading the Road Maps</title>
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+<h1>4. Reading the Road Maps</h1>
+
+<p>Roads are the scorecards displayed at every baccarat table. They track the history of results — not to predict the future (baccarat has no memory), but to give you a visual history and a shared language with other players at the table.</p>
+
+<p><strong>Key:</strong> <span class="dot-B">&#9679; Blue = Banker</span> · <span class="dot-P">&#9679; Red = Player</span> · <span class="dot-T">&#9679; Green = Tie</span></p>
+
+<hr/>
+
+<h2>Road 1: Big Road</h2>
+<p>The primary and most important road. Results fill columns from left to right. When the result changes (Banker to Player or Player to Banker), a new column begins. Ties do not start a new column — a green mark is placed on the current cell.</p>
+
+<div class="dots">
+  <span class="dot-B">&#9679;&#9679;&#9679;</span>
+  <span class="dot-P">&#9679;&#9679;</span>
+  <span class="dot-B">&#9679;</span>
+  <span class="dot-P">&#9679;&#9679;&#9679;&#9679;</span>
+</div>
+<p><em>Example above: Banker won 3 in a row, then Player won 2, then Banker 1, then Player 4.</em></p>
+<p>Tall columns mean streaks. Short columns mean a "chop" — alternating results.</p>
+
+<hr/>
+
+<h2>Road 2: Bead Plate</h2>
+<p>A simple grid filling left to right, top to bottom. Each cell is one hand result with no grouping by streak. Use it for a quick count of total hands and raw distribution of Banker vs Player wins.</p>
+
+<div class="dots">
+  <span class="dot-B">&#9679;</span><span class="dot-P">&#9679;</span><span class="dot-B">&#9679;</span><span class="dot-B">&#9679;</span><span class="dot-P">&#9679;</span><span class="dot-B">&#9679;</span>
+</div>
+<p>6 columns × 6 rows = 36 recent results visible at once.</p>
+
+<hr/>
+
+<h2>Road 3: Big Eye Boy</h2>
+<p>The first derived road. It is derived from the Big Road and starts from the <strong>second column</strong>. It compares each new entry to the column before it to detect whether the shoe is regular (repeating) or chaotic (choppy).</p>
+<ul>
+  <li><strong class="dot-B">Blue entry</strong> = the shoe is behaving regularly</li>
+  <li><strong class="dot-P">Red entry</strong> = the shoe is choppy or irregular</li>
+</ul>
+<p>A long run of blue entries means the pattern is consistent. A long run of red means results keep switching unexpectedly.</p>
+
+<hr/>
+
+<h2>Road 4: Small Road</h2>
+<p>The second derived road. Same logic as Big Eye Boy but skips one extra column back — it starts from the <strong>third column</strong> of the Big Road. Detects medium-term patterns. Fills faster than Big Eye Boy.</p>
+
+<hr/>
+
+<h2>Road 5: Cockroach Road (Cockroach Pig)</h2>
+<p>The third derived road. Skips two columns back, starting from the <strong>fourth column</strong> of the Big Road. The most zoomed-out of the three derived roads.</p>
+
+<div class="callout">
+  <strong>Do derived roads predict the future?</strong> No — mathematically, every hand is independent. But when all three derived roads agree (all blue or all red), many experienced players treat it as a signal worth noting. The roads are a shared language, not a formula.
+</div>
+
+<h2>Road Prediction on Baccarat Gladiator</h2>
+<p>Baccarat Gladiator shows you what the <strong>next entry on each derived road would be</strong> for both a Banker win and a Player win — before any cards are dealt. Tap the <strong>&#128302; Predict</strong> button in the app to see live road projections for the current shoe.</p>
+
+<div class="callout tip">
+  <strong>Practice tip:</strong> Spend 15 minutes watching only the Big Road at BaccaratGladiator.com before trying to read the derived roads. Once Big Road streaks and chops make sense visually, the other four roads will follow naturally.
+</div>
+</body>
+</html>
