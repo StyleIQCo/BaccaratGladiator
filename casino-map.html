@@ -4,19 +4,18 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>World Baccarat Casino Map — Baccarat Gladiator</title>
-<meta name="description" content="Interactive map of the world's top baccarat casinos — Las Vegas, Macau, Monte Carlo, Singapore, Atlantic City, and beyond. Contact details and insider notes from Road to Nine."/>
+<meta name="description" content="Interactive map of 70+ premier baccarat casinos worldwide — Las Vegas, Macau, Monte Carlo, Singapore, London, Australia, Africa, and beyond. Contact info, table minimums, and tier-match tips."/>
 <meta property="og:title" content="World Baccarat Casino Map — Baccarat Gladiator"/>
-<meta property="og:description" content="Find the world's premier baccarat rooms. Addresses, phone numbers, and insider notes for every casino in Road to Nine."/>
+<meta property="og:description" content="70+ top baccarat rooms across 6 continents. Addresses, phone numbers, minimums, and high-roller tier-match guidance."/>
 <meta property="og:type" content="website"/>
 <meta property="og:url" content="https://baccaratgladiator.com/casino-map"/>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Raleway:wght@300;400;600&display=swap" rel="stylesheet"/>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV/XN/WPeE=" crossorigin=""></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.css"/>
+<script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.js"></script>
 <style>
 *{ margin:0; padding:0; box-sizing:border-box; }
 html,body{ width:100%; height:100%; background:#0a0a0a; font-family:'Raleway',sans-serif; color:#e8dfc4; overflow:hidden; }
 
-/* ── HEADER ── */
 #header{
   position:fixed; top:0; left:0; right:0; z-index:1000;
   background:linear-gradient(180deg,rgba(0,0,0,0.97) 0%,rgba(0,0,0,0.85) 100%);
@@ -26,158 +25,118 @@ html,body{ width:100%; height:100%; background:#0a0a0a; font-family:'Raleway',sa
   height:56px;
 }
 #header-left{ display:flex; align-items:center; gap:12px; }
-#header-logo{
-  font-family:'Cinzel',serif; font-size:1.05rem; font-weight:700;
-  color:#c9a84c; letter-spacing:.06em; text-decoration:none;
-  white-space:nowrap;
-}
+#header-logo{ font-family:'Cinzel',serif; font-size:1.05rem; font-weight:700; color:#c9a84c; letter-spacing:.06em; text-decoration:none; white-space:nowrap; }
 #header-sep{ color:rgba(201,168,76,0.3); font-size:1.1rem; }
-#header-title{
-  font-family:'Cinzel',serif; font-size:.75rem; font-weight:400;
-  color:rgba(255,255,255,0.6); letter-spacing:.18em; text-transform:uppercase;
-}
-#header-back{
-  font-size:.75rem; color:rgba(201,168,76,0.7); text-decoration:none;
-  letter-spacing:.08em; border:1px solid rgba(201,168,76,0.25); border-radius:4px;
-  padding:5px 12px; transition:all .2s; white-space:nowrap;
-}
+#header-title{ font-family:'Cinzel',serif; font-size:.75rem; font-weight:400; color:rgba(255,255,255,0.6); letter-spacing:.18em; text-transform:uppercase; }
+#header-back{ font-size:.75rem; color:rgba(201,168,76,0.7); text-decoration:none; letter-spacing:.08em; border:1px solid rgba(201,168,76,0.25); border-radius:4px; padding:5px 12px; transition:all .2s; white-space:nowrap; }
 #header-back:hover{ color:#c9a84c; border-color:rgba(201,168,76,0.6); background:rgba(201,168,76,0.05); }
 
-/* ── MAP ── */
-#map{
-  position:fixed; top:56px; left:0; right:360px; bottom:0;
-}
+#map{ position:fixed; top:56px; left:0; right:380px; bottom:0; }
+
 @media(max-width:820px){
-  #map{ right:0; bottom:340px; }
-  #sidebar{ top:auto; bottom:0; left:0; right:0; height:340px; width:auto; border-left:none; border-top:1px solid rgba(201,168,76,0.2); }
+  #map{ right:0; bottom:360px; }
+  #sidebar{ top:auto; bottom:0; left:0; right:0; height:360px; width:auto; border-left:none; border-top:1px solid rgba(201,168,76,0.2); }
 }
 
-/* ── SIDEBAR ── */
-#sidebar{
-  position:fixed; top:56px; right:0; width:360px; bottom:0;
-  background:#0d0d0d; border-left:1px solid rgba(201,168,76,0.2);
+#sidebar{ position:fixed; top:56px; right:0; width:380px; bottom:0; background:#0d0d0d; border-left:1px solid rgba(201,168,76,0.2); display:flex; flex-direction:column; overflow:hidden; }
+
+#tier-match-banner{
+  background:linear-gradient(135deg,rgba(201,168,76,0.12),rgba(201,168,76,0.06));
+  border-bottom:1px solid rgba(201,168,76,0.25);
+  padding:10px 16px; flex-shrink:0; cursor:pointer;
+  display:flex; align-items:flex-start; gap:10px;
+}
+#tier-match-banner:hover{ background:rgba(201,168,76,0.14); }
+.tm-icon{ font-size:1.1rem; flex-shrink:0; margin-top:1px; }
+.tm-text{ flex:1; }
+.tm-title{ font-family:'Cinzel',serif; font-size:.68rem; font-weight:700; color:#c9a84c; letter-spacing:.08em; text-transform:uppercase; margin-bottom:2px; }
+.tm-sub{ font-size:.64rem; color:rgba(255,255,255,0.5); line-height:1.45; }
+.tm-arrow{ font-size:.8rem; color:rgba(201,168,76,0.4); flex-shrink:0; align-self:center; }
+
+#tier-match-panel{
+  position:absolute; inset:0; background:#0a0a0a; z-index:20;
+  transform:translateX(100%); transition:transform .25s ease;
   display:flex; flex-direction:column; overflow:hidden;
 }
+#tier-match-panel.open{ transform:translateX(0); }
+#tm-back{ padding:14px 18px; display:flex; align-items:center; gap:8px; border-bottom:1px solid rgba(201,168,76,0.15); cursor:pointer; flex-shrink:0; }
+#tm-back span{ font-size:.7rem; color:rgba(201,168,76,0.7); letter-spacing:.06em; text-transform:uppercase; }
+#tm-content{ flex:1; overflow-y:auto; padding:18px 20px 24px; }
+#tm-content h3{ font-family:'Cinzel',serif; font-size:.9rem; color:#c9a84c; margin-bottom:4px; }
+#tm-content .tm-city{ font-size:.65rem; color:rgba(255,255,255,0.35); letter-spacing:.12em; text-transform:uppercase; margin-bottom:14px; }
+.tm-section{ margin-bottom:16px; }
+.tm-section-label{ font-size:.6rem; letter-spacing:.15em; text-transform:uppercase; color:rgba(201,168,76,0.5); margin-bottom:6px; }
+.tm-section p{ font-size:.78rem; color:#ccc; line-height:1.65; }
+.tm-steps{ list-style:none; padding:0; margin:0; }
+.tm-steps li{ display:flex; gap:10px; margin-bottom:10px; font-size:.76rem; color:#ccc; line-height:1.6; }
+.tm-step-num{ width:20px; height:20px; border-radius:50%; background:rgba(201,168,76,0.15); border:1px solid rgba(201,168,76,0.3); color:#c9a84c; font-family:'Cinzel',serif; font-size:.6rem; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:2px; }
+.tm-note{ background:rgba(201,168,76,0.05); border:1px solid rgba(201,168,76,0.2); border-radius:6px; padding:12px 14px; margin-top:12px; font-size:.74rem; color:rgba(255,255,255,0.55); line-height:1.6; font-style:italic; }
+.tm-note strong{ color:#c9a84c; font-style:normal; }
 
-#sidebar-header{
-  padding:16px 20px 12px;
-  border-bottom:1px solid rgba(201,168,76,0.15);
-  flex-shrink:0;
-}
-#sidebar-header h2{
-  font-family:'Cinzel',serif; font-size:.85rem; font-weight:700;
-  color:#c9a84c; letter-spacing:.1em; text-transform:uppercase; margin-bottom:4px;
-}
-#sidebar-header p{ font-size:.72rem; color:rgba(255,255,255,0.4); line-height:1.5; }
+#sidebar-header{ padding:12px 20px 10px; border-bottom:1px solid rgba(201,168,76,0.15); flex-shrink:0; }
+#sidebar-header h2{ font-family:'Cinzel',serif; font-size:.78rem; font-weight:700; color:#c9a84c; letter-spacing:.1em; text-transform:uppercase; margin-bottom:3px; }
+#casino-count{ font-size:.63rem; color:rgba(255,255,255,0.35); }
 
-/* Filter pills */
-#filter-bar{
-  padding:10px 20px; border-bottom:1px solid rgba(201,168,76,0.1);
-  display:flex; gap:6px; flex-wrap:wrap; flex-shrink:0;
+#search-bar{ padding:8px 14px; border-bottom:1px solid rgba(201,168,76,0.1); flex-shrink:0; }
+#search-input{
+  width:100%; background:rgba(255,255,255,0.05); border:1px solid rgba(201,168,76,0.2);
+  border-radius:6px; padding:7px 12px; color:#e8dfc4; font-size:.73rem;
+  font-family:'Raleway',sans-serif; outline:none;
 }
-.filter-pill{
-  font-size:.65rem; letter-spacing:.08em; text-transform:uppercase;
-  padding:4px 10px; border-radius:20px; cursor:pointer;
-  border:1px solid rgba(201,168,76,0.25); color:rgba(255,255,255,0.45);
-  background:transparent; transition:all .2s; font-family:'Raleway',sans-serif;
-}
-.filter-pill:hover{ border-color:rgba(201,168,76,0.5); color:rgba(255,255,255,0.7); }
+#search-input::placeholder{ color:rgba(255,255,255,0.25); }
+#search-input:focus{ border-color:rgba(201,168,76,0.45); background:rgba(255,255,255,0.07); }
+
+#filter-bar{ padding:8px 14px; border-bottom:1px solid rgba(201,168,76,0.1); display:flex; gap:5px; flex-wrap:wrap; flex-shrink:0; }
+.filter-pill{ font-size:.6rem; letter-spacing:.07em; text-transform:uppercase; padding:3px 9px; border-radius:20px; cursor:pointer; border:1px solid rgba(201,168,76,0.2); color:rgba(255,255,255,0.4); background:transparent; transition:all .2s; font-family:'Raleway',sans-serif; }
+.filter-pill:hover{ border-color:rgba(201,168,76,0.45); color:rgba(255,255,255,0.65); }
 .filter-pill.active{ border-color:#c9a84c; color:#c9a84c; background:rgba(201,168,76,0.08); }
 
-/* Casino list */
-#casino-list{ flex:1; overflow-y:auto; padding:6px 0; }
-#casino-list::-webkit-scrollbar{ width:4px; }
+#casino-list{ flex:1; overflow-y:auto; padding:4px 0; }
+#casino-list::-webkit-scrollbar{ width:3px; }
 #casino-list::-webkit-scrollbar-track{ background:transparent; }
 #casino-list::-webkit-scrollbar-thumb{ background:rgba(201,168,76,0.2); border-radius:2px; }
 
-.casino-card{
-  padding:13px 20px; cursor:pointer;
-  border-bottom:1px solid rgba(255,255,255,0.04);
-  transition:background .15s;
-}
+.casino-card{ padding:10px 18px; cursor:pointer; border-bottom:1px solid rgba(255,255,255,0.03); transition:background .15s; }
 .casino-card:hover{ background:rgba(201,168,76,0.04); }
-.casino-card.active{ background:rgba(201,168,76,0.08); border-left:2px solid #c9a84c; }
+.casino-card.active{ background:rgba(201,168,76,0.07); border-left:2px solid #c9a84c; padding-left:16px; }
 
-.card-flag-name{ display:flex; align-items:center; gap:8px; margin-bottom:3px; }
-.card-flag{ font-size:1rem; }
-.card-name{ font-family:'Cinzel',serif; font-size:.78rem; font-weight:700; color:#e8dfc4; }
-.card-city{ font-size:.65rem; color:rgba(201,168,76,0.65); letter-spacing:.05em; text-transform:uppercase; }
-.card-type-badge{
-  display:inline-block; font-size:.58rem; letter-spacing:.06em; text-transform:uppercase;
-  padding:2px 6px; border-radius:3px; margin-left:auto; flex-shrink:0;
-}
-.badge-vip{ background:rgba(201,168,76,0.15); color:#c9a84c; border:1px solid rgba(201,168,76,0.3); }
-.badge-mid{ background:rgba(100,160,100,0.12); color:#78b878; border:1px solid rgba(100,160,100,0.3); }
-.badge-mass{ background:rgba(100,130,200,0.12); color:#7890c8; border:1px solid rgba(100,130,200,0.3); }
+.card-row1{ display:flex; align-items:center; gap:7px; margin-bottom:2px; }
+.card-flag{ font-size:.9rem; }
+.card-name{ font-family:'Cinzel',serif; font-size:.73rem; font-weight:700; color:#e8dfc4; flex:1; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.card-badge{ font-size:.55rem; letter-spacing:.05em; text-transform:uppercase; padding:2px 6px; border-radius:3px; flex-shrink:0; }
+.badge-vip{ background:rgba(201,168,76,0.12); color:#c9a84c; border:1px solid rgba(201,168,76,0.28); }
+.badge-mid{ background:rgba(80,150,80,0.1); color:#78b878; border:1px solid rgba(80,150,80,0.25); }
+.card-city{ font-size:.62rem; color:rgba(201,168,76,0.5); letter-spacing:.04em; padding-left:26px; }
 
-/* Detail panel */
-#detail-panel{
-  position:absolute; inset:0; background:#0d0d0d;
-  transform:translateX(100%); transition:transform .25s ease;
-  display:flex; flex-direction:column; overflow:hidden; z-index:10;
-}
+#detail-panel{ position:absolute; inset:0; background:#0d0d0d; transform:translateX(100%); transition:transform .25s ease; display:flex; flex-direction:column; overflow:hidden; z-index:10; }
 #detail-panel.open{ transform:translateX(0); }
-#detail-back{
-  padding:14px 20px; display:flex; align-items:center; gap:8px;
-  border-bottom:1px solid rgba(201,168,76,0.15); cursor:pointer;
-  flex-shrink:0;
-}
-#detail-back span{ font-size:.7rem; color:rgba(201,168,76,0.7); letter-spacing:.06em; text-transform:uppercase; }
+#detail-back{ padding:13px 18px; display:flex; align-items:center; gap:8px; border-bottom:1px solid rgba(201,168,76,0.15); cursor:pointer; flex-shrink:0; }
+#detail-back span{ font-size:.68rem; color:rgba(201,168,76,0.7); letter-spacing:.06em; text-transform:uppercase; }
 #detail-back:hover span{ color:#c9a84c; }
 #detail-content{ flex:1; overflow-y:auto; padding:0 20px 24px; }
-#detail-content::-webkit-scrollbar{ width:4px; }
-#detail-content::-webkit-scrollbar-track{ background:transparent; }
+#detail-content::-webkit-scrollbar{ width:3px; }
 #detail-content::-webkit-scrollbar-thumb{ background:rgba(201,168,76,0.2); }
 
-.detail-name{ font-family:'Cinzel',serif; font-size:1rem; font-weight:700; color:#c9a84c; padding-top:18px; margin-bottom:2px; }
-.detail-city{ font-size:.7rem; color:rgba(255,255,255,0.4); letter-spacing:.1em; text-transform:uppercase; margin-bottom:14px; }
-.detail-divider{ height:1px; background:linear-gradient(90deg,rgba(201,168,76,0.4),transparent); margin:12px 0; }
-
-.detail-section-label{
-  font-size:.6rem; letter-spacing:.15em; text-transform:uppercase;
-  color:rgba(201,168,76,0.5); margin-bottom:5px;
-}
-.detail-val{ font-size:.8rem; color:#e8dfc4; line-height:1.6; margin-bottom:12px; }
-.detail-val a{ color:#c9a84c; text-decoration:none; }
-.detail-val a:hover{ text-decoration:underline; }
-
-.detail-note{
-  background:rgba(201,168,76,0.04); border:1px solid rgba(201,168,76,0.15);
-  border-radius:6px; padding:12px 14px; margin-top:10px;
-  font-size:.76rem; line-height:1.65; color:rgba(255,255,255,0.65);
-  font-style:italic;
-}
+.detail-name{ font-family:'Cinzel',serif; font-size:.95rem; font-weight:700; color:#c9a84c; padding-top:16px; margin-bottom:2px; }
+.detail-city{ font-size:.67rem; color:rgba(255,255,255,0.38); letter-spacing:.1em; text-transform:uppercase; margin-bottom:12px; }
+.detail-divider{ height:1px; background:linear-gradient(90deg,rgba(201,168,76,0.35),transparent); margin:10px 0; }
+.dlabel{ font-size:.58rem; letter-spacing:.14em; text-transform:uppercase; color:rgba(201,168,76,0.48); margin-bottom:4px; }
+.dval{ font-size:.77rem; color:#e8dfc4; line-height:1.6; margin-bottom:11px; }
+.dval a{ color:#c9a84c; text-decoration:none; }
+.dval a:hover{ text-decoration:underline; }
+.detail-note{ background:rgba(201,168,76,0.04); border:1px solid rgba(201,168,76,0.15); border-radius:6px; padding:11px 13px; margin-top:8px; font-size:.74rem; line-height:1.65; color:rgba(255,255,255,0.6); font-style:italic; }
 .detail-note strong{ color:#c9a84c; font-style:normal; }
+.tier-match-chip{ display:inline-flex; align-items:center; gap:5px; background:rgba(201,168,76,0.1); border:1px solid rgba(201,168,76,0.3); border-radius:4px; padding:4px 9px; font-size:.62rem; color:#c9a84c; letter-spacing:.06em; text-transform:uppercase; margin-top:10px; cursor:pointer; }
+.tier-match-chip:hover{ background:rgba(201,168,76,0.18); }
+.directions-btn{ display:block; margin-top:14px; padding:9px 0; text-align:center; background:rgba(201,168,76,0.07); border:1px solid rgba(201,168,76,0.28); border-radius:6px; color:#c9a84c; font-size:.69rem; letter-spacing:.1em; text-transform:uppercase; text-decoration:none; transition:all .2s; font-family:'Raleway',sans-serif; }
+.directions-btn:hover{ background:rgba(201,168,76,0.14); border-color:#c9a84c; }
 
-.directions-btn{
-  display:block; margin-top:16px; padding:10px 0; text-align:center;
-  background:rgba(201,168,76,0.08); border:1px solid rgba(201,168,76,0.3);
-  border-radius:6px; color:#c9a84c; font-size:.72rem; letter-spacing:.1em;
-  text-transform:uppercase; text-decoration:none; transition:all .2s;
-  font-family:'Raleway',sans-serif;
-}
-.directions-btn:hover{ background:rgba(201,168,76,0.15); border-color:#c9a84c; }
-
-/* Leaflet custom markers */
-.bg-pin{
-  width:32px; height:32px; border-radius:50% 50% 50% 0;
-  transform:rotate(-45deg); border:2px solid;
-  display:flex; align-items:center; justify-content:center;
-}
-.pin-inner{ transform:rotate(45deg); font-size:14px; }
-.pin-vip{ background:rgba(201,168,76,0.9); border-color:#8a6a1a; }
-.pin-mid{ background:rgba(60,110,60,0.9); border-color:#2a5a2a; }
-.pin-mass{ background:rgba(40,60,120,0.9); border-color:#1a2a6a; }
-
-.leaflet-popup-content-wrapper{
-  background:#111; border:1px solid rgba(201,168,76,0.35); border-radius:8px;
-  color:#e8dfc4; box-shadow:0 4px 20px rgba(0,0,0,0.8);
-}
+.leaflet-popup-content-wrapper{ background:#111; border:1px solid rgba(201,168,76,0.35); border-radius:8px; color:#e8dfc4; box-shadow:0 4px 20px rgba(0,0,0,0.8); }
 .leaflet-popup-tip{ background:#111; }
-.leaflet-popup-content{ margin:12px 14px; }
-.popup-name{ font-family:'Cinzel',serif; font-size:.82rem; font-weight:700; color:#c9a84c; margin-bottom:3px; }
-.popup-addr{ font-size:.68rem; color:rgba(255,255,255,0.5); line-height:1.5; }
-.popup-open{ font-size:.62rem; color:#78b878; margin-top:3px; }
+.leaflet-popup-content{ margin:11px 13px; }
+.popup-name{ font-family:'Cinzel',serif; font-size:.78rem; font-weight:700; color:#c9a84c; margin-bottom:2px; }
+.popup-addr{ font-size:.65rem; color:rgba(255,255,255,0.45); line-height:1.5; }
+.popup-phone{ font-size:.62rem; color:rgba(201,168,76,0.6); margin-top:2px; }
 </style>
 </head>
 <body>
@@ -194,20 +153,78 @@ html,body{ width:100%; height:100%; background:#0a0a0a; font-family:'Raleway',sa
 <div id="map"></div>
 
 <div id="sidebar">
+
+  <!-- Tier Match Banner -->
+  <div id="tier-match-banner" onclick="openTierMatch()">
+    <div class="tm-icon">♛</div>
+    <div class="tm-text">
+      <div class="tm-title">High-Roller Tier Match</div>
+      <div class="tm-sub">Rated player at another casino? You may qualify for instant status here — tap to learn how.</div>
+    </div>
+    <div class="tm-arrow">›</div>
+  </div>
+
+  <!-- Tier Match Detail Panel -->
+  <div id="tier-match-panel">
+    <div id="tm-back" onclick="closeTierMatch()">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 13L5 8L10 3" stroke="#c9a84c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Back to Map</span>
+    </div>
+    <div id="tm-content">
+      <h3>How Tier Matching Works</h3>
+      <div class="tm-city">For High-Volume Baccarat Players</div>
+
+      <div class="tm-section">
+        <div class="tm-section-label">What Is a Tier Match?</div>
+        <p>If you are a rated high-roller at a major casino — holding Diamond, Chairman, Noir, Seven Stars, Prestige, or equivalent elite status — you can often request matching status at a competing property before you arrive or during your first visit. Casinos compete fiercely for high-volume baccarat players, and a documented play history is your leverage.</p>
+      </div>
+
+      <div class="tm-section">
+        <div class="tm-section-label">How to Request One</div>
+        <ul class="tm-steps">
+          <li><div class="tm-step-num">1</div><div>Contact the casino's <strong>VIP Host department or International Marketing</strong> directly — not the front desk or general reservations line. Ask specifically for the host who handles table game players or baccarat.</div></li>
+          <li><div class="tm-step-num">2</div><div>Provide <strong>proof of your current status</strong>: a photo of your card, a recent comp statement, or a letter from your home casino host confirming your average daily theoretical (ADT) and visit frequency.</div></li>
+          <li><div class="tm-step-num">3</div><div>Request a <strong>complimentary trial visit</strong> or a status match at or near your existing tier. Many Las Vegas, Macau, and Singapore properties will extend a matching rate or temporary elite status in exchange for a play commitment.</div></li>
+          <li><div class="tm-step-num">4</div><div><strong>Negotiate the comp package</strong>: room, food and beverage, transportation, and airfare credit are all on the table for high-volume players. Get the terms in writing from the host before arriving.</div></li>
+          <li><div class="tm-step-num">5</div><div>Play to the agreed level and <strong>ask for a written reference</strong> from the host at checkout — this becomes your credential for the next tier match at a third property.</div></li>
+        </ul>
+      </div>
+
+      <div class="tm-section">
+        <div class="tm-section-label">Which Properties Tier-Match Most Aggressively</div>
+        <p>Las Vegas Strip properties (especially MGM and Caesars portfolios) frequently match status across their own networks and will negotiate with competitors for new high-value players. Macau VIP rooms rely almost entirely on host relationships and junket operators rather than loyalty card status. Singapore's MBS and RWS both have dedicated international VIP teams. In Macau, ask for a <em>premium mass</em> or <em>direct VIP</em> contact rather than a junket.</p>
+      </div>
+
+      <div class="tm-note">
+        <strong>Important:</strong> Tier matching is not a published policy at most casinos — it is a negotiation. The higher your documented average bet and annual play, the stronger your position. Players averaging $500+ per hand with significant volume (100+ hours/year) are typically well-positioned to request matching. First-time requests are usually for a trial visit, not a permanent status grant. Always confirm with the host what play is expected to maintain any status extended to you.
+      </div>
+    </div>
+  </div>
+
   <div id="sidebar-header">
     <h2>Premier Baccarat Rooms</h2>
-    <p>Every casino covered in <em>Road to Nine</em> — tap a pin or select a property for contact details and insider notes.</p>
+    <div id="casino-count"></div>
   </div>
+
+  <div id="search-bar">
+    <input type="text" id="search-input" placeholder="Search casino, city, or country…" oninput="renderList()"/>
+  </div>
+
   <div id="filter-bar">
     <button class="filter-pill active" data-filter="all">All</button>
     <button class="filter-pill" data-filter="las-vegas">Las Vegas</button>
     <button class="filter-pill" data-filter="macau">Macau</button>
     <button class="filter-pill" data-filter="asia">Asia</button>
+    <button class="filter-pill" data-filter="australia">Australia</button>
     <button class="filter-pill" data-filter="europe">Europe</button>
     <button class="filter-pill" data-filter="atlantic-city">Atlantic City</button>
-    <button class="filter-pill" data-filter="northeast">Northeast US</button>
+    <button class="filter-pill" data-filter="northeast">NE USA</button>
     <button class="filter-pill" data-filter="africa">Africa</button>
+    <button class="filter-pill" data-filter="caribbean">Caribbean</button>
+    <button class="filter-pill" data-filter="canada">Canada</button>
+    <button class="filter-pill" data-filter="south-america">S. America</button>
   </div>
+
   <div id="casino-list"></div>
 
   <div id="detail-panel">
@@ -221,342 +238,194 @@ html,body{ width:100%; height:100%; background:#0a0a0a; font-family:'Raleway',sa
 
 <script>
 const CASINOS = [
-  {
-    id: 'bellagio',
-    name: 'Bellagio',
-    city: 'Las Vegas, Nevada',
-    country: 'USA',
-    flag: '🇺🇸',
-    region: 'las-vegas',
-    tier: 'vip',
-    lat: 36.1126, lng: -115.1767,
-    address: '3600 Las Vegas Blvd S, Las Vegas, NV 89109',
-    phone: '+1 (702) 693-7111',
-    website: 'bellagio.mgmresorts.com',
-    hours: 'Open 24 hours',
-    minBet: '$25–$50 minimums; high-limit rooms from $200',
-    note: 'The gold standard of Las Vegas baccarat. High-limit room on the casino floor near the poker room. Facial recognition VIP tracking. Known for the highest-volume mini-baccarat action on the Strip outside of Asian-branded rooms.'
-  },
-  {
-    id: 'wynn-lv',
-    name: 'Wynn Las Vegas',
-    city: 'Las Vegas, Nevada',
-    country: 'USA',
-    flag: '🇺🇸',
-    region: 'las-vegas',
-    tier: 'vip',
-    lat: 36.1278, lng: -115.1643,
-    address: '3131 Las Vegas Blvd S, Las Vegas, NV 89109',
-    phone: '+1 (702) 770-7000',
-    website: 'wynnlasvegas.com',
-    hours: 'Open 24 hours',
-    minBet: '$25–$100 on main floor; private rooms by arrangement',
-    note: 'Preferred by Asian high-rollers for its privacy and service ethos. Private baccarat salons available by host arrangement. Steve Wynn built the property partly as a dedicated Asian gaming destination. EZ Baccarat frequently offered.'
-  },
-  {
-    id: 'venetian-lv',
-    name: 'The Venetian Las Vegas',
-    city: 'Las Vegas, Nevada',
-    country: 'USA',
-    flag: '🇺🇸',
-    region: 'las-vegas',
-    tier: 'mid',
-    lat: 36.1210, lng: -115.1697,
-    address: '3355 Las Vegas Blvd S, Las Vegas, NV 89109',
-    phone: '+1 (702) 414-1000',
-    website: 'venetianlasvegas.com',
-    hours: 'Open 24 hours',
-    minBet: '$15–$25 during peak hours',
-    note: 'One of the largest baccarat footprints on the Strip. Connected to The Palazzo. Sands Corp legacy built deep Asian gaming relationships here. Good starting point for beginners due to table variety and mid-range minimums.'
-  },
-  {
-    id: 'palms-lv',
-    name: 'Palms Casino Resort',
-    city: 'Las Vegas, Nevada',
-    country: 'USA',
-    flag: '🇺🇸',
-    region: 'las-vegas',
-    tier: 'mid',
-    lat: 36.1162, lng: -115.1938,
-    address: '4321 W Flamingo Rd, Las Vegas, NV 89103',
-    phone: '+1 (702) 942-7777',
-    website: 'palms.com',
-    hours: 'Open 24 hours',
-    minBet: '$10–$25',
-    note: "Off-Strip locals favorite. The Palms Café offers an AYCE buffet with lobster and snow crab nights. Tim Ho Wan — the Las Vegas outpost of the Hong Kong dim sum chain recognized by Michelin in its home market — is on property. Lower minimums than Strip counterparts."
-  },
-  {
-    id: 'rio-lv',
-    name: 'Rio All-Suite Hotel & Casino',
-    city: 'Las Vegas, Nevada',
-    country: 'USA',
-    flag: '🇺🇸',
-    region: 'las-vegas',
-    tier: 'mid',
-    lat: 36.1163, lng: -115.1871,
-    address: '3700 W Flamingo Rd, Las Vegas, NV 89103',
-    phone: '+1 (702) 777-7777',
-    website: 'riolasvegas.com',
-    hours: 'Open 24 hours',
-    minBet: '$10–$15',
-    note: 'Off-Strip all-suites property. Home to the WSOP for many years. Lower minimums make it accessible for recreational baccarat players. Less crowded than Strip properties on weeknights.'
-  },
-  {
-    id: 'wynn-macau',
-    name: 'Wynn Macau',
-    city: 'Macau SAR, China',
-    country: 'China',
-    flag: '🇲🇴',
-    region: 'macau',
-    tier: 'vip',
-    lat: 22.1987, lng: 113.5445,
-    address: 'Rua Cidade de Sintra, NAPE, Macau',
-    phone: '+853 2888 9966',
-    website: 'wynnmacau.com',
-    hours: 'Open 24 hours',
-    minBet: 'HKD 1,000+ on main floor; VIP rooms by junket/host',
-    note: "The Wynn brand's Macau flagship. Private VIP rooms built into the casino architecture. Feng shui design principles throughout — water features at the entrance, auspicious color palettes. One of the premiere VIP baccarat destinations in the world. High-limit rooms accessible to verified players through casino hosts."
-  },
-  {
-    id: 'grand-lisboa',
-    name: 'Grand Lisboa',
-    city: 'Macau SAR, China',
-    country: 'China',
-    flag: '🇲🇴',
-    region: 'macau',
-    tier: 'vip',
-    lat: 22.1893, lng: 113.5406,
-    address: 'Avenida de Lisboa, Macau',
-    phone: '+853 2828 3838',
-    website: 'grandlisboahotels.com',
-    hours: 'Open 24 hours',
-    minBet: 'HKD 500+ (mass); significantly higher in VIP',
-    note: "Stanley Ho's iconic lotus-shaped tower, one of Macau's most recognizable buildings. The Lisboa casino brand has operated since 1970 — longer than any current major operator. Mass-market floors run continuous baccarat action. VIP baccarat rooms are accessible through casino hosts."
-  },
-  {
-    id: 'monte-carlo',
-    name: 'Casino de Monte-Carlo',
-    city: 'Monte Carlo, Monaco',
-    country: 'Monaco',
-    flag: '🇲🇨',
-    region: 'europe',
-    tier: 'vip',
-    lat: 43.7388, lng: 7.4282,
-    address: 'Place du Casino, 98000 Monaco',
-    phone: '+377 98 06 21 21',
-    website: 'casinodemontecarlo.com',
-    hours: 'Open daily from 2pm; some rooms from noon',
-    minBet: '€5 slots; €10 table games; private rooms higher',
-    note: 'The archetype of European casino elegance. Built in 1863, designed by Charles Garnier (architect of the Paris Opéra). Chemin de fer — the original form of baccarat — is still offered here. Bring your passport; Monaco residents are prohibited from gambling. Smart dress code enforced. Tourists welcome in main gaming rooms; Salles Privées require registration.'
-  },
-  {
-    id: 'marina-bay-sands',
-    name: 'Marina Bay Sands',
-    city: 'Singapore',
-    country: 'Singapore',
-    flag: '🇸🇬',
-    region: 'asia',
-    tier: 'vip',
-    lat: 1.2838, lng: 103.8607,
-    address: '10 Bayfront Ave, Singapore 018956',
-    phone: '+65 6688 8888',
-    website: 'marinabaysands.com',
-    hours: 'Open 24 hours',
-    minBet: 'SGD 25 (main floor); up to SGD 800,000 on high-limit tables',
-    note: 'One of the highest table maximums in the world — high-limit baccarat tables authorized up to SGD 800,000 per hand (Wizard of Vegas, 2023). Singapore citizens and PRs pay a mandatory SGD 150/24hr levy (Casino Control Amendment Act, October 2024). Foreign tourists enter free with passport. Iconic infinity pool on Level 57 (hotel guests only).'
-  },
-  {
-    id: 'paradise-city',
-    name: 'Paradise City',
-    city: 'Incheon, South Korea',
-    country: 'South Korea',
-    flag: '🇰🇷',
-    region: 'asia',
-    tier: 'vip',
-    lat: 37.4940, lng: 126.4855,
-    address: '2850 Gonghang-daero, Jung-gu, Incheon 22382',
-    phone: '+82 32-698-3600',
-    website: 'p-city.com',
-    hours: 'Casino open 24 hours',
-    minBet: 'KRW 10,000+; VIP rooms by arrangement',
-    note: '10-minute drive from Incheon International Airport — one of the world\'s top-ranked airports. A 55/45 joint venture between Paradise Co. and SEGA SAMMY Holdings, built specifically for Japanese VIP visitors who generate ~60% of casino revenue (Korea Economic Daily, 2023). Korean nationals barred. Full-service spa with onsen-style heated pools and jjimjilbang sauna facilities — excellent layover option. Featured as the resort destination in Netflix\'s Singles Inferno Seasons 1 & 2.'
-  },
-  {
-    id: 'borgata',
-    name: 'Borgata Hotel Casino & Spa',
-    city: 'Atlantic City, New Jersey',
-    country: 'USA',
-    flag: '🇺🇸',
-    region: 'atlantic-city',
-    tier: 'vip',
-    lat: 39.3622, lng: -74.4412,
-    address: '1 Borgata Way, Atlantic City, NJ 08401',
-    phone: '+1 (609) 317-1000',
-    website: 'borgata.com',
-    hours: 'Open 24 hours',
-    minBet: '$10–$25 on main floor; $50–$100 in high-limit',
-    note: 'The dominant premium property in Atlantic City since opening in 2003. MGM Resorts owned. The highest table limits in Atlantic City. Strong baccarat program with dedicated high-limit room. Point-based loyalty integrated with MGM Rewards. Best overall casino experience in the market.'
-  },
-  {
-    id: 'ocean-casino',
-    name: 'Ocean Casino Resort',
-    city: 'Atlantic City, New Jersey',
-    country: 'USA',
-    flag: '🇺🇸',
-    region: 'atlantic-city',
-    tier: 'mid',
-    lat: 39.3637, lng: -74.4337,
-    address: '500 Boardwalk, Atlantic City, NJ 08401',
-    phone: '+1 (609) 783-8000',
-    website: 'theoceanac.com',
-    hours: 'Open 24 hours',
-    minBet: '$10–$15 on most tables',
-    note: 'The tallest building in New Jersey at 57 floors. Formerly the Revel Casino (2012–2014). One of the newest and most modern gaming floors on the East Coast. Growing baccarat program with competitive minimums. Good alternative to Borgata for a slightly less crowded experience.'
-  },
-  {
-    id: 'sarova-stanley',
-    name: 'Simba on the Park Casino (Sarova Stanley)',
-    city: 'Nairobi, Kenya',
-    country: 'Kenya',
-    flag: '🇰🇪',
-    region: 'africa',
-    tier: 'mid',
-    lat: -1.2831, lng: 36.8179,
-    address: 'Corner of Kimathi St & Kenyatta Ave, Nairobi',
-    phone: '+254 20 228 830',
-    website: 'sarovahotels.com/stanley',
-    hours: 'Open daily; casino hours vary',
-    minBet: 'KES equivalent of ~$5–10 USD',
-    note: "One of the most atmospheric casino rooms in Africa. The Sarova Stanley opened in 1902 as one of East Africa's first hotels, rebuilt under British colonial administration into its current form. The interior is largely intact — dark wood paneling, long veranda corridors, and a measured pace that predates Kenya's independence by decades. Guests consistently describe the hospitality as exceptional. Baccarat available alongside roulette, blackjack, and poker. Foreign passport required for entry; KES and USD accepted."
-  },
-  {
-    id: 'resorts-world-nyc',
-    name: 'Resorts World NYC',
-    city: 'Jamaica, New York',
-    country: 'USA',
-    flag: '🇺🇸',
-    region: 'northeast',
-    tier: 'mid',
-    lat: 40.6694, lng: -73.8336,
-    address: '110-00 Rockaway Blvd, Jamaica, NY 11420',
-    phone: '+1 (718) 215-2828',
-    website: 'rwnewyork.com',
-    hours: 'Open 24 hours',
-    minBet: 'Live tables from $15 (as of April 2026)',
-    note: 'Historic: live table games — including baccarat, blackjack, craps, and roulette — launched here on April 28, 2026, the first in New York City\'s history. Previously electronic table games only. Adjacent to JFK Airport. NY Gaming Commission awarded the operating license December 2025. Significant expansion planned as the full downstate casino license process continues.'
-  }
+  // ── LAS VEGAS ─────────────────────────────────────────────────────
+  { id:'bellagio', name:'Bellagio', city:'Las Vegas, Nevada', flag:'🇺🇸', region:'las-vegas', tier:'vip', lat:36.1126, lng:-115.1767, address:'3600 Las Vegas Blvd S, Las Vegas, NV 89109', phone:'+1 (702) 693-7111', website:'bellagio.mgmresorts.com', hours:'Open 24 hours', minBet:'$25–$50; high-limit from $200', note:'The benchmark for Las Vegas baccarat. High-limit room adjacent to the poker room. Highest-volume baccarat on the Strip outside Asian-branded rooms. MGM Rewards points transferable across portfolio.' },
+  { id:'wynn-lv', name:'Wynn Las Vegas', city:'Las Vegas, Nevada', flag:'🇺🇸', region:'las-vegas', tier:'vip', lat:36.1278, lng:-115.1643, address:'3131 Las Vegas Blvd S, Las Vegas, NV 89109', phone:'+1 (702) 770-7000', website:'wynnlasvegas.com', hours:'Open 24 hours', minBet:'$25–$100; private rooms by arrangement', note:'Preferred by Asian high-rollers for privacy and service. Private baccarat salons available through host. EZ Baccarat frequently offered. Steve Wynn built partly as a dedicated Asian gaming destination.' },
+  { id:'encore-lv', name:'Encore Las Vegas', city:'Las Vegas, Nevada', flag:'🇺🇸', region:'las-vegas', tier:'vip', lat:36.1301, lng:-115.1647, address:'3131 Las Vegas Blvd S (Tower 2), Las Vegas, NV 89109', phone:'+1 (702) 770-8000', website:'wynnlasvegas.com/encore', hours:'Open 24 hours', minBet:'$25–$100 on main floor', note:'Wynn\'s sister tower with shared loyalty. Higher-end room atmosphere than the main Wynn casino. Separate high-limit baccarat area with private salon access for qualified players.' },
+  { id:'venetian-lv', name:'The Venetian Las Vegas', city:'Las Vegas, Nevada', flag:'🇺🇸', region:'las-vegas', tier:'mid', lat:36.1210, lng:-115.1697, address:'3355 Las Vegas Blvd S, Las Vegas, NV 89109', phone:'+1 (702) 414-1000', website:'venetianlasvegas.com', hours:'Open 24 hours', minBet:'$15–$25', note:'One of the largest baccarat footprints on the Strip. Palazzo is the attached sister property. Former Sands Corp heritage built deep Asian VIP relationships here. Good for beginners due to variety and mid-range minimums.' },
+  { id:'caesars-lv', name:"Caesars Palace", city:'Las Vegas, Nevada', flag:'🇺🇸', region:'las-vegas', tier:'vip', lat:36.1162, lng:-115.1744, address:'3570 Las Vegas Blvd S, Las Vegas, NV 89109', phone:'+1 (702) 731-7110', website:'caesarspalace.com', hours:'Open 24 hours', minBet:'$25–$50; Baccarat Pit from $100', note:'Home of the famous Baccarat Bar. Caesars Rewards (formerly Total Rewards) is one of the most transferable loyalty programs — status matches available across all Caesars Entertainment properties including Harrah\'s, Horseshoe, Paris, Bally\'s. Ask a host about the Seven Stars tier-match program.' },
+  { id:'aria-lv', name:'Aria Resort & Casino', city:'Las Vegas, Nevada', flag:'🇺🇸', region:'las-vegas', tier:'vip', lat:36.1072, lng:-115.1750, address:'3730 Las Vegas Blvd S, Las Vegas, NV 89158', phone:'+1 (702) 590-7111', website:'aria.com', hours:'Open 24 hours', minBet:'$25–$50; high-limit $200+', note:'CityCenter flagship. Sleek modern property with a dedicated high-limit baccarat room. Strong Asian player base. MGM Rewards integrates with Bellagio and Vdara next door. Separate VIP host team for international baccarat players.' },
+  { id:'cosmopolitan-lv', name:'The Cosmopolitan', city:'Las Vegas, Nevada', flag:'🇺🇸', region:'las-vegas', tier:'mid', lat:36.1095, lng:-115.1744, address:'3708 Las Vegas Blvd S, Las Vegas, NV 89109', phone:'+1 (702) 698-7000', website:'cosmopolitanlasvegas.com', hours:'Open 24 hours', minBet:'$15–$25', note:'Trendy, upscale boutique-style property. Good baccarat program with competitive minimums. Identity Blue loyalty cards. Part of MGM Rewards since 2022 acquisition.' },
+  { id:'mgm-grand-lv', name:'MGM Grand', city:'Las Vegas, Nevada', flag:'🇺🇸', region:'las-vegas', tier:'vip', lat:36.1025, lng:-115.1701, address:'3799 Las Vegas Blvd S, Las Vegas, NV 89109', phone:'+1 (702) 891-1111', website:'mgmgrand.com', hours:'Open 24 hours', minBet:'$25–$50; Mansion VIP rooms by invitation', note:'Flagship MGM property. The Mansion is a separate 29-villa private casino for invited ultrahigh-rollers — by introduction only. Regular casino has one of the busiest baccarat floors on the Strip. MGM Rewards points stack across the entire portfolio.' },
+  { id:'mandalay-bay', name:'Mandalay Bay', city:'Las Vegas, Nevada', flag:'🇺🇸', region:'las-vegas', tier:'mid', lat:36.0923, lng:-115.1764, address:'3950 Las Vegas Blvd S, Las Vegas, NV 89119', phone:'+1 (702) 632-7777', website:'mandalaybay.com', hours:'Open 24 hours', minBet:'$15–$25', note:'South Strip property. Connects to Delano Las Vegas and Four Seasons (non-gaming). Large convention crowd means baccarat minimums are often lower than north Strip peers. Beach club adds resort appeal for high-roller packages.' },
+  { id:'palms-lv', name:'Palms Casino Resort', city:'Las Vegas, Nevada', flag:'🇺🇸', region:'las-vegas', tier:'mid', lat:36.1162, lng:-115.1938, address:'4321 W Flamingo Rd, Las Vegas, NV 89103', phone:'+1 (702) 942-7777', website:'palms.com', hours:'Open 24 hours', minBet:'$10–$25', note:'Off-Strip locals favorite. AYCE buffet with lobster and snow crab nights. Tim Ho Wan — Las Vegas outpost of Hong Kong\'s Michelin-recognized dim sum chain — on property. Lower minimums than Strip counterparts. Station Casinos loyalty program.' },
+  { id:'rio-lv', name:'Rio All-Suite Hotel & Casino', city:'Las Vegas, Nevada', flag:'🇺🇸', region:'las-vegas', tier:'mid', lat:36.1163, lng:-115.1871, address:'3700 W Flamingo Rd, Las Vegas, NV 89103', phone:'+1 (702) 777-7777', website:'riolasvegas.com', hours:'Open 24 hours', minBet:'$10–$15', note:'Off-Strip all-suites property. Home to WSOP for many years. Lower minimums make it accessible for recreational baccarat players. Less crowded than Strip properties on weeknights.' },
+  { id:'park-mgm', name:'Park MGM', city:'Las Vegas, Nevada', flag:'🇺🇸', region:'las-vegas', tier:'mid', lat:36.1044, lng:-115.1739, address:'3770 Las Vegas Blvd S, Las Vegas, NV 89109', phone:'+1 (702) 730-7777', website:'parkmgm.com', hours:'Open 24 hours', minBet:'$10–$25', note:'Formerly Monte Carlo. Smoke-free gaming area (rare in Las Vegas). Nomad Bar operates here. Connects to T-Mobile Arena. MGM Rewards.' },
+  { id:'treasure-island', name:'Treasure Island', city:'Las Vegas, Nevada', flag:'🇺🇸', region:'las-vegas', tier:'mid', lat:36.1250, lng:-115.1681, address:'3300 Las Vegas Blvd S, Las Vegas, NV 89109', phone:'+1 (702) 894-7111', website:'treasureisland.com', hours:'Open 24 hours', minBet:'$10–$15', note:'Mid-Strip value property. Smaller baccarat program but accessible minimums. Good option for players who want Strip location without Strip prices.' },
+
+  // ── MACAU ─────────────────────────────────────────────────────────
+  { id:'wynn-macau', name:'Wynn Macau', city:'Macau SAR, China', flag:'🇲🇴', region:'macau', tier:'vip', lat:22.1987, lng:113.5445, address:'Rua Cidade de Sintra, NAPE, Macau', phone:'+853 2888 9966', website:'wynnmacau.com', hours:'Open 24 hours', minBet:'HKD 1,000+ main floor; VIP by host', note:'Flagship Wynn Macau property on the Peninsula. Feng shui design with water features at the entrance. VIP rooms among the best in the world. Tier match available for documented high-rollers from Las Vegas Wynn.' },
+  { id:'wynn-palace', name:'Wynn Palace Cotai', city:'Macau SAR, China', flag:'🇲🇴', region:'macau', tier:'vip', lat:22.1496, lng:113.5648, address:'Avenida da Nave Desportiva, Cotai, Macau', phone:'+853 8889 8889', website:'wynnpalace.com', hours:'Open 24 hours', minBet:'HKD 500+; VIP rooms by host', note:'Wynn\'s Cotai property — more modern than Wynn Macau, with a cable car, performance lake, and extensive luxury retail. Popular with premium mass and VIP players. Shared loyalty with Wynn Las Vegas.' },
+  { id:'grand-lisboa', name:'Grand Lisboa', city:'Macau SAR, China', flag:'🇲🇴', region:'macau', tier:'vip', lat:22.1893, lng:113.5406, address:'Avenida de Lisboa, Macau', phone:'+853 2828 3838', website:'grandlisboahotels.com', hours:'Open 24 hours', minBet:'HKD 500+ mass; higher in VIP', note:'Stanley Ho\'s lotus-shaped tower, one of Macau\'s most iconic buildings. Lisboa brand operating since 1970. Mass floors run continuous baccarat. VIP rooms accessible through casino hosts.' },
+  { id:'sands-macau', name:'Sands Macao', city:'Macau SAR, China', flag:'🇲🇴', region:'macau', tier:'mid', lat:22.1934, lng:113.5393, address:'Largo de Monte Carlo, Macau', phone:'+853 2888 3388', website:'sandsmacao.com', hours:'Open 24 hours', minBet:'HKD 100–500', note:'First Western-owned casino in Macau (opened 2004). Large mass-market floor. Good entry point for first-time Macau visitors. Sands loyalty (Sands Rewards) is cross-property with Venetian Macau and Parisian.' },
+  { id:'venetian-macau', name:'The Venetian Macao', city:'Macau SAR, China', flag:'🇲🇴', region:'macau', tier:'mid', lat:22.1489, lng:113.5670, address:'Estrada da Baía de Nossa Senhora da Esperança, Taipa, Macau', phone:'+853 2882 8888', website:'venetianmacao.com', hours:'Open 24 hours', minBet:'HKD 200–500', note:'The largest casino in the world by floor space. 3,400 slot machines, 800+ gaming tables. Baccarat section is massive. Family-friendly resort side coexists with enormous gaming floor. Sands Rewards cross-property.' },
+  { id:'galaxy-macau', name:'Galaxy Macau', city:'Macau SAR, China', flag:'🇲🇴', region:'macau', tier:'vip', lat:22.1496, lng:113.5706, address:'Estrada da Baía de Nossa Senhora da Esperança, Cotai, Macau', phone:'+853 2888 0888', website:'galaxymacau.com', hours:'Open 24 hours', minBet:'HKD 300+; VIP by host', note:'Galaxy Entertainment flagship. Popular with Mainland Chinese VIPs. Multiple hotel towers on property (Banyan Tree, Okura, JW Marriott). Galaxy Rewards. Luxury retail and dining to rival any property in Asia.' },
+  { id:'city-of-dreams', name:'City of Dreams', city:'Macau SAR, China', flag:'🇲🇴', region:'macau', tier:'vip', lat:22.1512, lng:113.5665, address:'Estrada do Istmo, Cotai, Macau', phone:'+853 8868 6688', website:'cityofdreamsmacau.com', hours:'Open 24 hours', minBet:'HKD 500+; Morpheus VIP by invitation', note:'Melco Resorts flagship. Houses the architecturally dramatic Morpheus Hotel, designed by Zaha Hadid. Crown Towers on property. VIP program operated directly (not through junkets). Popular for premium mass baccarat.' },
+  { id:'studio-city', name:'Studio City Macau', city:'Macau SAR, China', flag:'🇲🇴', region:'macau', tier:'mid', lat:22.1515, lng:113.5612, address:'Estrada do Istmo, Cotai, Macau', phone:'+853 8865 6868', website:'studiocity-macau.com', hours:'Open 24 hours', minBet:'HKD 200–500', note:'Melco\'s entertainment-focused property. Batman Dark Flight ride on property. More leisure-oriented than pure gaming. Good for groups with mixed gaming interest. Premium mass baccarat available.' },
+  { id:'mgm-cotai', name:'MGM Cotai', city:'Macau SAR, China', flag:'🇲🇴', region:'macau', tier:'vip', lat:22.1499, lng:113.5687, address:'Avenida da Nave Desportiva, Cotai, Macau', phone:'+853 8806 8888', website:'mgm.mo', hours:'Open 24 hours', minBet:'HKD 500+; Spectacle VIP rooms by host', note:'MGM\'s Cotai property built around an 8-story indoor Spectacle space. Notable for high design and VIP-focused layout. MGM Macau (Peninsula) is the sister property. MGM Lion\'s Share rewards.' },
+
+  // ── SINGAPORE ─────────────────────────────────────────────────────
+  { id:'marina-bay-sands', name:'Marina Bay Sands', city:'Singapore', flag:'🇸🇬', region:'asia', tier:'vip', lat:1.2838, lng:103.8607, address:'10 Bayfront Ave, Singapore 018956', phone:'+65 6688 8888', website:'marinabaysands.com', hours:'Open 24 hours', minBet:'SGD 25 main; up to SGD 800,000 high-limit', note:'One of the highest table maximums on earth — high-limit tables authorized to SGD 800,000/hand. Singapore citizens/PRs pay SGD 150/24hr levy (Oct 2024 Act). Tourists free with passport. Sands Rewards cross-property. International VIP team offers tier matching for documented high-rollers from other Sands properties.' },
+  { id:'rws', name:'Resorts World Sentosa', city:'Singapore', flag:'🇸🇬', region:'asia', tier:'vip', lat:1.2572, lng:103.8198, address:'8 Sentosa Gateway, Singapore 098269', phone:'+65 6577 8888', website:'rwsentosa.com', hours:'Open 24 hours', minBet:'SGD 25 main; private rooms higher', note:'Genting Singapore flagship. Universal Studios on property. Strong baccarat program with squeeze. RWS Genting Rewards. International marketing team (Singapore, Hong Kong, Indonesia offices) for VIP inquiries. Good for families combining gaming with theme park.' },
+
+  // ── SOUTH KOREA ───────────────────────────────────────────────────
+  { id:'paradise-city', name:'Paradise City', city:'Incheon, South Korea', flag:'🇰🇷', region:'asia', tier:'vip', lat:37.4940, lng:126.4855, address:'2850 Gonghang-daero, Jung-gu, Incheon 22382', phone:'+82 32-698-3600', website:'p-city.com', hours:'Casino open 24 hours', minBet:'KRW 10,000+; VIP by arrangement', note:'10-min drive from Incheon International Airport. 55/45 JV between Paradise Co. and SEGA SAMMY Holdings; ~60% of revenue from Japanese visitors (Korea Economic Daily, 2023). Korean nationals barred. Onsen-style spa and jjimjilbang saunas — excellent layover option. Featured in Netflix\'s Singles Inferno Seasons 1 & 2.' },
+  { id:'seven-luck-hilton', name:'Seven Luck Casino (Hilton)', city:'Seoul, South Korea', flag:'🇰🇷', region:'asia', tier:'mid', lat:37.5573, lng:126.9988, address:'395 Sowol-ro, Jung-gu, Seoul 04632', phone:'+82 2-3466-6000', website:'sevenluck.com', hours:'24 hours', minBet:'KRW 10,000+', note:'One of Korea\'s largest foreigner-only casinos. Grand Korea Leisure (GKL) operated, a government-affiliated company. Located inside Hilton Seoul. Strong baccarat focus with multiple tables. USD/JPY commonly accepted.' },
+  { id:'kangwon-land', name:'Kangwon Land Casino', city:'Jeongseon, South Korea', flag:'🇰🇷', region:'asia', tier:'mid', lat:37.2221, lng:128.9836, address:'Sanbuk-ro 1, Sawol-eup, Jeongseon-gun, Gangwon-do', phone:'+82 33-590-7700', website:'kangwonland.com', hours:'Open (seasonal hours; closed some days)', minBet:'KRW 1,000–10,000', note:'The only casino in Korea where Korean nationals can legally gamble. Located in a mountain resort area 3+ hours from Seoul. Mix of domestic Korean players and foreign visitors. Baccarat, blackjack, roulette available.' },
+
+  // ── PHILIPPINES ───────────────────────────────────────────────────
+  { id:'okada-manila', name:'Okada Manila', city:'Parañaque, Manila, Philippines', flag:'🇵🇭', region:'asia', tier:'vip', lat:14.5200, lng:120.9817, address:'New Seaside Drive, Entertainment City, Parañaque', phone:'+63 2 8888 0777', website:'okadamanila.com', hours:'Open 24 hours', minBet:'PHP 200+; VIP rooms by host', note:'Japan\'s Universal Entertainment Corp (pachinko conglomerate) flagship in Manila. Known for high-design interiors and a massive fountain show. Strong Japanese and Chinese high-roller base. VIP host team for international players. Baccarat is the dominant game.' },
+  { id:'solaire', name:'Solaire Resort & Casino', city:'Parañaque, Manila, Philippines', flag:'🇵🇭', region:'asia', tier:'vip', lat:14.5198, lng:120.9824, address:'1 Aseana Blvd, Entertainment City, Parañaque', phone:'+63 2 8888 8888', website:'solaireresort.com', hours:'Open 24 hours', minBet:'PHP 500+; VIP by host', note:'Bloomberry Resorts flagship. First of the Entertainment City IRs to open (2013). Strong Chinese VIP program. Premium mass and VIP floors. International VIP team will negotiate comps and status for documented high-rollers.' },
+  { id:'city-of-dreams-manila', name:'City of Dreams Manila', city:'Parañaque, Manila, Philippines', flag:'🇵🇭', region:'asia', tier:'vip', lat:14.5192, lng:120.9831, address:'Asean Ave, Entertainment City, Parañaque', phone:'+63 2 8691 9888', website:'cityofdreamsmanila.com', hours:'Open 24 hours', minBet:'PHP 200+; Crown Towers VIP higher', note:'Melco Resorts Manila property. Shares brand DNA with City of Dreams Macau. Crown Towers Manila on site. Nobu Manila restaurant. Chinese and Filipino VIP focus. Baccarat dominant on all floors.' },
+
+  // ── CAMBODIA ──────────────────────────────────────────────────────
+  { id:'nagaworld', name:'NagaWorld Phnom Penh', city:'Phnom Penh, Cambodia', flag:'🇰🇭', region:'asia', tier:'vip', lat:11.5630, lng:104.9289, address:'Samdach Techo Hun Sen Park, Phnom Penh 12301', phone:'+855 23 228 822', website:'nagaworld.com', hours:'Open 24 hours', minBet:'USD 5+; VIP rooms higher', note:'Cambodia\'s dominant integrated resort, operated by NagaCorp which holds an exclusive gaming licence in the capital until 2035. Strong Chinese VIP program. USD is the operating currency. Naga 1, Naga 2 towers. Baccarat is the primary game by volume.' },
+
+  // ── AUSTRALIA ─────────────────────────────────────────────────────
+  { id:'crown-melbourne', name:'Crown Melbourne', city:'Melbourne, Victoria, Australia', flag:'🇦🇺', region:'australia', tier:'vip', lat:-37.8228, lng:144.9558, address:'8 Whiteman St, Southbank VIC 3006', phone:'+61 3 9292 8888', website:'crownmelbourne.com.au', hours:'Open 24 hours', minBet:'AUD 5+; Mahogany Room VIP higher', note:'Australia\'s largest casino. The Mahogany Room is the VIP baccarat area — invitation-only, with minimums starting at AUD 300. Crown Rewards tier program. Previously hosted some of the world\'s biggest baccarat sessions. Under Star Entertainment + Blackstone ownership restructuring.' },
+  { id:'crown-sydney', name:'Crown Sydney', city:'Sydney, NSW, Australia', flag:'🇦🇺', region:'australia', tier:'vip', lat:-33.8612, lng:151.2006, address:'1 Barangaroo Ave, Barangaroo NSW 2000', phone:'+61 2 8871 7171', website:'crownsydney.com.au', hours:'Open 24 hours', minBet:'AUD 30 table games', note:'New luxury property in Barangaroo. Gaming restricted to private high-roller rooms (NSW licence conditions). Only Australian citizens/PRs with approved passes can access gaming. International VIPs can access via Crown International membership. Extraordinary views of Sydney Harbour.' },
+  { id:'the-star-sydney', name:'The Star Sydney', city:'Sydney, NSW, Australia', flag:'🇦🇺', region:'australia', tier:'mid', lat:-33.8696, lng:151.1986, address:'80 Pyrmont St, Pyrmont NSW 2009', phone:'+61 2 9777 9000', website:'star.com.au', hours:'Open 24 hours', minBet:'AUD 5–25', note:'The Star Entertainment flagship. Lyric Theatre on property. Strong Chinese and SE Asian player base. The Star Club loyalty rewards. Baccarat rooms on multiple levels. VIP Sovereign Room for high-limit play. Under regulatory oversight following 2022 review.' },
+  { id:'crown-perth', name:'Crown Perth', city:'Perth, Western Australia', flag:'🇦🇺', region:'australia', tier:'mid', lat:-31.9614, lng:115.8991, address:'Great Eastern Hwy, Burswood WA 6100', phone:'+61 8 9362 7777', website:'crownperth.com.au', hours:'Open 24 hours', minBet:'AUD 5+; Mahogany Room higher', note:'Western Australia\'s only legal casino. Crown Rewards cross-property with Melbourne. Strong Asian community in Perth drives steady baccarat play. Burswood on Swan location; concerts and sports events at adjacent stadium create room demand.' },
+
+  // ── MONTE CARLO / EUROPE ──────────────────────────────────────────
+  { id:'monte-carlo', name:'Casino de Monte-Carlo', city:'Monaco', flag:'🇲🇨', region:'europe', tier:'vip', lat:43.7388, lng:7.4282, address:'Place du Casino, 98000 Monaco', phone:'+377 98 06 21 21', website:'casinodemontecarlo.com', hours:'Daily from 2pm (some rooms from noon)', minBet:'€5 slots; €10 tables; Salles Privées higher', note:'Built 1863, designed by Charles Garnier (Paris Opéra architect). Chemin de fer — the original baccarat — still offered in Salles Privées. Passport required; Monaco residents barred. Smart dress code. Café de Paris casino adjacent is more casual.' },
+  { id:'casino-cafe-paris', name:'Casino Café de Paris', city:'Monaco', flag:'🇲🇨', region:'europe', tier:'mid', lat:43.7382, lng:7.4271, address:'Place du Casino, 98000 Monaco', phone:'+377 98 06 23 00', website:'montecarlosbm.com', hours:'Daily from 10am', minBet:'€1 slots; €3 tables', note:'More casual sibling to Casino de Monte-Carlo, operated by same Monte-Carlo SBM group. Slot-heavy but table games including baccarat available. No dress code. Monte-Carlo SBM loyalty cards cross-property.' },
+  { id:'casino-baden-baden', name:'Casino Baden-Baden', city:'Baden-Baden, Germany', flag:'🇩🇪', region:'europe', tier:'vip', lat:48.7626, lng:8.2447, address:'Kaiserallee 1, 76530 Baden-Baden, Germany', phone:'+49 7221 30240', website:'casino-baden-baden.de', hours:'Sun–Thu 2pm–3am; Fri–Sat 2pm–4am', minBet:'€5+; private rooms higher', note:'Widely considered the most beautiful casino in the world — Dostoevsky wrote The Gambler after losing here. Ornate Belle Époque interiors. Baccarat (Punto Banco) available in private rooms. Formal dress code strictly enforced (jacket required for men). Membership card required for entry.' },
+  { id:'casino-venezia', name:'Casino di Venezia', city:'Venice, Italy', flag:'🇮🇹', region:'europe', tier:'vip', lat:45.4423, lng:12.3348, address:'Cannaregio 2040, 30121 Venice, Italy', phone:'+39 041 529 7111', website:'casinovenezia.it', hours:'Daily 11:30am–2:30am (main); 3pm–2:30am (winter)', minBet:'€5+', note:'The oldest casino in the world — founded 1638. Housed in the 15th-century Ca\' Vendramin Calergi palazzo on the Grand Canal. Wagner died here in 1883. Two locations: the historic palace and a modern annexe. Punto Banco (baccarat) regularly offered. Vaporetto water taxi stop at the front door.' },
+  { id:'casino-estoril', name:'Casino de Estoril', city:'Estoril, Portugal', flag:'🇵🇹', region:'europe', tier:'mid', lat:38.7060, lng:-9.3965, address:'Av. Dr. Stanley Ho, 2765-192 Estoril, Portugal', phone:'+351 21 466 7700', website:'casino-estoril.pt', hours:'Daily 3pm–3am', minBet:'€5+', note:'The largest casino in Europe by floor space. Inspired Ian Fleming\'s James Bond — Casino Royale was partly set here. Punto Banco (baccarat) on main floor. 30 minutes from Lisbon by train. Beachside Estoril-Sol district.' },
+  { id:'casino-divonne', name:'Casino de Divonne-les-Bains', city:'Divonne-les-Bains, France', flag:'🇫🇷', region:'europe', tier:'mid', lat:46.3579, lng:6.1412, address:'Ave des Thermes, 01220 Divonne-les-Bains, France', phone:'+33 4 50 40 34 34', website:'groupetranchant.com', hours:'Daily from 11am', minBet:'€5+', note:'France\'s highest-grossing casino. Just 20 minutes from Geneva airport. Attracts wealthy Swiss and French players. Punto Banco baccarat available. Spa and thermal baths attached. Popular for players transiting Geneva.' },
+  { id:'holland-casino-amsterdam', name:'Holland Casino Amsterdam', city:'Amsterdam, Netherlands', flag:'🇳🇱', region:'europe', tier:'mid', lat:52.3634, lng:4.8948, address:'Max Euweplein 62, 1017 MB Amsterdam, Netherlands', phone:'+31 20 521 1111', website:'hollandcasino.nl', hours:'Daily noon–3am', minBet:'€5+', note:'State-owned Holland Casino has 14 locations across the Netherlands; Amsterdam is the flagship. Punto Banco (baccarat) available. No dress code but smart casual recommended. 5-minute walk from Leidseplein.' },
+  { id:'casino-tallinn', name:'Olympic Casino (Tallinn)', city:'Tallinn, Estonia', flag:'🇪🇪', region:'europe', tier:'mid', lat:59.4369, lng:24.7534, address:'Viru väljak 4, 10111 Tallinn, Estonia', phone:'+372 6315 840', website:'olympiccasino.ee', hours:'Open 24 hours', minBet:'€5+', note:'Olympic Entertainment Group operates 100+ casinos across the Baltic states and Eastern Europe. Baccarat available. Tallinn is a growing gaming destination for Scandinavian visitors. No entry fee; passport may be required.' },
+
+  // ── LONDON / UK ───────────────────────────────────────────────────
+  { id:'crockfords', name:'Crockfords Club', city:'London, England', flag:'🇬🇧', region:'europe', tier:'vip', lat:51.5068, lng:-0.1486, address:'30 Curzon St, Mayfair, London W1J 7TL', phone:'+44 20 7493 7771', website:'crockfords.co.uk', hours:'Members and guests; 24-hr licence', minBet:'High — private members club', note:'London\'s oldest gaming club (1828). Requires introduction by a member or sponsorship to join. Chemin de fer and Punto Banco. Scene of the famous Phil Ivey edge-sorting case (£7.7M baccarat dispute). Discretion absolute.' },
+  { id:'ritz-club', name:'The Ritz Club', city:'London, England', flag:'🇬🇧', region:'europe', tier:'vip', lat:51.5075, lng:-0.1427, address:'150 Piccadilly, London W1J 9BR', phone:'+44 20 7493 8181', website:'theritzclub.com', hours:'Members and guests; open from 2pm daily', minBet:'High — private members club', note:'Located inside The Ritz Hotel. Elaborate Louis XVI-style gaming room. Punto Banco, Chemin de fer, and private baccarat by arrangement. Membership application required; a known introducer expedites significantly. Dress code strictly enforced.' },
+  { id:'aspinalls', name:"Aspinall's Club", city:'London, England', flag:'🇬🇧', region:'europe', tier:'vip', lat:51.5023, lng:-0.1412, address:'27–28 Curzon St, Mayfair, London W1J 7EG', phone:'+44 20 7499 4599', website:'aspinalls.co.uk', hours:'Members and guests; restricted hours', minBet:'High — private members club', note:'Founded by John Aspinall in 1962. One of the most exclusive clubs in London. Baccarat, chemin de fer, and private tables. Accepts applications from high-net-worth individuals. Known for exceptional food and social atmosphere as much as gaming.' },
+  { id:'hippodrome', name:'The Hippodrome Casino', city:'London, England', flag:'🇬🇧', region:'europe', tier:'mid', lat:51.5116, lng:-0.1286, address:'Cranbourn St, London WC2H 7JH', phone:'+44 20 7769 8888', website:'hippodromecasino.com', hours:'Daily noon–6am', minBet:'£5+', note:'The largest standalone casino in central London. No membership required — walk-in welcome. Baccarat, roulette, poker. Five floors of entertainment. Leicester Square location. More accessible than Mayfair clubs; popular with tourists and walk-in trade.' },
+  { id:'grosvenor-vic', name:'Grosvenor Victoria Casino', city:'London, England', flag:'🇬🇧', region:'europe', tier:'mid', lat:51.5167, lng:-0.1773, address:'150–162 Edgware Rd, Paddington, London W2 2DT', phone:'+44 20 7262 7777', website:'grosvenorcasinos.com', hours:'Open 24 hours', minBet:'£2–10+', note:'The Victoria — one of the UK\'s most famous poker rooms, also offers baccarat. Grosvenor Rewards cross-property (over 50 UK locations). Walk-in welcome with valid ID. Popular with both regulars and international visitors.' },
+
+  // ── ATLANTIC CITY ─────────────────────────────────────────────────
+  { id:'borgata', name:'Borgata Hotel Casino & Spa', city:'Atlantic City, New Jersey', flag:'🇺🇸', region:'atlantic-city', tier:'vip', lat:39.3622, lng:-74.4412, address:'1 Borgata Way, Atlantic City, NJ 08401', phone:'+1 (609) 317-1000', website:'borgata.com', hours:'Open 24 hours', minBet:'$10–$25; high-limit $50–$100', note:'Dominant premium property in Atlantic City since 2003. MGM Resorts owned — MGM Rewards cross-property. Highest table limits in Atlantic City. Best baccarat program on the East Coast. VIP hosts for high-volume players; documented MGM play from Las Vegas can result in status offers.' },
+  { id:'ocean-casino', name:'Ocean Casino Resort', city:'Atlantic City, New Jersey', flag:'🇺🇸', region:'atlantic-city', tier:'mid', lat:39.3637, lng:-74.4337, address:'500 Boardwalk, Atlantic City, NJ 08401', phone:'+1 (609) 783-8000', website:'theoceanac.com', hours:'Open 24 hours', minBet:'$10–$15', note:'Tallest building in New Jersey (57 floors). Formerly the Revel (2012–2014). One of the newest, most modern gaming floors on the East Coast. Growing baccarat program with competitive minimums.' },
+  { id:'hard-rock-ac', name:'Hard Rock Hotel & Casino Atlantic City', city:'Atlantic City, New Jersey', flag:'🇺🇸', region:'atlantic-city', tier:'mid', lat:39.3600, lng:-74.4226, address:'1000 Boardwalk, Atlantic City, NJ 08401', phone:'+1 (609) 449-1000', website:'hardrockhotelatlanticcity.com', hours:'Open 24 hours', minBet:'$10–$25', note:'Converted from the former Trump Taj Mahal. Music-themed atmosphere. Hard Rock Rewards across 200+ global properties — cross-property status meaningful for traveling high-rollers. Baccarat available alongside live music entertainment.' },
+  { id:'caesars-ac', name:"Caesars Atlantic City", city:'Atlantic City, New Jersey', flag:'🇺🇸', region:'atlantic-city', tier:'mid', lat:39.3572, lng:-74.4298, address:'2100 Pacific Ave, Atlantic City, NJ 08401', phone:'+1 (609) 348-4411', website:'caesarsac.com', hours:'Open 24 hours', minBet:'$10–$25', note:'Caesars Rewards cross-property with all Caesars Entertainment locations (80+ casinos globally). Las Vegas Seven Stars status can be leveraged here. Classic Atlantic City property with boardwalk frontage. Baccarat, roulette, and blackjack.' },
+  { id:'tropicana-ac', name:'Tropicana Atlantic City', city:'Atlantic City, New Jersey', flag:'🇺🇸', region:'atlantic-city', tier:'mid', lat:39.3539, lng:-74.4280, address:'2831 Boardwalk, Atlantic City, NJ 08401', phone:'+1 (609) 340-4000', website:'tropicana.net', hours:'Open 24 hours', minBet:'$10–$15', note:'Caesars Entertainment property (acquired 2022). Caesars Rewards cross-property. South end of boardwalk. Large gaming floor with competitive minimums. Good value for recreational baccarat players.' },
+
+  // ── NORTHEAST US ──────────────────────────────────────────────────
+  { id:'resorts-world-nyc', name:'Resorts World NYC', city:'Jamaica, Queens, New York', flag:'🇺🇸', region:'northeast', tier:'mid', lat:40.6694, lng:-73.8336, address:'110-00 Rockaway Blvd, Jamaica, NY 11420', phone:'+1 (718) 215-2828', website:'rwnewyork.com', hours:'Open 24 hours', minBet:'From $15 (live tables as of April 2026)', note:'Historic: live table games — baccarat, blackjack, craps, roulette — launched April 28, 2026, the first in NYC history. Adjacent to JFK Airport. NY Gaming Commission awarded full downstate licence December 2025. Genting Rewards cross-property with RWS Singapore.' },
+  { id:'mgm-national-harbor', name:'MGM National Harbor', city:'Oxon Hill, Maryland', flag:'🇺🇸', region:'northeast', tier:'vip', lat:38.7765, lng:-76.9969, address:'101 MGM National Ave, Oxon Hill, MD 20745', phone:'+1 (844) 646-6847', website:'mgmnationalharbor.com', hours:'Open 24 hours', minBet:'$15–$25; high-limit available', note:'Flagship MGM property on the Potomac River, 10 minutes from DC. Strong baccarat program serving the DC/VA/MD Asian community. MGM Rewards cross-property — Las Vegas status transfers. Excellent high-roller host program.' },
+  { id:'foxwoods', name:'Foxwoods Resort Casino', city:'Mashantucket, Connecticut', flag:'🇺🇸', region:'northeast', tier:'mid', lat:41.4824, lng:-71.9654, address:'350 Trolley Line Blvd, Mashantucket, CT 06338', phone:'+1 (800) 369-9663', website:'foxwoods.com', hours:'Open 24 hours', minBet:'$10–$25', note:'One of the world\'s largest casinos by gaming floor. Mashantucket Pequot Tribal Nation operated. Foxwoods Rewards loyalty program. Baccarat available across multiple rooms. 2.5 hours from NYC; shuttle service available.' },
+  { id:'mohegan-sun', name:'Mohegan Sun', city:'Uncasville, Connecticut', flag:'🇺🇸', region:'northeast', tier:'mid', lat:41.4900, lng:-72.0930, address:'1 Mohegan Sun Blvd, Uncasville, CT 06382', phone:'+1 (888) 226-7711', website:'mohegansun.com', hours:'Open 24 hours', minBet:'$10–$25', note:'Mohegan Tribe operated. Three connected casino areas (Earth, Sky, Wind). Mohegan Sun Rewards cross-property internationally (including Niagara). Good baccarat program serving the Boston/Providence/NYC corridor.' },
+  { id:'live-casino-md', name:'Live! Casino & Hotel Maryland', city:'Hanover, Maryland', flag:'🇺🇸', region:'northeast', tier:'mid', lat:39.1679, lng:-76.6682, address:'7002 Arundel Mills Circle, Hanover, MD 21076', phone:'+1 (443) 842-7000', website:'livecasinohotel.com', hours:'Open 24 hours', minBet:'$10–$25', note:'Between Baltimore and Washington. Stadium-style gaming floor. Cordish Companies operated. Baccarat available. Convenient for BWI Airport travelers. Table minimums often lower than DC-area competition.' },
+  { id:'wind-creek-bethlehem', name:'Wind Creek Bethlehem', city:'Bethlehem, Pennsylvania', flag:'🇺🇸', region:'northeast', tier:'mid', lat:40.6155, lng:-75.3607, address:'77 Wind Creek Blvd, Bethlehem, PA 18015', phone:'+1 (877) 726-3777', website:'windcreekbethlehem.com', hours:'Open 24 hours', minBet:'$10–$15', note:'Pokagon Band of Potawatomi operated. Interesting location in a converted Bethlehem Steel plant — industrial heritage site. 1 hour from NYC. Baccarat available. Wind Creek Rewards cross-property.' },
+
+  // ── CANADA ────────────────────────────────────────────────────────
+  { id:'niagara-fallsview', name:'Niagara Fallsview Casino', city:'Niagara Falls, Ontario, Canada', flag:'🇨🇦', region:'canada', tier:'vip', lat:43.0919, lng:-79.0803, address:'6380 Fallsview Blvd, Niagara Falls, ON L2G 7X5', phone:'+1 (888) 325-5788', website:'fallsviewcasinoresort.com', hours:'Open 24 hours', minBet:'CAD 10–25; high-limit available', note:'OLG (Ontario Lottery & Gaming) operated. Views of Niagara Falls from the gaming floor. One of the busiest casinos in North America. Baccarat with strong Asian Canadian player base. Connected to Marriott Fallsview hotel.' },
+  { id:'casino-montreal', name:"Casino de Montréal", city:'Montréal, Québec, Canada', flag:'🇨🇦', region:'canada', tier:'mid', lat:45.5040, lng:-73.5271, address:'1 Ave du Casino, Montréal, QC H3C 4W7', phone:'+1 (514) 392-2746', website:'casinodemontreal.com', hours:'Open 24 hours', minBet:'CAD 5+', note:'Loto-Québec operated. Located on Île Notre-Dame. Housed in the former French pavilion from Expo 67. One of the most beautiful casino buildings in North America. Strong baccarat program. Carte Privilège loyalty.' },
+  { id:'river-rock', name:'River Rock Casino Resort', city:'Richmond, BC, Canada', flag:'🇨🇦', region:'canada', tier:'mid', lat:49.1719, lng:-123.0640, address:'8811 River Rd, Richmond, BC V6X 3P8', phone:'+1 (604) 247-8900', website:'riverrock.com', hours:'Open 24 hours', minBet:'CAD 5–25; Tuxedo Room VIP higher', note:'BCLC operated. 30-minute SkyTrain from Vancouver Airport (YVR). Strong Chinese-Canadian player base in Richmond. Baccarat is the dominant game. Tuxedo Room for high-limit play. Good option for players transiting YVR.' },
+  { id:'great-canadian-toronto', name:'Great Canadian Casino Resort Toronto', city:'Etobicoke, Ontario, Canada', flag:'🇨🇦', region:'canada', tier:'vip', lat:43.6543, lng:-79.5744, address:'250 Carlingview Dr, Toronto, ON M9W 5G6', phone:'+1 (647) 476-6000', website:'gcgaming.com', hours:'Open 24 hours', minBet:'CAD 10–25; VIP available', note:'Opened 2022. The first Las Vegas-style integrated resort in Greater Toronto. OLG operated. Near Toronto Pearson Airport. Strong Asian player base driving baccarat demand. Great Canadian Rewards program.' },
+
+  // ── CARIBBEAN & BAHAMAS ───────────────────────────────────────────
+  { id:'atlantis-bahamas', name:'Atlantis Paradise Island Casino', city:'Nassau, Bahamas', flag:'🇧🇸', region:'caribbean', tier:'vip', lat:25.0889, lng:-77.3253, address:'1 Casino Dr, Paradise Island, Nassau, Bahamas', phone:'+1 (242) 363-3000', website:'atlantisbahamas.com', hours:'Open 24 hours', minBet:'USD 10+; private rooms higher', note:'Largest casino in the Caribbean. Brookfield Asset Management operated. Strong baccarat program drawing American, Latin American, and international VIPs. Atlantis Crystal Palace Rewards. Resort complex includes water park, marine habitat, and multiple hotel towers.' },
+  { id:'baha-mar', name:"Baha Mar Grand Hyatt Casino", city:'Nassau, Bahamas', flag:'🇧🇸', region:'caribbean', tier:'vip', lat:25.0853, lng:-77.3399, address:'W Bay St & Blake Rd, Nassau, Bahamas', phone:'+1 (242) 788-2000', website:'bahamar.com', hours:'Open 24 hours', minBet:'USD 10+', note:'2,200 resort rooms across Grand Hyatt, SLS, and Rosewood brands. Newest major Bahamas resort (opened 2017). Baccarat and table games on large casino floor. SkyView Lounge high-limit area. Competing directly with Atlantis for regional VIP business — both offer aggressive tier-match packages.' },
+  { id:'aruba-hyatt', name:'Stellaris Casino (Hyatt)', city:'Palm Beach, Aruba', flag:'🇦🇼', region:'caribbean', tier:'mid', lat:12.5736, lng:-70.0338, address:'J.E. Irausquin Blvd 85, Palm Beach, Aruba', phone:'+297 586-1234', website:'aruba.hyatt.com', hours:'Daily 8pm–4am', minBet:'USD 5+', note:'Aruba is one of the Caribbean\'s better gaming destinations for table players. Stellaris at the Hyatt Regency is the most reputable baccarat room on the island. Dutch-administered territory — regulated gaming. Popular with Venezuelan and Colombian high-rollers.' },
+  { id:'atlantis-bahrain', name:'AlBander Resort (Bahrain)', city:'Salmabad, Bahrain', flag:'🇧🇭', region:'caribbean', tier:'mid', lat:26.1700, lng:50.5239, address:'AlBander Hotel & Resort, Salmabad, Bahrain', phone:'+973 1770 1701', website:'albander.com', hours:'Restaurant and leisure; gaming in licensed area', minBet:'Varies', note:'Bahrain permits gaming at licensed hotel properties for non-Muslims and international visitors. Limited but legal baccarat available at select licensed venues. Bahrain is the most accessible legal gaming destination in the GCC region. Dollar-pegged economy; USD universally accepted.' },
+
+  // ── SOUTH AMERICA ─────────────────────────────────────────────────
+  { id:'conrad-punta', name:"Conrad Punta del Este", city:'Punta del Este, Uruguay', flag:'🇺🇾', region:'south-america', tier:'vip', lat:-34.9133, lng:-54.9442, address:'Parada 4, Playa Mansa, Punta del Este, Uruguay', phone:'+598 42 491 1111', website:'hilton.com/conradpuntadeleste', hours:'Open 24 hours', minBet:'USD 5+; VIP rooms higher', note:'South America\'s premier casino resort. Conrad Hotels (Hilton) operated. Baccarat, roulette, and blackjack. Strong Argentine and Brazilian player base — Punta del Este is the luxury gambling destination for the Southern Cone. Hilton Honors cross-property.' },
+  { id:'casino-iguazu', name:"Enjoy Casino Iguazú", city:'Puerto Iguazú, Argentina', flag:'🇦🇷', region:'south-america', tier:'mid', lat:-25.5973, lng:-54.5810, address:'Av. Tres Fronteras 650, Puerto Iguazú, Misiones', phone:'+54 3757 49 8000', website:'enjoy.cl', hours:'Open 24 hours', minBet:'ARS equivalent', note:'Near Iguazú Falls on the Argentina-Brazil-Paraguay triple border. Enjoy Group (Chile) operated. Baccarat available. Popular with Brazilian visitors (Brazil has no legal casinos). Dramatic natural backdrop makes it a unique casino destination.' },
+
+  // ── AFRICA ────────────────────────────────────────────────────────
+  { id:'sarova-stanley', name:'Simba on the Park (Sarova Stanley)', city:'Nairobi, Kenya', flag:'🇰🇪', region:'africa', tier:'mid', lat:-1.2831, lng:36.8179, address:'Corner of Kimathi St & Kenyatta Ave, Nairobi', phone:'+254 20 228 830', website:'sarovahotels.com/stanley', hours:'Daily; casino hours vary', minBet:'KES equivalent of ~$5–10 USD', note:'The Sarova Stanley opened in 1902 — one of East Africa\'s first hotels. Interior is largely intact colonial-era: dark wood paneling, long corridors, old-school atmosphere. Baccarat available. Exceptional hospitality by regional standards. USD accepted at the cage.' },
+  { id:'sun-city', name:"Sun City Resort Casino", city:'North West Province, South Africa', flag:'🇿🇦', region:'africa', tier:'vip', lat:-25.3372, lng:27.0924, address:'Sun City Resort, North West Province 0316', phone:'+27 14 557 1000', website:'suncityresort.com', hours:'Open 24 hours', minBet:'ZAR 20+; Salon Privé higher', note:'Iconic South African resort — the "Las Vegas of Africa." Sun International operated. Salon Privé for high-limit play including baccarat. Water park, golf courses, and wildlife adjacent. 2 hours from Johannesburg. Investor relations: the resort is a significant employer in the North West Province.' },
+  { id:'grandwest', name:'GrandWest Casino & Entertainment World', city:'Cape Town, South Africa', flag:'🇿🇦', region:'africa', tier:'mid', lat:-33.9012, lng:18.5331, address:'1 Vanguard Dr, Goodwood, Cape Town 7460', phone:'+27 21 505 7777', website:'grandwest.co.za', hours:'Open 24 hours', minBet:'ZAR 20+', note:'Cape Town\'s primary casino. Tsogo Sun operated. Large gaming floor — over 2,500 slots and 80+ table games including baccarat. Strong local and tourist player base. Montecasino (Johannesburg) is the Tsogo Sun flagship. Frequent Players cross-property.' },
+  { id:'emperors-palace', name:"Emperors Palace", city:'Kempton Park (Johannesburg), South Africa', flag:'🇿🇦', region:'africa', tier:'vip', lat:-26.1296, lng:28.2255, address:'64 Jones Rd, Kempton Park 1620', phone:'+27 11 928 1000', website:'emperorspalace.com', hours:'Open 24 hours', minBet:'ZAR 20+; VIP rooms higher', note:'Directly adjacent to O.R. Tambo International Airport (Johannesburg). 5-minute shuttle. Peermont Hotels operated. One of the most convenient airport casinos in Africa. Baccarat in dedicated rooms. Strong business traveler and transit player base. Emperor\'s Palace Rewards.' },
+  { id:'skycity-auckland', name:'SkyCity Auckland', city:'Auckland, New Zealand', flag:'🇳🇿', region:'africa', tier:'mid', lat:-36.8481, lng:174.7620, address:'Corner of Victoria & Federal St, Auckland City 1010', phone:'+64 9 363 6000', website:'skycityauckland.co.nz', hours:'Open 24 hours', minBet:'NZD 5+; Sky Tower VIP higher', note:'New Zealand\'s only full-scale casino. At the base of Auckland\'s Sky Tower. SkyCity Entertainment Group operated. Baccarat draws strong Chinese New Zealander and tourist play. Sky Rewards loyalty program. International VIP team for documented high-rollers.' },
 ];
 
-// ── LEAFLET SETUP ──────────────────────────────────────────────────────────
-const map = L.map('map', {
-  center: [25, 10],
-  zoom: 2,
-  zoomControl: true,
-  attributionControl: true
-});
+// ── MAP INIT ───────────────────────────────────────────────────────
+const map = L.map('map', { center:[20, 20], zoom:2, zoomControl:true });
 
 L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/">CARTO</a>',
-  subdomains: 'abcd',
-  maxZoom: 19
+  attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/">CARTO</a>',
+  subdomains:'abcd', maxZoom:19
 }).addTo(map);
 
-// Custom pin icon
 function makeIcon(tier) {
-  const colors = {
-    vip:  { bg: '#c9a84c', border: '#8a6a1a', text: '#000' },
-    mid:  { bg: '#4a8a4a', border: '#2a5a2a', text: '#fff' },
-    mass: { bg: '#3a5aaa', border: '#1a2a6a', text: '#fff' }
-  };
-  const c = colors[tier] || colors.mid;
+  const c = tier === 'vip'
+    ? { bg:'#c9a84c', border:'#8a6a1a', sym:'♠' }
+    : { bg:'#3a7a3a', border:'#1a5a1a', sym:'♣' };
   return L.divIcon({
-    className: '',
-    html: `<div style="width:28px;height:28px;background:${c.bg};border:2px solid ${c.border};border-radius:50% 50% 50% 0;transform:rotate(-45deg);display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.6)"><div style="transform:rotate(45deg);font-size:11px;color:${c.text}">♠</div></div>`,
-    iconSize: [28, 28],
-    iconAnchor: [14, 28],
-    popupAnchor: [0, -30]
+    className:'',
+    html:`<div style="width:22px;height:22px;background:${c.bg};border:2px solid ${c.border};border-radius:50% 50% 50% 0;transform:rotate(-45deg);display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.7)"><div style="transform:rotate(45deg);font-size:9px;color:#000;font-weight:bold">${c.sym}</div></div>`,
+    iconSize:[22,22], iconAnchor:[11,22], popupAnchor:[0,-24]
   });
 }
 
 const markers = {};
-
 CASINOS.forEach(c => {
-  const marker = L.marker([c.lat, c.lng], { icon: makeIcon(c.tier) })
-    .addTo(map)
-    .bindPopup(`
-      <div class="popup-name">${c.flag} ${c.name}</div>
-      <div class="popup-addr">${c.address}</div>
-      <div class="popup-open">${c.hours}</div>
-    `, { maxWidth: 240 });
-
-  marker.on('click', () => openDetail(c.id));
-  markers[c.id] = marker;
+  const m = L.marker([c.lat,c.lng], {icon:makeIcon(c.tier)}).addTo(map)
+    .bindPopup(`<div class="popup-name">${c.flag} ${c.name}</div><div class="popup-addr">${c.city}</div><div class="popup-phone">${c.phone}</div>`, {maxWidth:220});
+  m.on('click', () => openDetail(c.id));
+  markers[c.id] = m;
 });
 
-// ── SIDEBAR LIST ───────────────────────────────────────────────────────────
+// ── STATE ──────────────────────────────────────────────────────────
 let activeFilter = 'all';
 let activeCard = null;
 
-function renderList() {
-  const list = document.getElementById('casino-list');
-  list.innerHTML = '';
-  const visible = CASINOS.filter(c => activeFilter === 'all' || c.region === activeFilter);
-  visible.forEach(c => {
-    const card = document.createElement('div');
-    card.className = 'casino-card' + (activeCard === c.id ? ' active' : '');
-    card.dataset.id = c.id;
-    const badgeClass = c.tier === 'vip' ? 'badge-vip' : c.tier === 'mid' ? 'badge-mid' : 'badge-mass';
-    const badgeLabel = c.tier === 'vip' ? 'High-Limit' : c.tier === 'mid' ? 'Mid-Range' : 'Mass';
-    card.innerHTML = `
-      <div class="card-flag-name">
-        <span class="card-flag">${c.flag}</span>
-        <span class="card-name">${c.name}</span>
-        <span class="card-type-badge ${badgeClass}">${badgeLabel}</span>
-      </div>
-      <div class="card-city">${c.city}</div>
-    `;
-    card.addEventListener('click', () => openDetail(c.id));
-    list.appendChild(card);
+function getVisible() {
+  const q = (document.getElementById('search-input').value || '').toLowerCase();
+  return CASINOS.filter(c => {
+    const matchesFilter = activeFilter === 'all' || c.region === activeFilter;
+    if (!matchesFilter) return false;
+    if (!q) return true;
+    return (c.name+c.city+c.flag+(c.region||'')).toLowerCase().includes(q);
   });
 }
 
-// ── DETAIL PANEL ───────────────────────────────────────────────────────────
+function renderList() {
+  const list = document.getElementById('casino-list');
+  const visible = getVisible();
+  document.getElementById('casino-count').textContent = `${visible.length} of ${CASINOS.length} properties`;
+  list.innerHTML = '';
+  visible.forEach(c => {
+    const el = document.createElement('div');
+    el.className = 'casino-card' + (activeCard===c.id?' active':'');
+    el.dataset.id = c.id;
+    el.innerHTML = `
+      <div class="card-row1">
+        <span class="card-flag">${c.flag}</span>
+        <span class="card-name">${c.name}</span>
+        <span class="card-badge ${c.tier==='vip'?'badge-vip':'badge-mid'}">${c.tier==='vip'?'VIP':'Mid'}</span>
+      </div>
+      <div class="card-city">${c.city}</div>`;
+    el.addEventListener('click', () => openDetail(c.id));
+    list.appendChild(el);
+  });
+}
+
+// ── DETAIL ─────────────────────────────────────────────────────────
 function openDetail(id) {
-  const c = CASINOS.find(x => x.id === id);
+  const c = CASINOS.find(x=>x.id===id);
   if (!c) return;
   activeCard = id;
   renderList();
-
-  map.flyTo([c.lat, c.lng], 13, { duration: 1.2 });
+  map.flyTo([c.lat,c.lng], 13, {duration:1});
   markers[id].openPopup();
-
-  const content = document.getElementById('detail-content');
-  const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(c.name + ' ' + c.address)}`;
-  content.innerHTML = `
+  const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(c.name+' '+c.address)}`;
+  document.getElementById('detail-content').innerHTML = `
     <div class="detail-name">${c.flag} ${c.name}</div>
     <div class="detail-city">${c.city}</div>
     <div class="detail-divider"></div>
-
-    <div class="detail-section-label">Address</div>
-    <div class="detail-val">${c.address}</div>
-
-    <div class="detail-section-label">Phone</div>
-    <div class="detail-val"><a href="tel:${c.phone.replace(/\s/g,'')}">${c.phone}</a></div>
-
-    <div class="detail-section-label">Website</div>
-    <div class="detail-val"><a href="https://${c.website}" target="_blank" rel="noopener">${c.website}</a></div>
-
-    <div class="detail-section-label">Hours</div>
-    <div class="detail-val">${c.hours}</div>
-
-    <div class="detail-section-label">Baccarat Minimums</div>
-    <div class="detail-val">${c.minBet}</div>
-
-    <div class="detail-note">${c.note.replace(/<strong>/g,'<strong>').replace(/<\/strong>/g,'</strong>')}</div>
-
-    <a href="${mapsUrl}" target="_blank" rel="noopener" class="directions-btn">Open in Google Maps ↗</a>
-  `;
-
+    <div class="dlabel">Address</div><div class="dval">${c.address}</div>
+    <div class="dlabel">Phone</div><div class="dval"><a href="tel:${c.phone.replace(/\s/g,'')}">${c.phone}</a></div>
+    <div class="dlabel">Website</div><div class="dval"><a href="https://${c.website}" target="_blank" rel="noopener">${c.website}</a></div>
+    <div class="dlabel">Hours</div><div class="dval">${c.hours}</div>
+    <div class="dlabel">Baccarat Minimums</div><div class="dval">${c.minBet}</div>
+    <div class="detail-note">${c.note}</div>
+    <div class="tier-match-chip" onclick="openTierMatch()">♛ &nbsp;Tier Match Guide</div>
+    <a href="${mapsUrl}" target="_blank" rel="noopener" class="directions-btn">Open in Google Maps ↗</a>`;
   document.getElementById('detail-panel').classList.add('open');
 }
 
@@ -564,22 +433,33 @@ document.getElementById('detail-back').addEventListener('click', () => {
   document.getElementById('detail-panel').classList.remove('open');
   activeCard = null;
   renderList();
-  map.flyTo([25, 10], 2, { duration: 1 });
+  const visible = getVisible();
+  if (visible.length > 0) {
+    const bounds = L.latLngBounds(visible.map(c=>[c.lat,c.lng]));
+    map.flyToBounds(bounds.pad(0.2), {duration:1});
+  }
 });
 
-// ── FILTERS ────────────────────────────────────────────────────────────────
+// ── TIER MATCH ─────────────────────────────────────────────────────
+function openTierMatch() {
+  document.getElementById('tier-match-panel').classList.add('open');
+}
+function closeTierMatch() {
+  document.getElementById('tier-match-panel').classList.remove('open');
+}
+
+// ── FILTERS ────────────────────────────────────────────────────────
 document.querySelectorAll('.filter-pill').forEach(pill => {
   pill.addEventListener('click', () => {
-    document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.filter-pill').forEach(p=>p.classList.remove('active'));
     pill.classList.add('active');
     activeFilter = pill.dataset.filter;
     activeCard = null;
+    document.getElementById('detail-panel').classList.remove('open');
     renderList();
-
-    const visible = CASINOS.filter(c => activeFilter === 'all' || c.region === activeFilter);
+    const visible = getVisible();
     if (visible.length > 0) {
-      const bounds = L.latLngBounds(visible.map(c => [c.lat, c.lng]));
-      map.flyToBounds(bounds.pad(0.3), { duration: 1 });
+      map.flyToBounds(L.latLngBounds(visible.map(c=>[c.lat,c.lng])).pad(0.3), {duration:1});
     }
   });
 });
