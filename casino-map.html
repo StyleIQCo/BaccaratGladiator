@@ -131,12 +131,12 @@ html,body{ width:100%; height:100%; background:#0a0a0a; font-family:'Raleway',sa
 .directions-btn{ display:block; margin-top:14px; padding:9px 0; text-align:center; background:rgba(201,168,76,0.07); border:1px solid rgba(201,168,76,0.28); border-radius:6px; color:#c9a84c; font-size:.69rem; letter-spacing:.1em; text-transform:uppercase; text-decoration:none; transition:all .2s; font-family:'Raleway',sans-serif; }
 .directions-btn:hover{ background:rgba(201,168,76,0.14); border-color:#c9a84c; }
 
-.leaflet-popup-content-wrapper{ background:#111; border:1px solid rgba(201,168,76,0.35); border-radius:8px; color:#e8dfc4; box-shadow:0 4px 20px rgba(0,0,0,0.8); }
-.leaflet-popup-tip{ background:#111; }
+.leaflet-popup-content-wrapper{ background:#fff; border:1px solid rgba(0,0,0,0.12); border-radius:8px; color:#222; box-shadow:0 4px 16px rgba(0,0,0,0.18); }
+.leaflet-popup-tip{ background:#fff; }
 .leaflet-popup-content{ margin:11px 13px; }
-.popup-name{ font-family:'Cinzel',serif; font-size:.78rem; font-weight:700; color:#c9a84c; margin-bottom:2px; }
-.popup-addr{ font-size:.65rem; color:rgba(255,255,255,0.45); line-height:1.5; }
-.popup-phone{ font-size:.62rem; color:rgba(201,168,76,0.6); margin-top:2px; }
+.popup-name{ font-family:'Cinzel',serif; font-size:.78rem; font-weight:700; color:#7a5c00; margin-bottom:2px; }
+.popup-addr{ font-size:.65rem; color:#555; line-height:1.5; }
+.popup-phone{ font-size:.62rem; color:#2a5c2a; margin-top:2px; }
 </style>
 </head>
 <body>
@@ -346,19 +346,19 @@ const CASINOS = [
 // ── MAP INIT ───────────────────────────────────────────────────────
 const map = L.map('map', { center:[20, 20], zoom:2, zoomControl:true });
 
-L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
   attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/">CARTO</a>',
   subdomains:'abcd', maxZoom:19
 }).addTo(map);
 
 function makeIcon(tier) {
   const c = tier === 'vip'
-    ? { bg:'#c9a84c', border:'#8a6a1a', sym:'♠' }
-    : { bg:'#3a7a3a', border:'#1a5a1a', sym:'♣' };
+    ? { bg:'#b8860b', border:'#5a3e00', text:'#fff' }
+    : { bg:'#1a5c1a', border:'#0a2e0a', text:'#fff' };
   return L.divIcon({
     className:'',
-    html:`<div style="width:22px;height:22px;background:${c.bg};border:2px solid ${c.border};border-radius:50% 50% 50% 0;transform:rotate(-45deg);display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.7)"><div style="transform:rotate(45deg);font-size:9px;color:#000;font-weight:bold">${c.sym}</div></div>`,
-    iconSize:[22,22], iconAnchor:[11,22], popupAnchor:[0,-24]
+    html:`<div style="width:26px;height:26px;background:${c.bg};border:2px solid ${c.border};border-radius:50% 50% 50% 0;transform:rotate(-45deg);display:flex;align-items:center;justify-content:center;box-shadow:0 2px 10px rgba(0,0,0,0.5)"><div style="transform:rotate(45deg);font-size:11px;color:${c.text};font-weight:bold">♠</div></div>`,
+    iconSize:[26,26], iconAnchor:[13,26], popupAnchor:[0,-28]
   });
 }
 
@@ -413,7 +413,10 @@ function openDetail(id) {
   renderList();
   map.flyTo([c.lat,c.lng], 13, {duration:1});
   markers[id].openPopup();
+  const q = encodeURIComponent(c.name + ' ' + c.city);
   const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(c.name+' '+c.address)}`;
+  const taUrl   = `https://www.tripadvisor.com/Search?q=${q}`;
+  const yelpUrl = `https://www.yelp.com/search?find_desc=${encodeURIComponent(c.name)}&find_loc=${encodeURIComponent(c.city)}`;
   document.getElementById('detail-content').innerHTML = `
     <div class="detail-name">${c.flag} ${c.name}</div>
     <div class="detail-city">${c.city}</div>
@@ -425,7 +428,11 @@ function openDetail(id) {
     <div class="dlabel">Baccarat Minimums</div><div class="dval">${c.minBet}</div>
     <div class="detail-note">${c.note}</div>
     <div class="tier-match-chip" onclick="openTierMatch()">♛ &nbsp;Tier Match Guide</div>
-    <a href="${mapsUrl}" target="_blank" rel="noopener" class="directions-btn">Open in Google Maps ↗</a>`;
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:14px;">
+      <a href="${mapsUrl}" target="_blank" rel="noopener" class="directions-btn" style="margin:0;font-size:.62rem;">📍 Google Maps</a>
+      <a href="${taUrl}"   target="_blank" rel="noopener" class="directions-btn" style="margin:0;font-size:.62rem;">⭐ TripAdvisor</a>
+      <a href="${yelpUrl}" target="_blank" rel="noopener" class="directions-btn" style="margin:0;font-size:.62rem;">🍽 Yelp</a>
+    </div>`;
   document.getElementById('detail-panel').classList.add('open');
 }
 
