@@ -31,12 +31,17 @@ jobs:
         run: |
           aws s3 sync . s3://${{ secrets.S3_BUCKET }} \
             --exclude ".git/*" \
+            --exclude ".claude/*" \
             --exclude "node_modules/*" \
             --exclude "android/*" \
             --exclude "ios/*" \
             --exclude "*.keystore" \
             --exclude "*.jks" \
-            --exclude "AuthKey_*.p8" \
+            --exclude "*.p8" \
+            --exclude "*.pdf" \
+            --exclude "*.docx" \
+            --exclude "*.pptx" \
+            --exclude "Apple_Developer*" \
             --delete
 
       - name: Invalidate CloudFront cache

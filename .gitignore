@@ -14,3 +14,7 @@ google-services.json
 
 # iOS secrets
 AuthKey_*.p8
+
+# Personal / sensitive documents — never commit
+Apple_Developer*
+.claude/
