@@ -330,7 +330,9 @@ td.bad                          { color: #cc2222 !important; }
 .payout-chip.banker { border-color: #1e5ac8 !important; color: #1e5ac8 !important; }
 .payout-chip.player { border-color: #cc2222 !important; color: #cc2222 !important; }
 .payout-chip.tie    { border-color: #1a8c3c !important; color: #1a8c3c !important; }
-.page-footer        { color: #888 !important; border-color: #ccc !important; }
+/* Footer: static flow so it follows content instead of floating mid-page */
+.page-footer        { position: static !important; margin-top: 0.45in !important;
+                      color: #888 !important; border-color: #ccc !important; }
 .gloss-term         { color: #1a4a1a !important; }
 .country-header     { border-color: #1a4a1a !important; }
 .country-name       { color: #1a4a1a !important; }
@@ -340,8 +342,20 @@ td.bad                          { color: #cc2222 !important; }
 .mistake-item       { border-color: #e0d8c8 !important; }
 .toc-num            { color: #c9a84c !important; }
 .toc-title          { color: #1a4a1a !important; }
-.toc-sub            { color: #555 !important; }
-.toc-entry          { border-color: #e0d8c8 !important; }
+/* Compact TOC subtitles so TOC page 1 (20 entries) fits within 9.5in */
+.toc-sub            { color: #555 !important; font-size: 7.5pt !important; line-height: 1.25 !important; }
+.toc-entry          { border-color: #e0d8c8 !important; padding: 3px 0 !important; }
+
+/* ── Cover: hide testimonial block — too tall for 9.5in content area ─── */
+.cover-testimonials { display: none !important; }
+
+/* ── Reader bonus callout print overrides ────────────────────────────── */
+.reader-bonus-callout { page-break-inside: avoid !important; break-inside: avoid !important;
+                        background: #fdf8e4 !important; border-color: #c9a84c !important; }
+.reader-bonus-callout img { width: 80px !important; height: 80px !important; }
+
+/* ── QR callout images: force display size for consistent layout ─────── */
+.qr-callout img { width: 80px !important; height: 80px !important; }
 
 /* Inline dark backgrounds (via style attribute) */
 [style*="background:#1a4a1a"], [style*="background: #1a4a1a"],
@@ -371,7 +385,7 @@ td.bad                          { color: #cc2222 !important; }
   </div>
   <div style="font-family:'Cinzel',serif;font-size:8pt;letter-spacing:.15em;color:rgba(201,168,76,.35);text-transform:uppercase;">28 Chapters · Rules · Roads · Strategy · Comps · VIP · Junkets · Rituals · History · Five Cities · Famous Characters</div>
 
-  <div style="margin:.2in 0 .15in;display:flex;flex-direction:column;gap:.1in;">
+  <div class="cover-testimonials" style="margin:.2in 0 .15in;display:flex;flex-direction:column;gap:.1in;">
     <div style="border-left:2px solid rgba(201,168,76,.4);padding-left:.15in;">
       <p style="margin:0;font-size:9pt;font-style:italic;color:rgba(201,168,76,.75);line-height:1.5;">"The only baccarat guide written by someone who has played in Singapore, Monte Carlo, London, and Las Vegas — and paid for all of it in comps."</p>
       <p style="margin:.04in 0 0;font-size:7.5pt;color:rgba(201,168,76,.45);font-family:'Cinzel',serif;letter-spacing:.1em;">— Baccarat Gladiator</p>
@@ -595,6 +609,17 @@ td.bad                          { color: #cc2222 !important; }
 
   <h3>A Note on the Math</h3>
   <p>This book does not pretend that baccarat can be beaten over the long run. It cannot. The Banker bet carries a 1.06% house edge that no strategy, system, or road map can eliminate. What this book does is help you understand the game completely, play it with discipline, enjoy the full casino experience, and extract every dollar of value the loyalty system is willing to give you. That is the honest promise.</p>
+
+  <!-- READER BONUS -->
+  <div class="reader-bonus-callout" style="display:flex;align-items:center;gap:.18in;border:2px solid #c9a84c;border-radius:8px;padding:.14in .2in;background:linear-gradient(135deg,#fdf8e4,#fffdf2);margin:.22in 0 .1in;page-break-inside:avoid;">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAAEsAQMAAABDsxw2AAAABlBMVEX///8AAABVwtN+AAAACXBIWXMAAA7EAAAOxAGVKw4bAAACHklEQVRoge2aQZKDQAhFSbnI0iN4FI+WHM2jeIQsXaTCCB9aM5mpSjDLz2Ys+mUWQH2BVuQ9uyhMZJxFusfqmQbVu4heZYjDmVgVmyzIJ135uYczPSLDDSkgVscs5uYcVZf11LB+6ZwfbmdLELHjmGVhsSK3aj+7h9j3MCtpOHcaQuwwlhoymWKcXEUa/4fUEPsIUxhKutV2PMQhsSr2ZM+nV/nHiL2NeRburbYh0f2y/rHou2gbT6yIre2ErqdbKeOHjmmoykysilmovRleg48XX2sw7IctWcRqGGrbq3wJxcj2WOI/EKtjiLkFv8f04dWeeXFVIVbFxPYPqG3d9xWobTf8jlgJG7MZTkH2oeNu501VhFgVE2vbLNTT+hDBj75ixLIikkGsgo258FEUuWvI7qEli1gBu+yCLzFER0dn1e4NBto8YgVMttNB0zCGuKp0O60m9jkWOiz2KlxyBeSiLbL1b8SKmMRGwpyK4L/MI8SqWE5w0tbCno7ut9QQq2FxQwRsl5pIkG6bH2IlTCDIIR27mzhfrEFMiB3B4lTc2aY88/rDTKyINbvo/hR5yT08sSoGJ2bnHEPmHPc2VSFWxCZLwSkvlB/Sqj2maVViR7AhP4eIIvePpqRpiESDQewgNjcx0bxF6nFbR+wbGD5Fy67Yy15ag0GshkmWdN4jTzZ9KKo9h2hiRUxhyALukXNv6VdyLy9KYt/H3rMf7qIe4QlcGZoAAAAASUVORK5CYII=" alt="Reader Bonus QR Code" style="width:80px;height:80px;flex-shrink:0;border-radius:4px;border:1px solid #c9a84c;">
+    <div style="flex:1;">
+      <strong style="font-family:'Cinzel',serif;font-size:8pt;color:#7a5c1a;display:block;letter-spacing:.08em;margin-bottom:5px;text-transform:uppercase;">⚔ Reader Bonus — Claim Your Rewards</strong>
+      <p style="font-size:8.5pt;color:#4a3a1a;line-height:1.55;margin:0 0 7px;">Scan the QR code or open <strong>BaccaratGladiator.com</strong>, tap <em>Have a promo code?</em> and enter the word below. You'll instantly receive 25,000 practice chips, 10 gems, your <em>Gladiator Reader</em> badge, and unlimited free hands — no sign-in required.</p>
+      <div style="display:inline-block;background:#c9a84c;color:#fff;font-family:'Cinzel',serif;font-size:10.5pt;font-weight:700;letter-spacing:.22em;padding:4px 16px;border-radius:4px;">MAKAO</div>
+      <span style="font-size:7.5pt;color:#888;margin-left:9px;font-style:italic;">your reader promo code</span>
+    </div>
+  </div>
 
   <div class="page-footer"><span>Road to Nine</span><span>BaccaratGladiator.com</span></div>
 </div>
@@ -1455,7 +1480,7 @@ td.bad                          { color: #cc2222 !important; }
   <div class="field-note">At Marina Bay Sands in Singapore, I was three shoes into a session and down about four hundred. The Big Eye Boy had been flipping red on nearly every column: the shoe was genuinely choppy, the kind that punishes anyone chasing a pattern. I dropped to minimum bets and waited. Not because I thought the roads would turn (I knew they wouldn't tell me that) but because the roads confirmed what I already felt: this shoe had no rhythm, and the right play was patience. On the fourth shoe, the first six hands went Banker. I still didn't size up immediately. I waited for three consecutive columns. Then I moved. I ended the session close to flat. At that table, flat felt like a victory. The roads didn't predict what happened. They gave me the discipline not to bet into chaos.</div>
 
   <div class="qr-callout">
-    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAABQAQMAAAC032DuAAAABlBMVEX//vgNMyAyqBTcAAAACXBIWXMAAA7EAAAOxAGVKw4bAAABV0lEQVQokXXSMYuDMBQH8CeBuBRdPTjMV/DocoWiXyWb60GXDoUUMnS81aHgV9HFLqX9CkpB15YuESS52OPu4tG86efy/P/DA/gbpjj4ecmVNEmdPATACDyT6Y2L+S65k5OVeYDqavWf224gJZ+SOvtGCbl6/OIZmdq386xaPZL9Uo97JGr7nf6H7KbaZeoMbWTh2kPgq1I50iRLLiHQaoMjC6mHxm7XpjDJzmM3PNNpDLoS6W49h9hC9qa7ZcVMRCZJQdyju/jUe006vF3SwxBEFgYxBX/XcxybTJ06hLVgOrrJmIh5JkHvfU5XcQEpHuMYpPprIItxr4UJbwb9+mFkMi1Qd87kpism9C9ttK6Y8CwEeK2REh8vJ5NM5dKvy7tubJA6PEiy5Po4o2dMb/sAKGa6xZTdXfVDL6fMmyF4R25hob5J95zHMzKhvkmc1IdrHVn4N18FRnE/nWPUTQAAAABJRU5ErkJggg==" alt="QR code — Baccarat Scoreboard">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAAEsAQMAAABDsxw2AAAABlBMVEX//vgNMyAyqBTcAAAACXBIWXMAAA7EAAAOxAGVKw4bAAACJ0lEQVRoge2avXHDMAyF4Uuh0iNoFI1mjaZROIJKFTkhxB9JX5I7G0q6h4ohP7sAmMdH0ESvxYMtiJaiE8zbzPxZByvNvliAZbFN1m5c+XKXVY86QzTvVgJgeUxyLpML86H8RvfjQ5K/zfskBQJ2HZMqHJrzuqcnnQH2d5hsaZk06XANAXYZCw2pOacPk2Rf3X6SGmBvYbbgW7rtbR/4IrAs9hQTn4OvWOmXAPYyplWoOZfQ5PO6mFZL9utRqB8ElsYKUR0P9lg/aINd5MX+F4DlMPaDbwl7vITB8G/wYgHLYBtFFb7b4zqwawiwLFb/lMlne2yXO6kLnwQsj5Ged1aFwR77Uaj+zQwGsAz28INvsMfq32TdVaVJDbC3MZMO39vu38h9RagKAbuA7a4Y3b/pCciyuadeBWAprCefTDHqwdc1RMohUgMshVn/4aZXufBvotWnyUv3b8CyWEyGf/N+GtFo84BlMPJGRNdq0rtz+LfQEGApTG4fUzwVNf/mHYlRQ4ClMa+C+beVhgj1BpbF5tjbpszDS5w21jikBlgO8+S7f2tGzluawhRgSaxFfyFSyT5Dlm8MLI/ZJPecc7t0xCXar9jAMtgmmXc7cWiPvfcoXL0fBVgam/3nENoEllgK+c97mLt/A3YRawefxGlPcvZaV4Bdxrj5N3PFNWy3u4ADS2GuIeaTzb/ZM4c1hYBdwtii2Qm2E1C12lTl+aAE9g/Ya/EFGh+xQAIJNHcAAAAASUVORK5CYII=" alt="QR code — Baccarat Scoreboard">
     <div class="qr-text">
       <div class="qr-label">Free Interactive Scoreboard</div>
       <div class="qr-desc">All five roads — Big Road, Bead Plate, Big Eye Boy, Small Road, Cockroach — updated live as you tap results. Includes road prediction for both Banker and Player outcomes.</div>
@@ -2931,7 +2956,7 @@ td.bad                          { color: #cc2222 !important; }
   </div>
 
   <div class="qr-callout">
-    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABIAQMAAABvIyEEAAAABlBMVEX9+fANMyAI9EEoAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAA50lEQVQokXXRMY6DQAwFUCOkTEdNgTTXgIqrIHEB0qOYvQC5wB7GacI1kCjSkm4ijcYxGxSxwrh6nf+3Ab6DPENpLIeNKjjfgTNIVNWhATAZ9gc6M7tjNQWZI8kOB+m6bRXy854/Pvn2kimJ1yo7YcAX8/TbqIqf14FM3OmqMJykb3vZqMUucqmXVJqWfaXzdVCF3BWDiZcEiipkylPrL6rqax/ROI3JVj8hYinSqQKIbs5AC6rkfpSb7C/VXhU0hXvA0lyR/JKM7Jj/a6DRYziSAwe2VyWfvpG1PlElqQYep8/Pd/rOGxVvQSvzb0EPAAAAAElFTkSuQmCC" width="72" height="72" alt="BaccaratGladiator.com QR Code">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAAEsAQMAAABDsxw2AAAABlBMVEX9+fANMyAI9EEoAAAACXBIWXMAAA7EAAAOxAGVKw4bAAABX0lEQVRoge3Yy5HDIBAE0CEChaBQSZUQFIFmDfMB2+uyj3RVT+lgi3drho9EfquqUZe/Ub1FiraSI9rI9mA5evnTTR96SBspZHDMcs/oYyjSb2TAbPbv2tFkyEwO7c/XGUK2PbOy6P3PadFna5NBsezg2HY99PbxxEW2OXuqo7+Lo5R8LLK9Wc3cR5kcdfemtocMiomIjXYwV+mxPhsgQ2P1koxb5OUaW8YEiE8TZCgsWtimQf9toZ+5ShcyLJbl8ftabSxvPWRbsOrDaoH2Jy8y79suGQRb1t6x8ErspGWZA2RgzI9GR6Q/c7d+L2SIbG6p8y4zqvlmSgbE1nIfcY+Ovl8R2fasZsqXzCVa4vPg21GKDIAt3/DtKBUgoj/J8FjmbtH391nNO5oMl6nmUUq9l/Wf6MlgWH7szU359NMUGRaz8na2i8/M/c4rDxkM06hI3/rXr7HZzmQ47Lf6A2Pq3lFfY2HLAAAAAElFTkSuQmCC" width="72" height="72" alt="BaccaratGladiator.com QR Code">
     <div class="qr-callout-text"><strong>Practice makes permanent — play free at BaccaratGladiator.com</strong><span>All variants · No account · Real road maps · Card squeeze included</span></div>
   </div>
 
@@ -3150,7 +3175,7 @@ td.bad                          { color: #cc2222 !important; }
   <div class="field-note">I played at one of the Mayfair clubs on a visit where I had no expectations beyond seeing the room. I ended up at a table with three other players, no one I recognized, no one who introduced themselves. We played for nearly three hours and exchanged maybe twenty words total. The chips were different, the felt was different, the silence was different. In Las Vegas or Macau, there is always ambient noise, even in high-limit rooms. In that London room there was nothing but the cards and the occasional quiet instruction from the croupier. I lost a modest amount and walked out into Mayfair at midnight feeling like I had been somewhere very few people ever get to go. That feeling was worth more than the loss.</div>
 
   <div class="qr-callout">
-    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABIAQMAAABvIyEEAAAABlBMVEX9+fANMyAI9EEoAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAA50lEQVQokXXRMY6DQAwFUCOkTEdNgTTXgIqrIHEB0qOYvQC5wB7GacI1kCjSkm4ijcYxGxSxwrh6nf+3Ab6DPENpLIeNKjjfgTNIVNWhATAZ9gc6M7tjNQWZI8kOB+m6bRXy854/Pvn2kimJ1yo7YcAX8/TbqIqf14FM3OmqMJykb3vZqMUucqmXVJqWfaXzdVCF3BWDiZcEiipkylPrL6rqax/ROI3JVj8hYinSqQKIbs5AC6rkfpSb7C/VXhU0hXvA0lyR/JKM7Jj/a6DRYziSAwe2VyWfvpG1PlElqQYep8/Pd/rOGxVvQSvzb0EPAAAAAElFTkSuQmCC" width="72" height="72" alt="BaccaratGladiator.com QR Code">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAAEsAQMAAABDsxw2AAAABlBMVEX9+fANMyAI9EEoAAAACXBIWXMAAA7EAAAOxAGVKw4bAAABX0lEQVRoge3Yy5HDIBAE0CEChaBQSZUQFIFmDfMB2+uyj3RVT+lgi3drho9EfquqUZe/Ub1FiraSI9rI9mA5evnTTR96SBspZHDMcs/oYyjSb2TAbPbv2tFkyEwO7c/XGUK2PbOy6P3PadFna5NBsezg2HY99PbxxEW2OXuqo7+Lo5R8LLK9Wc3cR5kcdfemtocMiomIjXYwV+mxPhsgQ2P1koxb5OUaW8YEiE8TZCgsWtimQf9toZ+5ShcyLJbl8ftabSxvPWRbsOrDaoH2Jy8y79suGQRb1t6x8ErspGWZA2RgzI9GR6Q/c7d+L2SIbG6p8y4zqvlmSgbE1nIfcY+Ovl8R2fasZsqXzCVa4vPg21GKDIAt3/DtKBUgoj/J8FjmbtH391nNO5oMl6nmUUq9l/Wf6MlgWH7szU359NMUGRaz8na2i8/M/c4rDxkM06hI3/rXr7HZzmQ47Lf6A2Pq3lFfY2HLAAAAAElFTkSuQmCC" width="72" height="72" alt="BaccaratGladiator.com QR Code">
     <div class="qr-callout-text"><strong>Practice before you travel — free at BaccaratGladiator.com</strong><span>Same rules as Macau, Las Vegas, Singapore, London, and Monte Carlo · No account needed</span></div>
   </div>
 
@@ -3653,7 +3678,7 @@ td.bad                          { color: #cc2222 !important; }
   <p>If you have never played live baccarat, or if it has been a while, practice costs nothing. The <strong>Baccarat Gladiator app</strong> offers a full free baccarat game with live road maps, squeeze mode, and bet tracking, no account required, available on any device. Use it to get comfortable with bet placement, road reading, and pace before you sit at a real table. It is especially useful for making the third-card rules feel instinctive: play enough hands through the app and the draw-or-stand decisions stop feeling like rules you have to look up and start feeling like something you already know. Live dealer platforms (Evolution Gaming, Playtech, Pragmatic Play) also offer demo modes at no cost. Spend at least a few sessions watching the roads fill, making decisions without money on the line. The table feels very different when $200 is on Banker.</p>
 
   <div class="qr-callout">
-    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAABQAQMAAAC032DuAAAABlBMVEX//vgNMyAyqBTcAAAACXBIWXMAAA7EAAAOxAGVKw4bAAABA0lEQVQokXXSQarDIBAGYMFtqBcQcjXBCwhuBQfcSrxAwKsFvEDArXQ69j3avNeO2XwS5dcZhXiPiIc2iyp4v9IIuwsns7gxtIMm4Ja4sbQjInzQGFkws6T9rWH6TfvCiG232f+c98V5EXCvO30yjtiGzz47hhJ3HRaF5+1K+q0tnh4EQ4sJJHgIjqGEELGfQsGV6742UFgogmE9woqpF2Bo624kuOAcQ62NxA4z7cIQxEqdwL4xtO0IJp6eljNMFeRJIe4Pa4O1F+x3hmKWVXWIHJ/d7CVHuNIIoy2oGfGd9LgQe5p1ZZmoqKC2f6RvNpkhPbmasoTFMaRD1iGH88DwPR6dfofyB239TgAAAABJRU5ErkJggg==" alt="QR code — Free Baccarat Game">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAAEsAQMAAABDsxw2AAAABlBMVEX//vgNMyAyqBTcAAAACXBIWXMAAA7EAAAOxAGVKw4bAAACJ0lEQVRoge2avXHDMAyF4Uuh0iNoFI1mjaZROIJKFTkhxB9JX5I7G0q6h4ohP7sAmMdH0ESvxYMtiJaiE8zbzPxZByvNvliAZbFN1m5c+XKXVY86QzTvVgJgeUxyLpML86H8RvfjQ5K/zfskBQJ2HZMqHJrzuqcnnQH2d5hsaZk06XANAXYZCw2pOacPk2Rf3X6SGmBvYbbgW7rtbR/4IrAs9hQTn4OvWOmXAPYyplWoOZfQ5PO6mFZL9utRqB8ElsYKUR0P9lg/aINd5MX+F4DlMPaDbwl7vITB8G/wYgHLYBtFFb7b4zqwawiwLFb/lMlne2yXO6kLnwQsj5Ged1aFwR77Uaj+zQwGsAz28INvsMfq32TdVaVJDbC3MZMO39vu38h9RagKAbuA7a4Y3b/pCciyuadeBWAprCefTDHqwdc1RMohUgMshVn/4aZXufBvotWnyUv3b8CyWEyGf/N+GtFo84BlMPJGRNdq0rtz+LfQEGApTG4fUzwVNf/mHYlRQ4ClMa+C+beVhgj1BpbF5tjbpszDS5w21jikBlgO8+S7f2tGzluawhRgSaxFfyFSyT5Dlm8MLI/ZJPecc7t0xCXar9jAMtgmmXc7cWiPvfcoXL0fBVgam/3nENoEllgK+c97mLt/A3YRawefxGlPcvZaV4Bdxrj5N3PFNWy3u4ADS2GuIeaTzb/ZM4c1hYBdwtii2Qm2E1C12lTl+aAE9g/Ya/EFGh+xQAIJNHcAAAAASUVORK5CYII=" alt="QR code — Free Baccarat Game">
     <div class="qr-text">
       <div class="qr-label">Practice Free — No Account Required</div>
       <div class="qr-desc">Full baccarat game with live road maps, squeeze mode, and bet tracking. Play as long as you like before your trip — on any device, no download needed.</div>
@@ -5271,7 +5296,7 @@ td.bad                          { color: #cc2222 !important; }
         <div style="font-size:8pt;color:#444;line-height:1.6;">Bet Banker · Set stop-loss before sitting<br>Pocket profits · Never bet the Tie</div>
       </div>
       <div style="text-align:center;">
-        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAABQAQMAAAC032DuAAAABlBMVEX///8NMyCSHwXVAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAA60lEQVQokYXSMQ7DIAwFUEcM2ZILoHCNDki5UtgyFXqB9EpIHbgGUi7QbgwI12nTdsGps7wB4g8Y4FcWM4i7tlgYTiDn2OcJBoYGJf1HGzygRfSHbOV3bYXUzULj98YVUt55XT7RK6Rqc5/3Q1doUdGHyyn+Z5PWlEF3wHEa0dHtmFQYnscI6nK7U/Q6ARSueHuEwtBibOWku1eyGqlbEhdv340rNGF1shNXP3D06OjEGOA/qWbldJM4bm8hnDahMKTXbNVCaznSPMy0AUM8YO7EAwtPC72HcWC4TbVssk0ct7xYxHUfrkP+6gkjMIOL5J/M2wAAAABJRU5ErkJggg==" width="80" height="80" alt="QR Code" style="border-radius:4px;border:1px solid #ddd;">
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAAEsAQMAAABDsxw2AAAABlBMVEX//vgNMyAyqBTcAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAB50lEQVRoge2au23DQAyGKahwqRE0ikfTjeZRNIJKF4YYPi9yAgMpQlvFz8aHu8/VD75F9DdbOEzOA9+mh/xedqJJbuZ8W4EVY6uJMcrlXTA9z/d+40oBq8cuosY2st+IWKx/XDbjB3l7AHsjpg5ym8JJGgE7M2Zhzfzo4iiwN2L2ZmLtdNVLF+tlGARWgIWPRJax+CaqLelEZsCKsYOZ7xB1jV4YsI9hrqkoKKaeFeK2J3GBFWOukaeSwXJ9b1LMGpGXasAKMRPLCq01WkV/3sjFOroMsE9ja2h6LAAoHWrINgdYKRZVscS3rIqZtSreupgPAlaOWVWsDsJxiIgXM64W8gGrx9iSi0QwGh1pLt/+LBawz2KLnq2RzJwS8U1V1gqNMgwCq8MsuVwzlVxNKXsN65oCK8SWQ07Jg3lKmHcrwIoxTfHRm7AvqmZ93mLk2KYMXMDOgO2+QOEsj/0Q5fExDAIrxTSs9WWix7fe13sXCawU+zb3lJFj5JitIgM7DbaEdocZfmra91lEwIox1yukueUi3j5KeYpvwEqxdJA5ZcvexKw5D+xdmHUrKlROV9ylfn4OAewMGHMO571U6yr/kh7Yv2MZ3+ZoLWPMEp1+Lh+BlWKcinhm5yy0Ys+YrSKwE2B/sy89RTOHjEM2qgAAAABJRU5ErkJggg==" width="80" height="80" alt="QR Code" style="border-radius:4px;border:1px solid #ddd;">
         <div style="font-size:6pt;color:#999;margin-top:3px;letter-spacing:.08em;">PRACTICE FREE</div>
       </div>
     </div>

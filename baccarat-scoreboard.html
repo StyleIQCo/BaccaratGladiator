@@ -4134,7 +4134,7 @@ body.streamer-mode .seat-bet-chip { display:none; }
     </div>
     <div>
       <div style="font-size:0.56rem;color:rgba(140,220,255,0.82);" id="hdr-premium">Gems: 50 · LVL 1 Recruit</div>
-      <div id="hdr-trial" class="trial-badge">Session Hands: 10 remaining</div>
+      <div id="hdr-trial" class="trial-badge">Free Play · Sign in for leaderboard</div>
       <div style="font-size:0.56rem;color:rgba(140,200,255,0.75);margin-top:2px;">
         <span id="hdr-user">Guest</span>
         <button class="hdr-auth-btn" id="hdr-login-btn" onclick="showAuthOverlay()">Login</button>
@@ -4230,6 +4230,52 @@ body.streamer-mode .seat-bet-chip { display:none; }
   line-height:1;padding:3px 5px;transition:color 0.2s;
 }
 .tb-dismiss:hover { color:rgba(201,168,76,0.8); }
+
+/* ── COACH PANEL ─────────────────────────────────────────────── */
+#coach-panel{background:linear-gradient(160deg,#0a1a0c,#060e07);border:1px solid rgba(201,168,76,0.28);border-radius:10px;margin:6px 0 2px;overflow:hidden;animation:coach-in 0.3s ease;}
+@keyframes coach-in{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.coach-header{display:flex;align-items:center;gap:8px;padding:6px 12px;background:rgba(201,168,76,0.07);border-bottom:1px solid rgba(201,168,76,0.12);}
+.coach-icon{font-size:0.85rem;}
+.coach-title{font-family:'Cinzel',serif;font-size:0.56rem;letter-spacing:0.18em;color:var(--gold);flex:1;}
+.coach-close{background:none;border:none;color:rgba(255,255,255,0.3);font-size:1rem;cursor:pointer;padding:0 2px;line-height:1;transition:color 0.2s;}
+.coach-close:hover{color:rgba(255,255,255,0.7);}
+.coach-body{padding:8px 12px 10px;display:grid;grid-template-columns:1fr 1fr;gap:7px;}
+@media(max-width:700px){.coach-body{grid-template-columns:1fr;}}
+.coach-section{background:rgba(255,255,255,0.03);border:1px solid rgba(201,168,76,0.1);border-radius:6px;padding:7px 10px;}
+.coach-section-title{font-family:'Cinzel',serif;font-size:0.52rem;letter-spacing:0.14em;color:rgba(201,168,76,0.55);text-transform:uppercase;margin-bottom:4px;}
+.coach-section-body{font-size:0.78rem;color:rgba(255,255,255,0.68);line-height:1.5;}
+.coach-section-body strong{color:rgba(255,255,255,0.88);}
+.coach-ev-warn{grid-column:1/-1;background:rgba(180,100,30,0.1);border:1px solid rgba(210,140,40,0.28);border-radius:6px;padding:7px 10px;font-size:0.76rem;color:rgba(230,175,70,0.82);line-height:1.5;}
+.coach-ev-warn a{color:var(--gold-lt);text-decoration:underline;opacity:0.8;}
+.coach-ev-warn strong{color:rgba(245,195,90,0.95);}
+
+/* ── EV WIDGET (sidebar) ──────────────────────────────────────── */
+#ev-widget{background:linear-gradient(160deg,#0c1a0e,#080e09);border:1px solid rgba(201,168,76,0.18);border-radius:12px;margin-top:10px;overflow:hidden;}
+.ev-header{display:flex;align-items:center;justify-content:space-between;padding:9px 14px;cursor:pointer;user-select:none;}
+.ev-header:hover{background:rgba(201,168,76,0.05);}
+.ev-title{font-family:'Cinzel',serif;font-size:0.62rem;letter-spacing:0.18em;color:var(--gold);}
+.ev-toggle{font-size:0.65rem;color:rgba(201,168,76,0.5);}
+.ev-body{padding:10px 14px 14px;display:none;}
+.ev-stat-row{font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.1em;color:rgba(201,168,76,0.5);margin-bottom:6px;}
+.ev-expected-loss{font-size:0.82rem;color:rgba(255,255,255,0.65);margin-bottom:10px;line-height:1.5;}
+.ev-expected-loss strong{color:rgba(255,255,255,0.88);}
+.ev-table{width:100%;border-collapse:collapse;margin-bottom:10px;}
+.ev-table th{font-family:'Cinzel',serif;font-size:0.52rem;letter-spacing:0.1em;color:rgba(255,255,255,0.25);text-transform:uppercase;padding:4px 6px;text-align:left;border-bottom:1px solid rgba(255,255,255,0.05);}
+.ev-table td{font-size:0.78rem;color:rgba(255,255,255,0.6);padding:5px 6px;border-bottom:1px solid rgba(255,255,255,0.04);}
+.ev-table td:last-child{color:rgba(230,120,100,0.85);}
+.ev-table tr:last-child td{border-bottom:none;}
+.ev-bankroll{font-size:0.76rem;color:rgba(255,255,255,0.45);line-height:1.5;margin-bottom:8px;}
+.ev-bankroll strong{color:rgba(255,255,255,0.7);}
+.ev-system-warn{font-size:0.74rem;color:rgba(255,200,100,0.6);line-height:1.55;padding:6px 8px;background:rgba(180,100,30,0.08);border:1px solid rgba(180,100,30,0.18);border-radius:5px;margin-bottom:8px;}
+.ev-sim-link{display:block;font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.1em;color:rgba(201,168,76,0.6);text-decoration:none;text-align:center;padding:5px;border:1px solid rgba(201,168,76,0.18);border-radius:5px;transition:all 0.2s;}
+.ev-sim-link:hover{background:rgba(201,168,76,0.08);color:var(--gold);}
+
+/* ── STORE-SAFE DISCLAIMER ────────────────────────────────────── */
+#store-disclaimer{width:100%;text-align:center;padding:6px 16px;font-size:0.58rem;letter-spacing:0.1em;color:rgba(255,255,255,0.18);border-top:1px solid rgba(255,255,255,0.05);background:rgba(0,0,0,0.4);}
+
+/* ── COACH TOGGLE IN HEADER ───────────────────────────────────── */
+.mode-pill.coach{background:rgba(80,140,80,0.12);border-color:rgba(80,180,80,0.35);color:rgba(120,210,120,0.8);}
+.mode-pill.coach.active{background:rgba(60,140,60,0.3);border-color:rgba(80,200,80,0.6);color:#80e880;}
 </style>
 <div id="tourn-banner">
   <div class="tb-inner">
@@ -4342,7 +4388,7 @@ body.streamer-mode .seat-bet-chip { display:none; }
         </button>
       </div>
       <div class="auth-row">
-        <button class="auth-btn alt" id="auth-trial-btn" onclick="startGuestTrial()">PLAY 10-HAND TRIAL</button>
+        <button class="auth-btn alt" id="auth-trial-btn" onclick="startGuestTrial()">PLAY FREE — NO SIGN-IN NEEDED</button>
       </div>
       <div class="auth-note" id="auth-note"></div>
       <div style="margin-top:14px;text-align:center;">
@@ -4472,6 +4518,7 @@ body.streamer-mode .seat-bet-chip { display:none; }
   <button class="mode-info-btn" onclick="toggleRules()">Rules ▾</button>
   <button class="btn-prediction-toggle" id="btn-prediction-toggle" onclick="togglePrediction()" title="Pre-deal road prediction">🔮 Predict</button>
   <button class="mode-pill train" id="btn-train-mode" onclick="toggleTrainingMode()" title="Training mode — quiz yourself on third-card rules"><svg width="13" height="13" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:3px" aria-hidden="true"><use href="#ico-train"/></svg>Train</button>
+  <button class="mode-pill coach" id="btn-coach" onclick="toggleCoachMode()" title="Coach mode — explains each hand after it resolves">🎓 Coach</button>
   <span id="tq-score-badge">✓ 0 / 0</span>
 </div>
 
@@ -4695,6 +4742,15 @@ body.streamer-mode .seat-bet-chip { display:none; }
   <div id="bb-status">
     <div class="msg-bar" id="msg-bar">Select a mode · place virtual chips · DEAL</div>
     <div class="dealer-caption" id="dealer-caption"></div>
+    <!-- Coach Mode panel — shown after each hand when coach mode is on -->
+    <div id="coach-panel" style="display:none;">
+      <div class="coach-header">
+        <span class="coach-icon">🎓</span>
+        <span class="coach-title">COACH EXPLAINS</span>
+        <button class="coach-close" onclick="hideCoachPanel()" aria-label="Close">×</button>
+      </div>
+      <div class="coach-body" id="coach-body"></div>
+    </div>
   </div>
   <div id="bb-chips">
     <div class="chip c1"   onclick="addChip(1)">$1</div>
@@ -4827,6 +4883,25 @@ body.streamer-mode .seat-bet-chip { display:none; }
   </div>
   <div class="feed-scroll" id="feed-scroll">
     <div class="feed-empty" id="feed-empty">Game events will appear here…</div>
+  </div>
+</div>
+
+<!-- ═══════ EV TOOLS WIDGET ═══════ -->
+<div id="ev-widget">
+  <div class="ev-header" onclick="toggleEvWidget()" role="button" aria-expanded="false" id="ev-header">
+    <span class="ev-title">📊 EV TOOLS</span>
+    <span class="ev-toggle" id="ev-toggle-arrow">▼</span>
+  </div>
+  <div class="ev-body" id="ev-body">
+    <div class="ev-stat-row" id="ev-mode-label"></div>
+    <div class="ev-expected-loss" id="ev-expected-loss"></div>
+    <table class="ev-table">
+      <thead><tr><th>Bet</th><th>House Edge</th><th>Avg Loss / hand</th></tr></thead>
+      <tbody id="ev-table-body"></tbody>
+    </table>
+    <div class="ev-bankroll" id="ev-bankroll"></div>
+    <div class="ev-system-warn">Betting systems (Martingale, Paroli, Fibonacci, etc.) change <em>when</em> you lose — not <em>whether</em> you lose. The house edge applies on every hand regardless of bet size or sequence.</div>
+    <a class="ev-sim-link" href="simulator.html">Run 1,000-shoe simulation →</a>
   </div>
 </div>
 
@@ -5449,7 +5524,8 @@ const VENUE_AUDIO={
 };
 
 // ── FREE TRIAL ────────────────────────────────────────────────────
-const FREE_HAND_LIMIT = 10;
+// Practice is always free — sign-in gates leaderboard / cloud / tournaments only
+const FREE_HAND_LIMIT = 9999;
 let freeHandsUsed = 0;
 let trialExpired = false;
 let guestTrialStarted = false;
@@ -5841,27 +5917,18 @@ function showAuthOverlay(mode){
   showAuthPanel('main');
   const tb=document.getElementById('auth-trial-btn');
   if(tb){
-    const locked = guestTrialExpired();
-    tb.disabled = locked;
-    tb.textContent = locked ? 'TRIAL COMPLETE' : 'PLAY 10-HAND TRIAL';
-    tb.style.opacity = locked ? '0.5' : '1';
-    tb.style.cursor = locked ? 'not-allowed' : 'pointer';
+    tb.disabled = false;
+    tb.textContent = 'PLAY FREE — NO SIGN-IN NEEDED';
+    tb.style.opacity = '1';
+    tb.style.cursor = 'pointer';
   }
-  if(m==='trial-limit'){
-    setAuthNote('Guest trial complete. Sign in or create account to continue.', false);
-  } else {
-    setAuthNote('Choose an option to continue.', false);
-  }
+  setAuthNote('Play is always free. Sign in for leaderboard, cloud saves & tournaments.', false);
 }
 
 function startGuestTrial(){
-  if(guestTrialExpired()){
-    setAuthNote('Guest trial complete. Sign in or create account to continue.', false);
-    return;
-  }
   guestTrialStarted=true;
   hideAuthOverlay();
-  setMsg('Guest trial active. You have ' + guestHandsRemaining() + ' hands.');
+  setMsg('Welcome! Play is free — sign in anytime for leaderboard & cloud saves.');
   if(!botPersonaLocked) confirmBotPersona();
 }
 
@@ -8160,6 +8227,9 @@ function resolveHand(){
     if(shareData.special || netChange>=500) setTimeout(()=>showSharePanel(shareData), 1200);
   }
 
+  // ── Coach Mode post-hand explanation
+  showCoachPanel(r, b, netChange, isNatural, isNatural9, isNatural8);
+
   // ── AI player resolution
   let aiSpecialNote = feedSpecial.trim() || null;
   if(aiSpecialNote) aiSpecialNote = aiSpecialNote + ' — the crowd goes wild!';
@@ -8211,6 +8281,7 @@ function setBadge(id,type,text){
 
 // ── NEW ROUND ─────────────────────────────────────────────────────
 function newRound(){
+  hideCoachPanel();
   setDealerMood('new_round');
   phase='betting';
   dealerPhaseAnnounced = false;
@@ -9459,6 +9530,203 @@ function tqUpdateScoreLine(){
     : '';
 }
 
+// ══════════════════════════════════════════════════════════════════════════
+//  COACH MODE — post-hand explanation panel
+// ══════════════════════════════════════════════════════════════════════════
+let coachMode = (localStorage.getItem('bg_coach_mode') === '1');
+(function(){ const btn=document.getElementById('btn-coach'); if(btn) btn.classList.toggle('active',coachMode); })();
+
+function toggleCoachMode(){
+  coachMode = !coachMode;
+  localStorage.setItem('bg_coach_mode', coachMode ? '1' : '0');
+  const btn = document.getElementById('btn-coach');
+  if(btn) btn.classList.toggle('active', coachMode);
+  if(!coachMode) hideCoachPanel();
+  setMsg(coachMode
+    ? '🎓 Coach Mode ON — each hand explained after it resolves. Toggle off with the Coach button.'
+    : 'Coach Mode off.');
+}
+
+function hideCoachPanel(){
+  const p = document.getElementById('coach-panel');
+  if(p) p.style.display = 'none';
+}
+
+function _cv(c){ return ['10','J','Q','K'].includes(c.rank) ? 0 : (c.rank==='A' ? 1 : parseInt(c.rank)); }
+
+function buildCoachExplanation(r, b, netChange, isNatural, isNatural9, isNatural8){
+  const {pH, bH} = r;
+  const pT2 = (_cv(pH[0])+_cv(pH[1]))%10;
+  const bT2 = (_cv(bH[0])+_cv(bH[1]))%10;
+  const pThird = pH.length===3 ? pH[2] : null;
+  const bThird = bH.length===3 ? bH[2] : null;
+  const pThirdVal = pThird ? _cv(pThird) : null;
+
+  // ── Player explanation
+  let playerExpl;
+  if(isNatural){
+    playerExpl = `<strong>Natural ${Math.max(r.pT, r.bT)}.</strong> Either hand totaled 8 or 9 on two cards — hand ends immediately, no third cards drawn.`;
+  } else if(pT2 <= 5){
+    playerExpl = `Player's two-card total: <strong>${pT2}</strong>. Rule: draw on 0–5. Player drew third card <strong>${pThird?pThird.rank+pThird.suit:'?'}</strong> → final ${r.pT}.`;
+  } else {
+    playerExpl = `Player's two-card total: <strong>${pT2}</strong>. Rule: stand on 6–7. No third card drawn. Final: ${r.pT}.`;
+  }
+
+  // ── Banker explanation
+  let bankerExpl;
+  if(isNatural){
+    bankerExpl = `Natural hand — Banker drawing rule not applied.`;
+  } else if(pThird === null){
+    if(bT2 <= 5){
+      bankerExpl = `Player stood, so Banker draws on 0–5. Banker had <strong>${bT2}</strong> → drew <strong>${bThird?bThird.rank+bThird.suit:'?'}</strong> → final ${r.bT}.`;
+    } else {
+      bankerExpl = `Player stood, so Banker stands on 6–7. Banker had <strong>${bT2}</strong> → stood. Final: ${r.bT}.`;
+    }
+  } else {
+    let bRule='';
+    const bDraws = !!bThird;
+    if(bT2<=2) bRule=`always draws on 0–2`;
+    else if(bT2===3) bRule=pThirdVal===8?`stands on 3 — Player drew an 8`:`draws on 3 unless Player drew 8 (Player drew ${pThirdVal})`;
+    else if(bT2===4) bRule=(pThirdVal>=2&&pThirdVal<=7)?`draws on 4 when Player drew 2–7 (drew ${pThirdVal})`:`stands on 4 — Player drew ${pThirdVal} (not 2–7)`;
+    else if(bT2===5) bRule=(pThirdVal>=4&&pThirdVal<=7)?`draws on 5 when Player drew 4–7 (drew ${pThirdVal})`:`stands on 5 — Player drew ${pThirdVal} (not 4–7)`;
+    else if(bT2===6) bRule=(pThirdVal===6||pThirdVal===7)?`draws on 6 when Player drew 6–7 (drew ${pThirdVal})`:`stands on 6 — Player drew ${pThirdVal} (not 6–7)`;
+    else bRule=`always stands on 7`;
+    bankerExpl = `Player drew a <strong>${pThird.rank}</strong> (val ${pThirdVal}). Banker had <strong>${bT2}</strong> — <em>${bRule}</em>${bThird?' → drew <strong>'+bThird.rank+bThird.suit+'</strong> → final '+r.bT:' → stood, final '+r.bT}.`;
+  }
+
+  // ── Payout lines
+  const bSnap = b;
+  const paylines = [];
+  if(r.winner==='B'){
+    if(bSnap.banker>0){
+      if(gameMode==='standard'){ const comm=Math.ceil(bSnap.banker*0.05),pay=Math.floor(bSnap.banker*0.95); paylines.push(`Banker $${bSnap.banker} wins $${pay} (5% commission = $${comm}).`); }
+      else if(gameMode==='ez'&&r.isDragon7) paylines.push(`Banker $${bSnap.banker}: PUSH — Dragon 7 blocks Banker payout. No commission, no win.`);
+      else if(gameMode==='tiger'&&r.bT===6) paylines.push(`Banker $${bSnap.banker}: wins $${Math.floor(bSnap.banker*0.5)} (Banker 6 pays half in Tiger mode).`);
+      else paylines.push(`Banker $${bSnap.banker}: wins $${bSnap.banker} (even money, no commission).`);
+    }
+    if(bSnap.player>0) paylines.push(`Player $${bSnap.player}: lost.`);
+  } else if(r.winner==='P'){
+    if(bSnap.player>0) paylines.push(`Player $${bSnap.player}: wins $${bSnap.player} (even money 1:1).`);
+    if(bSnap.banker>0) paylines.push(`Banker $${bSnap.banker}: lost.`);
+  } else {
+    if(bSnap.tie>0) paylines.push(`Tie $${bSnap.tie}: wins $${bSnap.tie*8} (8:1 payout). House edge: 14.4%.`);
+    if(bSnap.banker>0) paylines.push(`Banker $${bSnap.banker}: returned (Tie is a push on main bets).`);
+    if(bSnap.player>0) paylines.push(`Player $${bSnap.player}: returned.`);
+  }
+
+  // EZ side bets
+  if(gameMode==='ez'){
+    if(bSnap.dragon7>0){ paylines.push(r.isDragon7?`Dragon 7 $${bSnap.dragon7}: 🎉 wins $${bSnap.dragon7*40} (+40:1)!`:`Dragon 7 $${bSnap.dragon7}: lost.`); }
+    if(bSnap.panda8>0)  { paylines.push(r.isPanda8 ?`Panda 8 $${bSnap.panda8}: 🎉 wins $${bSnap.panda8*25} (+25:1)!`:`Panda 8 $${bSnap.panda8}: lost.`); }
+  }
+  if(gameMode==='tiger'){
+    if(bSnap.bigTiger>0)  { paylines.push(r.isBigTiger  ?`Big Tiger $${bSnap.bigTiger}: 🎉 wins $${bSnap.bigTiger*50} (+50:1)!`:`Big Tiger $${bSnap.bigTiger}: lost.`); }
+    if(bSnap.smallTiger>0){ paylines.push(r.isSmallTiger?`Small Tiger $${bSnap.smallTiger}: 🎉 wins $${bSnap.smallTiger*22} (+22:1)!`:`Small Tiger $${bSnap.smallTiger}: lost.`); }
+    if(bSnap.tigerTie>0)  { paylines.push(r.isTigerTie  ?`Tiger Tie $${bSnap.tigerTie}: 🎉 wins $${bSnap.tigerTie*35} (+35:1)!`:`Tiger Tie $${bSnap.tigerTie}: lost.`); }
+  }
+
+  // ── Side bet EV warnings
+  const evWarns = [];
+  if(gameMode==='ez'){
+    if(bSnap.dragon7>0) evWarns.push(`Dragon 7: <strong>7.61% house edge</strong> — $${(bSnap.dragon7*0.0761).toFixed(2)} expected loss per hand on average.`);
+    if(bSnap.panda8>0)  evWarns.push(`Panda 8: <strong>10.19% house edge</strong> — $${(bSnap.panda8*0.1019).toFixed(2)} expected loss per hand.`);
+  }
+  if(gameMode==='tiger'){
+    if(bSnap.bigTiger>0)   evWarns.push(`Big Tiger: <strong>8.6% house edge</strong> — 4× costlier than a Banker bet.`);
+    if(bSnap.smallTiger>0) evWarns.push(`Small Tiger: <strong>6.4% house edge</strong>.`);
+    if(bSnap.tigerTie>0)   evWarns.push(`Tiger Tie: <strong>11.0% house edge</strong> — high volatility, very expensive long-term.`);
+  }
+  if(bSnap.tie>0 && r.winner!=='T') evWarns.push(`Tie bet: <strong>14.4% house edge</strong> — the most expensive standard bet on the table.`);
+
+  return { playerExpl, bankerExpl, paylines, evWarns };
+}
+
+function showCoachPanel(r, b, netChange, isNatural, isNatural9, isNatural8){
+  if(!coachMode || autoPlayRemaining > 0) return;
+  const data = buildCoachExplanation(r, b, netChange, isNatural, isNatural9, isNatural8);
+  const panel = document.getElementById('coach-panel');
+  const body  = document.getElementById('coach-body');
+  if(!panel || !body) return;
+
+  const hasPaylines = data.paylines.length > 0;
+  const hasWarn     = data.evWarns.length > 0;
+  const spanFull    = !hasPaylines && !hasWarn;
+
+  let html = `
+    <div class="coach-section"${spanFull?' style="grid-column:1/-1"':''}>
+      <div class="coach-section-title">Player</div>
+      <div class="coach-section-body">${data.playerExpl}</div>
+    </div>
+    <div class="coach-section"${spanFull?' style="grid-column:1/-1"':''}>
+      <div class="coach-section-title">Banker</div>
+      <div class="coach-section-body">${data.bankerExpl}</div>
+    </div>`;
+
+  if(hasPaylines){
+    html += `<div class="coach-section">
+      <div class="coach-section-title">Payout</div>
+      <div class="coach-section-body">${data.paylines.map(l=>'• '+l).join('<br>')}</div>
+    </div>`;
+  }
+
+  if(hasWarn){
+    html += `<div class="coach-ev-warn">
+      <strong>⚠ Side Bet Cost</strong><br>
+      ${data.evWarns.join('<br>')}
+      <br><span style="opacity:0.7;font-size:0.72rem">Side bets carry 2–14× higher house edges than Banker/Player. <a href="simulator.html">See long-run impact →</a></span>
+    </div>`;
+  }
+
+  body.innerHTML = html;
+  panel.style.display = 'block';
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+//  EV TOOLS WIDGET
+// ══════════════════════════════════════════════════════════════════════════
+let _evExpanded = false;
+const _HOUSE_EDGES = {
+  standard: { banker:1.06, player:1.24, tie:14.36 },
+  // Dragon 7 HE = 7.61% (prob ≈2.25%, pays 40:1); Panda 8 HE = 10.19% (prob ≈3.45%, pays 25:1)
+  ez:       { banker:1.02, player:1.24, tie:14.36, 'Dragon 7':7.61, 'Panda 8':10.19 },
+  tiger:    { banker:1.07, player:1.24, tie:14.36, 'Big Tiger':8.6, 'Small Tiger':6.4, 'Tiger Tie':11.0 },
+};
+
+function toggleEvWidget(){
+  _evExpanded = !_evExpanded;
+  const body  = document.getElementById('ev-body');
+  const arrow = document.getElementById('ev-toggle-arrow');
+  const hdr   = document.getElementById('ev-header');
+  if(body) body.style.display = _evExpanded ? 'block' : 'none';
+  if(arrow) arrow.textContent = _evExpanded ? '▲' : '▼';
+  if(hdr)  hdr.setAttribute('aria-expanded', _evExpanded);
+  if(_evExpanded) _renderEvWidget();
+}
+
+function _renderEvWidget(){
+  const mode = gameMode||'standard';
+  const edges = _HOUSE_EDGES[mode]||_HOUSE_EDGES.standard;
+  const betSize = (bets.banker||bets.player||25);
+  const modeLabel = {standard:'Standard (5% Commission)', ez:'EZ Baccarat', tiger:'Tiger Baccarat'}[mode]||mode;
+
+  const el = document.getElementById('ev-mode-label'); if(el) el.textContent = 'Mode: '+modeLabel;
+
+  const bankerHE = edges.banker||1.06;
+  const lossEl = document.getElementById('ev-expected-loss');
+  if(lossEl) lossEl.innerHTML = `At <strong>$${betSize}/hand</strong> on Banker: expected loss ≈ <strong>$${(betSize*bankerHE/100).toFixed(2)}/hand</strong> = ~$${(betSize*bankerHE*100/100).toFixed(0)} per 100 hands.`;
+
+  const tbody = document.getElementById('ev-table-body');
+  if(tbody) tbody.innerHTML = Object.entries(edges)
+    .map(([k,he])=>`<tr><td>${k.charAt(0).toUpperCase()+k.slice(1)}</td><td>${he.toFixed(2)}%</td><td>$${(betSize*he/100).toFixed(2)}</td></tr>`)
+    .join('');
+
+  const brEl = document.getElementById('ev-bankroll');
+  if(brEl){
+    const handsToBreakeven = Math.round(balance/(betSize*bankerHE/100));
+    brEl.innerHTML = `Current credits: <strong>$${balance.toLocaleString()}</strong>. At $${betSize}/hand on Banker, credits statistically erode over ~<strong>${handsToBreakeven.toLocaleString()} hands</strong>. (Variance is high — actual results vary widely.)`;
+  }
+}
+
 // ── Keyboard shortcuts ────────────────────────────────────────────────────
 // B/P/T  → select bet slot   |  1-6 → add chip   |  Space/Enter → deal
 // C      → clear bets        |  R   → repeat last bet
@@ -9862,6 +10130,7 @@ function setMasterVolume(v){
 const PROMO_KEY = 'bg_promos_v1';
 const PROMO_CATALOG = {
   'ROADTONINE': { chips:25000, gems:10, unlimitedHands:true, badge:'📖 Gladiator Reader', title:'Road to Nine — Reader Bonus' },
+  'MAKAO':      { chips:25000, gems:10, unlimitedHands:true, badge:'📖 Gladiator Reader', title:'Road to Nine — Reader Bonus' },
   'GLADIATOR':  { chips:10000, gems:5,  unlimitedHands:true, badge:'⚔ Gladiator',        title:'Gladiator Welcome Bonus' },
 };
 
@@ -10440,24 +10709,21 @@ function updateTrialBadge(){
     el.className='trial-badge';
     return;
   }
-  const rem=guestHandsRemaining();
-  if(guestTrialExpired()){
-    el.textContent='Guest Trial Complete · Sign In to Continue';
-    el.className='trial-badge critical';
+  if(checkPromoUnlimitedHands()){
+    el.textContent='Reader Bonus · Unlimited Hands';
+    el.className='trial-badge';
     return;
   }
-  el.textContent=`Guest Trial: ${rem} hand${rem===1?'':'s'} left`;
-  if(rem<=2) el.className='trial-badge critical';
-  else if(rem<=5) el.className='trial-badge warning';
-  else el.className='trial-badge';
+  el.textContent='Free Play · Sign in for leaderboard';
+  el.className='trial-badge';
 }
 
-// Block chips/deal when trial expired (called from addChip + deal)
+// Reserved for future sign-in-gated features (leaderboard, tournaments)
 function checkTrialBlock(){
   trialExpired = guestTrialExpired();
   if(trialExpired){
-    showAuthOverlay('trial-limit');
-    setMsg('Free guest trial complete. Sign in to continue playing.');
+    showAuthOverlay();
+    setMsg('Sign in to access leaderboard, cloud saves & tournaments.');
     return true;
   }
   return false;
@@ -15126,6 +15392,8 @@ setTimeout(updateDSCHeaderBtn,600);
   }
 })();
 </script>
+
+<div id="store-disclaimer">For entertainment only &nbsp;·&nbsp; Virtual chips only &nbsp;·&nbsp; No real money &nbsp;·&nbsp; No prizes &nbsp;·&nbsp; Must be 18+ to play</div>
 
 </body>
 </html>

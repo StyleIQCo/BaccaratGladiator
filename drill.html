@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Third-Card Drill — Baccarat Gladiator</title>
+<title>Baccarat Drill — Baccarat Gladiator</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=EB+Garamond:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
 <style>
@@ -64,6 +64,20 @@ nav{width:100%;max-width:640px;display:flex;align-items:center;justify-content:s
 .next-btn{width:100%;max-width:640px;font-family:'Cinzel',serif;font-size:.95rem;font-weight:700;letter-spacing:.08em;padding:16px;border-radius:12px;background:linear-gradient(135deg,var(--gold),var(--gold-lt),var(--gold));background-size:200% auto;color:#000;border:none;cursor:pointer;display:none;transition:background-position .3s,transform .2s;}
 .next-btn:hover{background-position:right center;transform:translateY(-1px);}
 
+/* TOPIC NAV */
+.topic-nav{width:100%;max-width:640px;display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px;}
+.topic-btn{font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:.1em;padding:7px 14px;border-radius:20px;border:1px solid rgba(201,168,76,.25);color:rgba(201,168,76,.6);background:transparent;cursor:pointer;transition:all .2s;white-space:nowrap;}
+.topic-btn:hover{background:rgba(201,168,76,.1);border-color:rgba(201,168,76,.5);color:var(--gold-lt);}
+.topic-btn.active{background:rgba(201,168,76,.18);border-color:var(--gold);color:var(--gold-lt);}
+.topic-heading{width:100%;max-width:640px;margin-bottom:12px;}
+.topic-heading h2{font-family:'Cinzel',serif;font-size:1.1rem;font-weight:700;color:var(--gold-lt);margin-bottom:4px;}
+.topic-heading p{font-size:.88rem;color:rgba(255,255,255,.38);line-height:1.5;}
+
+/* CHAPTER LINK */
+.chapter-link-row{width:100%;max-width:640px;text-align:center;margin-top:8px;}
+.chapter-link-row a{font-family:'Cinzel',serif;font-size:.68rem;color:rgba(201,168,76,.55);text-decoration:none;letter-spacing:.08em;border:1px solid rgba(201,168,76,.18);padding:5px 14px;border-radius:12px;transition:all .2s;}
+.chapter-link-row a:hover{background:rgba(201,168,76,.08);color:var(--gold);}
+
 /* CHIP REWARD TOAST */
 .chip-toast{position:fixed;top:24px;left:50%;transform:translateX(-50%) translateY(-80px);background:linear-gradient(135deg,#1a2e10,#0f1f0a);border:1px solid var(--gold);border-radius:30px;padding:10px 24px;font-family:'Cinzel',serif;font-size:.9rem;color:var(--gold-lt);font-weight:700;letter-spacing:.06em;transition:transform .4s cubic-bezier(.22,1,.36,1);z-index:100;pointer-events:none;}
 .chip-toast.show{transform:translateX(-50%) translateY(0);}
@@ -89,6 +103,21 @@ nav{width:100%;max-width:640px;display:flex;align-items:center;justify-content:s
   <a class="nav-logo" href="https://www.baccaratgladiator.com/">Baccarat Gladiator</a>
   <a class="nav-back" href="https://www.baccaratgladiator.com/baccarat-scoreboard.html">← Back to Game</a>
 </nav>
+
+<!-- Topic navigation -->
+<div class="topic-nav" id="topic-nav">
+  <button class="topic-btn" id="tbtn-third-card"  onclick="setTopic('third-card')">🃏 Third-Card Rules</button>
+  <button class="topic-btn" id="tbtn-side-bets"   onclick="setTopic('side-bets')">🐉 Side Bets</button>
+  <button class="topic-btn" id="tbtn-bet-math"    onclick="setTopic('bet-math')">🧮 Bet Math</button>
+  <button class="topic-btn" id="tbtn-bankroll"    onclick="setTopic('bankroll')">💰 Bankroll</button>
+  <button class="topic-btn" id="tbtn-etiquette"   onclick="setTopic('etiquette')">🎩 Etiquette</button>
+  <button class="topic-btn" id="tbtn-roads"       onclick="setTopic('roads')">📊 Road Reading</button>
+</div>
+<div class="topic-heading" id="topic-heading">
+  <h2 id="topic-title">Third-Card Rules</h2>
+  <p id="topic-desc">Quiz yourself on when Player draws and when Banker draws — the foundation of every baccarat hand.</p>
+</div>
+<div class="chapter-link-row" id="chapter-link-row"></div>
 
 <div class="stats-bar">
   <div class="stat-box"><div class="stat-val" id="st-score">0</div><div class="stat-lbl">Score</div></div>
@@ -142,6 +171,171 @@ nav{width:100%;max-width:640px;display:flex;align-items:center;justify-content:s
 <div class="chip-toast" id="chip-toast">+250 chips!</div>
 
 <script>
+// ══════════════════════════════════════════════════════════════════════════
+//  TOPIC REGISTRY
+// ══════════════════════════════════════════════════════════════════════════
+const TOPICS = {
+  'third-card': {
+    title: 'Third-Card Rules',
+    desc: 'Quiz yourself on when Player draws and when Banker draws — the foundation of every baccarat hand.',
+    chapter: { label: 'Chapter 5 in the book', url: 'print-manuscript.html#ch5' },
+  },
+  'side-bets': {
+    title: 'Side Bets',
+    desc: 'Identify Dragon 7, Panda 8, Tiger variants — when they hit, what they pay, and what they cost.',
+    chapter: { label: 'Chapter 6 in the book', url: 'print-manuscript.html#ch6' },
+  },
+  'bet-math': {
+    title: 'Bet Math & Commission',
+    desc: 'Commission, payouts, and expected value — understand the real cost of each bet.',
+    chapter: { label: 'Chapter 3 in the book', url: 'print-manuscript.html#ch3' },
+  },
+  'bankroll': {
+    title: 'Bankroll Discipline',
+    desc: 'True or false: test your understanding of session management, stop-loss, and systems.',
+    chapter: { label: 'Chapter 14 in the book', url: 'print-manuscript.html#ch14' },
+  },
+  'etiquette': {
+    title: 'Table Etiquette',
+    desc: 'Casino table manners, common customs, and what not to do at a live baccarat table.',
+    chapter: { label: 'Chapter 8 in the book', url: 'print-manuscript.html#ch8' },
+  },
+  'roads': {
+    title: 'Road Reading',
+    desc: 'Understand the Big Road, Big Eye Boy, Small Road, and Cockroach Pig at a glance.',
+    chapter: { label: 'Chapter 9 in the book', url: 'print-manuscript.html#ch9' },
+  },
+};
+
+let currentTopic = 'third-card';
+
+function setTopic(t){
+  currentTopic = t;
+  document.querySelectorAll('.topic-btn').forEach(b=>b.classList.remove('active'));
+  const btn = document.getElementById('tbtn-'+t);
+  if(btn) btn.classList.add('active');
+  const meta = TOPICS[t]||TOPICS['third-card'];
+  document.getElementById('topic-title').textContent = meta.title;
+  document.getElementById('topic-desc').textContent  = meta.desc;
+  const row = document.getElementById('chapter-link-row');
+  if(row && meta.chapter){
+    row.innerHTML = `<a href="${meta.chapter.url}" target="_blank">📖 ${meta.chapter.label}</a>`;
+  }
+  startDrill();
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+//  SIDE BETS QUESTION BANK
+// ══════════════════════════════════════════════════════════════════════════
+function generateSideBetQuestion(){
+  const qs = [
+    { tag:'Dragon 7', scenario:'Banker wins with a <strong>3-card total of 7</strong> in EZ Baccarat.', question:'Does Dragon 7 side bet pay?', correct:true, explanation:'Dragon 7 pays 40:1 when Banker wins with a 3-card total of 7. House edge: 2.25%.' },
+    { tag:'Dragon 7', scenario:'Banker wins with a <strong>2-card total of 7</strong> in EZ Baccarat (Natural).', question:'Does Dragon 7 side bet pay?', correct:false, explanation:'Dragon 7 requires exactly 3 Banker cards totaling 7. A 2-card natural 7 does not qualify.' },
+    { tag:'Panda 8',  scenario:'Player wins with a <strong>3-card total of 8</strong> in EZ Baccarat.', question:'Does Panda 8 side bet pay?', correct:true, explanation:'Panda 8 pays 25:1 when Player wins with a 3-card total of 8. House edge: 3.45%.' },
+    { tag:'Panda 8',  scenario:'Player wins with a <strong>2-card total of 8</strong> (Natural 8) in EZ Baccarat.', question:'Does Panda 8 side bet pay?', correct:false, explanation:'Panda 8 requires 3 Player cards totaling 8. A 2-card natural 8 does not qualify.' },
+    { tag:'EZ Banker',scenario:'Banker wins with a <strong>3-card total of 7</strong>. Player bet $100 on Banker.', question:'Does the Banker bet pay even money?', correct:false, explanation:'In EZ Baccarat, a Dragon 7 result PUSHES the Banker bet — neither wins nor loses. The Dragon 7 side bet (if placed) pays 40:1 instead.' },
+    { tag:'Big Tiger', scenario:'Banker wins with a <strong>3-card total of 6</strong> in Tiger Baccarat.', question:'Does Big Tiger side bet pay?', correct:true, explanation:'Big Tiger pays 50:1 when Banker wins with a 3-card 6. House edge: ~8.6%.' },
+    { tag:'Small Tiger', scenario:'Banker wins with a <strong>2-card total of 6</strong> in Tiger Baccarat.', question:'Does Small Tiger side bet pay?', correct:true, explanation:'Small Tiger pays 22:1 when Banker wins with a 2-card 6. House edge: ~6.4%.' },
+    { tag:'Tiger Tie', scenario:'Both Banker and Player total <strong>6</strong> — the hand ties in Tiger mode.', question:'Does Tiger Tie side bet pay?', correct:true, explanation:'Tiger Tie pays 35:1 when both hands total 6 and tie. House edge: ~11%.' },
+    { tag:'Tiger Banker 6', scenario:'Banker wins with a <strong>2-card total of 6</strong> in Tiger Baccarat (no Tiger Tie).', question:'Does the main Banker bet pay even money?', correct:false, explanation:'In Tiger Baccarat, Banker winning with any total of 6 (2-card or 3-card) pays only half — the house keeps 50% of the Banker bet profit.' },
+    { tag:'Side Bet Cost', scenario:'You place $25 on Dragon 7 (2.25% house edge) every hand.', question:'Are side bets mathematically cheaper than the Banker main bet (1.06% HE)?', correct:false, explanation:'Dragon 7\'s 2.25% house edge is more than double the Banker main bet\'s 1.06%. Side bets offer excitement but cost more per dollar wagered on average.' },
+  ];
+  return qs[Math.floor(Math.random()*qs.length)];
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+//  BET MATH QUESTION BANK
+// ══════════════════════════════════════════════════════════════════════════
+function generateBetMathQuestion(){
+  const betAmt = [10,25,50,100][Math.floor(Math.random()*4)];
+  const qs = [
+    { tag:'Commission', scenario:`You bet <strong>$${betAmt}</strong> on Banker and win in Standard mode.`, question:`Do you receive the full $${betAmt} profit?`, correct:false,
+      explanation:`Standard Baccarat charges 5% commission on Banker wins. On $${betAmt} you receive $${Math.floor(betAmt*0.95)} profit (commission = $${Math.ceil(betAmt*0.05)}).` },
+    { tag:'EZ Commission', scenario:`You bet <strong>$${betAmt}</strong> on Banker and win in EZ Baccarat (not a Dragon 7).`, question:`Do you pay 5% commission on this Banker win?`, correct:false,
+      explanation:`EZ Baccarat has no commission on Banker wins — you receive the full $${betAmt} profit. The house edge is recovered via the Dragon 7 push rule instead.` },
+    { tag:'Tie Payout', scenario:`You bet <strong>$${betAmt}</strong> on Tie and the hand ties.`, question:`Does the Tie bet pay 8:1?`, correct:true,
+      explanation:`Tie pays 8:1 — your $${betAmt} wins $${betAmt*8}. However, Tie has a 14.4% house edge — by far the highest main bet.` },
+    { tag:'Player HE', scenario:'Banker HE is 1.06%. Player HE is 1.24%.', question:'Is betting Player better value than betting Banker?', correct:false,
+      explanation:'Banker (1.06%) has a lower house edge than Player (1.24%) in Standard Baccarat. Banker wins roughly 50.68% of non-Tie hands vs. Player\'s 49.32%.' },
+    { tag:'House Edge', scenario:`You play 100 hands betting $${betAmt} on Banker (1.06% HE) each hand.`, question:`Is your expected loss more than $${Math.round(betAmt*1.06*100/100)+5}?`, correct:false,
+      explanation:`Expected loss = bet × HE × hands = $${betAmt} × 0.0106 × 100 = $${(betAmt*1.06).toFixed(0)}. Actual results vary widely due to variance.` },
+    { tag:'Tie Push', scenario:'You bet $50 on Banker. The hand ties. Standard Baccarat.', question:'Do you lose your $50 Banker bet?', correct:false,
+      explanation:'In Standard Baccarat, a Tie pushes — Banker and Player bets are returned to the player. Neither side wins or loses on a Tie.' },
+    { tag:'Banker Commission', scenario:`You win $1,000 on Banker in Standard mode. What commission do you pay?`, question:'Is the commission exactly $50?', correct:true,
+      explanation:'5% of $1,000 = $50 commission. You keep $950 profit. In practice, casinos often round to the nearest 25 cents.' },
+  ];
+  return qs[Math.floor(Math.random()*qs.length)];
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+//  BANKROLL QUESTION BANK
+// ══════════════════════════════════════════════════════════════════════════
+function generateBankrollQuestion(){
+  const qs = [
+    { tag:'Systems', scenario:'A player doubles their bet after every loss (Martingale system).', question:'Can Martingale overcome the house edge in the long run?', correct:false,
+      explanation:'Martingale (and all betting systems) shift when you lose, not whether you lose. The house edge applies on every hand regardless of bet size. Table limits and finite bankrolls prevent infinite doubling.' },
+    { tag:'Stop-Loss', scenario:'You set a stop-loss of 30% of your session bankroll.', question:'Is a pre-set stop-loss a good practice for session management?', correct:true,
+      explanation:'Stop-losses prevent chasing losses. Losing 30% and walking away is recoverable. Chasing losses until bust is how most big casino losses happen.' },
+    { tag:'Hot Streaks', scenario:'Banker has won 10 hands in a row.', question:'Is Banker more likely to win the next hand because of this streak?', correct:false,
+      explanation:'Each baccarat hand is independent. Past results do not affect future probabilities. The roads show history, not predictions. Banker still wins ~50.68% of non-Tie hands.' },
+    { tag:'Win Goals', scenario:'You set a win goal of 20% above your starting bankroll.', question:'Is walking away when you hit your win goal a sound strategy?', correct:true,
+      explanation:'Win goals lock in profits before variance erodes them. Since the house edge grinds down bankrolls over time, booking a win and leaving is rational.' },
+    { tag:'Bet Sizing', scenario:'You have $500 and bet $100/hand.', question:'Is betting 20% of your bankroll per hand high risk?', correct:true,
+      explanation:'20% per hand is extremely aggressive — five losses in a row (which happens regularly) would wipe the bankroll. 1–3% per hand is a common conservative guideline.' },
+    { tag:'Long Run', scenario:'Over 10,000 hands, the results should approach theoretical house edge.', question:'Will every player lose close to the theoretical expected amount over 10,000 hands?', correct:false,
+      explanation:'Theoretical EV applies to infinite samples. Individual players experience high variance — some will be well ahead, some far behind, even after thousands of hands.' },
+    { tag:'Session Length', scenario:'You are playing a long session and are down 40% of your bankroll.', question:'Is increasing bet size to "catch up" a sound strategy?', correct:false,
+      explanation:'Increasing bets when losing is called "chasing" — it raises risk of total loss without improving your odds. The house edge doesn\'t decrease just because you\'re behind.' },
+  ];
+  return qs[Math.floor(Math.random()*qs.length)];
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+//  ETIQUETTE QUESTION BANK
+// ══════════════════════════════════════════════════════════════════════════
+function generateEtiquetteQuestion(){
+  const qs = [
+    { tag:'Seat Etiquette', scenario:'You squeeze the cards aggressively, bending them.', question:'Is card bending/squeezing typical behavior in a high-limit room?', correct:false,
+      explanation:'While slow-rolling (squeeze) is a Macau tradition, deliberately damaging cards is not acceptable. Casinos may charge for bent cards. Gentleness is always expected.' },
+    { tag:'Seat Numbers', scenario:'In Macau-style baccarat, you notice there is no Seat 4 at the table.', question:'Is this normal in Asian-style baccarat rooms?', correct:true,
+      explanation:'The number 4 sounds like "death" in Cantonese (四/sì). High-limit rooms often omit Seat 4 out of respect for superstition and VIP comfort.' },
+    { tag:'Touching Cards', scenario:'In a game where cards are dealt face-up in a shoe, you reach to flip a card.', question:'Is it proper to touch the cards in this type of game?', correct:false,
+      explanation:'In face-up shoe games, players do not touch the cards. Only in traditional squeeze/face-down games may the designated player handle the cards.' },
+    { tag:'Tipping', scenario:'A pit boss provides exceptional service to your group.', question:'Is tipping pit bosses a common practice in Macau casinos?', correct:false,
+      explanation:'In Macau and most Asian casinos, tipping staff (including dealers and pit bosses) is generally prohibited by casino policy. Tipping is more common in Las Vegas.' },
+    { tag:'Dress Code', scenario:'You want to enter a VIP high-limit room at a Macau casino.', question:'Are casual clothes (e.g., shorts and flip-flops) typically acceptable?', correct:false,
+      explanation:'High-limit rooms in Macau and major Asian casinos enforce strict dress codes — smart casual to formal wear. Casual beachwear is typically not permitted.' },
+    { tag:'Phone Etiquette', scenario:'You take photos of the scoreboard with your phone at the baccarat table.', question:'Is this generally permitted at all casinos?', correct:false,
+      explanation:'Photography policies vary by casino. Many prohibit any photography at the gaming table. Always check with the pit boss before photographing any part of the table.' },
+    { tag:'Comp Culture', scenario:'A player has been at the same table for 4 hours and asks the pit boss for comps.', question:'Is this an acceptable way to request comps?', correct:true,
+      explanation:'Requesting comps after an extended session is normal casino culture. Comps (meals, rooms, show tickets) are based on average bet, time played, and theoretical loss.' },
+  ];
+  return qs[Math.floor(Math.random()*qs.length)];
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+//  ROAD READING QUESTION BANK
+// ══════════════════════════════════════════════════════════════════════════
+function generateRoadsQuestion(){
+  const qs = [
+    { tag:'Big Road', scenario:'The Big Road records results as circles: Red (Banker) or Blue (Player), with Ties shown as a slash.', question:'Does a new column start every time the result changes (B→P or P→B)?', correct:true,
+      explanation:'The Big Road shifts to a new column whenever the outcome changes. A run of the same result stacks vertically. This is the primary scoreboard used in all baccarat rooms.' },
+    { tag:'Bead Road', scenario:'The Bead Road (or Bead Plate) records every result in sequence, left to right, top to bottom.', question:'Does the Bead Road ignore ties (not record them)?', correct:false,
+      explanation:'The Bead Road records every hand — Banker (red), Player (blue), and Tie (green) — in order. It\'s the most literal hand-by-hand record.' },
+    { tag:'Big Eye Boy', scenario:'The Big Eye Boy is a derived road — it compares current column depth to the previous column.', question:'Is the Big Eye Boy based on actual Banker/Player results directly?', correct:false,
+      explanation:'Derived roads (Big Eye Boy, Small Road, Cockroach Pig) compare patterns in the Big Road rather than recording raw B/P/T outcomes. They show whether the shoe is "repetitive" or "choppy."' },
+    { tag:'Prediction Dots', scenario:'Before a deal, the scoreboard shows a red or blue prediction dot.', question:'Does this prediction dot guarantee the next result?', correct:false,
+      explanation:'Prediction dots show where the next result would land on the derived roads IF Banker wins or IF Player wins. They are pattern projections, not predictions — baccarat outcomes are random.' },
+    { tag:'Dragon Tail', scenario:'A "Dragon" on the Big Road refers to a long column (usually 6+ results the same).', question:'Does a Dragon indicate the streak will continue?', correct:false,
+      explanation:'A Dragon is a long streak, but each hand is independent. The streak may continue or end on the very next hand with equal probability based on the underlying odds.' },
+    { tag:'Small Road', scenario:'The Small Road skips one column back in its comparisons (vs. Big Eye Boy which looks one column back).', question:'Do Big Eye Boy, Small Road, and Cockroach Pig all show the same information?', correct:false,
+      explanation:'Each derived road looks a different number of columns back: Big Eye Boy = 1 column, Small Road = 2 columns, Cockroach Pig = 3 columns. They can give different signals simultaneously.' },
+    { tag:'Roads & Edge', scenario:'A casino player spots a pattern in the roads and believes the next result is highly predictable.', question:'Can road patterns reliably predict outcomes and reduce the house edge?', correct:false,
+      explanation:'Baccarat is dealt from a random shoe. Road patterns are retrospective — they describe what happened, not what will happen. No road reading system changes the mathematical house edge.' },
+  ];
+  return qs[Math.floor(Math.random()*qs.length)];
+}
+
 // ── THIRD-CARD RULES ──────────────────────────────────────────────────────
 // Player: draws on 0-5, stands on 6-7, natural on 8-9
 // Banker when Player draws:
@@ -205,6 +399,29 @@ function randInt(min, max){ return Math.floor(Math.random()*(max-min+1))+min; }
 function cardVal(c){ return c>=10?0:c; } // face cards = 0
 
 function generateQuestion(difficulty) {
+  // Route to topic-specific generator first
+  if(currentTopic === 'side-bets'){
+    const q = generateSideBetQuestion();
+    return { tag:q.tag, scenario:q.scenario, question:q.question, correctAnswer:q.correct, explanation:q.explanation, type:'side-bet' };
+  }
+  if(currentTopic === 'bet-math'){
+    const q = generateBetMathQuestion();
+    return { tag:q.tag, scenario:q.scenario, question:q.question, correctAnswer:q.correct, explanation:q.explanation, type:'bet-math' };
+  }
+  if(currentTopic === 'bankroll'){
+    const q = generateBankrollQuestion();
+    return { tag:q.tag, scenario:q.scenario, question:q.question, correctAnswer:q.correct, explanation:q.explanation, type:'bankroll' };
+  }
+  if(currentTopic === 'etiquette'){
+    const q = generateEtiquetteQuestion();
+    return { tag:q.tag, scenario:q.scenario, question:q.question, correctAnswer:q.correct, explanation:q.explanation, type:'etiquette' };
+  }
+  if(currentTopic === 'roads'){
+    const q = generateRoadsQuestion();
+    return { tag:q.tag, scenario:q.scenario, question:q.question, correctAnswer:q.correct, explanation:q.explanation, type:'roads' };
+  }
+
+  // Default: third-card rules
   // difficulty 0=easy (player rule only), 1=medium (banker when stands), 2=hard (banker when player drew)
   const roll = Math.random();
 
@@ -452,7 +669,14 @@ function updateStats(){
   document.getElementById('st-chips').textContent = chipsEarned.toLocaleString();
 }
 
-startDrill();
+// Read ?topic= from URL and activate that tab
+(function(){
+  const params = new URLSearchParams(location.search);
+  const t = params.get('topic');
+  const valid = Object.keys(TOPICS);
+  const initial = valid.includes(t) ? t : 'third-card';
+  setTopic(initial);
+})();
 </script>
 </body>
 </html>
