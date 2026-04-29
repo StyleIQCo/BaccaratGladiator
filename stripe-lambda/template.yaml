@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: BaccaratGladiator Stripe chip purchase backend
+Description: BaccaratGladiator Stripe backend — chip purchases + book PDF + email list
 
 Globals:
   Function:
@@ -8,9 +8,9 @@ Globals:
     Runtime: nodejs20.x
     Environment:
       Variables:
-        STRIPE_SECRET_KEY: !Ref StripeSecretKey
+        STRIPE_SECRET_KEY:    !Ref StripeSecretKey
         STRIPE_WEBHOOK_SECRET: !Ref StripeWebhookSecret
-        ALLOWED_ORIGIN: !Ref AllowedOrigin
+        ALLOWED_ORIGIN:       !Ref AllowedOrigin
 
 Parameters:
   StripeSecretKey:
@@ -25,8 +25,28 @@ Parameters:
     Type: String
     Default: https://baccaratgladiator.com
     Description: CORS allowed origin
+  BookPdfUrl:
+    Type: String
+    NoEcho: true
+    Description: Direct S3 URL (or pre-signed URL) for the Road to Nine PDF download
 
 Resources:
+
+  # ── Email subscribers table ──────────────────────────────────────────────
+  SubscribersTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: bg-subscribers
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: email
+          AttributeType: S
+      KeySchema:
+        - AttributeName: email
+          KeyType: HASH
+      TimeToLiveSpecification:
+        AttributeName: ttl
+        Enabled: false
 
   # ── Create checkout session ──────────────────────────────────────────────
   CreateCheckoutFunction:
@@ -34,7 +54,7 @@ Resources:
     Properties:
       FunctionName: bg-stripe-create-checkout
       Handler: src/createCheckout.handler
-      Description: Creates a Stripe checkout session for chip purchases
+      Description: Creates a Stripe checkout session for chip purchases and book PDF
       Events:
         Api:
           Type: Api
@@ -43,19 +63,58 @@ Resources:
             Path: /create-checkout
             Method: POST
 
+  # ── Verify book purchase session ─────────────────────────────────────────
+  VerifySessionFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: bg-stripe-verify-session
+      Handler: src/verifySession.handler
+      Description: Verifies a paid Stripe session and returns the book PDF download URL
+      Environment:
+        Variables:
+          BOOK_PDF_URL: !Ref BookPdfUrl
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            RestApiId: !Ref BgApi
+            Path: /verify-session
+            Method: GET
+
   # ── Stripe webhook handler ───────────────────────────────────────────────
   WebhookFunction:
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: bg-stripe-webhook
       Handler: src/webhook.handler
-      Description: Handles Stripe webhook events to verify payment
+      Description: Handles Stripe webhook events to credit chips after payment
       Events:
         Api:
           Type: Api
           Properties:
             RestApiId: !Ref BgApi
             Path: /webhook
+            Method: POST
+
+  # ── Email subscribe ──────────────────────────────────────────────────────
+  SubscribeFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: bg-stripe-subscribe
+      Handler: src/subscribe.handler
+      Description: Saves reader email opt-ins from guide-download.html
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref SubscribersTable
+      Environment:
+        Variables:
+          SUBSCRIBERS_TABLE: !Ref SubscribersTable
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            RestApiId: !Ref BgApi
+            Path: /subscribe
             Method: POST
 
   # ── API Gateway ──────────────────────────────────────────────────────────
@@ -65,7 +124,7 @@ Resources:
       Name: bg-stripe-api
       StageName: prod
       Cors:
-        AllowMethods: "'POST,OPTIONS'"
+        AllowMethods: "'GET,POST,OPTIONS'"
         AllowHeaders: "'Content-Type,stripe-signature'"
         AllowOrigin: "'*'"
 
@@ -73,6 +132,15 @@ Outputs:
   CreateCheckoutUrl:
     Description: POST to this URL to create a checkout session
     Value: !Sub https://${BgApi}.execute-api.${AWS::Region}.amazonaws.com/prod/create-checkout
+  VerifySessionUrl:
+    Description: GET ?session_id=xxx to verify a paid book session
+    Value: !Sub https://${BgApi}.execute-api.${AWS::Region}.amazonaws.com/prod/verify-session
   WebhookUrl:
     Description: Add this URL as a Stripe webhook endpoint
     Value: !Sub https://${BgApi}.execute-api.${AWS::Region}.amazonaws.com/prod/webhook
+  SubscribeUrl:
+    Description: POST email opt-ins here
+    Value: !Sub https://${BgApi}.execute-api.${AWS::Region}.amazonaws.com/prod/subscribe
+  SubscribersTableName:
+    Description: DynamoDB table holding email subscribers
+    Value: !Ref SubscribersTable

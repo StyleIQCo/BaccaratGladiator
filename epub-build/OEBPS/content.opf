@@ -1,37 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <package version="3.0" xmlns="http://www.idpf.org/2007/opf" unique-identifier="uid">
   <metadata xmlns:dc="http://purl.org/dc/elements/1.1/">
-    <dc:identifier id="uid">com.baccaratgladiator.fieldguide</dc:identifier>
+    <dc:identifier id="uid">com.baccaratgladiator.roadtonine</dc:identifier>
     <dc:title>Road to Nine: A Baccarat Gladiator Guide</dc:title>
     <dc:creator>Baccarat Gladiator</dc:creator>
     <dc:language>en</dc:language>
-    <dc:description>Complete reference guide for baccarat players. Covers all 5 road maps, third-card rules, EZ Baccarat, betting systems, house edge, casino etiquette, and strategy. Practice free at BaccaratGladiator.com.</dc:description>
+    <dc:description>The complete baccarat guide: 28 chapters, 18 appendices. House edge math, road maps, EZ Baccarat, comp extraction, VIP strategy, cultural rituals, and international properties. Practice free at BaccaratGladiator.com.</dc:description>
     <dc:subject>Baccarat</dc:subject>
     <dc:subject>Casino Games</dc:subject>
     <dc:subject>Gambling Strategy</dc:subject>
     <dc:publisher>Baccarat Gladiator</dc:publisher>
     <dc:rights>Copyright 2026 Baccarat Gladiator. All rights reserved.</dc:rights>
-    <meta property="dcterms:modified">2026-04-20T00:00:00Z</meta>
+    <meta property="dcterms:modified">2026-04-29T00:00:00Z</meta>
   </metadata>
   <manifest>
-    <item id="nav"      href="nav.xhtml"     media-type="application/xhtml+xml" properties="nav"/>
-    <item id="cover"    href="cover.xhtml"   media-type="application/xhtml+xml"/>
-    <item id="ch01"     href="ch01.xhtml"    media-type="application/xhtml+xml"/>
-    <item id="ch02"     href="ch02.xhtml"    media-type="application/xhtml+xml"/>
-    <item id="ch03"     href="ch03.xhtml"    media-type="application/xhtml+xml"/>
-    <item id="ch04"     href="ch04.xhtml"    media-type="application/xhtml+xml"/>
-    <item id="ch05"     href="ch05.xhtml"    media-type="application/xhtml+xml"/>
-    <item id="ch06"     href="ch06.xhtml"    media-type="application/xhtml+xml"/>
-    <item id="ch07"     href="ch07.xhtml"    media-type="application/xhtml+xml"/>
-    <item id="ch08"     href="ch08.xhtml"    media-type="application/xhtml+xml"/>
-    <item id="ch09"     href="ch09.xhtml"    media-type="application/xhtml+xml"/>
-    <item id="ch10"     href="ch10.xhtml"    media-type="application/xhtml+xml"/>
-    <item id="css"      href="styles.css"    media-type="text/css"/>
+    <item id="nav" href="Text/nav.xhtml" media-type="application/xhtml+xml" properties="nav"/>
     <item id="cover-img" href="bg-card.png" media-type="image/png" properties="cover-image"/>
+    <item id="css" href="Text/styles.css" media-type="text/css"/>
+    <item id="front" href="Text/front.xhtml" media-type="application/xhtml+xml"/>
+    <item id="sec00" href="Text/sec00.xhtml" media-type="application/xhtml+xml"/>
+    <item id="ch01" href="Text/ch01.xhtml" media-type="application/xhtml+xml"/>
+    <item id="ch02" href="Text/ch02.xhtml" media-type="application/xhtml+xml"/>
+    <item id="ch03" href="Text/ch03.xhtml" media-type="application/xhtml+xml"/>
+    <item id="ch04" href="Text/ch04.xhtml" media-type="application/xhtml+xml"/>
+    <item id="ch05" href="Text/ch05.xhtml" media-type="application/xhtml+xml"/>
+    <item id="ch06" href="Text/ch06.xhtml" media-type="application/xhtml+xml"/>
+    <item id="ch07" href="Text/ch07.xhtml" media-type="application/xhtml+xml"/>
+    <item id="ch08" href="Text/ch08.xhtml" media-type="application/xhtml+xml"/>
+    <item id="ch09" href="Text/ch09.xhtml" media-type="application/xhtml+xml"/>
+    <item id="ch10" href="Text/ch10.xhtml" media-type="application/xhtml+xml"/>
+    <item id="ch11" href="Text/ch11.xhtml" media-type="application/xhtml+xml"/>
+    <item id="ch12" href="Text/ch12.xhtml" media-type="application/xhtml+xml"/>
+    <item id="ch13" href="Text/ch13.xhtml" media-type="application/xhtml+xml"/>
+    <item id="ch14" href="Text/ch14.xhtml" media-type="application/xhtml+xml"/>
+    <item id="ch15" href="Text/ch15.xhtml" media-type="application/xhtml+xml"/>
+    <item id="ch16" href="Text/ch16.xhtml" media-type="application/xhtml+xml"/>
+    <item id="ch17" href="Text/ch17.xhtml" media-type="application/xhtml+xml"/>
+    <item id="ch18" href="Text/ch18.xhtml" media-type="application/xhtml+xml"/>
+    <item id="ch19" href="Text/ch19.xhtml" media-type="application/xhtml+xml"/>
+    <item id="ch20" href="Text/ch20.xhtml" media-type="application/xhtml+xml"/>
+    <item id="ch21" href="Text/ch21.xhtml" media-type="application/xhtml+xml"/>
+    <item id="ch22" href="Text/ch22.xhtml" media-type="application/xhtml+xml"/>
+    <item id="ch23" href="Text/ch23.xhtml" media-type="application/xhtml+xml"/>
+    <item id="ch24" href="Text/ch24.xhtml" media-type="application/xhtml+xml"/>
+    <item id="ch25" href="Text/ch25.xhtml" media-type="application/xhtml+xml"/>
+    <item id="ch26" href="Text/ch26.xhtml" media-type="application/xhtml+xml"/>
+    <item id="ch27" href="Text/ch27.xhtml" media-type="application/xhtml+xml"/>
+    <item id="ch28" href="Text/ch28.xhtml" media-type="application/xhtml+xml"/>
+    <item id="appA" href="Text/appA.xhtml" media-type="application/xhtml+xml"/>
+    <item id="appC" href="Text/appC.xhtml" media-type="application/xhtml+xml"/>
+    <item id="appD" href="Text/appD.xhtml" media-type="application/xhtml+xml"/>
+    <item id="appE" href="Text/appE.xhtml" media-type="application/xhtml+xml"/>
+    <item id="appF" href="Text/appF.xhtml" media-type="application/xhtml+xml"/>
+    <item id="appG" href="Text/appG.xhtml" media-type="application/xhtml+xml"/>
+    <item id="appH" href="Text/appH.xhtml" media-type="application/xhtml+xml"/>
+    <item id="appI" href="Text/appI.xhtml" media-type="application/xhtml+xml"/>
+    <item id="appJ" href="Text/appJ.xhtml" media-type="application/xhtml+xml"/>
+    <item id="appK" href="Text/appK.xhtml" media-type="application/xhtml+xml"/>
+    <item id="appL" href="Text/appL.xhtml" media-type="application/xhtml+xml"/>
+    <item id="appM" href="Text/appM.xhtml" media-type="application/xhtml+xml"/>
+    <item id="appN" href="Text/appN.xhtml" media-type="application/xhtml+xml"/>
+    <item id="appO" href="Text/appO.xhtml" media-type="application/xhtml+xml"/>
+    <item id="appP" href="Text/appP.xhtml" media-type="application/xhtml+xml"/>
+    <item id="appQ" href="Text/appQ.xhtml" media-type="application/xhtml+xml"/>
+    <item id="appR" href="Text/appR.xhtml" media-type="application/xhtml+xml"/>
   </manifest>
   <spine>
-    <itemref idref="cover"/>
-    <itemref idref="nav"/>
+    <itemref idref="front"/>
+    <itemref idref="sec00"/>
     <itemref idref="ch01"/>
     <itemref idref="ch02"/>
     <itemref idref="ch03"/>
@@ -42,5 +78,40 @@
     <itemref idref="ch08"/>
     <itemref idref="ch09"/>
     <itemref idref="ch10"/>
+    <itemref idref="ch11"/>
+    <itemref idref="ch12"/>
+    <itemref idref="ch13"/>
+    <itemref idref="ch14"/>
+    <itemref idref="ch15"/>
+    <itemref idref="ch16"/>
+    <itemref idref="ch17"/>
+    <itemref idref="ch18"/>
+    <itemref idref="ch19"/>
+    <itemref idref="ch20"/>
+    <itemref idref="ch21"/>
+    <itemref idref="ch22"/>
+    <itemref idref="ch23"/>
+    <itemref idref="ch24"/>
+    <itemref idref="ch25"/>
+    <itemref idref="ch26"/>
+    <itemref idref="ch27"/>
+    <itemref idref="ch28"/>
+    <itemref idref="appA"/>
+    <itemref idref="appC"/>
+    <itemref idref="appD"/>
+    <itemref idref="appE"/>
+    <itemref idref="appF"/>
+    <itemref idref="appG"/>
+    <itemref idref="appH"/>
+    <itemref idref="appI"/>
+    <itemref idref="appJ"/>
+    <itemref idref="appK"/>
+    <itemref idref="appL"/>
+    <itemref idref="appM"/>
+    <itemref idref="appN"/>
+    <itemref idref="appO"/>
+    <itemref idref="appP"/>
+    <itemref idref="appQ"/>
+    <itemref idref="appR"/>
   </spine>
 </package>

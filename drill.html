@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Third-Card Drill — Baccarat Gladiator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=EB+Garamond:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --gold:#c9a84c;--gold-lt:#f0d080;--felt:#0d3320;--dark:#080e08;
+  --green:#1a3a20;--red:#cc3333;--correct:#2a6a2a;--wrong:#6a2020;
+}
+body{background:var(--dark);color:#fff;font-family:'EB Garamond',Georgia,serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:0 16px 40px;}
+
+/* NAV */
+nav{width:100%;max-width:640px;display:flex;align-items:center;justify-content:space-between;padding:16px 0;border-bottom:1px solid rgba(201,168,76,.15);margin-bottom:24px;}
+.nav-logo{font-family:'Cinzel',serif;font-size:.85rem;font-weight:700;color:var(--gold-lt);letter-spacing:.1em;text-decoration:none;}
+.nav-back{font-family:'Cinzel',serif;font-size:.75rem;color:var(--gold);border:1px solid rgba(201,168,76,.3);padding:6px 16px;border-radius:20px;text-decoration:none;transition:background .2s;}
+.nav-back:hover{background:rgba(201,168,76,.1);}
+
+/* HEADER STATS */
+.stats-bar{width:100%;max-width:640px;display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-bottom:24px;}
+.stat-box{background:rgba(255,255,255,.04);border:1px solid rgba(201,168,76,.12);border-radius:10px;padding:10px;text-align:center;}
+.stat-val{font-family:'Cinzel',serif;font-size:1.2rem;font-weight:700;color:var(--gold-lt);}
+.stat-lbl{font-size:.7rem;color:rgba(255,255,255,.35);letter-spacing:.08em;text-transform:uppercase;margin-top:2px;}
+
+/* PROGRESS */
+.progress-wrap{width:100%;max-width:640px;margin-bottom:20px;}
+.progress-bar{height:4px;background:rgba(255,255,255,.1);border-radius:2px;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-lt));transition:width .4s ease;}
+
+/* QUESTION CARD */
+.card{width:100%;max-width:640px;background:linear-gradient(160deg,#0f2010,#0a1a0a);border:1px solid rgba(201,168,76,.2);border-radius:16px;padding:32px 28px;margin-bottom:20px;min-height:220px;display:flex;flex-direction:column;justify-content:space-between;transition:border-color .3s;}
+.card.correct{border-color:#4a9a4a;background:linear-gradient(160deg,#0a1f0a,#081408);}
+.card.wrong{border-color:#9a3a3a;background:linear-gradient(160deg,#1f0a0a,#140808);}
+.card-tag{font-family:'Cinzel',serif;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(201,168,76,.6);margin-bottom:16px;}
+.card-scenario{font-size:1.05rem;color:rgba(255,255,255,.75);line-height:1.6;margin-bottom:20px;}
+.card-scenario strong{color:#fff;}
+.card-question{font-family:'Cinzel',serif;font-size:1.15rem;font-weight:700;color:var(--gold-lt);line-height:1.4;}
+
+/* FEEDBACK */
+.feedback{min-height:52px;width:100%;max-width:640px;display:flex;align-items:center;gap:12px;padding:14px 18px;border-radius:10px;margin-bottom:16px;opacity:0;transition:opacity .3s;}
+.feedback.show{opacity:1;}
+.feedback.correct{background:rgba(42,106,42,.3);border:1px solid rgba(74,154,74,.4);}
+.feedback.wrong{background:rgba(106,32,32,.3);border:1px solid rgba(154,74,74,.4);}
+.feedback-icon{font-size:1.4rem;flex-shrink:0;}
+.feedback-text{font-size:.95rem;line-height:1.5;}
+.feedback-text strong{font-size:1rem;}
+
+/* ANSWER BUTTONS */
+.answers{width:100%;max-width:640px;display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
+.ans-btn{font-family:'Cinzel',serif;font-size:1rem;font-weight:700;letter-spacing:.06em;padding:18px;border-radius:12px;border:2px solid;cursor:pointer;transition:all .2s;background:transparent;}
+.ans-btn.yes{color:#5dcc5d;border-color:rgba(93,204,93,.4);}
+.ans-btn.yes:hover:not(:disabled){background:rgba(93,204,93,.12);border-color:rgba(93,204,93,.7);}
+.ans-btn.no{color:#cc5d5d;border-color:rgba(204,93,93,.4);}
+.ans-btn.no:hover:not(:disabled){background:rgba(204,93,93,.12);border-color:rgba(204,93,93,.7);}
+.ans-btn:disabled{opacity:.4;cursor:not-allowed;}
+.ans-btn.highlight-correct{background:rgba(42,106,42,.3)!important;border-color:#4a9a4a!important;color:#8ddd8d!important;}
+.ans-btn.highlight-wrong{background:rgba(106,32,32,.3)!important;border-color:#9a3a3a!important;color:#dd8d8d!important;}
+
+/* NEXT BUTTON */
+.next-btn{width:100%;max-width:640px;font-family:'Cinzel',serif;font-size:.95rem;font-weight:700;letter-spacing:.08em;padding:16px;border-radius:12px;background:linear-gradient(135deg,var(--gold),var(--gold-lt),var(--gold));background-size:200% auto;color:#000;border:none;cursor:pointer;display:none;transition:background-position .3s,transform .2s;}
+.next-btn:hover{background-position:right center;transform:translateY(-1px);}
+
+/* CHIP REWARD TOAST */
+.chip-toast{position:fixed;top:24px;left:50%;transform:translateX(-50%) translateY(-80px);background:linear-gradient(135deg,#1a2e10,#0f1f0a);border:1px solid var(--gold);border-radius:30px;padding:10px 24px;font-family:'Cinzel',serif;font-size:.9rem;color:var(--gold-lt);font-weight:700;letter-spacing:.06em;transition:transform .4s cubic-bezier(.22,1,.36,1);z-index:100;pointer-events:none;}
+.chip-toast.show{transform:translateX(-50%) translateY(0);}
+
+/* RESULTS SCREEN */
+#results-screen{display:none;width:100%;max-width:640px;text-align:center;}
+.results-icon{font-size:3.5rem;margin-bottom:16px;filter:drop-shadow(0 0 20px rgba(201,168,76,.4));}
+.results-title{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:900;color:var(--gold-lt);margin-bottom:8px;}
+.results-sub{color:rgba(255,255,255,.5);font-size:1rem;margin-bottom:32px;}
+.results-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:32px;}
+.results-box{background:rgba(255,255,255,.04);border:1px solid rgba(201,168,76,.15);border-radius:12px;padding:20px;text-align:center;}
+.results-box .val{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;color:var(--gold-lt);}
+.results-box .lbl{font-size:.8rem;color:rgba(255,255,255,.4);margin-top:4px;letter-spacing:.06em;text-transform:uppercase;}
+.replay-btn{font-family:'Cinzel',serif;font-size:.95rem;font-weight:700;padding:16px 40px;border-radius:30px;background:linear-gradient(135deg,var(--gold),var(--gold-lt),var(--gold));background-size:200% auto;color:#000;border:none;cursor:pointer;margin-right:12px;transition:background-position .3s,transform .2s;}
+.replay-btn:hover{background-position:right center;transform:translateY(-1px);}
+.play-btn-outline{font-family:'Cinzel',serif;font-size:.9rem;font-weight:700;padding:15px 32px;border-radius:30px;border:1px solid rgba(201,168,76,.4);color:var(--gold);background:transparent;cursor:pointer;transition:background .2s;}
+.play-btn-outline:hover{background:rgba(201,168,76,.1);}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="https://www.baccaratgladiator.com/">Baccarat Gladiator</a>
+  <a class="nav-back" href="https://www.baccaratgladiator.com/baccarat-scoreboard.html">← Back to Game</a>
+</nav>
+
+<div class="stats-bar">
+  <div class="stat-box"><div class="stat-val" id="st-score">0</div><div class="stat-lbl">Score</div></div>
+  <div class="stat-box"><div class="stat-val" id="st-streak">0</div><div class="stat-lbl">Streak</div></div>
+  <div class="stat-box"><div class="stat-val" id="st-correct">0</div><div class="stat-lbl">Correct</div></div>
+  <div class="stat-box"><div class="stat-val" id="st-chips" style="color:var(--gold);">0</div><div class="stat-lbl">Chips Earned</div></div>
+</div>
+
+<div class="progress-wrap">
+  <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+</div>
+
+<!-- Question screen -->
+<div id="question-screen">
+  <div class="card" id="q-card">
+    <div>
+      <div class="card-tag" id="q-tag">Player Rule</div>
+      <div class="card-scenario" id="q-scenario"></div>
+      <div class="card-question" id="q-question"></div>
+    </div>
+  </div>
+
+  <div class="feedback" id="feedback">
+    <div class="feedback-icon" id="fb-icon"></div>
+    <div class="feedback-text" id="fb-text"></div>
+  </div>
+
+  <div class="answers" id="answers">
+    <button class="ans-btn yes" id="btn-yes" onclick="answer(true)">✓ YES — Draw</button>
+    <button class="ans-btn no"  id="btn-no"  onclick="answer(false)">✕ NO — Stand</button>
+  </div>
+
+  <button class="next-btn" id="next-btn" onclick="nextQuestion()">Next Question →</button>
+</div>
+
+<!-- Results screen -->
+<div id="results-screen">
+  <div class="results-icon" id="results-icon">🏆</div>
+  <div class="results-title" id="results-title">Drill Complete</div>
+  <div class="results-sub" id="results-sub"></div>
+  <div class="results-grid">
+    <div class="results-box"><div class="val" id="r-correct">0</div><div class="lbl">Correct</div></div>
+    <div class="results-box"><div class="val" id="r-accuracy">0%</div><div class="lbl">Accuracy</div></div>
+    <div class="results-box"><div class="val" id="r-streak">0</div><div class="lbl">Best Streak</div></div>
+    <div class="results-box"><div class="val" id="r-chips" style="color:var(--gold);">+0</div><div class="lbl">Chips Earned</div></div>
+  </div>
+  <button class="replay-btn" onclick="startDrill()">Play Again</button>
+  <button class="play-btn-outline" onclick="location.href='https://www.baccaratgladiator.com/baccarat-scoreboard.html'">Play Baccarat →</button>
+</div>
+
+<div class="chip-toast" id="chip-toast">+250 chips!</div>
+
+<script>
+// ── THIRD-CARD RULES ──────────────────────────────────────────────────────
+// Player: draws on 0-5, stands on 6-7, natural on 8-9
+// Banker when Player draws:
+//   0,1,2: always draw
+//   3: draw unless player's 3rd card = 8
+//   4: draw if player's 3rd card = 2,3,4,5,6,7
+//   5: draw if player's 3rd card = 4,5,6,7
+//   6: draw if player's 3rd card = 6,7
+//   7: always stand
+//   8,9: natural
+// Banker when Player stands (6 or 7):
+//   draws on 0-5, stands on 6-7
+
+function playerDraws(pTotal){ return pTotal<=5; }
+
+function bankerDrawsWhenPlayerDrew(bTotal, playerThirdCard){
+  if(bTotal<=2) return true;
+  if(bTotal===3) return playerThirdCard!==8;
+  if(bTotal===4) return playerThirdCard>=2&&playerThirdCard<=7;
+  if(bTotal===5) return playerThirdCard>=4&&playerThirdCard<=7;
+  if(bTotal===6) return playerThirdCard===6||playerThirdCard===7;
+  return false; // 7,8,9
+}
+
+function bankerDrawsWhenPlayerStands(bTotal){ return bTotal<=5; }
+
+// ── EXPLANATIONS ──────────────────────────────────────────────────────────
+function playerExplanation(pTotal, draws){
+  if(pTotal>=8) return 'Player totals ' + pTotal + ' — a Natural. The hand ends immediately. No draw.';
+  if(draws) return 'Player totals ' + pTotal + ' (0–5) — Player always draws a third card.';
+  return 'Player totals ' + pTotal + ' (6–7) — Player always stands.';
+}
+
+function bankerExplanation(bTotal, playerThirdCard, draws, playerStood){
+  if(playerStood){
+    if(draws) return 'When Player stands, Banker draws on any total 0–5. Banker has ' + bTotal + '.';
+    return 'When Player stands, Banker stands on 6 or 7. Banker has ' + bTotal + '.';
+  }
+  if(bTotal<=2) return 'Banker totals ' + bTotal + ' — Banker always draws, regardless of Player\'s third card.';
+  if(bTotal===3){
+    if(draws) return 'Banker totals 3 — draws unless Player\'s third card is 8. Player drew a ' + playerThirdCard + ', so Banker draws.';
+    return 'Banker totals 3 — draws unless Player\'s third card is 8. Player drew an 8, so Banker stands.';
+  }
+  if(bTotal===4){
+    if(draws) return 'Banker totals 4 — draws if Player\'s third card is 2–7. Player drew a ' + playerThirdCard + '.';
+    return 'Banker totals 4 — draws only on Player\'s 2–7. Player drew a ' + playerThirdCard + ', so Banker stands.';
+  }
+  if(bTotal===5){
+    if(draws) return 'Banker totals 5 — draws if Player\'s third card is 4–7. Player drew a ' + playerThirdCard + '.';
+    return 'Banker totals 5 — draws only on Player\'s 4–7. Player drew a ' + playerThirdCard + ', so Banker stands.';
+  }
+  if(bTotal===6){
+    if(draws) return 'Banker totals 6 — draws only if Player\'s third card is 6 or 7. Player drew a ' + playerThirdCard + '.';
+    return 'Banker totals 6 — draws only on Player\'s 6–7. Player drew a ' + playerThirdCard + ', so Banker stands.';
+  }
+  return 'Banker totals ' + bTotal + ' — Banker always stands on 7.';
+}
+
+// ── QUESTION GENERATOR ────────────────────────────────────────────────────
+function randInt(min, max){ return Math.floor(Math.random()*(max-min+1))+min; }
+function cardVal(c){ return c>=10?0:c; } // face cards = 0
+
+function generateQuestion(difficulty) {
+  // difficulty 0=easy (player rule only), 1=medium (banker when stands), 2=hard (banker when player drew)
+  const roll = Math.random();
+
+  // Player rule questions (always some)
+  if(difficulty===0 || roll<0.35){
+    const pTotal = randInt(0,9);
+    const isNatural = pTotal>=8;
+    if(isNatural){
+      return {
+        tag:'Natural',
+        scenario:'Player\'s first two cards total <strong>' + pTotal + '</strong>.',
+        question:'Is this a Natural? Does the hand end without any draw?',
+        correctAnswer:true,
+        explanation:'Player totals ' + pTotal + ' — a Natural ' + pTotal + '. The hand ends immediately. No third cards are drawn by either side.',
+        type:'natural'
+      };
+    }
+    const draws = playerDraws(pTotal);
+    return {
+      tag:'Player Rule',
+      scenario:'Player\'s first two cards total <strong>' + pTotal + '</strong>. Banker has a non-natural total.',
+      question:'Does <strong>Player</strong> draw a third card?',
+      correctAnswer:draws,
+      explanation:playerExplanation(pTotal, draws),
+      type:'player'
+    };
+  }
+
+  // Banker rule when player stands
+  if(difficulty<=1 || roll<0.55){
+    const pTotal = randInt(6,7); // player stands
+    const bTotal = randInt(0,7);
+    const draws = bankerDrawsWhenPlayerStands(bTotal);
+    return {
+      tag:'Banker Rule',
+      scenario:'Player stands on <strong>' + pTotal + '</strong>. Banker\'s first two cards total <strong>' + bTotal + '</strong>.',
+      question:'Does <strong>Banker</strong> draw a third card?',
+      correctAnswer:draws,
+      explanation:bankerDrawsWhenPlayerStands(bTotal)
+        ? 'When Player stands, Banker draws on any total 0–5. Banker has ' + bTotal + '.'
+        : 'When Player stands, Banker stands on 6 or 7. Banker has ' + bTotal + '.',
+      type:'banker-stand'
+    };
+  }
+
+  // Banker rule when player drew (hardest)
+  const pInitial = randInt(0,5); // player must have drawn
+  const thirdCard = randInt(0,9);
+  const bTotal = randInt(0,7);
+  const draws = bankerDrawsWhenPlayerDrew(bTotal, thirdCard);
+  return {
+    tag:'Banker Rule — Advanced',
+    scenario:'Player drew a third card (Player\'s third card value: <strong>' + thirdCard + '</strong>). Banker\'s two-card total: <strong>' + bTotal + '</strong>.',
+    question:'Does <strong>Banker</strong> draw a third card?',
+    correctAnswer:draws,
+    explanation:bankerExplanation(bTotal, thirdCard, draws, false),
+    type:'banker-draw'
+  };
+}
+
+// ── DRILL STATE ───────────────────────────────────────────────────────────
+const TOTAL_QUESTIONS = 15;
+const CHIPS_PER_CORRECT = 250;
+const STREAK_BONUS_AT = 5;
+const STREAK_BONUS_CHIPS = 500;
+const DAILY_CHIP_CAP = 5000;
+
+let questionIndex = 0;
+let score = 0;
+let streak = 0;
+let bestStreak = 0;
+let correctCount = 0;
+let chipsEarned = 0;
+let answered = false;
+let currentQ = null;
+
+function getDailyChipsEarned(){
+  const key = 'bg_drill_daily_' + todayKey();
+  return parseInt(localStorage.getItem(key)||'0', 10);
+}
+function addDailyChips(n){
+  const key = 'bg_drill_daily_' + todayKey();
+  const current = getDailyChipsEarned();
+  localStorage.setItem(key, current + n);
+}
+function todayKey(){
+  return new Date().toISOString().slice(0,10);
+}
+
+function awardChips(amount){
+  const dailySoFar = getDailyChipsEarned();
+  const canEarn = Math.max(0, DAILY_CHIP_CAP - dailySoFar);
+  const actual = Math.min(amount, canEarn);
+  if(actual <= 0) return 0;
+
+  // Add to bg_economy_v1
+  try {
+    const eco = JSON.parse(localStorage.getItem('bg_economy_v1')||'{}');
+    eco.balance = (eco.balance||1000) + actual;
+    localStorage.setItem('bg_economy_v1', JSON.stringify(eco));
+  } catch(e) {}
+  addDailyChips(actual);
+  return actual;
+}
+
+function showChipToast(amount){
+  const t = document.getElementById('chip-toast');
+  t.textContent = '+' + amount.toLocaleString() + ' chips!';
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2000);
+}
+
+function startDrill(){
+  questionIndex = 0; score = 0; streak = 0; bestStreak = 0;
+  correctCount = 0; chipsEarned = 0; answered = false;
+  document.getElementById('question-screen').style.display='block';
+  document.getElementById('results-screen').style.display='none';
+  loadQuestion();
+}
+
+function loadQuestion(){
+  answered = false;
+  const difficulty = questionIndex < 5 ? 0 : questionIndex < 10 ? 1 : 2;
+  currentQ = generateQuestion(difficulty);
+
+  document.getElementById('q-tag').textContent = currentQ.tag;
+  document.getElementById('q-scenario').innerHTML = currentQ.scenario;
+  document.getElementById('q-question').innerHTML = currentQ.question;
+  document.getElementById('q-card').className = 'card';
+
+  const fb = document.getElementById('feedback');
+  fb.className = 'feedback';
+  fb.querySelector('#fb-text').innerHTML = '';
+
+  document.getElementById('btn-yes').disabled = false;
+  document.getElementById('btn-no').disabled = false;
+  document.getElementById('btn-yes').className = 'ans-btn yes';
+  document.getElementById('btn-no').className = 'ans-btn no';
+  document.getElementById('next-btn').style.display = 'none';
+
+  const pct = (questionIndex / TOTAL_QUESTIONS) * 100;
+  document.getElementById('progress-fill').style.width = pct + '%';
+
+  updateStats();
+}
+
+function answer(userAnswer){
+  if(answered) return;
+  answered = true;
+
+  const correct = userAnswer === currentQ.correctAnswer;
+
+  document.getElementById('btn-yes').disabled = true;
+  document.getElementById('btn-no').disabled = true;
+
+  // Highlight buttons
+  if(currentQ.correctAnswer){
+    document.getElementById('btn-yes').className = 'ans-btn yes highlight-correct';
+    if(!correct) document.getElementById('btn-no').className = 'ans-btn no highlight-wrong';
+  } else {
+    document.getElementById('btn-no').className = 'ans-btn no highlight-correct';
+    if(!correct) document.getElementById('btn-yes').className = 'ans-btn yes highlight-wrong';
+  }
+
+  if(correct){
+    correctCount++;
+    streak++;
+    if(streak > bestStreak) bestStreak = streak;
+    score += 100 + (streak > 1 ? (streak-1)*20 : 0);
+
+    let earned = awardChips(CHIPS_PER_CORRECT);
+    chipsEarned += earned;
+    if(streak > 0 && streak % STREAK_BONUS_AT === 0){
+      const bonus = awardChips(STREAK_BONUS_CHIPS);
+      chipsEarned += bonus;
+      earned += bonus;
+    }
+    if(earned > 0) showChipToast(earned);
+
+    document.getElementById('q-card').className = 'card correct';
+    const fb = document.getElementById('feedback');
+    fb.className = 'feedback correct show';
+    fb.querySelector('#fb-icon').textContent = '✓';
+    fb.querySelector('#fb-text').innerHTML = '<strong>' + (streak>=3?'🔥 On a '+streak+' streak! ':'') + 'Correct!</strong><br>' + currentQ.explanation;
+  } else {
+    streak = 0;
+    document.getElementById('q-card').className = 'card wrong';
+    const fb = document.getElementById('feedback');
+    fb.className = 'feedback wrong show';
+    fb.querySelector('#fb-icon').textContent = '✗';
+    fb.querySelector('#fb-text').innerHTML = '<strong>Not quite.</strong><br>' + currentQ.explanation;
+  }
+
+  updateStats();
+  questionIndex++;
+
+  if(questionIndex >= TOTAL_QUESTIONS){
+    document.getElementById('next-btn').style.display = 'block';
+    document.getElementById('next-btn').textContent = 'See Results →';
+    document.getElementById('next-btn').onclick = showResults;
+  } else {
+    document.getElementById('next-btn').style.display = 'block';
+    document.getElementById('next-btn').textContent = 'Next Question →';
+    document.getElementById('next-btn').onclick = nextQuestion;
+  }
+}
+
+function nextQuestion(){
+  loadQuestion();
+}
+
+function showResults(){
+  document.getElementById('question-screen').style.display='none';
+  document.getElementById('results-screen').style.display='block';
+  document.getElementById('progress-fill').style.width='100%';
+
+  const accuracy = Math.round((correctCount/TOTAL_QUESTIONS)*100);
+  let icon = '🎯'; let title = 'Keep Practicing';
+  if(accuracy>=95){ icon='🏆'; title='Perfect — Gladiator Rank'; }
+  else if(accuracy>=80){ icon='⚔️'; title='Strong Performance'; }
+  else if(accuracy>=60){ icon='🃏'; title='Good Foundation'; }
+
+  document.getElementById('results-icon').textContent = icon;
+  document.getElementById('results-title').textContent = title;
+  document.getElementById('results-sub').textContent =
+    accuracy+'% accuracy · '+correctCount+' of '+TOTAL_QUESTIONS+' correct';
+
+  document.getElementById('r-correct').textContent = correctCount+'/'+TOTAL_QUESTIONS;
+  document.getElementById('r-accuracy').textContent = accuracy+'%';
+  document.getElementById('r-streak').textContent = bestStreak;
+  document.getElementById('r-chips').textContent = '+'+chipsEarned.toLocaleString();
+
+  // Mark achievement in economy
+  try {
+    const achieved = new Set(JSON.parse(localStorage.getItem('bg_achievements_v1')||'[]'));
+    if(!achieved.has('drill_complete')){ achieved.add('drill_complete'); localStorage.setItem('bg_achievements_v1', JSON.stringify([...achieved])); }
+    if(accuracy===100 && !achieved.has('drill_perfect')){ achieved.add('drill_perfect'); localStorage.setItem('bg_achievements_v1', JSON.stringify([...achieved])); }
+  } catch(e){}
+}
+
+function updateStats(){
+  document.getElementById('st-score').textContent = score.toLocaleString();
+  document.getElementById('st-streak').textContent = streak;
+  document.getElementById('st-correct').textContent = correctCount;
+  document.getElementById('st-chips').textContent = chipsEarned.toLocaleString();
+}
+
+startDrill();
+</script>
+</body>
+</html>

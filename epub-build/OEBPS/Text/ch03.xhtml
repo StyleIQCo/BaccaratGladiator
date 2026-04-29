@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>Chapter 3: Third-Card Rules</title>
+<link rel="stylesheet" type="text/css" href="../styles.css"/>
+</head>
+<body>
+<div class="section-head"><span class="num">3</span>Third-Card Rules</div>
+
+  <p>No one chooses whether a third card is drawn; the rules are fixed and automatic. The dealer applies them the same way every hand, in every casino, in every country. You never need to memorize this table to play, but understanding it demystifies the hands that seem to defy logic.</p>
+
+  <h3>Player Third-Card Rule</h3>
+  <table>
+    <thead><tr><th>Player Total (first 2 cards)</th><th class="center">Action</th></tr></thead>
+    <tbody>
+      <tr><td>0 – 5</td><td class="center bad">Draws a third card</td></tr>
+      <tr><td>6 – 7</td><td class="center good">Stands</td></tr>
+      <tr><td>8 – 9</td><td class="center bold">Natural — no draw, hand ends</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Banker Third-Card Rule (when Player drew)</h3>
+  <table>
+    <thead><tr><th>Banker Total</th><th>Draws when Player's 3rd card is…</th><th class="center">Stands when…</th></tr></thead>
+    <tbody>
+      <tr><td class="bold">0, 1, 2</td><td>Always draws</td><td class="center">—</td></tr>
+      <tr><td class="bold">3</td><td>0, 1, 2, 3, 4, 5, 6, 7, 9</td><td class="center">8</td></tr>
+      <tr><td class="bold">4</td><td>2, 3, 4, 5, 6, 7</td><td class="center">0, 1, 8, 9</td></tr>
+      <tr><td class="bold">5</td><td>4, 5, 6, 7</td><td class="center">0, 1, 2, 3, 8, 9</td></tr>
+      <tr><td class="bold">6</td><td>6, 7 (only if Player drew)</td><td class="center">0–5, 8, 9</td></tr>
+      <tr><td class="bold">7</td><td colspan="2" class="center">Always stands</td></tr>
+      <tr><td class="bold">8 – 9</td><td colspan="2" class="center">Natural — hand ends</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout"><strong>Memory shortcut:</strong> Banker on 3 draws on everything except an 8. Banker on 6 only draws if Player's third card was 6 or 7. Otherwise: draw on low totals, stand on high.</div>
+
+  <h3>Visual Decision Flowchart</h3>
+  <svg viewBox="0 0 680 185" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;margin:.1in 0;">
+
+    <!-- ===== LEFT: PLAYER HAND ===== -->
+    <text x="170" y="13" font-family="Georgia,serif" font-size="8.5" fill="#555" text-anchor="middle" letter-spacing="2" font-weight="700">PLAYER HAND</text>
+
+    <!-- Decision pill -->
+    <rect x="72" y="19" width="196" height="28" rx="14" fill="#c9a84c"/>
+    <text x="170" y="37" font-family="Georgia,serif" font-size="8.5" fill="#1a1a1a" text-anchor="middle" font-weight="700">Player's 2-card total?</text>
+
+    <!-- Stem down -->
+    <line x1="170" y1="47" x2="170" y2="65" stroke="#c9a84c" stroke-width="1.8"/>
+    <!-- Horizontal branch -->
+    <line x1="52" y1="65" x2="288" y2="65" stroke="#c9a84c" stroke-width="1.5"/>
+    <!-- Three legs down -->
+    <line x1="52"  y1="65" x2="52"  y2="84" stroke="#c9a84c" stroke-width="1.5"/>
+    <line x1="170" y1="65" x2="170" y2="84" stroke="#c9a84c" stroke-width="1.5"/>
+    <line x1="288" y1="65" x2="288" y2="84" stroke="#c9a84c" stroke-width="1.5"/>
+
+    <!-- Branch labels -->
+    <text x="52"  y="79" font-family="Georgia,serif" font-size="7.5" fill="#666" text-anchor="middle" font-style="italic">8 or 9</text>
+    <text x="170" y="79" font-family="Georgia,serif" font-size="7.5" fill="#666" text-anchor="middle" font-style="italic">6 or 7</text>
+    <text x="288" y="79" font-family="Georgia,serif" font-size="7.5" fill="#666" text-anchor="middle" font-style="italic">0 – 5</text>
+
+    <!-- End nodes -->
+    <rect x="8"   y="88" width="88" height="38" rx="5" fill="#1a6b3a"/>
+    <text x="52"  y="103" font-family="Georgia,serif" font-size="7.5" fill="white" text-anchor="middle" font-weight="700">NATURAL</text>
+    <text x="52"  y="116" font-family="Georgia,serif" font-size="7"   fill="rgba(255,255,255,.85)" text-anchor="middle">Stand</text>
+
+    <rect x="126" y="88" width="88" height="38" rx="5" fill="#1a6b3a"/>
+    <text x="170" y="111" font-family="Georgia,serif" font-size="8"   fill="white" text-anchor="middle" font-weight="700">Stand</text>
+
+    <rect x="244" y="88" width="88" height="38" rx="5" fill="#cc2222"/>
+    <text x="288" y="103" font-family="Georgia,serif" font-size="7.5" fill="white" text-anchor="middle" font-weight="700">Draw</text>
+    <text x="288" y="116" font-family="Georgia,serif" font-size="7"   fill="rgba(255,255,255,.85)" text-anchor="middle">3rd Card</text>
+
+    <!-- ===== DIVIDER ===== -->
+    <line x1="340" y1="8" x2="340" y2="175" stroke="#d0c8b0" stroke-width="1" stroke-dasharray="4,3"/>
+
+    <!-- ===== RIGHT: BANKER HAND ===== -->
+    <text x="510" y="13" font-family="Georgia,serif" font-size="8.5" fill="#555" text-anchor="middle" letter-spacing="2" font-weight="700">BANKER HAND</text>
+    <text x="510" y="24" font-family="Georgia,serif" font-size="7"   fill="#999" text-anchor="middle" font-style="italic">(when Player stood)</text>
+
+    <!-- Decision pill -->
+    <rect x="412" y="30" width="196" height="28" rx="14" fill="#c9a84c"/>
+    <text x="510" y="48" font-family="Georgia,serif" font-size="8.5" fill="#1a1a1a" text-anchor="middle" font-weight="700">Banker's 2-card total?</text>
+
+    <!-- Stem down -->
+    <line x1="510" y1="58" x2="510" y2="65" stroke="#c9a84c" stroke-width="1.8"/>
+    <!-- Horizontal branch -->
+    <line x1="392" y1="65" x2="628" y2="65" stroke="#c9a84c" stroke-width="1.5"/>
+    <!-- Three legs down -->
+    <line x1="392" y1="65" x2="392" y2="84" stroke="#c9a84c" stroke-width="1.5"/>
+    <line x1="510" y1="65" x2="510" y2="84" stroke="#c9a84c" stroke-width="1.5"/>
+    <line x1="628" y1="65" x2="628" y2="84" stroke="#c9a84c" stroke-width="1.5"/>
+
+    <!-- Branch labels -->
+    <text x="392" y="79" font-family="Georgia,serif" font-size="7.5" fill="#666" text-anchor="middle" font-style="italic">0 – 5</text>
+    <text x="510" y="79" font-family="Georgia,serif" font-size="7.5" fill="#666" text-anchor="middle" font-style="italic">6 – 7</text>
+    <text x="628" y="79" font-family="Georgia,serif" font-size="7.5" fill="#666" text-anchor="middle" font-style="italic">8 – 9</text>
+
+    <!-- End nodes -->
+    <rect x="348" y="88" width="88" height="38" rx="5" fill="#1e5ac8"/>
+    <text x="392" y="111" font-family="Georgia,serif" font-size="8"   fill="white" text-anchor="middle" font-weight="700">Draw</text>
+
+    <rect x="466" y="88" width="88" height="38" rx="5" fill="#1a6b3a"/>
+    <text x="510" y="111" font-family="Georgia,serif" font-size="8"   fill="white" text-anchor="middle" font-weight="700">Stand</text>
+
+    <rect x="584" y="88" width="88" height="38" rx="5" fill="#1a6b3a"/>
+    <text x="628" y="103" font-family="Georgia,serif" font-size="7.5" fill="white" text-anchor="middle" font-weight="700">NATURAL</text>
+    <text x="628" y="116" font-family="Georgia,serif" font-size="7"   fill="rgba(255,255,255,.85)" text-anchor="middle">Stand</text>
+
+    <!-- ===== LEGEND ===== -->
+    <rect x="168" y="145" width="12" height="12" rx="3" fill="#1a6b3a"/>
+    <text x="184" y="155" font-family="Georgia,serif" font-size="7.5" fill="#666">Stand / Natural</text>
+    <rect x="300" y="145" width="12" height="12" rx="3" fill="#cc2222"/>
+    <text x="316" y="155" font-family="Georgia,serif" font-size="7.5" fill="#666">Player draws</text>
+    <rect x="415" y="145" width="12" height="12" rx="3" fill="#1e5ac8"/>
+    <text x="431" y="155" font-family="Georgia,serif" font-size="7.5" fill="#666">Banker draws</text>
+  </svg>
+
+  <div style="border:1px solid rgba(0,0,0,0.12);border-left:3px solid var(--gold);border-radius:0 6px 6px 0;padding:.1in .14in;margin:.12in 0;background:#f8f6f0;display:grid;grid-template-columns:72px 1fr;gap:.12in;align-items:start;">
+    <div style="text-align:center;padding-top:2px;">
+      <img src="https://chart.googleapis.com/chart?chs=72x72&cht=qr&chl=https%3A%2F%2Fwww.baccaratgladiator.com%2Fdrill.html&choe=UTF-8" alt="QR: baccaratgladiator.com/drill" style="width:72px;height:72px;border-radius:3px;display:block;">
+      <div style="font-size:6pt;color:#888;margin-top:3px;font-style:italic;">baccaratgladiator.com/drill</div>
+    </div>
+    <div>
+      <div style="font-family:'Cinzel',serif;font-size:7pt;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:.06in;">Practice These Rules Free — On the App</div>
+      <p style="font-size:8.5pt;color:#444;margin:0 0 .06in;line-height:1.5;">The <strong>Third-Card Rule Drill</strong> at BaccaratGladiator.com tests every scenario from this chapter in a timed quiz format. Learn the rules. Understand the odds. 15 questions, three difficulty tiers.</p>
+      <p style="font-size:8.5pt;color:#444;margin:0;line-height:1.5;">Prefer to learn by doing? The <strong>Baccarat Gladiator app</strong> lets you play full hands; you will see every third-card situation play out in real time, with the roads tracking automatically. It is the fastest way to make the third-card matrix feel instinctive before you ever sit at a real table. Free to play, no account needed.</p>
+    </div>
+  </div>
+
+  <div style="border:1px solid rgba(0,0,0,0.12);border-left:3px solid #aaa;border-radius:0 6px 6px 0;padding:.09in .14in;margin:.08in 0 .12in;background:#f5f5f0;">
+    <div style="font-family:'Cinzel',serif;font-size:7pt;letter-spacing:.2em;text-transform:uppercase;color:#777;margin-bottom:.07in;">Self-Check — Chapter 3</div>
+    <ol style="margin:0;padding-left:.18in;font-size:8.5pt;color:#444;line-height:1.7;">
+      <li>Player's first two cards total 6. Does Player draw a third card?</li>
+      <li>Banker holds 5. Player drew a 4 as a third card. Does Banker draw?</li>
+      <li>Player shows a Natural 8. Banker shows a Natural 9. What is the result?</li>
+    </ol>
+    <div style="font-size:7.5pt;color:#888;margin-top:.06in;font-style:italic;">Answers → Appendix R</div>
+  </div>
+
+  <div style="background:linear-gradient(135deg,#f8f5ee,#fffef8);border:1px solid rgba(201,168,76,0.28);border-radius:8px;padding:.13in .18in;margin:.15in 0;">
+    <div style="font-family:'Cinzel',serif;font-size:7.5pt;letter-spacing:.18em;color:var(--gold);text-transform:uppercase;margin-bottom:.1in;">Key Takeaways</div>
+    <ul style="margin:0;padding-left:.2in;font-size:9pt;color:#444;line-height:1.7;">
+      <li>Third-card rules are fully automatic — the dealer follows a fixed matrix with no discretion allowed</li>
+      <li>Player draws on totals of 0–5 and stands on 6–7; a Natural 8 or 9 stops play immediately with no further cards dealt</li>
+      <li>Banker's draw depends entirely on the value of Player's third card — the matrix governs every combination precisely</li>
+      <li>Understanding these rules removes all mystery from the game and confirms there is nothing in the deal sequence to exploit</li>
+    </ul>
+  </div>
+
+  <div class="page-footer"><span>Road to Nine</span><span>BaccaratGladiator.com</span><span>6</span></div>
+</div>
+
+<!-- CHAPTER 4: ROAD MAPS -->
+<div class="page inner" style="position:relative;">
+  
+</body>
+</html>

@@ -43,7 +43,13 @@ exports.handler = async (event) => {
     return { statusCode: 200, body: JSON.stringify({ received: true }) };
   }
 
-  const { packageId, chips, game, userId, clientSessionId } = session.metadata || {};
+  const { packageId, chips, game, userId, clientSessionId, type } = session.metadata || {};
+
+  // Book-only purchase — no chips to credit, nothing to do in webhook
+  if (type === 'book') {
+    return { statusCode: 200, body: JSON.stringify({ received: true }) };
+  }
+
   const pkg = PACKAGE_MAP[packageId];
 
   if (!pkg) {

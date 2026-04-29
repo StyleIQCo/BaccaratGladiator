@@ -1,7 +1,7 @@
 'use strict';
 
 const Stripe = require('stripe');
-const { PACKAGE_MAP } = require('./packages');
+const { PACKAGE_MAP, BOOK_MAP } = require('./packages');
 
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -37,13 +37,65 @@ exports.handler = async (event) => {
 
   const { packageId, game, sessionId, userId } = body;
 
-  // Validate package
+  const BASE_URL = 'https://baccaratgladiator.com';
+
+  // ── Book / bundle purchase ───────────────────────────────────────────────
+  const book = BOOK_MAP[packageId];
+  if (book) {
+    const isBundle = book.type === 'bundle';
+    const desc = isBundle
+      ? `27 chapters · 17 appendices · Print-ready PDF + ${book.chips.toLocaleString()} app chips`
+      : '27 chapters · 17 appendices · Print-ready PDF · Immediate download';
+    try {
+      const session = await stripe.checkout.sessions.create({
+        payment_method_types: ['card'],
+        mode: 'payment',
+        line_items: [
+          {
+            price_data: {
+              currency: 'usd',
+              unit_amount: book.price,
+              product_data: {
+                name:        book.name,
+                description: desc,
+                images:      [`${BASE_URL}/gumroad-cover-final.png`],
+              },
+            },
+            quantity: 1,
+          },
+        ],
+        metadata: {
+          packageId,
+          type:   book.type,
+          chips:  isBundle ? String(book.chips) : '0',
+          userId: body.userId || '',
+        },
+        success_url: `${BASE_URL}/guide-download.html?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url:  `${BASE_URL}/book.html?purchase=cancelled`,
+      });
+
+      return {
+        statusCode: 200,
+        headers: CORS,
+        body: JSON.stringify({ url: session.url, sessionId: session.id }),
+      };
+    } catch (err) {
+      console.error('Stripe error (book):', err.message);
+      return {
+        statusCode: 500,
+        headers: CORS,
+        body: JSON.stringify({ error: 'Failed to create checkout session' }),
+      };
+    }
+  }
+
+  // ── Chip purchase ────────────────────────────────────────────────────────
   const pkg = PACKAGE_MAP[packageId];
   if (!pkg) {
     return {
       statusCode: 400,
       headers: CORS,
-      body: JSON.stringify({ error: 'Invalid package', validPackages: Object.keys(PACKAGE_MAP) }),
+      body: JSON.stringify({ error: 'Invalid package', validPackages: [...Object.keys(PACKAGE_MAP), ...Object.keys(BOOK_MAP)] }),
     };
   }
 
@@ -56,7 +108,6 @@ exports.handler = async (event) => {
     };
   }
 
-  const BASE_URL  = 'https://baccaratgladiator.com';
   const gameSlug  = game === 'blackjack' ? 'bj/' : '';
   const gameUrl   = gameSlug ? `${BASE_URL}/${gameSlug}` : `${BASE_URL}/`;
 
@@ -78,7 +129,6 @@ exports.handler = async (event) => {
           quantity: 1,
         },
       ],
-      // Pass metadata so the webhook knows what to credit
       metadata: {
         packageId,
         chips:           String(pkg.chips),

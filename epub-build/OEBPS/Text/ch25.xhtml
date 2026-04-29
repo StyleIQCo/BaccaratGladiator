@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>Chapter 25: The Mathematics of Baccarat</title>
+<link rel="stylesheet" type="text/css" href="../styles.css"/>
+</head>
+<body>
+<div class="section-head"><span class="num">25</span>The Mathematics of Baccarat</div>
+  <p style="font-size:9.5pt;margin-bottom:.1in;">Every number in this book traces back to one source: the combinatorial analysis of an 8-deck shoe. This chapter shows the derivations, not to prove the game is unbeatable (it is), but because understanding <em>exactly why</em> is the difference between discipline grounded in math and discipline grounded in hope.</p>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:.18in;margin-bottom:.14in;">
+    <!-- Deck composition -->
+    <div style="border:1px solid #d0c8b0;border-radius:7px;padding:.12in .15in;background:#fdf9f0;">
+      <div style="font-family:'Cinzel',serif;font-size:7.5pt;letter-spacing:.14em;color:var(--gold);text-transform:uppercase;margin-bottom:.09in;">8-Deck Shoe Composition</div>
+      <table style="margin:0;font-size:8.5pt;">
+        <thead><tr><th>Value</th><th>Cards</th><th class="center">Count</th><th class="center">%</th></tr></thead>
+        <tbody>
+          <tr><td class="bold">0</td><td>10, J, Q, K</td><td class="center">128</td><td class="center bold" style="color:var(--felt);">30.77%</td></tr>
+          <tr><td class="bold">1</td><td>Ace</td><td class="center">32</td><td class="center">7.69%</td></tr>
+          <tr><td class="bold">2–9</td><td>Face value</td><td class="center">32 each</td><td class="center">7.69% each</td></tr>
+          <tr><td class="bold" colspan="2" style="color:var(--felt);">Total</td><td class="center bold">416</td><td class="center bold">100%</td></tr>
+        </tbody>
+      </table>
+      <p style="font-size:8pt;color:#666;margin-top:.07in;margin-bottom:0;">Zero-value cards (30.77%) are the single most common value, the primary reason Banker holds the structural edge on draws.</p>
+    </div>
+    <!-- Outcome probabilities -->
+    <div style="border:1px solid #d0c8b0;border-radius:7px;padding:.12in .15in;background:#fdf9f0;">
+      <div style="font-family:'Cinzel',serif;font-size:7.5pt;letter-spacing:.14em;color:var(--gold);text-transform:uppercase;margin-bottom:.09in;">Exact Outcome Probabilities</div>
+      <table style="margin:0;font-size:8.5pt;">
+        <thead><tr><th>Outcome</th><th class="center">Probability</th><th class="center">Per 80 hands</th></tr></thead>
+        <tbody>
+          <tr><td class="bold" style="color:#1e5ac8;">Banker wins</td><td class="center">45.859%</td><td class="center">36.69</td></tr>
+          <tr><td class="bold" style="color:#cc2222;">Player wins</td><td class="center">44.625%</td><td class="center">35.70</td></tr>
+          <tr><td class="bold" style="color:#1a8c3c;">Tie</td><td class="center">9.516%</td><td class="center">7.61</td></tr>
+          <tr><td colspan="3" style="font-size:7.5pt;color:#888;padding-top:5px;">Source: Ethier (2010) — exact calculation via full 8-deck combinatorial analysis; third-card rules fully modeled.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <h3>House Edge: The Complete Proofs</h3>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:.12in;margin-bottom:.12in;">
+    <div style="background:#f0f4ff;border-left:3px solid #1e5ac8;padding:.1in .13in;border-radius:0 5px 5px 0;font-size:8.5pt;">
+      <strong style="color:#1e5ac8;font-family:'Cinzel',serif;">Banker (5% Commission)</strong><br>
+      <code style="font-size:8pt;color:#333;">EV = 0.45859 × 0.95 − 0.44625 × 1 + 0.09516 × 0</code><br>
+      <code style="font-size:8pt;color:#333;">   = 0.43566 − 0.44625 = <strong>−0.01059</strong></code><br>
+      House edge: <strong>1.06%</strong> · Expected loss per $100 bet: <strong>$1.06</strong>
+    </div>
+    <div style="background:#f0f4ff;border-left:3px solid #1e5ac8;padding:.1in .13in;border-radius:0 5px 5px 0;font-size:8.5pt;">
+      <strong style="color:#1e5ac8;font-family:'Cinzel',serif;">Banker (4% Commission)</strong><br>
+      <code style="font-size:8pt;color:#333;">EV = 0.45859 × 0.96 − 0.44625 × 1</code><br>
+      <code style="font-size:8pt;color:#333;">   = 0.44025 − 0.44625 = <strong>−0.00600</strong></code><br>
+      House edge: <strong>0.60%</strong> · Best available Banker bet.
+    </div>
+    <div style="background:#fff5f5;border-left:3px solid #cc2222;padding:.1in .13in;border-radius:0 5px 5px 0;font-size:8.5pt;">
+      <strong style="color:#cc2222;font-family:'Cinzel',serif;">Player (no commission)</strong><br>
+      <code style="font-size:8pt;color:#333;">EV = 0.44625 × 1 − 0.45859 × 1 + 0.09516 × 0</code><br>
+      <code style="font-size:8pt;color:#333;">   = 0.44625 − 0.45859 = <strong>−0.01235</strong></code><br>
+      House edge: <strong>1.24%</strong> · Expected loss per $100 bet: <strong>$1.24</strong>
+    </div>
+    <div style="background:#f0fff4;border-left:3px solid #1a8c3c;padding:.1in .13in;border-radius:0 5px 5px 0;font-size:8.5pt;">
+      <strong style="color:#1a8c3c;font-family:'Cinzel',serif;">Tie (8:1 standard payout)</strong><br>
+      <code style="font-size:8pt;color:#333;">EV = 0.09516 × 8 − 0.90484 × 1</code><br>
+      <code style="font-size:8pt;color:#333;">   = 0.76128 − 0.90484 = <strong>−0.14356</strong></code><br>
+      House edge: <strong>14.36%</strong> · Per $100 bet: <strong>$14.36 expected loss</strong>
+    </div>
+    <div style="background:#fff9f0;border-left:3px solid #c9a84c;padding:.1in .13in;border-radius:0 5px 5px 0;font-size:8.5pt;">
+      <strong style="color:#c9a84c;font-family:'Cinzel',serif;">Tie (9:1 — some casinos)</strong><br>
+      <code style="font-size:8pt;color:#333;">EV = 0.09516 × 9 − 0.90484 × 1</code><br>
+      <code style="font-size:8pt;color:#333;">   = 0.85644 − 0.90484 = <strong>−0.04840</strong></code><br>
+      House edge: <strong>4.84%</strong> · Still 4× worse than Banker.
+    </div>
+    <div style="background:#fdf5ff;border-left:3px solid #7b3f9e;padding:.1in .13in;border-radius:0 5px 5px 0;font-size:8.5pt;">
+      <strong style="color:#7b3f9e;font-family:'Cinzel',serif;">Pair Bets (11:1, both sides)</strong><br>
+      <code style="font-size:8pt;color:#333;">P(pair) = 13 × (32 × 31) / (416 × 415) = 7.47%</code><br>
+      <code style="font-size:8pt;color:#333;">EV = 0.0747 × 11 − 0.9253 = <strong>−0.1036</strong></code><br>
+      House edge: <strong>10.36%</strong> · Applied to both Player Pair and Banker Pair.
+    </div>
+  </div>
+
+  <!-- EV Comparison SVG -->
+  <svg viewBox="0 0 530 68" style="width:100%;max-width:7in;display:block;margin:.02in auto .08in;" xmlns="http://www.w3.org/2000/svg">
+    <text x="265" y="10" text-anchor="middle" font-size="7" fill="#888" font-family="'Cinzel',Georgia,serif" letter-spacing="1">HOUSE EDGE COMPARISON — ALL MAJOR BETS</text>
+    <!-- Bars (left-anchored from x=130, max width 370px for 14.36%) -->
+    <!-- Scale: 370px = 14.36% → 1% = 25.76px -->
+    <text x="2" y="23" font-size="7.5" fill="#1e5ac8" font-family="Georgia,serif" font-weight="bold">Banker 4%</text>
+    <rect x="130" y="14" width="15" height="10" rx="2" fill="#1e5ac8"/>
+    <text x="148" y="23" font-size="7" fill="#555" font-family="Georgia,serif">0.60%</text>
+
+    <text x="2" y="36" font-size="7.5" fill="#1e5ac8" font-family="Georgia,serif" font-weight="bold">Banker 5%</text>
+    <rect x="130" y="27" width="27" height="10" rx="2" fill="#1e5ac8" opacity=".8"/>
+    <text x="160" y="36" font-size="7" fill="#555" font-family="Georgia,serif">1.06%</text>
+
+    <text x="2" y="49" font-size="7.5" fill="#cc2222" font-family="Georgia,serif" font-weight="bold">Player</text>
+    <rect x="130" y="40" width="32" height="10" rx="2" fill="#cc2222" opacity=".7"/>
+    <text x="165" y="49" font-size="7" fill="#555" font-family="Georgia,serif">1.24%</text>
+
+    <text x="2" y="62" font-size="7.5" fill="#1a8c3c" font-family="Georgia,serif" font-weight="bold">Tie 9:1</text>
+    <rect x="130" y="53" width="125" height="10" rx="2" fill="#1a8c3c" opacity=".5"/>
+    <text x="258" y="62" font-size="7" fill="#555" font-family="Georgia,serif">4.84%</text>
+
+    <line x1="340" y1="12" x2="340" y2="65" stroke="#ddd" stroke-width="0.5" stroke-dasharray="2,2"/>
+    <text x="2" y="23" dx="340" dy="0" font-size="0">·</text>
+
+    <text x="365" y="23" font-size="7.5" fill="#7b3f9e" font-family="Georgia,serif" font-weight="bold">Pair bets</text>
+    <rect x="470" y="14" width="55" height="10" rx="2" fill="#7b3f9e" opacity=".5"/>
+    <text x="528" y="23" font-size="7" fill="#555" font-family="Georgia,serif">10.4%</text>
+
+    <text x="365" y="36" font-size="7.5" fill="#cc2222" font-family="Georgia,serif" font-weight="bold">Tie 8:1</text>
+    <rect x="470" y="27" width="55" height="10" rx="2" fill="#cc2222" opacity=".8"/>
+    <text x="509" y="36" font-size="7" fill="white" font-family="Georgia,serif" font-weight="bold">14.36%</text>
+
+    <text x="365" y="49" font-size="6.5" fill="#999" font-family="Georgia,serif" font-style="italic">← The gap between Banker and Tie is not a matter of opinion.</text>
+    <text x="365" y="61" font-size="6.5" fill="#999" font-family="Georgia,serif" font-style="italic">    It is a 13.3× difference in expected loss per dollar wagered.</text>
+  </svg>
+
+  <div style="background:linear-gradient(135deg,#f8f5ee,#fffef8);border:1px solid rgba(201,168,76,0.28);border-radius:8px;padding:.11in .16in;margin:.06in 0 0;">
+    <div style="font-family:'Cinzel',serif;font-size:7.5pt;letter-spacing:.18em;color:var(--gold);text-transform:uppercase;margin-bottom:.08in;">Key Takeaways: Part 1</div>
+    <ul style="margin:0;padding-left:.2in;font-size:9pt;color:#444;line-height:1.65;">
+      <li>Zero-value cards (10/J/Q/K) represent 30.77% of the shoe, more than any other single value, and drive the structural Banker advantage on third-card draws</li>
+      <li>The Tie bet at 8:1 costs 13.5× more per dollar wagered than the Banker bet; the math is unambiguous regardless of how long it has been since the last Tie</li>
+      <li>A 4% commission table saves $0.46 per $100 bet vs. the standard 5%; over a full shoe (80 hands × $100), that is $37 in retained expected value</li>
+    </ul>
+  </div>
+
+  <div class="page-footer"><span>Road to Nine</span><span>BaccaratGladiator.com</span><span>29</span></div>
+</div>
+
+<!-- CHAPTER 25 CONTINUED: VARIANCE, RISK OF RUIN, KELLY, COUNTING -->
+<div class="page inner" style="position:relative;">
+  <div style="font-family:'Cinzel',serif;font-size:10pt;font-weight:700;color:var(--felt);border-bottom:1px solid rgba(201,168,76,0.4);padding-bottom:5px;margin-bottom:.15in;letter-spacing:.05em;">The Mathematics of Baccarat <span style="color:#bbb;font-size:7.5pt;font-weight:400;"> · Chapter 25 continued</span></div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:.18in;margin-bottom:.15in;">
+    <!-- Variance section -->
+    <div>
+      <h3 style="margin-top:0;">Variance &amp; Standard Deviation</h3>
+      <p style="font-size:9pt;margin-bottom:.1in;">Baccarat has near-50/50 odds. That means short-run results vary dramatically even when playing perfectly. The formula for variance per hand (flat Banker, $100 bet):</p>
+      <div style="background:#f8f5ee;padding:.1in .13in;border-radius:5px;font-size:8.5pt;line-height:1.7;margin-bottom:.1in;">
+        <strong>E(X)</strong> = 0.45859 × $95 − 0.44625 × $100 = <strong>−$1.06</strong><br>
+        <strong>E(X²)</strong> = 0.45859 × $9,025 + 0.44625 × $10,000 = $8,601<br>
+        <strong>Var(X)</strong> = $8,601 − $1.06² = <strong>$8,600</strong><br>
+        <strong>SD/hand</strong> = √$8,600 = <strong>$92.74</strong>
+      </div>
+      <table style="margin:0;font-size:8.5pt;">
+        <thead><tr><th>Bet Size</th><th class="center">EV/Shoe</th><th class="center">1 SD</th><th class="center">2 SD Range</th></tr></thead>
+        <tbody>
+          <tr><td class="bold">$25</td><td class="center bad">−$21</td><td class="center">±$208</td><td class="center">−$437 to +$395</td></tr>
+          <tr><td class="bold">$50</td><td class="center bad">−$42</td><td class="center">±$415</td><td class="center">−$872 to +$788</td></tr>
+          <tr><td class="bold">$100</td><td class="center bad">−$85</td><td class="center">±$830</td><td class="center">−$1,745 to +$1,575</td></tr>
+          <tr><td class="bold">$200</td><td class="center bad">−$169</td><td class="center">±$1,659</td><td class="center">−$3,487 to +$3,149</td></tr>
+          <tr style="background:#f5f2ea;"><td colspan="4" style="font-size:7.5pt;color:#888;padding:4px 10px;">One shoe = 80 hands. SD = √80 × SD/hand. 68% of sessions fall within ±1 SD.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- Risk of Ruin -->
+    <div>
+      <h3 style="margin-top:0;">Risk of Ruin by System</h3>
+      <p style="font-size:9pt;margin-bottom:.1in;">Ruin occurs when a betting system requires a bet size that exceeds either the table maximum or the player's remaining bankroll. These numbers are exact for a $100 base unit and $10,000 table maximum.</p>
+      <table style="margin:0;font-size:8pt;">
+        <thead><tr><th>System</th><th class="center">Levels Before Bust</th><th class="center">Bust Probability/Shoe</th><th class="center">Expected Shoes</th></tr></thead>
+        <tbody>
+          <tr><td class="bold good">Flat Bet</td><td class="center">∞</td><td class="center good">0%</td><td class="center good">Never (gradual decay)</td></tr>
+          <tr><td class="bold good">Paroli</td><td class="center">—</td><td class="center good">0%</td><td class="center good">Never</td></tr>
+          <tr><td class="bold" style="color:#8a5500;">D'Alembert</td><td class="center">~100</td><td class="center" style="color:#8a5500;">&lt;0.1%</td><td class="center" style="color:#8a5500;">Very rare</td></tr>
+          <tr><td class="bold" style="color:#8a5500;">Fibonacci</td><td class="center">13</td><td class="center" style="color:#8a5500;">~1.2%</td><td class="center" style="color:#8a5500;">~5–10 shoes</td></tr>
+          <tr><td class="bold bad">Martingale</td><td class="center">7</td><td class="center bad">~3.8%</td><td class="center bad">~2–3 shoes</td></tr>
+          <tr><td class="bold bad">Grand Martingale</td><td class="center">6</td><td class="center bad">~6.4%</td><td class="center bad">~1–2 shoes</td></tr>
+          <tr style="background:#f5f2ea;"><td colspan="4" style="font-size:7.5pt;color:#888;padding:4px 10px;">P(bust) uses P(consecutive Banker-bet losses) = 0.4932 per non-tie hand. $10K table cap assumed.</td></tr>
+        </tbody>
+      </table>
+      <div style="background:#fff5f5;border-left:2px solid #cc2222;padding:.08in .12in;font-size:8.5pt;margin-top:.08in;border-radius:0 4px 4px 0;color:#555;line-height:1.5;">
+        <strong style="color:#cc2222;">Martingale math:</strong> P(7 consecutive losses) = 0.4932⁷ = 0.64%. With ~65 active sequences per shoe, you face bust risk on roughly 1 in 2.4 shoes. When it busts: total loss = $12,700 from a $100 base session.
+      </div>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:.18in;margin-bottom:.15in;">
+    <!-- Kelly Criterion -->
+    <div>
+      <h3 style="margin-top:0;">Kelly Criterion</h3>
+      <p style="font-size:9pt;margin-bottom:.09in;">Kelly gives the mathematically optimal fraction of bankroll to bet each hand. For a bet with net odds <em>b</em>, win probability <em>p</em>, and loss probability <em>q</em>:</p>
+      <div style="background:#f8f5ee;padding:.1in .13in;border-radius:5px;font-size:8.5pt;line-height:1.8;margin-bottom:.09in;">
+        <strong>f* = (b·p − q) / b</strong><br>
+        For Banker (5%, ties excluded):<br>
+        b = 0.95, p = 0.5071, q = 0.4932<br>
+        f* = (0.95 × 0.5071 − 0.4932) / 0.95<br>
+        f* = (0.4817 − 0.4932) / 0.95 = <strong style="color:#cc2222;">−0.0121</strong>
+      </div>
+      <div class="callout red-callout" style="margin:0;font-size:8.5pt;padding:.09in .13in;">
+        <strong>Kelly gives a negative answer.</strong> The optimal bet for every baccarat wager is $0; the math confirms no rational position exists. Players who choose to play should cap bets at <strong>1–2% of session bankroll</strong> per hand to minimise ruin risk.
+      </div>
+    </div>
+    <!-- Card Counting -->
+    <div>
+      <h3 style="margin-top:0;">Why Card Counting Fails</h3>
+      <p style="font-size:9pt;margin-bottom:.09in;">Counting works in blackjack because card removal dramatically shifts player edge. In baccarat, the Effect of Card Removal (ECR) by rank is nearly uniform; no single card's departure meaningfully shifts the Banker/Player balance:</p>
+      <table style="margin:0 0 .09in;font-size:8pt;">
+        <thead><tr><th>Cards Removed</th><th class="center">ECR on Banker Edge</th><th>Effect</th></tr></thead>
+        <tbody>
+          <tr><td class="bold">5s</td><td class="center good">−0.032%</td><td class="good">Most favorable removal</td></tr>
+          <tr><td class="bold">9s</td><td class="center good">−0.022%</td><td class="good">2nd most favorable</td></tr>
+          <tr><td class="bold">7s</td><td class="center bad">+0.017%</td><td class="bad">Slightly unfavorable</td></tr>
+          <tr><td class="bold">All others</td><td class="center">±0.003–0.014%</td><td>Negligible</td></tr>
+        </tbody>
+      </table>
+      <p style="font-size:8.5pt;color:#555;margin:0;line-height:1.55;">Maximum possible player edge from optimal count: <strong>+0.27%</strong>, requiring extreme shoe imbalance that occurs in less than 1% of shoes. Compare to blackjack, where skilled counting yields +1–2% routinely. Baccarat counting: mathematically possible, <em>practically worthless</em>.</p>
+    </div>
+  </div>
+
+  <div style="background:linear-gradient(135deg,#f8f5ee,#fffef8);border:1px solid rgba(201,168,76,0.28);border-radius:8px;padding:.12in .16in;margin:0;">
+    <div style="font-family:'Cinzel',serif;font-size:7.5pt;letter-spacing:.18em;color:var(--gold);text-transform:uppercase;margin-bottom:.08in;">Key Takeaways: The Complete Math Summary</div>
+    <ul style="margin:0;padding-left:.2in;font-size:9pt;color:#444;line-height:1.65;">
+      <li>Banker at 5% commission (1.06%) costs $85 in expected value per 80-hand shoe at $100 flat, but a single standard deviation is ±$830, meaning most sessions land anywhere from −$915 to +$745</li>
+      <li>Kelly Criterion returns a negative optimal bet for every baccarat wager; the rational mathematical answer is not to bet, and recreational players should cap bets at 1–2% of session bankroll per hand to minimise ruin risk</li>
+      <li>Martingale busts with 7 consecutive Banker losses (probability 0.64% per sequence); with ~65 active sequences per shoe, a bust occurs roughly once every 2–3 shoes of Martingale play</li>
+      <li>Card counting in baccarat yields a maximum theoretical edge of +0.27% under extreme conditions, not actionable in any real session; Thorp (1966) confirmed this definitively</li>
+    </ul>
+  </div>
+
+  <div style="margin-top:.12in;border-top:1px solid #d0c8b0;padding-top:.1in;">
+    <div style="font-family:'Cinzel',serif;font-size:7pt;letter-spacing:.18em;color:#888;text-transform:uppercase;margin-bottom:.07in;">Sources &amp; References</div>
+    <div style="font-size:7.5pt;color:#666;line-height:1.8;">
+      Ethier, Stewart N. <em>The Doctrine of Chances: Probabilistic Aspects of Gambling.</em> Springer, 2010. — Probability tables, ECR values, combinatorial analysis of 8-deck baccarat used throughout Chapters 25–26.<br>
+      Thorp, Edward O. <em>Beat the Dealer.</em> Vintage Books, 1966. — Card counting framework and baccarat counting analysis confirming negligible ECR effect; referenced in Chapter 25 counting section.<br>
+      Nevada Gaming Control Board. <em>Nevada Gaming Abstract.</em> Published annually. ngcb.nv.gov — House edge data and gross gaming revenue figures used in Chapters 1, 8, and Appendix I.<br>
+      Griffin, Peter A. <em>The Theory of Blackjack.</em> Huntington Press, 6th ed., 1999. — ECR methodology extended to baccarat; basis for the Dragon 7 compound-ECR argument in Chapter 26.
+    </div>
+  </div>
+
+  <div class="page-footer"><span>Road to Nine</span><span>BaccaratGladiator.com</span><span>30</span></div>
+</div>
+
+<!-- CHAPTER 26: EZ BACCARAT — PAGE 1 -->
+<div class="page inner" style="position:relative;">
+  
+</body>
+</html>

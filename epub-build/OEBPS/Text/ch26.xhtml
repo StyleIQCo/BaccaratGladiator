@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>Chapter 26: EZ Baccarat: The Commission-Free Game</title>
+<link rel="stylesheet" type="text/css" href="../styles.css"/>
+</head>
+<body>
+<div class="section-head"><span class="num">26</span>EZ Baccarat: The Commission-Free Game</div>
+
+  <p>Walk into most US casino baccarat rooms today and you will find EZ Baccarat, not standard commission baccarat. The 5% commission window is gone. The dealer does not collect anything. But nothing in a casino is free; the house recouped the commission by changing one rule: when Banker wins with a three-card total of 7, it is a push. Your Banker bet is returned, no win, no loss. That single rule change is called the Dragon 7 exclusion, and it is the entire mathematical engine behind the format.</p>
+
+  <h3>The House Edge Proof</h3>
+  <p>In standard baccarat, the commission creates the Banker edge. In EZ Baccarat, the Dragon 7 push creates it. The math produces nearly identical results, but not exactly.</p>
+
+  <div class="two-col" style="gap:.2in;margin:.12in 0;">
+    <div style="border:1px solid #d0c8b0;border-radius:7px;padding:.12in .15in;background:#f8f5ee;">
+      <div style="font-family:'Cinzel',serif;font-size:7.5pt;letter-spacing:.14em;color:var(--gold);text-transform:uppercase;margin-bottom:.08in;">Standard Baccarat — Banker Bet</div>
+      <p style="font-size:8.5pt;color:#444;line-height:1.7;margin:0;">Win probability: <strong>0.45859</strong><br>
+      Loss probability: <strong>0.44625</strong><br>
+      Tie probability: <strong>0.09516</strong></p>
+      <p style="font-size:8.5pt;color:#444;line-height:1.7;">EV = 0.45859 × <strong>0.95</strong> − 0.44625 × 1<br>
+      EV = 0.43566 − 0.44625<br>
+      EV = <strong>−0.01059 per unit</strong></p>
+      <div style="background:#cc2222;color:white;border-radius:4px;padding:4px 8px;font-size:8.5pt;font-weight:700;text-align:center;">House Edge: 1.06%</div>
+    </div>
+    <div style="border:1px solid #d0c8b0;border-radius:7px;padding:.12in .15in;background:#f0f8f2;">
+      <div style="font-family:'Cinzel',serif;font-size:7.5pt;letter-spacing:.14em;color:var(--gold);text-transform:uppercase;margin-bottom:.08in;">EZ Baccarat — Banker Bet</div>
+      <p style="font-size:8.5pt;color:#444;line-height:1.7;margin:0;">P(Dragon 7) ≈ <strong>0.02253</strong> of all hands<br>
+      P(Banker wins, not D7): 0.45859 − 0.02253<br>
+      = <strong>0.43606</strong></p>
+      <p style="font-size:8.5pt;color:#444;line-height:1.7;">EV = 0.43606 × <strong>1.00</strong> − 0.44625 × 1<br>
+      D7 hands push (EV = 0)<br>
+      EV = <strong>−0.01019 per unit</strong></p>
+      <div style="background:#1a6b3a;color:white;border-radius:4px;padding:4px 8px;font-size:8.5pt;font-weight:700;text-align:center;">House Edge: 1.02%</div>
+    </div>
+  </div>
+
+  <div class="callout" style="margin:.08in 0;">EZ Baccarat's Banker edge (1.02%) is fractionally <em>better</em> for the player than standard commission baccarat (1.06%). The difference is ~$0.04 per $100 wagered — statistically negligible, but real. In practice, table limits and pace matter far more.</div>
+
+  <h3>The Dragon 7 Side Bet</h3>
+  <p>EZ tables offer the Dragon 7 bet: you win 40:1 if Banker wins with a three-card total of exactly 7. This is the same event that pushes your Banker bet. The math:</p>
+
+  <div style="border:1px solid #d0c8b0;border-radius:7px;padding:.12in .18in;background:#f8f5ee;margin:.1in 0;">
+    <div class="two-col" style="gap:.2in;font-size:8.5pt;">
+      <div>
+        <strong style="color:var(--felt);">P(Dragon 7)</strong> ≈ 2.25% per hand<br>
+        <strong style="color:var(--felt);">Payout:</strong> 40:1<br>
+        <strong style="color:var(--felt);">EV:</strong> 0.0225 × 40 − 0.9775 × 1<br>
+        = 0.900 − 0.978 = <strong style="color:#cc2222;">−0.076</strong>
+      </div>
+      <div>
+        <strong style="color:var(--felt);">House edge:</strong> 7.6%<br>
+        <strong style="color:var(--felt);">Frequency:</strong> ~1 in 44 hands<br>
+        <strong style="color:var(--felt);">Verdict:</strong> Exciting. Mathematically worse than Pairs. Skip it.
+      </div>
+    </div>
+  </div>
+
+  <h3>Why Dragon 7 Cannot Be Predicted: The Three Conditions</h3>
+  <p>Dragon 7 prediction is a recurring claim online. The math makes it impossible in any practical sense. A Dragon 7 requires all three of the following conditions to be true simultaneously; each is independent, and the combined probability of all three is what produces the ~2.25% figure:</p>
+
+  <div style="border:2px solid var(--gold);border-radius:8px;padding:.14in .18in;margin:.1in 0;background:linear-gradient(135deg,#fdf8e8,#fffef8);">
+    <div style="font-family:'Cinzel',serif;font-size:8.5pt;font-weight:700;color:var(--felt);margin-bottom:.12in;letter-spacing:.04em;">The Three Conditions for Dragon 7</div>
+    <div style="display:grid;grid-template-columns:2.2em 1fr;gap:.1in .14in;font-size:9pt;color:#333;line-height:1.65;">
+      <div style="font-family:'Cinzel',serif;font-size:11pt;color:var(--gold);font-weight:700;padding-top:2px;">①</div>
+      <div><strong style="color:var(--felt);">Banker must draw a third card.</strong> If Banker's first two cards total 8 or 9 (a Natural), or if the hand rules say Banker stands on 6 or 7, the hand ends before a third card is drawn; Dragon 7 is impossible. A third Banker card only enters play on specific Player/Banker total combinations governed by the fixed third-card rules (see Chapter 3).</div>
+      <div style="font-family:'Cinzel',serif;font-size:11pt;color:var(--gold);font-weight:700;padding-top:2px;">②</div>
+      <div><strong style="color:var(--felt);">Banker's three-card total must equal exactly 7 (mod 10).</strong> The three cards must sum to 7, 17, or 27. This requires a specific combination from the remaining deck — e.g., 3+2+2, 5+1+1, K+4+3, 7+0+0. There are many valid combinations but they represent a narrow slice of all possible three-card totals (0–9 equally likely in a balanced shoe).</div>
+      <div style="font-family:'Cinzel',serif;font-size:11pt;color:var(--gold);font-weight:700;padding-top:2px;">③</div>
+      <div><strong style="color:var(--felt);">Banker must win the hand.</strong> A Banker three-card total of 7 does not guarantee a win. If Player's two-card total is also 7 — or Player draws and reaches 7 or higher — Banker does not win. Dragon 7 requires Banker's final total to exceed Player's final total.</div>
+    </div>
+    <div style="margin-top:.12in;padding-top:.1in;border-top:1px solid rgba(201,168,76,.3);font-size:8.5pt;color:#555;line-height:1.65;">
+      <strong style="color:var(--felt);">Combined probability:</strong> P(Banker draws) × P(three-card total = 7 | Banker draws) × P(Banker wins | three-card 7) ≈ <strong>2.25%</strong> per hand. None of the three conditions are knowable from road map history. None become more or less likely because Dragon 7 "hasn't hit recently."
+    </div>
+  </div>
+
+  <div class="page-footer"><span>Road to Nine</span><span>BaccaratGladiator.com</span><span>31</span></div>
+</div>
+
+<!-- CHAPTER 26: EZ BACCARAT — PAGE 2 -->
+<div class="page inner" style="position:relative;">
+  <div style="font-family:'Cinzel',serif;font-size:8pt;letter-spacing:.2em;color:var(--gold);text-transform:uppercase;margin-bottom:.12in;">Chapter 26 continued — EZ Baccarat</div>
+
+  <h3>Why Card Composition Does Not Help</h3>
+  <p>The only mathematically legitimate prediction argument would be card composition: tracking which cards remain in the shoe, as in blackjack counting. The problem is threefold:</p>
+  <div style="border:1px solid #d0c8b0;border-radius:7px;padding:.12in .15in;background:#f8f5ee;margin:.08in 0 .12in;">
+    <div class="two-col" style="gap:.2in;font-size:8.5pt;color:#333;line-height:1.75;">
+      <div>
+        <strong style="color:#cc2222;">Problem 1: ECR for Dragon 7 is compound.</strong> Unlike the Banker/Player ECR table in Chapter 25 (which measures a single bet's sensitivity to card removal), Dragon 7 ECR requires tracking how removing each card value affects all three conditions simultaneously. The compound effect is smaller, not larger, than standard Banker ECR — which is already too small to exploit (max +0.27%).<br><br>
+        <strong style="color:#cc2222;">Problem 2: Condition ① gates everything.</strong> Banker drawing a third card depends on Player's hand total, which depends on Player's two cards, which are drawn after you place your Dragon 7 bet. You cannot know at bet time whether Condition ① will even be met.
+      </div>
+      <div>
+        <strong style="color:#cc2222;">Problem 3: Casinos prevent the shoe depth needed.</strong> Any card-composition effect only becomes meaningful deep in a shoe with significant imbalance. Continuous shuffle machines eliminate this entirely. Cut cards placed at 50–65% shoe penetration leave too few hands for any signal to emerge above noise.<br><br>
+        <strong style="color:var(--felt);">The bottom line:</strong> Dragon 7 prediction systems circulating online invariably rely on Condition ① being misunderstood (road pattern = Banker "due"), or Condition ② being treated as pattern-based (non-Dragon 7 Banker wins = "overdue"). Both are the gambler's fallacy. The 7.6% edge applies to every Dragon 7 bet, regardless of hand history.
+      </div>
+    </div>
+  </div>
+
+  <h3>Why Panda 8 Cannot Be Predicted: The Three Conditions</h3>
+  <p>Panda 8 is offered on many EZ tables: Player wins with a three-card total of 8. Pays 25:1. P(Panda 8) ≈ 3.45%. EV = 0.0345 × 25 − 0.9655 = −0.103. <strong style="color:#cc2222;">House edge: 10.2%, comparable to a Pairs bet and well above the Banker's 1.02%.</strong> Like Dragon 7, online prediction claims exist. Like Dragon 7, three simultaneous conditions make it structurally unpredictable:</p>
+
+  <div style="border:2px solid #cc2222;border-radius:8px;padding:.13in .17in;margin:.1in 0;background:rgba(204,34,34,0.03);">
+    <div style="font-family:'Cinzel',serif;font-size:8.5pt;font-weight:700;color:#cc2222;margin-bottom:.11in;letter-spacing:.04em;">The Three Conditions for Panda 8</div>
+    <div style="display:grid;grid-template-columns:2.2em 1fr;gap:.09in .13in;font-size:9pt;color:#333;line-height:1.65;">
+      <div style="font-family:'Cinzel',serif;font-size:11pt;color:#cc2222;font-weight:700;padding-top:2px;">①</div>
+      <div><strong style="color:var(--felt);">Player must draw a third card.</strong> Player stands on 6 or 7 and never draws on 8 or 9 (Natural). A Panda 8 is impossible on any hand where Player's first two cards total 6, 7, 8, or 9 — roughly 37% of all hands are eliminated before the third card is even considered.</div>
+      <div style="font-family:'Cinzel',serif;font-size:11pt;color:#cc2222;font-weight:700;padding-top:2px;">②</div>
+      <div><strong style="color:var(--felt);">Player's three-card total must equal exactly 8 (mod 10).</strong> The three cards must sum to 8, 18, or 28 — e.g., 5+2+1, 4+3+1, K+5+3, 6+2+0. Valid combinations exist across all ranks but represent one of ten equally likely final digits. No card remaining in the shoe reliably steers the total toward 8 rather than 7 or 9.</div>
+      <div style="font-family:'Cinzel',serif;font-size:11pt;color:#cc2222;font-weight:700;padding-top:2px;">③</div>
+      <div><strong style="color:var(--felt);">Player must win the hand.</strong> A Player three-card total of 8 does not guarantee a win. Banker may also reach 8 (Tie, Panda 8 loses) or exceed 8 with a total of 9 (Banker wins). The Panda 8 bet requires Player's final total to exceed Banker's — a further conditional that cannot be known before the hand resolves.</div>
+    </div>
+    <div style="margin-top:.11in;padding-top:.09in;border-top:1px solid rgba(204,34,34,.25);font-size:8.5pt;color:#555;line-height:1.65;">
+      <strong style="color:var(--felt);">Combined probability:</strong> P(Player draws) × P(three-card total = 8 | Player draws) × P(Player wins | three-card 8) ≈ <strong>3.45%</strong> per hand. Panda 8 occurs slightly more often than Dragon 7 because Player draws more frequently than Banker, but the 25:1 payout (vs. Dragon 7's 40:1) still produces a <strong>10.2% house edge</strong>, higher than Dragon 7's 7.6%.
+    </div>
+  </div>
+
+  <div style="border:1px solid #d0c8b0;border-radius:7px;padding:.1in .14in;background:#f8f5ee;margin:.08in 0;">
+    <div style="font-family:'Cinzel',serif;font-size:7.5pt;letter-spacing:.14em;color:var(--gold);text-transform:uppercase;margin-bottom:.07in;">Panda 8 vs. Dragon 7 — Side by Side</div>
+    <table style="margin:0;font-size:8pt;">
+      <thead><tr><th></th><th class="center">Dragon 7</th><th class="center">Panda 8</th></tr></thead>
+      <tbody>
+        <tr><td>Trigger</td><td class="center">Banker wins, 3-card total 7</td><td class="center">Player wins, 3-card total 8</td></tr>
+        <tr><td>Probability</td><td class="center">~2.25%</td><td class="center">~3.45%</td></tr>
+        <tr><td>Payout</td><td class="center">40:1</td><td class="center">25:1</td></tr>
+        <tr><td>House edge</td><td class="center bad">7.6%</td><td class="center bad">10.2%</td></tr>
+        <tr><td>Condition ① gate</td><td class="center">Banker draws (~63% of hands)</td><td class="center">Player draws (~51% of hands)</td></tr>
+        <tr><td>Predictable?</td><td class="center bad">No</td><td class="center bad">No</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:8pt;color:#666;font-style:italic;margin:.07in 0 0;">Panda 8 occurs more often than Dragon 7 but pays less per win. The higher frequency fools players into thinking it is more catchable. The 10.2% edge means it costs $10.20 per $100 wagered on average — meaningfully worse than Dragon 7's 7.6%.</p>
+  </div>
+
+  <h3>Identifying EZ Tables</h3>
+  <table style="font-size:8.5pt;">
+    <thead><tr><th>Sign</th><th>Standard Baccarat</th><th>EZ Baccarat</th></tr></thead>
+    <tbody>
+      <tr><td>Commission window</td><td class="center">Present on felt</td><td class="center good">Absent</td></tr>
+      <tr><td>Felt markings</td><td>"5% Commission" text</td><td class="center">"EZ Baccarat" or "Dragon 7" marker</td></tr>
+      <tr><td>Banker 3-card 7 win</td><td class="center good">Pays 0.95:1</td><td class="center">Push (returned)</td></tr>
+      <tr><td>Dragon 7 side bet circle</td><td class="center">Absent</td><td class="center">Present on layout</td></tr>
+      <tr><td>Banker edge</td><td class="center">1.06%</td><td class="center good">1.02%</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Strategy Adaptations for EZ Baccarat</h3>
+  <p>Your core strategy does not change. Bet Banker, manage your bankroll, set stop-losses before you sit. The Dragon 7 push rule creates one practical difference: when Banker wins on a three-card 7, it <em>feels</em> like a loss (your bet returned, not won). It is not a loss. Your chips come back. Many players reflexively change their bet after a Dragon 7 push, treating it as a negative signal. It is not. The next hand is independent.</p>
+
+  <div class="page-footer"><span>Road to Nine</span><span>BaccaratGladiator.com</span><span>32</span></div>
+</div>
+
+<!-- CHAPTER 26: EZ BACCARAT — PAGE 3 -->
+<div class="page inner" style="position:relative;">
+  <div style="font-family:'Cinzel',serif;font-size:8pt;letter-spacing:.2em;color:var(--gold);text-transform:uppercase;margin-bottom:.12in;">Chapter 26 continued — EZ Baccarat</div>
+
+  <div style="border:2px solid var(--gold);border-radius:8px;padding:.14in .18in;margin:.05in 0 .15in;background:linear-gradient(135deg,#fdf8e8,#fffef8);">
+    <div style="font-family:'Cinzel',serif;font-size:8.5pt;font-weight:700;color:var(--felt);margin-bottom:.1in;letter-spacing:.04em;">The EZ Baccarat Psychological Traps</div>
+    <div class="two-col" style="gap:.2in;font-size:8.5pt;color:#333;line-height:1.7;">
+      <div>
+        <strong style="color:#cc2222;">Trap 1: Chasing Dragon 7.</strong> Placing repeated Dragon 7 side bets because you "haven't seen one in a while." Gambler's fallacy. Each hand is independent. The 7.6% edge does not decrease as you wait.<br><br>
+        <strong style="color:#cc2222;">Trap 2: Treating pushes as losses.</strong> A Dragon 7 push is neutral — money returned. Players who tilt after a push are reacting to an event with zero EV impact on their bankroll.
+      </div>
+      <div>
+        <strong style="color:#cc2222;">Trap 3: Assuming EZ is worse.</strong> "No commission" sounds player-friendly, but the Dragon 7 push replaces the commission — at 1.02% edge, EZ Banker is marginally better than standard. The change is cosmetic to your strategy.<br><br>
+        <strong style="color:#cc2222;">Trap 4: Over-indexing on Panda 8.</strong> The 25:1 payout draws attention. The 10.2% edge makes it significantly worse than the main bets — comparable to a Pairs bet, not a reason to play.
+      </div>
+    </div>
+  </div>
+
+  <h3>Where EZ Baccarat Dominates</h3>
+  <p>EZ Baccarat is the primary format at most mid-range US casinos and mini-baccarat rooms. High-limit rooms, Macau properties, and European casinos typically run standard commission baccarat. The higher the limit and the more formal the room, the more likely you will encounter the commission format.</p>
+
+  <table style="font-size:8.5pt;">
+    <thead><tr><th>Venue Type</th><th>Likely Format</th><th>Commission Rate</th></tr></thead>
+    <tbody>
+      <tr><td>US mass-floor mini-baccarat</td><td class="center">EZ Baccarat</td><td class="center">None (Dragon 7 push)</td></tr>
+      <tr><td>US mid-limit rooms ($25–$100)</td><td class="center">EZ or Standard</td><td class="center">0% or 5%</td></tr>
+      <tr><td>US high-limit rooms ($500+)</td><td class="center">Standard</td><td class="center">5% (sometimes 4%)</td></tr>
+      <tr><td>Macau mass floor</td><td class="center">Standard</td><td class="center">5%</td></tr>
+      <tr><td>Macau VIP (junket rooms)</td><td class="center">Standard</td><td class="center">~1.25% rolling chip</td></tr>
+      <tr><td>Monte Carlo / London</td><td class="center">Chemin de Fer / Punto Banco</td><td class="center">5%</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout green-callout" style="margin:.12in 0;">Before placing your first bet: <strong>"Is this EZ Baccarat or standard commission?"</strong> Then adjust mentally. If EZ: remember Dragon 7 pushes Banker. If standard: the commission is tracked on the felt's commission boxes and paid at shoe end or when you leave. Strategy is identical either way. Bet Banker. Follow your limits. Leave when you planned to.</div>
+
+  <div style="border:1px solid rgba(201,168,76,0.35);border-radius:8px;overflow:hidden;margin:.15in 0;">
+    <div style="background:var(--felt);padding:.1in .16in;">
+      <div style="font-family:'Cinzel',serif;font-size:8pt;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);">From the Scoreboard — A Real Shoe</div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.18in;padding:.14in .16in;align-items:start;">
+      <div>
+        <img src="dragon banker long tail.jpg" alt="Real baccarat scoreboard showing 18 consecutive Banker wins with Dragon 7 and Panda 8 hits" style="width:100%;height:auto;border-radius:5px;border:1px solid rgba(0,0,0,0.12);display:block;">
+      </div>
+      <div style="font-size:9pt;color:#333;line-height:1.7;">
+        <p style="margin:0 0 .09in;">This is a real scoreboard from an actual shoe. What it shows is not a simulation or a hypothetical; it is a sequence that genuinely occurred.</p>
+        <p style="margin:0 0 .09in;">Within the shoe: <strong>18 consecutive Banker wins.</strong> During that 18-hand streak, <strong>Dragon 7 hit five times</strong> — meaning five of those eighteen Banker wins were three-card sevens, each one pushing Banker bets in EZ Baccarat and paying 40:1 to anyone on the Dragon 7 side bet.</p>
+        <p style="margin:0 0 .09in;">On top of the streak itself: <strong>10 bonus side bet events total</strong> — 9 Dragon 7s and 1 Panda 8 across the full shoe. A Panda 8 hitting in the same shoe as nine Dragons is statistically unremarkable (each occurs independently), but experientially, it is the kind of shoe that gets talked about for years.</p>
+        <p style="margin:0;">The red neon border at the top of the screen marks this as an EZ Baccarat table. The scoreboard is reading Chinese: 莊 (Banker) 48 wins, 閒 (Player) 23 wins, 和 (Tie) 6. Hand 77 dealt. This is baccarat at its most dramatic and at its most honest. Every one of those Dragon 7s was unforeseeable before it happened. None of them could have been predicted from the roads. They simply came. That is the game.</p>
+      </div>
+    </div>
+  </div>
+
+  <div style="background:linear-gradient(135deg,#f8f5ee,#fffef8);border:1px solid rgba(201,168,76,0.28);border-radius:8px;padding:.12in .18in;margin:.1in 0;">
+    <div style="font-family:'Cinzel',serif;font-size:7.5pt;letter-spacing:.18em;color:var(--gold);text-transform:uppercase;margin-bottom:.08in;">Chapter 26 Key Takeaways</div>
+    <ul style="margin:0;padding-left:.2in;font-size:9pt;color:#444;line-height:1.7;">
+      <li>EZ Baccarat replaces the 5% commission with a Dragon 7 push rule; the Banker edge shifts from 1.06% to 1.02%</li>
+      <li>Dragon 7 requires three independent conditions simultaneously — draw, exact total 7, Banker wins — none predictable from road history</li>
+      <li>Dragon 7 ECR is compound and smaller than standard Banker ECR, which is already too small to exploit; card composition counting offers no actionable edge</li>
+      <li>Dragon 7 (7.6% edge) and Panda 8 (10.2% edge) each require three simultaneous conditions; neither is predictable from road history, shoe count, or wait time, and the house edge applies identically to every bet placed</li>
+      <li>EZ Baccarat is dominant on US mass floors; standard commission returns in high-limit and international rooms</li>
+    </ul>
+  </div>
+
+  <div class="page-footer"><span>Road to Nine</span><span>BaccaratGladiator.com</span><span>33</span></div>
+</div>
+
+<!-- CHAPTER 27: PUTTING IT ALL TOGETHER — PAGE 1 -->
+<div class="page inner" style="position:relative;">
+  
+</body>
+</html>

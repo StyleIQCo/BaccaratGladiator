@@ -40,7 +40,16 @@ html,body{ width:100%; height:100%; background:#000; overflow:hidden; font-famil
   border-left:1px solid rgba(201,168,76,0.25);
   display:flex; flex-direction:column;
 }
-@media(max-width:820px){ #bacc-panel{ display:none; } }
+@media(max-width:820px){
+  #splash{ flex-direction:column; }
+  #city-panel{ flex:1 1 0; min-height:0; }
+  #bacc-panel{
+    display:flex; width:100%; height:200px; flex-shrink:0;
+    border-left:none; border-top:1px solid rgba(201,168,76,0.2);
+  }
+  #bacc-panel-header{ padding:7px 14px 5px; }
+  .bacc-panel-title{ font-size:0.6rem; }
+}
 
 /* ── CITY BACKGROUNDS ────────────────────────────────────────── */
 .city-bg{
@@ -483,7 +492,7 @@ html,body{ width:100%; height:100%; background:#000; overflow:hidden; font-famil
     <!-- 4: Macau -->
     <div class="city-bg" id="city-bg-4">
       <div class="grad-fallback" style="background:linear-gradient(180deg,#010100 0%,#060400 25%,#140c00 50%,#2e1800 70%,#5a3200 88%,#8a4c00 100%)"></div>
-      <img src="https://upload.wikimedia.org/wikipedia/commons/c/c4/Casino_Grand_Lisboa%2C_Macao%2C_2013-08-08%2C_DD_01.jpg" alt="Grand Lisboa Macau" style="object-position:center top" onerror="this.style.display:'none'">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/c/c4/Casino_Grand_Lisboa%2C_Macao%2C_2013-08-08%2C_DD_01.jpg" alt="Grand Lisboa Macau" style="object-position:center top" onerror="this.style.display='none'">
       <div class="city-vignette"></div><div class="city-bottom-fade"></div><div class="city-left-fade"></div>
       <svg class="city-skyline" viewBox="0 0 1200 220" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
         <defs>
@@ -693,6 +702,11 @@ html,body{ width:100%; height:100%; background:#000; overflow:hidden; font-famil
 
 <script>
 'use strict';
+
+// Skip splash when launched via PWA shortcut or direct ?skip_splash=1 link
+if(new URLSearchParams(location.search).get('skip_splash')==='1'){
+  window.location.replace('baccarat-scoreboard.html');
+}
 
 // ══════════════════════════════════════════════════════════════════
 //  CITY DATA

@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bankroll Simulator — Baccarat Gladiator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=EB+Garamond:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --gold:#c9a84c;--gold-lt:#f0d080;--felt:#0d3320;--dark:#080e08;
+  --green:#1a3a20;--red:#9a2020;--chip:#c9a84c;
+}
+body{background:var(--dark);color:#fff;font-family:'EB Garamond',Georgia,serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:0 16px 60px;}
+
+/* NAV */
+nav{width:100%;max-width:680px;display:flex;align-items:center;justify-content:space-between;padding:16px 0;border-bottom:1px solid rgba(201,168,76,.15);margin-bottom:28px;}
+.nav-logo{font-family:'Cinzel',serif;font-size:.85rem;font-weight:700;color:var(--gold-lt);letter-spacing:.1em;text-decoration:none;}
+.nav-back{font-family:'Cinzel',serif;font-size:.75rem;color:var(--gold);border:1px solid rgba(201,168,76,.3);padding:6px 16px;border-radius:20px;text-decoration:none;transition:background .2s;}
+.nav-back:hover{background:rgba(201,168,76,.1);}
+
+/* PAGE HEADER */
+.page-header{width:100%;max-width:680px;margin-bottom:28px;text-align:center;}
+.page-header h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:900;color:var(--gold-lt);letter-spacing:.06em;margin-bottom:8px;}
+.page-header p{color:rgba(255,255,255,.45);font-size:1rem;}
+
+/* CONFIG CARD */
+.config-card{width:100%;max-width:680px;background:linear-gradient(160deg,#0f1a0e,#090f09);border:1px solid rgba(201,168,76,.2);border-radius:18px;padding:28px 24px;margin-bottom:20px;}
+
+.section-label{font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(201,168,76,.5);margin-bottom:16px;border-bottom:1px solid rgba(201,168,76,.1);padding-bottom:8px;}
+
+.input-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;}
+.input-grid.three{grid-template-columns:1fr 1fr 1fr;}
+@media(max-width:500px){.input-grid,.input-grid.three{grid-template-columns:1fr;}}
+
+.input-group{display:flex;flex-direction:column;gap:6px;}
+.input-group label{font-family:'Cinzel',serif;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.45);}
+.input-group input,.input-group select{background:rgba(255,255,255,.06);border:1px solid rgba(201,168,76,.2);border-radius:8px;color:#fff;font-family:'EB Garamond',Georgia,serif;font-size:1rem;padding:10px 12px;width:100%;outline:none;transition:border-color .2s;}
+.input-group input:focus,.input-group select:focus{border-color:rgba(201,168,76,.5);}
+.input-group select option{background:#0f1a0e;}
+.input-hint{font-size:.75rem;color:rgba(255,255,255,.25);margin-top:2px;}
+
+.preset-row{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap;}
+.preset-btn{font-family:'Cinzel',serif;font-size:.65rem;padding:5px 12px;border-radius:20px;border:1px solid rgba(201,168,76,.25);color:rgba(201,168,76,.6);background:transparent;cursor:pointer;transition:all .2s;}
+.preset-btn:hover{background:rgba(201,168,76,.1);border-color:rgba(201,168,76,.5);color:var(--gold-lt);}
+
+.toggle-group{display:flex;gap:0;border:1px solid rgba(201,168,76,.2);border-radius:8px;overflow:hidden;}
+.toggle-btn{flex:1;font-family:'Cinzel',serif;font-size:.72rem;letter-spacing:.06em;padding:10px 8px;border:none;background:transparent;color:rgba(255,255,255,.4);cursor:pointer;transition:all .2s;}
+.toggle-btn.active{background:rgba(201,168,76,.15);color:var(--gold-lt);}
+.toggle-btn:hover:not(.active){background:rgba(255,255,255,.04);color:rgba(255,255,255,.65);}
+
+.strategy-desc-box{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:10px 14px;font-size:.88rem;color:rgba(255,255,255,.45);line-height:1.5;margin-top:8px;min-height:48px;transition:all .3s;}
+
+/* RUN BUTTON */
+.run-btn{width:100%;max-width:680px;font-family:'Cinzel',serif;font-size:1rem;font-weight:700;letter-spacing:.1em;padding:18px;border-radius:14px;background:linear-gradient(135deg,var(--gold),var(--gold-lt),var(--gold));background-size:200% auto;color:#000;border:none;cursor:pointer;transition:background-position .3s,transform .2s;margin-bottom:8px;}
+.run-btn:hover{background-position:right center;transform:translateY(-2px);}
+.run-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+
+/* LOADING */
+#loading-screen{display:none;width:100%;max-width:680px;text-align:center;padding:40px 0;}
+.loading-label{font-family:'Cinzel',serif;font-size:.9rem;color:var(--gold);letter-spacing:.1em;margin-bottom:16px;}
+.loading-bar-wrap{height:6px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden;}
+.loading-bar-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-lt));border-radius:3px;width:0%;transition:width .05s linear;}
+.loading-pct{font-family:'Cinzel',serif;font-size:1.4rem;font-weight:700;color:var(--gold-lt);margin-top:12px;}
+
+/* RESULTS */
+#results-screen{display:none;width:100%;max-width:680px;}
+
+.results-header{text-align:center;margin-bottom:24px;}
+.results-header h2{font-family:'Cinzel',serif;font-size:1.4rem;font-weight:700;color:var(--gold-lt);margin-bottom:4px;}
+.results-header p{font-size:.9rem;color:rgba(255,255,255,.35);}
+
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px;}
+@media(max-width:480px){.stat-grid{grid-template-columns:repeat(2,1fr);}}
+.stat-box{background:rgba(255,255,255,.04);border:1px solid rgba(201,168,76,.12);border-radius:12px;padding:16px 10px;text-align:center;}
+.stat-box.bust{border-color:rgba(180,60,60,.3);background:rgba(180,60,60,.05);}
+.stat-box.win{border-color:rgba(60,180,80,.3);background:rgba(60,180,80,.05);}
+.stat-val{font-family:'Cinzel',serif;font-size:1.35rem;font-weight:700;color:var(--gold-lt);}
+.stat-box.bust .stat-val{color:#e07070;}
+.stat-box.win .stat-val{color:#70d080;}
+.stat-lbl{font-size:.65rem;color:rgba(255,255,255,.35);letter-spacing:.08em;text-transform:uppercase;margin-top:4px;}
+
+/* CHART */
+.chart-card{background:rgba(255,255,255,.03);border:1px solid rgba(201,168,76,.12);border-radius:14px;padding:20px;margin-bottom:20px;}
+.chart-title{font-family:'Cinzel',serif;font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(201,168,76,.5);margin-bottom:14px;}
+#histogram{width:100%;height:220px;display:block;}
+
+/* CHART LEGEND */
+.chart-legend{display:flex;gap:20px;flex-wrap:wrap;margin-top:10px;}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:.78rem;color:rgba(255,255,255,.4);}
+.legend-swatch{width:12px;height:12px;border-radius:2px;flex-shrink:0;}
+
+/* PERCENTILE TABLE */
+.pct-card{background:rgba(255,255,255,.03);border:1px solid rgba(201,168,76,.12);border-radius:14px;padding:20px;margin-bottom:20px;}
+.pct-card h3{font-family:'Cinzel',serif;font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(201,168,76,.5);margin-bottom:16px;}
+.pct-table{width:100%;border-collapse:collapse;}
+.pct-table th{font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.3);padding:6px 10px;text-align:left;border-bottom:1px solid rgba(255,255,255,.06);}
+.pct-table td{font-size:.95rem;padding:10px 10px;border-bottom:1px solid rgba(255,255,255,.04);color:rgba(255,255,255,.75);}
+.pct-table tr:last-child td{border-bottom:none;}
+.pct-table td.money{font-family:'Cinzel',serif;font-size:.95rem;color:var(--gold-lt);}
+.pct-table td.pos{color:#70d080;}
+.pct-table td.neg{color:#e07070;}
+
+/* INSIGHT BOX */
+.insight-card{background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.2);border-radius:14px;padding:18px 20px;margin-bottom:20px;}
+.insight-card h3{font-family:'Cinzel',serif;font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;}
+.insight-card p{font-size:.95rem;color:rgba(255,255,255,.6);line-height:1.65;}
+.insight-card p + p{margin-top:8px;}
+
+/* ACTION BUTTONS */
+.action-row{display:flex;gap:12px;flex-wrap:wrap;}
+.btn-gold{font-family:'Cinzel',serif;font-size:.85rem;font-weight:700;letter-spacing:.08em;padding:14px 28px;border-radius:30px;background:linear-gradient(135deg,var(--gold),var(--gold-lt),var(--gold));background-size:200% auto;color:#000;border:none;cursor:pointer;transition:background-position .3s,transform .2s;}
+.btn-gold:hover{background-position:right center;transform:translateY(-1px);}
+.btn-outline{font-family:'Cinzel',serif;font-size:.82rem;font-weight:700;letter-spacing:.06em;padding:13px 24px;border-radius:30px;border:1px solid rgba(201,168,76,.35);color:var(--gold);background:transparent;cursor:pointer;transition:background .2s;}
+.btn-outline:hover{background:rgba(201,168,76,.08);}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="https://www.baccaratgladiator.com/">Baccarat Gladiator</a>
+  <a class="nav-back" href="https://www.baccaratgladiator.com/baccarat-scoreboard.html">← Back to Game</a>
+</nav>
+
+<div class="page-header">
+  <h1>Bankroll Simulator</h1>
+  <p>1,000 simulated shoes — see where your strategy actually leads</p>
+</div>
+
+<!-- ─── CONFIG SCREEN ─────────────────────────────────────────────────── -->
+<div id="config-screen">
+
+<div class="config-card">
+  <div class="section-label">Bankroll Setup</div>
+  <div class="input-grid">
+    <div class="input-group">
+      <label>Starting Bankroll ($)</label>
+      <input type="number" id="inp-bankroll" value="1000" min="50" max="1000000" step="50">
+      <div class="preset-row">
+        <button class="preset-btn" onclick="setVal('inp-bankroll',500)">$500</button>
+        <button class="preset-btn" onclick="setVal('inp-bankroll',1000)">$1K</button>
+        <button class="preset-btn" onclick="setVal('inp-bankroll',5000)">$5K</button>
+        <button class="preset-btn" onclick="setVal('inp-bankroll',10000)">$10K</button>
+      </div>
+    </div>
+    <div class="input-group">
+      <label>Base Bet Size ($)</label>
+      <input type="number" id="inp-bet" value="25" min="1" max="100000" step="5">
+      <div class="preset-row">
+        <button class="preset-btn" onclick="setVal('inp-bet',10)">$10</button>
+        <button class="preset-btn" onclick="setVal('inp-bet',25)">$25</button>
+        <button class="preset-btn" onclick="setVal('inp-bet',50)">$50</button>
+        <button class="preset-btn" onclick="setVal('inp-bet',100)">$100</button>
+      </div>
+    </div>
+  </div>
+  <div class="input-grid">
+    <div class="input-group">
+      <label>Stop-Loss Threshold ($)</label>
+      <input type="number" id="inp-stoploss" value="500" min="0" step="25">
+      <div class="input-hint">Walk away if bankroll drops to this</div>
+    </div>
+    <div class="input-group">
+      <label>Win Goal ($)</label>
+      <input type="number" id="inp-wingoal" value="1500" min="51" step="25">
+      <div class="input-hint">Walk away if bankroll reaches this</div>
+    </div>
+  </div>
+</div>
+
+<div class="config-card">
+  <div class="section-label">Strategy</div>
+  <div class="input-grid">
+    <div class="input-group">
+      <label>Betting System</label>
+      <select id="inp-strategy" onchange="onStrategyChange()">
+        <option value="flat">Flat Betting</option>
+        <option value="martingale">Martingale</option>
+        <option value="paroli">Paroli (Reverse Martingale)</option>
+        <option value="1326">1-3-2-6 System</option>
+        <option value="dalembert">D'Alembert</option>
+        <option value="fibonacci">Fibonacci</option>
+      </select>
+    </div>
+    <div class="input-group">
+      <label>Bet Target</label>
+      <div class="toggle-group" style="margin-top:2px;">
+        <button class="toggle-btn active" id="btn-banker" onclick="setBetTarget('banker')">Banker (−5% comm)</button>
+        <button class="toggle-btn" id="btn-player" onclick="setBetTarget('player')">Player (even money)</button>
+      </div>
+      <div class="input-hint">Banker HE ≈ 1.06% · Player HE ≈ 1.24%</div>
+    </div>
+  </div>
+  <div class="strategy-desc-box" id="strategy-desc">Always bet the same amount every hand. Lowest variance, purest test of the house edge.</div>
+</div>
+
+<button class="run-btn" id="run-btn" onclick="startSimulation()">Run 1,000 Simulations →</button>
+
+</div><!-- /config-screen -->
+
+<!-- ─── LOADING ────────────────────────────────────────────────────────── -->
+<div id="loading-screen">
+  <div class="loading-label" id="loading-label">Shuffling shoes…</div>
+  <div class="loading-bar-wrap"><div class="loading-bar-fill" id="loading-fill"></div></div>
+  <div class="loading-pct" id="loading-pct">0%</div>
+</div>
+
+<!-- ─── RESULTS ───────────────────────────────────────────────────────── -->
+<div id="results-screen">
+  <div class="results-header">
+    <h2 id="r-headline">Results</h2>
+    <p id="r-subhead"></p>
+  </div>
+
+  <div class="stat-grid">
+    <div class="stat-box bust">
+      <div class="stat-val" id="r-bust">—</div>
+      <div class="stat-lbl">Bust Rate</div>
+    </div>
+    <div class="stat-box win">
+      <div class="stat-val" id="r-winrate">—</div>
+      <div class="stat-lbl">Hit Win Goal</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-val" id="r-median">—</div>
+      <div class="stat-lbl">Median Final</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-val" id="r-ev">—</div>
+      <div class="stat-lbl">Avg P&amp;L</div>
+    </div>
+  </div>
+
+  <div class="chart-card">
+    <div class="chart-title">Final Bankroll Distribution — 1,000 Shoes</div>
+    <canvas id="histogram"></canvas>
+    <div class="chart-legend" id="chart-legend"></div>
+  </div>
+
+  <div class="pct-card">
+    <h3>Percentile Breakdown</h3>
+    <table class="pct-table" id="pct-table"></table>
+  </div>
+
+  <div class="insight-card">
+    <h3>Simulation Insights</h3>
+    <div id="insights"></div>
+  </div>
+
+  <div class="action-row">
+    <button class="btn-gold" onclick="goBack()">Adjust Settings</button>
+    <button class="btn-outline" onclick="location.href='https://www.baccaratgladiator.com/baccarat-scoreboard.html'">Play Baccarat →</button>
+    <button class="btn-outline" onclick="location.href='https://www.baccaratgladiator.com/drill.html'">Rule Drill →</button>
+  </div>
+</div>
+
+<script>
+// ── STRATEGY DESCRIPTIONS ─────────────────────────────────────────────────
+const STRATEGY_DESCS = {
+  flat:       'Always bet the same amount every hand. Lowest variance, purest test of the house edge.',
+  martingale: 'Double your bet after every loss, return to base after a win. Recovers losses in one win — but a streak of losses rapidly depletes the bankroll. Capped at 64× base to simulate table limits.',
+  paroli:     'Double your bet after each win (up to 3 consecutive wins), then reset. Let winning streaks compound while losses only cost you the base bet.',
+  '1326':     'Bet 1×, 3×, 2×, 6× units on consecutive wins. A winning 4-hand sequence yields a 12-unit profit. Reset on any loss.',
+  dalembert:  'Increase bet by 1 unit after a loss, decrease by 1 unit after a win (minimum 1 unit). Slower progression than Martingale — less explosive, less dangerous.',
+  fibonacci:  'Follow the Fibonacci sequence (1,1,2,3,5,8…) after losses; move back 2 steps after a win. A slower form of negative progression.',
+};
+let betTarget = 'banker';
+
+function setVal(id, val){ document.getElementById(id).value = val; }
+
+function setBetTarget(t){
+  betTarget = t;
+  document.getElementById('btn-banker').classList.toggle('active', t==='banker');
+  document.getElementById('btn-player').classList.toggle('active', t==='player');
+}
+
+function onStrategyChange(){
+  const s = document.getElementById('inp-strategy').value;
+  document.getElementById('strategy-desc').textContent = STRATEGY_DESCS[s];
+}
+
+// ── SHOE SIMULATION ENGINE ────────────────────────────────────────────────
+const CARD_VALS = [0,1,2,3,4,5,6,7,8,9,0,0,0]; // Ace through King
+const NUM_DECKS = 8;
+const CUT_REMAINING = 14;
+
+function buildShuffledShoe(){
+  const shoe = new Uint8Array(NUM_DECKS * 52);
+  let i = 0;
+  for(let d=0;d<NUM_DECKS;d++)
+    for(let suit=0;suit<4;suit++)
+      for(let rank=0;rank<13;rank++)
+        shoe[i++] = CARD_VALS[rank];
+  for(let n=shoe.length-1;n>0;n--){
+    const j = Math.random()*n|0;
+    const t = shoe[n]; shoe[n] = shoe[j]; shoe[j] = t;
+  }
+  return shoe;
+}
+
+function dealShoe(shoe){
+  const results = [];
+  let idx = 0;
+  const limit = shoe.length - CUT_REMAINING;
+  while(idx + 6 <= limit){
+    const p1=shoe[idx++], b1=shoe[idx++], p2=shoe[idx++], b2=shoe[idx++];
+    let pT=(p1+p2)%10, bT=(b1+b2)%10;
+    if(pT>=8||bT>=8){ results.push(pT>bT?'P':bT>pT?'B':'T'); continue; }
+    let p3=-1;
+    if(pT<=5){ p3=shoe[idx++]; pT=(pT+p3)%10; }
+    let bDraw=false;
+    if(p3<0){ bDraw=bT<=5; }
+    else{
+      if(bT<=2) bDraw=true;
+      else if(bT===3) bDraw=p3!==8;
+      else if(bT===4) bDraw=p3>=2&&p3<=7;
+      else if(bT===5) bDraw=p3>=4&&p3<=7;
+      else if(bT===6) bDraw=p3===6||p3===7;
+    }
+    if(bDraw) bT=(bT+shoe[idx++])%10;
+    results.push(pT>bT?'P':bT>pT?'B':'T');
+  }
+  return results;
+}
+
+// ── BETTING STRATEGY ──────────────────────────────────────────────────────
+const FIB=[1,1,2,3,5,8,13,21,34,55,89,144,233];
+
+function runOneShoe(cfg){
+  const hands = dealShoe(buildShuffledShoe());
+  let br = cfg.startBankroll;
+  let bet = cfg.baseBet;
+  let parWins=0, seq1326=0, fibIdx=0, dalBet=cfg.baseBet;
+  const maxBet = cfg.baseBet * 64;
+  const isBanker = cfg.betTarget==='banker';
+
+  for(let i=0;i<hands.length;i++){
+    if(br<=cfg.stopLoss||br>=cfg.winGoal) break;
+
+    // determine this hand's bet
+    let thisBet;
+    switch(cfg.strategy){
+      case 'flat':      thisBet=cfg.baseBet; break;
+      case 'martingale':thisBet=bet; break;
+      case 'paroli':    thisBet=bet; break;
+      case '1326':      thisBet=cfg.baseBet*[1,3,2,6][seq1326]; break;
+      case 'dalembert': thisBet=dalBet; break;
+      case 'fibonacci': thisBet=cfg.baseBet*FIB[fibIdx]; break;
+      default: thisBet=cfg.baseBet;
+    }
+    thisBet = Math.min(thisBet, br, maxBet);
+    if(thisBet <= 0) break;
+
+    const result = hands[i];
+    let won = false, pnl = 0;
+    if(isBanker){
+      if(result==='B'){ pnl=thisBet*0.95; won=true; }
+      else if(result==='P'){ pnl=-thisBet; }
+    } else {
+      if(result==='P'){ pnl=thisBet; won=true; }
+      else if(result==='B'){ pnl=-thisBet; }
+    }
+    br += pnl;
+
+    // update strategy state
+    switch(cfg.strategy){
+      case 'martingale': bet = won ? cfg.baseBet : Math.min(bet*2, maxBet); break;
+      case 'paroli':
+        if(won){ parWins++; bet=(parWins<3)?bet*2:cfg.baseBet; if(parWins>=3)parWins=0; }
+        else { bet=cfg.baseBet; parWins=0; }
+        break;
+      case '1326': seq1326 = won ? (seq1326+1)%4 : 0; break;
+      case 'dalembert': dalBet = won ? Math.max(cfg.baseBet,dalBet-cfg.baseBet) : dalBet+cfg.baseBet; break;
+      case 'fibonacci': fibIdx = won ? Math.max(0,fibIdx-2) : Math.min(fibIdx+1,FIB.length-1); break;
+    }
+  }
+
+  return {
+    final: Math.max(0, br),
+    bust: br <= cfg.stopLoss,
+    hitGoal: br >= cfg.winGoal,
+    hands: hands.length,
+  };
+}
+
+// ── STATS ─────────────────────────────────────────────────────────────────
+function percentile(sorted, p){
+  const idx = (p/100)*(sorted.length-1);
+  const lo = Math.floor(idx), hi = Math.ceil(idx);
+  return sorted[lo]+(sorted[hi]-sorted[lo])*(idx-lo);
+}
+
+function computeStats(results, cfg){
+  const finals = results.map(r=>r.final).sort((a,b)=>a-b);
+  const n = results.length;
+  const bustCount = results.filter(r=>r.bust).length;
+  const winCount  = results.filter(r=>r.hitGoal).length;
+  const mean = finals.reduce((s,v)=>s+v,0)/n;
+  const avgHands = results.reduce((s,r)=>s+r.hands,0)/n;
+
+  return {
+    n, finals,
+    bustRate: bustCount/n,
+    winRate: winCount/n,
+    mean,
+    median: percentile(finals,50),
+    p10: percentile(finals,10),
+    p25: percentile(finals,25),
+    p75: percentile(finals,75),
+    p90: percentile(finals,90),
+    best: finals[finals.length-1],
+    worst: finals[0],
+    avgHands: Math.round(avgHands),
+  };
+}
+
+// ── HISTOGRAM ─────────────────────────────────────────────────────────────
+function drawHistogram(stats, cfg){
+  const canvas = document.getElementById('histogram');
+  const dpr = window.devicePixelRatio||1;
+  const W = canvas.offsetWidth;
+  const H = 220;
+  canvas.width  = W*dpr;
+  canvas.height = H*dpr;
+  canvas.style.height = H+'px';
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr,dpr);
+
+  const PAD = {l:52,r:16,t:12,b:36};
+  const cw = W-PAD.l-PAD.r;
+  const ch = H-PAD.t-PAD.b;
+
+  const minX = Math.min(0, stats.worst*0.95, cfg.stopLoss*0.9);
+  const maxX = Math.max(cfg.winGoal*1.05, stats.best*1.02);
+
+  const NUM_BINS = 30;
+  const binW = (maxX-minX)/NUM_BINS;
+  const bins = new Array(NUM_BINS).fill(0);
+  stats.finals.forEach(f=>{
+    let bi = Math.floor((f-minX)/binW);
+    bi = Math.max(0,Math.min(NUM_BINS-1,bi));
+    bins[bi]++;
+  });
+  const maxCount = Math.max(...bins);
+
+  function xPx(v){ return PAD.l+(v-minX)/(maxX-minX)*cw; }
+  function yPx(v){ return PAD.t+ch-v/maxCount*ch; }
+
+  // grid lines
+  ctx.strokeStyle='rgba(255,255,255,.04)';
+  ctx.lineWidth=1;
+  for(let y=0;y<=4;y++){
+    const py = PAD.t + ch*y/4;
+    ctx.beginPath(); ctx.moveTo(PAD.l,py); ctx.lineTo(PAD.l+cw,py); ctx.stroke();
+  }
+
+  // bars
+  const bpx = cw/NUM_BINS;
+  bins.forEach((cnt,i)=>{
+    if(!cnt) return;
+    const x = PAD.l + i*bpx;
+    const barH = cnt/maxCount*ch;
+    const midVal = minX+(i+0.5)*binW;
+
+    let color;
+    if(midVal <= cfg.stopLoss)        color='rgba(200,70,70,.8)';
+    else if(midVal < cfg.startBankroll) color='rgba(210,130,50,.8)';
+    else if(midVal < cfg.winGoal)     color='rgba(190,155,55,.8)';
+    else                               color='rgba(70,180,90,.8)';
+
+    ctx.fillStyle=color;
+    ctx.fillRect(x+1, PAD.t+ch-barH, bpx-2, barH);
+  });
+
+  // reference lines
+  function vLine(val, color, label){
+    const x = xPx(val);
+    if(x<PAD.l||x>PAD.l+cw) return;
+    ctx.save();
+    ctx.setLineDash([4,4]);
+    ctx.strokeStyle=color;
+    ctx.lineWidth=1.5;
+    ctx.beginPath(); ctx.moveTo(x,PAD.t); ctx.lineTo(x,PAD.t+ch); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle=color;
+    ctx.font='bold 9px Cinzel,serif';
+    ctx.textAlign='center';
+    ctx.fillText(label, x, PAD.t-2);
+    ctx.restore();
+  }
+  vLine(cfg.stopLoss,     'rgba(220,80,80,.8)',  'SL');
+  vLine(cfg.startBankroll,'rgba(255,255,255,.5)','Start');
+  vLine(cfg.winGoal,      'rgba(80,200,100,.8)', 'Goal');
+
+  // x-axis labels
+  ctx.fillStyle='rgba(255,255,255,.3)';
+  ctx.font='10px EB Garamond,serif';
+  ctx.textAlign='center';
+  const tickVals=[minX, cfg.stopLoss, cfg.startBankroll, cfg.winGoal, maxX];
+  const seen=new Set();
+  tickVals.forEach(v=>{
+    const x = xPx(v);
+    if(x<PAD.l||x>PAD.l+cw) return;
+    const key=Math.round(x);
+    if(seen.has(key)) return; seen.add(key);
+    ctx.fillText('$'+Math.round(v).toLocaleString(), x, H-PAD.b+14);
+  });
+
+  // y-axis label
+  ctx.save();
+  ctx.translate(12, PAD.t+ch/2);
+  ctx.rotate(-Math.PI/2);
+  ctx.textAlign='center';
+  ctx.fillStyle='rgba(255,255,255,.25)';
+  ctx.font='10px EB Garamond,serif';
+  ctx.fillText('# shoes', 0, 0);
+  ctx.restore();
+
+  // legend
+  document.getElementById('chart-legend').innerHTML=`
+    <div class="legend-item"><div class="legend-swatch" style="background:rgba(200,70,70,.8)"></div>At or below stop-loss</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:rgba(210,130,50,.8)"></div>Below start</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:rgba(190,155,55,.8)"></div>Above start</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:rgba(70,180,90,.8)"></div>At or above win goal</div>
+  `;
+}
+
+// ── POPULATE RESULTS UI ───────────────────────────────────────────────────
+function showResults(results, cfg){
+  const s = computeStats(results, cfg);
+  const start = cfg.startBankroll;
+  const stratNames = {flat:'Flat',martingale:'Martingale',paroli:'Paroli','1326':'1-3-2-6',dalembert:"D'Alembert",fibonacci:'Fibonacci'};
+
+  document.getElementById('r-headline').textContent =
+    `${stratNames[cfg.strategy]} on ${cfg.betTarget==='banker'?'Banker':'Player'} — 1,000 Shoes`;
+  document.getElementById('r-subhead').textContent =
+    `$${start.toLocaleString()} bankroll · $${cfg.baseBet.toLocaleString()} base bet · avg ${s.avgHands} hands/shoe`;
+
+  document.getElementById('r-bust').textContent    = (s.bustRate*100).toFixed(1)+'%';
+  document.getElementById('r-winrate').textContent = (s.winRate*100).toFixed(1)+'%';
+  document.getElementById('r-median').textContent  = '$'+Math.round(s.median).toLocaleString();
+  const ev = s.mean-start;
+  const evEl = document.getElementById('r-ev');
+  evEl.textContent = (ev>=0?'+':'')+'$'+Math.round(Math.abs(ev)).toLocaleString();
+  evEl.parentElement.querySelector('.stat-val').style.color = ev>=0?'#70d080':'#e07070';
+
+  // percentile table
+  const rows = [
+    ['10th',s.p10],['25th',s.p25],['50th (Median)',s.median],['75th',s.p75],['90th',s.p90],
+    ['Best',s.best],['Worst',s.worst],
+  ];
+  document.getElementById('pct-table').innerHTML =
+    '<tr><th>Percentile</th><th>Final Bankroll</th><th>vs Start</th></tr>' +
+    rows.map(([lbl,val])=>{
+      const diff = val-start;
+      const cls = diff>0?'pos':diff<0?'neg':'';
+      return `<tr><td>${lbl}</td><td class="money">$${Math.round(val).toLocaleString()}</td><td class="${cls}">${diff>=0?'+':''}$${Math.round(Math.abs(diff)).toLocaleString()}</td></tr>`;
+    }).join('');
+
+  // insights
+  const impliedHE = ((start-s.mean)/start*100);
+  const insights = [];
+  if(s.bustRate>0.4) insights.push(`<p>This configuration <strong style="color:#e07070">busted in ${(s.bustRate*100).toFixed(0)}% of shoes</strong>. Your stop-loss is tight relative to your bet size — consider either increasing your bankroll or reducing your base bet.</p>`);
+  else if(s.bustRate<0.1) insights.push(`<p>Bust rate is low at ${(s.bustRate*100).toFixed(1)}%, meaning your bankroll comfortably absorbs typical variance.</p>`);
+  else insights.push(`<p>Bust rate of ${(s.bustRate*100).toFixed(1)}% means roughly 1 in ${Math.round(1/s.bustRate)} sessions ends at the stop-loss floor.</p>`);
+
+  if(impliedHE>0) insights.push(`<p>Implied house edge from this simulation: <strong>${impliedHE.toFixed(2)}%</strong> per shoe on average — consistent with theoretical expectations for ${cfg.betTarget==='banker'?'Banker (1.06%)':'Player (1.24%)'} betting.</p>`);
+
+  if(cfg.strategy!=='flat' && s.bustRate>0){
+    const flatRef = cfg.betTarget==='banker'?1.06:1.24;
+    insights.push(`<p>Progression systems like ${stratNames[cfg.strategy]} shift variance — they change <em>when</em> you lose, not <em>whether</em> you lose. The underlying house edge remains ${flatRef}% regardless of bet sizing.</p>`);
+  }
+  document.getElementById('insights').innerHTML = insights.join('');
+
+  // draw chart after DOM settles
+  requestAnimationFrame(()=>drawHistogram(s, cfg));
+}
+
+// ── SIMULATION RUNNER ─────────────────────────────────────────────────────
+function startSimulation(){
+  const startBankroll = parseFloat(document.getElementById('inp-bankroll').value)||1000;
+  const baseBet       = parseFloat(document.getElementById('inp-bet').value)||25;
+  const stopLoss      = parseFloat(document.getElementById('inp-stoploss').value)||0;
+  const winGoal       = parseFloat(document.getElementById('inp-wingoal').value)||startBankroll*2;
+  const strategy      = document.getElementById('inp-strategy').value;
+
+  if(baseBet <= 0 || startBankroll <= 0){ alert('Please enter valid bankroll and bet amounts.'); return; }
+  if(stopLoss >= startBankroll){ alert('Stop-loss must be less than starting bankroll.'); return; }
+  if(winGoal  <= startBankroll){ alert('Win goal must be greater than starting bankroll.'); return; }
+
+  const cfg = { startBankroll, baseBet, stopLoss, winGoal, strategy, betTarget };
+
+  document.getElementById('config-screen').style.display='none';
+  document.getElementById('results-screen').style.display='none';
+  document.getElementById('loading-screen').style.display='block';
+
+  const TOTAL = 1000;
+  const BATCH = 50;
+  const results = [];
+  let done = 0;
+
+  const loadingLabels = ['Shuffling shoes…','Dealing hands…','Applying strategy…','Computing outcomes…','Finalizing results…'];
+  let labelIdx = 0;
+
+  function runBatch(){
+    const end = Math.min(done+BATCH, TOTAL);
+    for(let i=done;i<end;i++) results.push(runOneShoe(cfg));
+    done = end;
+
+    const pct = done/TOTAL;
+    document.getElementById('loading-fill').style.width = (pct*100)+'%';
+    document.getElementById('loading-pct').textContent  = Math.round(pct*100)+'%';
+
+    if(done%200===0 && labelIdx<loadingLabels.length-1){
+      labelIdx++;
+      document.getElementById('loading-label').textContent = loadingLabels[labelIdx];
+    }
+
+    if(done<TOTAL){ setTimeout(runBatch, 0); }
+    else {
+      document.getElementById('loading-screen').style.display='none';
+      document.getElementById('results-screen').style.display='block';
+      showResults(results, cfg);
+    }
+  }
+  setTimeout(runBatch, 16);
+}
+
+function goBack(){
+  document.getElementById('results-screen').style.display='none';
+  document.getElementById('config-screen').style.display='block';
+}
+
+// init
+onStrategyChange();
+</script>
+</body>
+</html>

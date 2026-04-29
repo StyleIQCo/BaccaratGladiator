@@ -18,13 +18,13 @@ A professional Baccarat casino game bundle — playable web app, strategy guide,
 ### Baccarat Variants
 - **Standard** — Classic 5% commission Baccarat
 - **EZ Baccarat** — No commission · Dragon 7 (40:1) · Panda 8 (25:1)
-- **Tiger Baccarat** — No commission · Big Tiger (12:1) · Small Tiger (20:1) · Tiger Tie (35:1)
+- **Tiger Baccarat** — No commission · Big Tiger (50:1) · Small Tiger (22:1) · Tiger Tie (35:1)
 
 ### Side Bets
 - **Dragon 7** — Banker wins with a 3-card total of 7 · pays 40:1
 - **Panda 8** — Player wins with a 3-card total of 8 · pays 25:1
-- **Big Tiger** — Banker wins with a 2-card total of 6 · pays 12:1
-- **Small Tiger** — Banker wins with a 3-card total of 6 · pays 20:1
+- **Big Tiger** — Banker wins with a 3-card total of 6 · pays 50:1
+- **Small Tiger** — Banker wins with a 2-card total of 6 · pays 22:1
 - **Tiger Tie** — Both hands tie on 6 · pays 35:1
 - **Talon Bet** — Wager on Player's 3rd card (High/Low/Red/Black)
 

@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>Chapter 6: Bankroll & Session Management</title>
+<link rel="stylesheet" type="text/css" href="../styles.css"/>
+</head>
+<body>
+<div class="section-head"><span class="num">6</span>Bankroll &amp; Session Management</div>
+
+  <p>Baccarat's house edge is so small that how you manage your money matters more than almost any other decision you make at the table. A player who bets Banker every hand but manages sessions poorly will lose more than a player who occasionally makes suboptimal bets but leaves on schedule.</p>
+
+  <h3>How Much to Bring</h3>
+  <p>A standard rule: bring at least <strong>50× the table minimum</strong> as your session bankroll. At a $25 minimum table, that's $1,250. This gives you enough runway to weather normal variance without being forced out by a short losing run.</p>
+  <table>
+    <thead><tr><th>Table Minimum</th><th>Recommended Session Bankroll</th><th>Expected Loss (1hr, Banker only)</th></tr></thead>
+    <tbody>
+      <tr><td>$10</td><td>$500</td><td>~$6 – $12</td></tr>
+      <tr><td>$25</td><td>$1,250</td><td>~$15 – $30</td></tr>
+      <tr><td>$100</td><td>$5,000</td><td>~$60 – $120</td></tr>
+      <tr><td>$500</td><td>$25,000</td><td>~$300 – $600</td></tr>
+    </tbody>
+  </table>
+
+  <h3>The Four Session Rules</h3>
+  <table>
+    <thead><tr><th>Rule</th><th>Threshold</th><th>Why It Works</th></tr></thead>
+    <tbody>
+      <tr><td class="bold">Stop-loss</td><td>Lose 40% of session bankroll → leave</td><td>Prevents catastrophic single-session losses</td></tr>
+      <tr><td class="bold">Win goal</td><td>Up 30–50% → pocket the profit, play with winnings only</td><td>Locks in wins; you can't leave a winner a loser</td></tr>
+      <tr><td class="bold">Time limit</td><td>Set a hard end time before you sit down</td><td>Removes the "just one more hand" trap</td></tr>
+      <tr><td class="bold">Bet sizing</td><td>Single bet ≤ 2–5% of session bankroll</td><td>Prevents one hand from deciding the session</td></tr>
+    </tbody>
+  </table>
+
+  <h3>The Kelly Criterion: Simplified</h3>
+  <p>The Kelly Criterion is a bankroll formula used by professional gamblers and investors. In a negative-edge game like baccarat, it technically says bet zero. But adapted for recreational play, the insight is: <strong>bet a small, fixed fraction of your total bankroll</strong>, never a fixed dollar amount.</p>
+  <p>At $10,000 total bankroll, 1% per bet = $100. After losing $2,000, 1% = $80. This naturally reduces bet size during downswings and scales up during winning periods, extending your playing time and reducing ruin risk.</p>
+
+  <div class="callout red-callout"><strong>The cardinal sin:</strong> Increasing bet size to "win back" losses. Every hand is independent. A larger bet after a loss does not improve your odds. It only means you lose more on the next loss.</div>
+
+  <h3>Session Variance: What One Shoe Actually Looks Like</h3>
+  <p style="font-size:9.5pt;color:#555;margin-bottom:.12in;">80 hands at $100 flat on Banker. Expected loss: ~$85. But variance, not the house edge, determines your actual result. This is the realistic distribution of outcomes across thousands of simulated sessions:</p>
+
+  <svg viewBox="0 0 520 170" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:6.5in;display:block;margin:.1in auto .08in;font-family:Georgia,serif;">
+    <!-- Background -->
+    <rect width="520" height="170" fill="#fffef8" rx="6"/>
+
+    <!-- Axis baseline -->
+    <line x1="48" y1="135" x2="506" y2="135" stroke="#ccc" stroke-width="1"/>
+
+    <!-- Bars: outcome buckets from left (big loss) to right (big win)
+         Buckets: <-1000, -1000to-600, -600to-200, -200to+200, +200to+600, +600to+1000, >+1000
+         Approximate probabilities (normal approx, SD~$830):
+         <-1000: ~8%   -1000to-600: ~9%   -600to-200: ~19%   -200to+200: ~28%   +200to+600: ~19%   +600to+1000: ~10%   >+1000: ~7%
+    -->
+    <!-- Bar 1: < -$1,000  8% -->
+    <rect x="54"  y="121.8" width="52" height="13.2" rx="3" fill="#cc2222" opacity=".85"/>
+    <text x="80"  y="118" font-size="8" fill="#cc2222" text-anchor="middle" font-weight="700">8%</text>
+
+    <!-- Bar 2: -$1,000 to -$600  9% -->
+    <rect x="114" y="120.3" width="52" height="14.7" rx="3" fill="#d94040" opacity=".75"/>
+    <text x="140" y="116.5" font-size="8" fill="#d94040" text-anchor="middle" font-weight="700">9%</text>
+
+    <!-- Bar 3: -$600 to -$200  19% -->
+    <rect x="174" y="104.9" width="52" height="30.1" rx="3" fill="#e8884a" opacity=".8"/>
+    <text x="200" y="101" font-size="8" fill="#e8884a" text-anchor="middle" font-weight="700">19%</text>
+
+    <!-- Bar 4: -$200 to +$200  28%  (center, tallest) — HIGHLIGHTED green-gold -->
+    <rect x="234" y="89.2" width="52" height="45.8" rx="3" fill="#0d3320"/>
+    <text x="260" y="85.5" font-size="8" fill="#0d3320" text-anchor="middle" font-weight="700">28%</text>
+
+    <!-- Bar 5: +$200 to +$600  19% -->
+    <rect x="294" y="104.9" width="52" height="30.1" rx="3" fill="#1a8c3c" opacity=".75"/>
+    <text x="320" y="101" font-size="8" fill="#1a8c3c" text-anchor="middle" font-weight="700">19%</text>
+
+    <!-- Bar 6: +$600 to +$1,000  10% -->
+    <rect x="354" y="118.7" width="52" height="16.3" rx="3" fill="#1a6b3a" opacity=".8"/>
+    <text x="380" y="115" font-size="8" fill="#1a6b3a" text-anchor="middle" font-weight="700">10%</text>
+
+    <!-- Bar 7: > +$1,000  7% -->
+    <rect x="414" y="123.5" width="52" height="11.5" rx="3" fill="#c9a84c" opacity=".9"/>
+    <text x="440" y="120" font-size="8" fill="#c9a84c" text-anchor="middle" font-weight="700">7%</text>
+
+    <!-- X-axis labels -->
+    <text x="80"  y="148" font-size="7.5" fill="#666" text-anchor="middle">Below −$1K</text>
+    <text x="140" y="148" font-size="7.5" fill="#666" text-anchor="middle">−$600</text>
+    <text x="200" y="148" font-size="7.5" fill="#666" text-anchor="middle">−$200</text>
+    <text x="260" y="148" font-size="7.5" fill="#0d3320" text-anchor="middle" font-weight="700">±$200</text>
+    <text x="320" y="148" font-size="7.5" fill="#666" text-anchor="middle">+$200</text>
+    <text x="380" y="148" font-size="7.5" fill="#666" text-anchor="middle">+$600</text>
+    <text x="440" y="148" font-size="7.5" fill="#666" text-anchor="middle">Above +$1K</text>
+
+    <!-- X-axis title -->
+    <text x="284" y="163" font-size="7.5" fill="#999" text-anchor="middle" font-style="italic">Session Net Result</text>
+
+    <!-- Y-axis label -->
+    <text x="12" y="115" font-size="7" fill="#999" text-anchor="middle" transform="rotate(-90 12 115)" font-style="italic">Frequency</text>
+
+    <!-- Expected loss arrow -->
+    <line x1="247" y1="75" x2="247" y2="88" stroke="#888" stroke-width="1" stroke-dasharray="2,2"/>
+    <text x="247" y="71" font-size="7" fill="#888" text-anchor="middle">Exp. loss −$85</text>
+
+    <!-- "Most sessions land here" callout -->
+    <line x1="260" y1="85" x2="260" y2="55" stroke="#0d3320" stroke-width="1" stroke-dasharray="3,2"/>
+    <text x="261" y="51" font-size="7.5" fill="#0d3320" font-weight="700" text-anchor="start">Most sessions land here</text>
+  </svg>
+  <p style="font-size:8pt;color:#888;font-style:italic;text-align:center;margin-bottom:.15in;">80 hands · $100 flat Banker · 1 SD ≈ $830 · Based on binomial approximation, 8-deck shoe</p>
+
+  <div class="callout green-callout" style="margin-bottom:.18in;"><strong>The insight:</strong> The house edge of 1.06% costs you roughly $85 per 80-hand session, a rounding error inside a variance of ±$830. <strong>You will not feel the house edge in any single session.</strong> You will feel variance. Understanding this prevents two mistakes: attributing wins to skill, and attributing losses to bad luck rather than math.</div>
+
+  <h3>What $10,000 Buys You at the Baccarat Table</h3>
+  <p style="font-size:9.5pt;color:#555;margin-bottom:.12in;">A $10,000 session bankroll looks very different depending on where you sit. Here is what to expect at each level, betting Banker flat the entire session.</p>
+  <table>
+    <thead><tr><th>Bet Level</th><th>Min. Table</th><th>Hands/Hr</th><th>Hrs of Play</th><th>Expected Loss</th><th>Variance</th></tr></thead>
+    <tbody>
+      <tr><td class="bold">Low Stakes</td><td>$10</td><td>~80</td><td>12+ hrs</td><td>~$85</td><td>Low — smooth swings</td></tr>
+      <tr><td class="bold">Mid Stakes</td><td>$100</td><td>~70</td><td>~1.5 hrs</td><td>~$105</td><td>Moderate — $2K swings normal</td></tr>
+      <tr><td class="bold">High Limit</td><td>$500</td><td>~60</td><td>~20–25 min</td><td>~$106</td><td>High — $5K+ swings common</td></tr>
+      <tr><td class="bold">Baccarat Whale</td><td>$5,000</td><td>~50</td><td>~2–3 hands</td><td>~$106+</td><td>Extreme — session-ending variance</td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:8.5pt;color:#888;font-style:italic;margin-top:.08in;">Expected loss assumes 1.06% house edge, Banker flat bet, 8-deck shoe. Variance column reflects realistic single-session swings, not theoretical limits.</p>
+  <div class="callout" style="margin:.15in 0;"><strong>The insight:</strong> Expected loss is nearly identical across bet levels, about $105 per $10,000 wagered. What changes is <em>pace</em>. The same $10K lasts twelve hours at $10/hand and disappears in three hands at $5,000/hand. Your edge isn't the bet size. It's how long you can stay disciplined.</div>
+
+  <div class="field-note" style="margin-top:.18in;margin-bottom:.15in;">I came close to a $10,000 mistake once. I was at a high-limit table in Las Vegas, a good room, good shoe, up about thirty percent after an hour. The rational move was to pocket the profit and leave. Instead I told myself I had been reading the shoe well, that the Banker streak was not finished, that I deserved to see how deep it ran. I placed a bet twice my session maximum. I lost it in four hands. By the time I left I had surrendered the entire profit plus a third of my original stake. The mistake was not the bet size. I've made bigger bets. The mistake was the story I told myself to justify it: <em>I deserve to keep winning</em>. Baccarat does not care what you deserve. It never did. The session rules in this chapter exist specifically for that moment, the one where you feel invincible and have the most to lose. Follow them when it costs you nothing. Trust them when it costs you everything.</div>
+
+  <div style="border:1px solid rgba(0,0,0,0.12);border-left:3px solid var(--gold);border-radius:0 6px 6px 0;padding:.1in .14in;margin:.12in 0;background:#f8f6f0;display:grid;grid-template-columns:72px 1fr;gap:.12in;align-items:start;">
+    <div style="text-align:center;padding-top:2px;">
+      <img src="https://chart.googleapis.com/chart?chs=72x72&cht=qr&chl=https%3A%2F%2Fwww.baccaratgladiator.com%2Fsimulator.html&choe=UTF-8" alt="QR: baccaratgladiator.com/simulator" style="width:72px;height:72px;border-radius:3px;display:block;">
+      <div style="font-size:6pt;color:#888;margin-top:3px;font-style:italic;">baccaratgladiator.com/simulator</div>
+    </div>
+    <div>
+      <div style="font-family:'Cinzel',serif;font-size:7pt;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:.06in;">Test Your Bankroll Plan Free</div>
+      <p style="font-size:8.5pt;color:#444;margin:0;line-height:1.5;">The <strong>Bankroll Simulator</strong> at BaccaratGladiator.com runs 1,000 simulated shoes using your own numbers: bankroll, bet size, stop-loss, win goal, and strategy. See the outcome distribution before you sit down.</p>
+    </div>
+  </div>
+
+  <div style="border:1px solid rgba(0,0,0,0.12);border-left:3px solid #aaa;border-radius:0 6px 6px 0;padding:.09in .14in;margin:.08in 0 .12in;background:#f5f5f0;">
+    <div style="font-family:'Cinzel',serif;font-size:7pt;letter-spacing:.2em;text-transform:uppercase;color:#777;margin-bottom:.07in;">Self-Check — Chapter 6</div>
+    <ol style="margin:0;padding-left:.18in;font-size:8.5pt;color:#444;line-height:1.7;">
+      <li>You start with $500 and set a stop-loss of $250. At what bankroll value do you walk away from the table?</li>
+      <li>You've just hit your win goal of $750. You feel you're "on a run." According to the rules in this chapter, what should you do?</li>
+    </ol>
+    <div style="font-size:7.5pt;color:#888;margin-top:.06in;font-style:italic;">Answers → Appendix R</div>
+  </div>
+
+  <div style="background:linear-gradient(135deg,#f8f5ee,#fffef8);border:1px solid rgba(201,168,76,0.28);border-radius:8px;padding:.13in .18in;margin:.15in 0;">
+    <div style="font-family:'Cinzel',serif;font-size:7.5pt;letter-spacing:.18em;color:var(--gold);text-transform:uppercase;margin-bottom:.1in;">Key Takeaways</div>
+    <ul style="margin:0;padding-left:.2in;font-size:9pt;color:#444;line-height:1.7;">
+      <li>Expected loss is nearly identical across all stake levels, roughly $105 per $10,000 wagered on Banker flat</li>
+      <li>What changes with stake size is pace: the same $10K lasts 12+ hours at $10/hand, and just three hands at $5,000/hand</li>
+      <li>Set three numbers before every session: win goal, stop-loss, and time limit. Honor all three without renegotiation</li>
+      <li>The biggest losses come from the story you tell yourself to justify one more bet after a winning run; the rules exist for exactly that moment</li>
+    </ul>
+  </div>
+
+  <div class="page-footer"><span>Road to Nine</span><span>BaccaratGladiator.com</span><span>10</span></div>
+</div>
+
+<!-- CHAPTER 7: THE MENTAL GAME -->
+<div class="page inner" style="position:relative;">
+  
+</body>
+</html>
