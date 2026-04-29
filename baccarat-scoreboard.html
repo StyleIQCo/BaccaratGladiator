@@ -9632,9 +9632,9 @@ function buildCoachExplanation(r, b, netChange, isNatural, isNatural9, isNatural
     if(bSnap.panda8>0)  evWarns.push(`Panda 8: <strong>10.19% house edge</strong> — $${(bSnap.panda8*0.1019).toFixed(2)} expected loss per hand.`);
   }
   if(gameMode==='tiger'){
-    if(bSnap.bigTiger>0)   evWarns.push(`Big Tiger: <strong>8.6% house edge</strong> — 4× costlier than a Banker bet.`);
-    if(bSnap.smallTiger>0) evWarns.push(`Small Tiger: <strong>6.4% house edge</strong>.`);
-    if(bSnap.tigerTie>0)   evWarns.push(`Tiger Tie: <strong>11.0% house edge</strong> — high volatility, very expensive long-term.`);
+    if(bSnap.bigTiger>0)   evWarns.push(`Big Tiger: <strong>15.25% house edge</strong> — $${(bSnap.bigTiger*0.1525).toFixed(2)} expected loss per hand on average.`);
+    if(bSnap.smallTiger>0) evWarns.push(`Small Tiger: <strong>14.33% house edge</strong> — $${(bSnap.smallTiger*0.1433).toFixed(2)} expected loss per hand.`);
+    if(bSnap.tigerTie>0)   evWarns.push(`Tiger Tie: <strong>39.2% house edge</strong> at 35:1 payout — $${(bSnap.tigerTie*0.392).toFixed(2)} expected loss per hand. Worst bet on the table.`);
   }
   if(bSnap.tie>0 && r.winner!=='T') evWarns.push(`Tie bet: <strong>14.4% house edge</strong> — the most expensive standard bet on the table.`);
 
@@ -9689,7 +9689,9 @@ const _HOUSE_EDGES = {
   standard: { banker:1.06, player:1.24, tie:14.36 },
   // Dragon 7 HE = 7.61% (prob ≈2.25%, pays 40:1); Panda 8 HE = 10.19% (prob ≈3.45%, pays 25:1)
   ez:       { banker:1.02, player:1.24, tie:14.36, 'Dragon 7':7.61, 'Panda 8':10.19 },
-  tiger:    { banker:1.07, player:1.24, tie:14.36, 'Big Tiger':8.6, 'Small Tiger':6.4, 'Tiger Tie':11.0 },
+  // Big Tiger HE = 15.25% (prob ≈1.69%, pays 50:1 per WoO); Small Tiger HE = 14.33% (prob ≈1.69%, pays 22:1)
+  // Tiger Tie HE ≈ 39.2% at game's 35:1 payout (WoO baseline 30.74% at 40:1; P ≈ 1.689%)
+  tiger:    { banker:1.07, player:1.24, tie:14.36, 'Big Tiger':15.25, 'Small Tiger':14.33, 'Tiger Tie':39.2 },
 };
 
 function toggleEvWidget(){
