@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#070012">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Stage Select — Baccarat Gladiator</title>
+<meta name="description" content="60 themed baccarat venues across 10 tiers. Clear a stage to unlock the next tier — final boss: The Colosseum.">
+<meta property="og:title" content="Baccarat Gladiator — Stage Select">
+<meta property="og:description" content="60 themed baccarat venues across 10 tiers. Clear a stage to unlock the next tier.">
+<meta property="og:image" content="https://baccaratgladiator.com/preview-nine.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://baccaratgladiator.com/preview-nine.jpg">
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="/baccarat-gladiator-logo.svg" type="image/svg+xml">
+<link rel="preload" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Orbitron:wght@500;700;900&family=Press+Start+2P&display=swap" as="style">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Orbitron:wght@500;700;900&family=Press+Start+2P&display=swap">
+
+<style>
+* { margin:0; padding:0; box-sizing:border-box;
+    -webkit-tap-highlight-color:transparent; -webkit-user-select:none;
+    user-select:none; -webkit-touch-callout:none; }
+html,body {
+  width:100%; height:100vh; height:100dvh; overflow:hidden;
+  overscroll-behavior:none; -webkit-overflow-scrolling:auto;
+  background:#040008;
+  color:#f0e3c0;
+  font-family:'Orbitron','Inter',-apple-system,sans-serif;
+  touch-action:manipulation;
+}
+
+/* ── CRT cabinet backdrop ──────────────────────────────────────
+   Deep purple haze + soft starfield, with subtle scanlines for the
+   arcade-cabinet feel. */
+#cabinet-bg { position:fixed; inset:0; z-index:0;
+  background:
+    radial-gradient(ellipse at 50% 35%, #1a0530 0%, #0a0218 45%, #040008 100%),
+    radial-gradient(circle at 20% 80%, rgba(255,40,180,0.08) 0%, transparent 40%),
+    radial-gradient(circle at 80% 20%, rgba(80,200,255,0.10) 0%, transparent 45%);
+}
+#scanlines { position:fixed; inset:0; z-index:50; pointer-events:none;
+  background:repeating-linear-gradient(0deg,
+    rgba(0,0,0,0)   0px, rgba(0,0,0,0)   2px,
+    rgba(0,0,0,0.18) 2px, rgba(0,0,0,0.18) 3px);
+  mix-blend-mode:multiply; opacity:0.55; }
+
+/* Subtle drifting star specks behind everything */
+#starfield { position:fixed; inset:0; z-index:1; pointer-events:none;
+  background-image:
+    radial-gradient(1px 1px at 12% 14%, rgba(255,210,255,0.6), transparent),
+    radial-gradient(1px 1px at 24% 70%, rgba(180,220,255,0.5), transparent),
+    radial-gradient(1px 1px at 41% 22%, rgba(255,255,255,0.4), transparent),
+    radial-gradient(1px 1px at 67% 48%, rgba(255,200,150,0.5), transparent),
+    radial-gradient(1px 1px at 82% 78%, rgba(200,180,255,0.5), transparent),
+    radial-gradient(1px 1px at 91% 18%, rgba(255,255,255,0.5), transparent);
+  animation: stars 80s linear infinite;
+}
+@keyframes stars { from { background-position:0 0; } to { background-position:0 -200px; } }
+
+/* ── Marquee — chrome/neon header ──────────────────────────── */
+#marquee { position:fixed; top:0; left:0; right:0; z-index:20;
+  padding:14px 16px max(12px,env(safe-area-inset-top)) 16px;
+  padding-top:max(14px,env(safe-area-inset-top));
+  text-align:center;
+  background:linear-gradient(180deg, rgba(20,4,30,0.92), rgba(20,4,30,0.4) 70%, transparent);
+  backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); }
+#marquee .pre { font-family:'Press Start 2P','Orbitron',monospace;
+  font-size:0.55rem; letter-spacing:4px; color:#ff6cfa;
+  text-shadow:0 0 6px #ff48d8, 0 0 12px #c818a8;
+  margin-bottom:6px; }
+#marquee .title { font-family:'Cinzel',serif; font-weight:900;
+  font-size:1.5rem; letter-spacing:5px;
+  background:linear-gradient(180deg, #ffe7a0 0%, #f5c450 35%, #b07f1c 60%, #ffe7a0 80%, #fff5c8 100%);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  filter:drop-shadow(0 0 6px rgba(255,200,80,0.55));
+  text-shadow:0 2px 0 rgba(0,0,0,0.6);
+  display:inline-block; padding:0 14px; }
+#marquee .sub { font-family:'Orbitron',sans-serif; font-weight:700;
+  font-size:0.62rem; letter-spacing:7px; color:#9affe7;
+  text-shadow:0 0 4px #4adfd3, 0 0 10px #1a8a85;
+  margin-top:4px; animation: pre-blink 1.2s steps(2) infinite; }
+@keyframes pre-blink { from { opacity:1; } 50% { opacity:0.65; } to { opacity:1; } }
+
+/* Chrome rail under marquee */
+#marquee::after { content:""; display:block; height:2px; margin:14px auto 0; max-width:80%;
+  background:linear-gradient(90deg, transparent, #c5b358 12%, #fff5c8 50%, #c5b358 88%, transparent);
+  filter:drop-shadow(0 0 4px rgba(255,200,80,0.6)); }
+
+/* ── 3D carousel deck ──────────────────────────────────────── */
+#deck-frame { position:fixed; left:50%; top:50%; transform:translate(-50%, -52%);
+  width:100%; max-width:600px; height:64vh; max-height:640px;
+  perspective:1200px; perspective-origin:50% 50%; z-index:10;
+  pointer-events:none; }
+
+#deck { position:absolute; inset:0;
+  transform-style:preserve-3d; pointer-events:auto; }
+
+.card { position:absolute; left:50%; top:50%;
+  width:78%; aspect-ratio:1200/630;
+  transform:translate(-50%, -50%);
+  border-radius:14px; overflow:hidden;
+  background:#1a0a2a;
+  box-shadow:
+    0 12px 28px rgba(0,0,0,0.7),
+    0 0 0 2px rgba(255,255,255,0.06),
+    inset 0 0 0 1px rgba(255,255,255,0.1);
+  transition: transform 360ms cubic-bezier(.2,.7,.25,1),
+              opacity   360ms ease,
+              filter    360ms ease;
+  cursor:pointer; }
+
+/* Card art: preview JPG fills, name + tagline overlay */
+.card .art { position:absolute; inset:0; background-size:cover; background-position:center;
+  background-color:#1a0a2a; }
+.card .art-mask { position:absolute; inset:0;
+  background:linear-gradient(180deg,
+    rgba(0,0,0,0)   0%,
+    rgba(0,0,0,0.0) 50%,
+    rgba(0,0,0,0.55) 78%,
+    rgba(0,0,0,0.85) 100%); }
+.card .meta { position:absolute; left:14px; right:14px; bottom:12px;
+  text-align:left; }
+.card .meta .name { font-family:'Cinzel',serif; font-weight:900;
+  font-size:1.15rem; letter-spacing:2px; color:#fff;
+  text-shadow:0 2px 6px rgba(0,0,0,0.85); line-height:1.05; }
+.card .meta .tag { font-family:'Orbitron',sans-serif; font-weight:500;
+  font-size:0.62rem; letter-spacing:1.5px; color:#ffe1a8;
+  text-shadow:0 2px 4px rgba(0,0,0,0.85);
+  margin-top:3px; }
+.card .corner { position:absolute; top:9px; left:9px;
+  font-family:'Press Start 2P','Orbitron',monospace; font-size:0.5rem;
+  letter-spacing:2px; padding:5px 8px; border-radius:4px;
+  background:rgba(0,0,0,0.65); border:1px solid rgba(255,200,80,0.45);
+  color:#ffe1a8; text-shadow:0 0 4px rgba(255,200,80,0.6); }
+.card .region { position:absolute; top:9px; right:9px;
+  font-size:1rem; padding:4px 7px; border-radius:4px;
+  background:rgba(0,0,0,0.55); }
+
+/* Tier-color accent rail across the top of every card */
+.card::before { content:""; position:absolute; top:0; left:0; right:0; height:4px;
+  background:var(--tier-color, #c5b358);
+  box-shadow:0 0 14px var(--tier-color, #c5b358); z-index:2; }
+
+/* Locked card overlay */
+.card.locked .art { filter:grayscale(0.85) brightness(0.45); }
+.card.locked .art-mask { background:linear-gradient(180deg,
+    rgba(20,5,30,0.55) 0%, rgba(20,5,30,0.85) 100%); }
+.card.locked .meta .name { color:#888; text-shadow:0 0 8px rgba(120,80,160,0.4); }
+.card .lock { display:none; }
+.card.locked .lock { display:flex; position:absolute; inset:0;
+  align-items:center; justify-content:center; flex-direction:column;
+  z-index:3; pointer-events:none; }
+.card.locked .lock .icon { font-size:3.4rem;
+  filter:drop-shadow(0 0 12px rgba(255,180,80,0.4)); opacity:0.7; }
+.card.locked .lock .req { font-family:'Press Start 2P',monospace;
+  font-size:0.5rem; letter-spacing:2px; color:#ffc060;
+  text-shadow:0 0 4px rgba(255,160,40,0.6);
+  margin-top:10px; padding:6px 10px;
+  background:rgba(0,0,0,0.7); border-radius:4px;
+  border:1px solid rgba(255,180,80,0.4); text-align:center; }
+.card.locked.shake { animation:lock-shake 0.45s ease-in-out; }
+@keyframes lock-shake {
+  0%,100% { transform:translate(-50%, -50%) rotateY(var(--ry,0deg)) translateX(0); }
+  20%     { transform:translate(-50%, -50%) rotateY(var(--ry,0deg)) translateX(-8px); }
+  40%     { transform:translate(-50%, -50%) rotateY(var(--ry,0deg)) translateX(8px); }
+  60%     { transform:translate(-50%, -50%) rotateY(var(--ry,0deg)) translateX(-5px); }
+  80%     { transform:translate(-50%, -50%) rotateY(var(--ry,0deg)) translateX(5px); }
+}
+
+/* Centered card glows hot */
+.card.center {
+  filter:drop-shadow(0 0 18px var(--tier-color, #c5b358)); }
+.card.center::after { content:""; position:absolute; inset:-3px; border-radius:16px;
+  border:2px solid var(--tier-color, #c5b358);
+  box-shadow:inset 0 0 14px var(--tier-color, #c5b358),
+             0 0 18px var(--tier-color, #c5b358);
+  opacity:0.85; pointer-events:none; animation:center-pulse 2.4s ease-in-out infinite; }
+@keyframes center-pulse {
+  0%,100% { opacity:0.55; }
+  50%     { opacity:0.95; }
+}
+
+/* ── Bottom controls ─────────────────────────────────────── */
+#dock { position:fixed; bottom:0; left:0; right:0; z-index:30;
+  padding:12px 14px max(14px,env(safe-area-inset-bottom));
+  background:linear-gradient(0deg, rgba(20,4,30,0.92), rgba(20,4,30,0.55) 70%, transparent);
+  backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); }
+
+#tier-bar { display:flex; gap:5px; justify-content:center;
+  margin-bottom:10px; flex-wrap:nowrap; padding:0 4px; }
+.tier-pip { flex:1; height:5px; max-width:24px; border-radius:2px;
+  background:rgba(255,255,255,0.12); transition:background 200ms;
+  box-shadow:inset 0 1px 0 rgba(0,0,0,0.4); }
+.tier-pip.cleared { background:linear-gradient(90deg, #c5b358, #ffe7a0);
+  box-shadow:0 0 6px rgba(255,200,80,0.7); }
+.tier-pip.current { background:linear-gradient(90deg, #ff6cfa, #c818a8);
+  box-shadow:0 0 8px rgba(255,108,250,0.9); }
+
+#stage-meta { text-align:center; margin-bottom:10px; }
+#stage-meta .num { font-family:'Press Start 2P',monospace; font-size:0.55rem;
+  letter-spacing:3px; color:#9affe7; text-shadow:0 0 4px #4adfd3; }
+#stage-meta .tier-name { font-family:'Cinzel',serif; font-weight:700;
+  font-size:0.78rem; letter-spacing:4px; color:#ffe1a8;
+  text-shadow:0 0 6px rgba(255,200,80,0.5);
+  margin-top:3px; }
+
+#controls { display:flex; align-items:center; gap:10px; }
+.arrow {
+  flex:0 0 56px; height:56px; border-radius:14px;
+  background:linear-gradient(180deg, #2a0d40 0%, #1a0220 100%);
+  border:2px solid rgba(255,200,80,0.45);
+  color:#ffe1a8; font-size:1.5rem;
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; touch-action:manipulation;
+  box-shadow:
+    0 4px 0 #4a0820,
+    0 6px 14px rgba(0,0,0,0.6),
+    inset 0 1px 0 rgba(255,255,255,0.15);
+  transition:transform 60ms ease, box-shadow 60ms ease; }
+.arrow:active { transform:translateY(3px);
+  box-shadow:0 1px 0 #4a0820, 0 2px 6px rgba(0,0,0,0.5),
+             inset 0 1px 0 rgba(255,255,255,0.15); }
+
+#btn-select {
+  flex:1; height:62px; border-radius:14px; border:none;
+  background:
+    linear-gradient(180deg, #fff5c8 0%, #ffd75a 30%, #d8a430 60%, #8a6418 100%);
+  color:#3a1810; cursor:pointer; touch-action:manipulation;
+  font-family:'Cinzel',serif; font-weight:900; letter-spacing:6px;
+  font-size:1.05rem;
+  text-shadow:0 1px 0 rgba(255,255,255,0.4);
+  box-shadow:
+    0 5px 0 #6a3818,
+    0 7px 18px rgba(255,180,40,0.45),
+    inset 0 1px 0 rgba(255,255,255,0.6),
+    inset 0 -2px 0 rgba(0,0,0,0.25);
+  transition:transform 80ms ease, box-shadow 80ms ease, filter 200ms ease;
+  position:relative; overflow:hidden; }
+#btn-select::after { content:""; position:absolute; inset:0;
+  background:linear-gradient(180deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0) 50%);
+  pointer-events:none; }
+#btn-select:active { transform:translateY(4px);
+  box-shadow:0 1px 0 #6a3818, 0 3px 8px rgba(255,180,40,0.4),
+             inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -2px 0 rgba(0,0,0,0.25); }
+#btn-select.locked { filter:grayscale(0.65) brightness(0.55); cursor:not-allowed; }
+#btn-select { animation: select-pulse 1.6s ease-in-out infinite; }
+@keyframes select-pulse {
+  0%,100% { filter:brightness(1); }
+  50%     { filter:brightness(1.15) drop-shadow(0 0 12px rgba(255,200,80,0.7)); }
+}
+#btn-select.locked { animation:none; }
+
+/* "Insert coin" hint that fades after first interaction */
+#coin-hint { position:fixed; left:50%; bottom:calc(120px + env(safe-area-inset-bottom));
+  transform:translateX(-50%); z-index:25; pointer-events:none;
+  font-family:'Press Start 2P',monospace; font-size:0.55rem; letter-spacing:3px;
+  color:#ffe1a8; text-shadow:0 0 6px rgba(255,200,80,0.6);
+  animation: pre-blink 0.9s steps(2) infinite; opacity:0.92;
+  transition:opacity 600ms ease; }
+#coin-hint.gone { opacity:0; }
+
+/* Card flash on SELECT */
+#flash { position:fixed; inset:0; z-index:60; pointer-events:none;
+  background:radial-gradient(circle at 50% 50%, #fff 0%, #ffd75a 30%, transparent 60%);
+  opacity:0; transition:opacity 200ms ease; }
+#flash.fire { animation: flash-burst 750ms ease-out forwards; }
+@keyframes flash-burst {
+  0%   { opacity:0; }
+  20%  { opacity:1; }
+  100% { opacity:0; }
+}
+
+/* Loading splash that briefly shows the chosen stage's name before nav */
+#load-splash { position:fixed; inset:0; z-index:70; pointer-events:none;
+  background:#040008; display:flex; align-items:center; justify-content:center;
+  flex-direction:column; opacity:0; transition:opacity 200ms ease; }
+#load-splash.show { opacity:1; pointer-events:auto; }
+#load-splash .stage-name { font-family:'Cinzel',serif; font-weight:900;
+  font-size:2rem; letter-spacing:6px; color:#ffe1a8;
+  text-shadow:0 0 16px rgba(255,200,80,0.85); }
+#load-splash .stage-tier { font-family:'Press Start 2P',monospace;
+  font-size:0.65rem; letter-spacing:4px; color:#9affe7;
+  text-shadow:0 0 8px rgba(74,223,211,0.6); margin-top:14px; }
+#load-splash .bar { margin-top:24px; width:60%; max-width:300px; height:5px;
+  border-radius:2px; background:rgba(255,255,255,0.1);
+  overflow:hidden; position:relative; }
+#load-splash .bar::after { content:""; position:absolute; inset:0;
+  background:linear-gradient(90deg, #ff6cfa, #ffe7a0);
+  width:0; transition:width 700ms ease-out; }
+#load-splash.show .bar::after { width:100%; }
+
+/* Top-left back-to-home */
+#btn-home { position:fixed; top:max(14px,env(safe-area-inset-top));
+  left:14px; width:42px; height:42px; padding:0; z-index:25;
+  border-radius:10px; border:1px solid rgba(255,200,80,0.45);
+  background:rgba(0,0,0,0.55); color:#ffe1a8; font-size:1rem;
+  backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+  cursor:pointer; }
+
+/* Visited badge — stamped on cards you've already cleared */
+.card.visited .visited-badge { display:flex; }
+.card .visited-badge { display:none; position:absolute; top:9px;
+  right:48px; font-family:'Press Start 2P',monospace; font-size:0.4rem;
+  letter-spacing:2px; padding:4px 6px; border-radius:3px;
+  background:rgba(40,180,90,0.85); color:#fff; text-shadow:0 1px 0 rgba(0,0,0,0.5);
+  z-index:3; border:1px solid rgba(255,255,255,0.25); }
+
+/* iOS short-screen tweak */
+@media (max-height: 700px) {
+  #marquee .title { font-size:1.25rem; letter-spacing:4px; }
+  #marquee .pre   { font-size:0.5rem; }
+  #marquee .sub   { font-size:0.55rem; }
+  #deck-frame { height:54vh; }
+  .card .meta .name { font-size:1rem; }
+}
+</style>
+</head>
+<body>
+
+<div id="cabinet-bg"></div>
+<div id="starfield"></div>
+
+<header id="marquee">
+  <div class="pre">★ INSERT COIN ★</div>
+  <h1 class="title">BACCARAT GLADIATOR</h1>
+  <div class="sub">SELECT YOUR STAGE</div>
+</header>
+
+<button id="btn-home" aria-label="Home" title="Home">⌂</button>
+
+<div id="deck-frame">
+  <div id="deck"></div>
+</div>
+
+<div id="coin-hint">SWIPE OR TAP ◀ ▶</div>
+
+<div id="dock">
+  <div id="tier-bar" aria-label="Tier progress"></div>
+  <div id="stage-meta">
+    <div class="num"></div>
+    <div class="tier-name"></div>
+  </div>
+  <div id="controls">
+    <button class="arrow" id="btn-prev" aria-label="Previous stage">◀</button>
+    <button id="btn-select">SELECT STAGE</button>
+    <button class="arrow" id="btn-next" aria-label="Next stage">▶</button>
+  </div>
+</div>
+
+<div id="flash"></div>
+
+<div id="load-splash">
+  <div class="stage-name">—</div>
+  <div class="stage-tier">—</div>
+  <div class="bar"></div>
+</div>
+
+<script>
+//
+// ═══════════════════════════════════════════════════════════════════
+//   BACCARAT GLADIATOR — STAGE SELECT
+//   60 themed venues across 10 tiers. Clear any stage in tier N to
+//   unlock tier N+1. Final boss tier is the Colosseum + KTV + Speakeasy.
+// ═══════════════════════════════════════════════════════════════════
+//
+
+// Tier metadata — color used for the accent rail and centered glow.
+const TIERS = [
+  { id:1,  name:'WELCOME PIT',     subtitle:'unlocked',                  color:'#9affe7' },
+  { id:2,  name:'INDIE BLOCK',     subtitle:'clear 1 in WELCOME PIT',    color:'#7adfff' },
+  { id:3,  name:'FAR HORIZONS',    subtitle:'clear 1 in INDIE BLOCK',    color:'#80e090' },
+  { id:4,  name:'UNDERGROUND',     subtitle:'clear 1 in FAR HORIZONS',   color:'#ff8ad0' },
+  { id:5,  name:'POSTCARD CITIES', subtitle:'clear 1 in UNDERGROUND',    color:'#ffc060' },
+  { id:6,  name:'CHAMPIONSHIP',    subtitle:'clear 1 in POSTCARD CITIES',color:'#ffa040' },
+  { id:7,  name:'NEON STREETS',    subtitle:'clear 1 in CHAMPIONSHIP',   color:'#ff48d8' },
+  { id:8,  name:'VIP ESCAPE',      subtitle:'clear 1 in NEON STREETS',   color:'#c060ff' },
+  { id:9,  name:'CASINO ROYALTY',  subtitle:'clear 1 in VIP ESCAPE',     color:'#ffe7a0' },
+  { id:10, name:'FINAL ARENA',     subtitle:'clear 1 in CASINO ROYALTY', color:'#ff4040' },
+];
+
+// ── Stage roster ────────────────────────────────────────────────
+// Sorted by tier (lowest demand first). The slug matches the variant's
+// /road-to-<slug>.html path. Region emoji is purely decorative.
+const STAGES = [
+  // T1 — WELCOME PIT
+  { slug:'nine',           name:'Road to Nine',     tag:'The original baccarat',                region:'♠',  tier:1 },
+  { slug:'cat-cafe',       name:'Cat Cafe',         tag:'Tokyo paw bets',                       region:'🐱', tier:1 },
+  { slug:'canine-club',    name:'Canine Club',      tag:'Westminster · best in show',           region:'🐶', tier:1 },
+  { slug:'labubu',         name:'Labubu Lab',       tag:'Plush mascot energy',                  region:'🧸', tier:1 },
+  { slug:'huff-puff',      name:'Huff & Puff',      tag:'Three little pigs',                    region:'🐷', tier:1 },
+  { slug:'toy-story',      name:'Toy Story',        tag:"Andy's room · to infinity",            region:'🚀', tier:1 },
+  { slug:'bricks',         name:'Bricks',           tag:'Block-by-block builder',               region:'🧱', tier:1 },
+
+  // T2 — INDIE BLOCK
+  { slug:'hipster',        name:'Hipster',          tag:'Brooklyn · single origin',             region:'☕', tier:2 },
+  { slug:'portlandia',     name:'Portlandia',       tag:'Keep it weird',                        region:'🦅', tier:2 },
+  { slug:'mockingbird',    name:'Mockingbird',      tag:'Maycomb · sleepy south',               region:'🌳', tier:2 },
+  { slug:'breaking',       name:'Breaking',         tag:'B-boy battle · cardboard arena',       region:'💃', tier:2 },
+  { slug:'cali-surfer',    name:'Cali Surfer',      tag:'Pacific point · sunset surf',          region:'🏄', tier:2 },
+  { slug:'marrakech',      name:'Marrakech',        tag:'Medina · spice & saffron',             region:'🇲🇦', tier:2 },
+
+  // T3 — FAR HORIZONS
+  { slug:'kenya',          name:'Kenya',            tag:'Maasai Mara · safari sunset',          region:'🇰🇪', tier:3 },
+  { slug:'batumi',         name:'Batumi',           tag:'Black Sea · high-roller riviera',      region:'🇬🇪', tier:3 },
+  { slug:'cyprus',         name:'Cyprus',           tag:"Aphrodite's coast",                    region:'🇨🇾', tier:3 },
+  { slug:'jiufen-tea',     name:'Jiufen 九份',       tag:'Lantern-red tea-house mountain',       region:'🇹🇼', tier:3 },
+  { slug:'mexico',         name:'Mexico',           tag:'Día de muertos · marigold',            region:'🇲🇽', tier:3 },
+  { slug:'uruguay',        name:'Uruguay',          tag:'Punta del Este · summer crown',        region:'🇺🇾', tier:3 },
+  { slug:'ktown',          name:'K-Town',           tag:'Koreatown · soju & static',            region:'🇰🇷', tier:3 },
+
+  // T4 — UNDERGROUND
+  { slug:'disco',          name:'Disco',            tag:'Studio 54 · mirror ball',              region:'🪩', tier:4 },
+  { slug:'coachella',      name:'Coachella',        tag:'Festival ferris wheel',                region:'🎡', tier:4 },
+  { slug:'techno-rave',    name:'Techno Rave',      tag:'Berghain bunker',                      region:'🔊', tier:4 },
+  { slug:'muay-thai',      name:'Muay Thai',        tag:'Lumpinee · art of eight limbs',        region:'🥊', tier:4 },
+  { slug:'wing-chun',      name:'Wing Chun',        tag:'Foshan · centerline theory',           region:'🥋', tier:4 },
+  { slug:'canada-f1',      name:'Montréal F1',      tag:'Île Notre-Dame · pole position',       region:'🏎', tier:4 },
+
+  // T5 — POSTCARD CITIES
+  { slug:'spain',          name:'Spain',            tag:'Madrid · feria flamenca',              region:'🇪🇸', tier:5 },
+  { slug:'neo-tokyo-anime',name:'Neo Tokyo',        tag:'Akira · neo tokyo 2099',               region:'🇯🇵', tier:5 },
+  { slug:'texas',          name:'Texas',            tag:'Lone Star · everything bigger',        region:'🤠', tier:5 },
+  { slug:'silicon-valley', name:'Silicon Valley',   tag:'Sand Hill · Series A',                 region:'💻', tier:5 },
+  { slug:'cycling',        name:'Cycling',          tag:'Tour breakaway · alpine pass',         region:'🚴', tier:5 },
+  { slug:'pga',            name:'PGA',              tag:'Augusta · 18th green',                 region:'⛳', tier:5 },
+
+  // T6 — CHAMPIONSHIP
+  { slug:'baseball',       name:'Baseball',         tag:'Stadium lights · ninth inning',        region:'⚾', tier:6 },
+  { slug:'ufc',            name:'UFC',              tag:'Octagon · championship rounds',        region:'🥊', tier:6 },
+  { slug:'boxing',         name:'Boxing',           tag:'Title fight · championship night',     region:'🥊', tier:6 },
+  { slug:'melbourne',      name:'Melbourne',        tag:'Crown · southern cross',               region:'🇦🇺', tier:6 },
+  { slug:'manila',         name:'Manila',           tag:'Manila bay · Pasay strip',             region:'🇵🇭', tier:6 },
+  { slug:'seoul',          name:'Seoul',            tag:'Gangnam · K-Casino',                   region:'🇰🇷', tier:6 },
+  { slug:'skydiving',      name:'Skydiving',        tag:'12,000 ft · canopy out',               region:'🪂', tier:6 },
+
+  // T7 — NEON STREETS
+  { slug:'nyc',            name:'New York',         tag:'Times Square · midnight',              region:'🗽', tier:7 },
+  { slug:'miami',          name:'Miami',            tag:'South Beach · neon vice',              region:'🌴', tier:7 },
+  { slug:'hawaii',         name:'Hawaii',           tag:'Lava lounge · big island',             region:'🌺', tier:7 },
+  { slug:'mad-max',        name:'Mad Max',          tag:'Wasteland · fury road',                region:'🏜', tier:7 },
+  { slug:'fast-furious',   name:'Fast & Furious',   tag:'Quarter mile · family',                region:'🏁', tier:7 },
+  { slug:'cyberpunk',      name:'Cyberpunk',        tag:'Night city · neon noir',               region:'🤖', tier:7 },
+
+  // T8 — VIP ESCAPE
+  { slug:'jet',            name:'Private Jet',      tag:'40,000 ft · private suite',            region:'✈',  tier:8 },
+  { slug:'cruise',         name:'Cruise',           tag:'Top deck · sea breeze',                region:'🛳', tier:8 },
+  { slug:'orbit',          name:'Orbit',            tag:'Low Earth orbit · zero G',             region:'🛰', tier:8 },
+  { slug:'gta',            name:'Vinewood',         tag:'Grand theft baccarat',                 region:'🎮', tier:8 },
+  { slug:'vegas-hangover', name:'Vegas Hangover',   tag:'Caesars · what happens here',          region:'🎰', tier:8 },
+  { slug:'oceans-11',      name:'Ocean\'s 11',      tag:'Bellagio heist · five for five',       region:'🎩', tier:8 },
+  { slug:'bond',           name:'Bond',             tag:'MI6 · shaken not stirred',             region:'🎲', tier:8 },
+
+  // T9 — CASINO ROYALTY
+  { slug:'mc',             name:'Monte Carlo',      tag:'Belle Époque · 5% commission',         region:'🇲🇨', tier:9 },
+  { slug:'lv',             name:'Las Vegas',        tag:'Tiger Bonus · the Strip',              region:'🇺🇸', tier:9 },
+  { slug:'ac',             name:'Atlantic City',    tag:'Boardwalk classic',                    region:'🇺🇸', tier:9 },
+  { slug:'bahamas',        name:'Bahamas',          tag:'Atlantis · Dragon Bonus',              region:'🇧🇸', tier:9 },
+  { slug:'sg',             name:'Singapore',        tag:'Marina Bay · Merlion',                 region:'🇸🇬', tier:9 },
+  { slug:'pnw',            name:'Pacific NW',       tag:'EZ Baccarat · Dragon 7 / Panda 8',     region:'🌲', tier:9 },
+  { slug:'london',         name:'London',           tag:'Mayfair · pinstripe pit',              region:'🇬🇧', tier:9 },
+
+  // T10 — FINAL ARENA (boss tier)
+  { slug:'gladiator',      name:'The Colosseum',    tag:'Imperial Rome · Tyrian Purple',        region:'🛡', tier:10 },
+  { slug:'ktv-karaoke',    name:'KTV Afterparty',   tag:'Neon midnight · Cashbox suite',        region:'🎤', tier:10 },
+  { slug:'prohibition-jazz',name:'Prohibition Jazz',tag:'Speakeasy · Bourbon Gold',             region:'🥃', tier:10 },
+];
+
+// ── Persistence ────────────────────────────────────────────────
+const LS_VISITED  = 'bg_visited_slugs';
+const LS_CLEARED  = 'bg_cleared_tiers';
+function loadSet(key) {
+  try { return new Set(JSON.parse(localStorage.getItem(key) || '[]')); }
+  catch (e) { return new Set(); }
+}
+function saveSet(key, set) {
+  try { localStorage.setItem(key, JSON.stringify([...set])); } catch (e) {}
+}
+const visited = loadSet(LS_VISITED);
+const cleared = loadSet(LS_CLEARED);
+
+function isTierUnlocked(t) {
+  // Tier 1: always playable. Tier N (N>1): requires clearing any stage
+  // in tier N-1. Clearing = clicking SELECT on that stage at least once.
+  if (t === 1) return true;
+  return cleared.has(t - 1);
+}
+
+// ── Audio (Web Audio API blips) ──────────────────────────────
+let audio = null;
+function ensureAudio() {
+  if (!audio) {
+    try { audio = new (window.AudioContext || window.webkitAudioContext)(); }
+    catch (e) { audio = null; }
+  }
+}
+function blip(freq = 440, dur = 0.06, type = 'square', vol = 0.06) {
+  ensureAudio();
+  if (!audio) return;
+  if (audio.state === 'suspended') audio.resume();
+  const o = audio.createOscillator();
+  const g = audio.createGain();
+  o.type = type; o.frequency.value = freq;
+  g.gain.value = vol;
+  g.gain.exponentialRampToValueAtTime(0.0001, audio.currentTime + dur);
+  o.connect(g); g.connect(audio.destination);
+  o.start();
+  o.stop(audio.currentTime + dur);
+}
+function selectChunk() {
+  // Two-blip "ka-CHUNK" arcade select sound
+  blip(660, 0.05, 'square', 0.08);
+  setTimeout(() => blip(220, 0.12, 'square', 0.10), 60);
+  setTimeout(() => blip(140, 0.18, 'sawtooth', 0.08), 140);
+}
+function lockedBuzz() {
+  blip(110, 0.18, 'sawtooth', 0.12);
+}
+function navBlip() { blip(540, 0.04, 'square', 0.04); }
+
+// ── Build deck ────────────────────────────────────────────────
+const deck = document.getElementById('deck');
+let idx = 0;
+
+STAGES.forEach((s, i) => {
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.dataset.slug = s.slug;
+  card.dataset.tier = s.tier;
+  const tier = TIERS[s.tier - 1];
+  card.style.setProperty('--tier-color', tier.color);
+  card.innerHTML = `
+    <div class="art" style="background-image:url('/preview-${s.slug}.jpg')"></div>
+    <div class="art-mask"></div>
+    <div class="corner">T${String(s.tier).padStart(2,'0')} · ${String(i+1).padStart(2,'0')}/${STAGES.length}</div>
+    <div class="region">${s.region}</div>
+    <div class="visited-badge">CLEARED</div>
+    <div class="meta">
+      <div class="name">${s.name}</div>
+      <div class="tag">${s.tag}</div>
+    </div>
+    <div class="lock">
+      <div class="icon">🔒</div>
+      <div class="req">${tier.subtitle.toUpperCase()}</div>
+    </div>
+  `;
+  card.addEventListener('click', () => {
+    if (i !== idx) { goto(i); return; }
+    select();
+  });
+  deck.appendChild(card);
+});
+
+// Find the first stage that's unlocked but not yet visited; that's the
+// "next play" target. If everything's cleared, default to last cleared.
+const firstUncleared = STAGES.findIndex(s => isTierUnlocked(s.tier) && !visited.has(s.slug));
+if (firstUncleared >= 0) idx = firstUncleared;
+
+// ── Layout the carousel ───────────────────────────────────────
+function layout() {
+  STAGES.forEach((s, i) => {
+    const card = deck.children[i];
+    const tier = TIERS[s.tier - 1];
+    const offset = i - idx;
+    const isCenter = offset === 0;
+    const unlocked = isTierUnlocked(s.tier);
+
+    card.classList.toggle('center', isCenter);
+    card.classList.toggle('locked', !unlocked);
+    card.classList.toggle('visited', visited.has(s.slug));
+
+    if (Math.abs(offset) > 4) {
+      card.style.display = 'none';
+      return;
+    }
+    card.style.display = 'block';
+
+    const dx = offset * 64;             // % horizontal spread
+    const dz = -Math.abs(offset) * 180; // depth
+    const ry = offset * -22;            // rotateY
+    const op = Math.max(0, 1 - Math.abs(offset) * 0.30);
+    card.style.setProperty('--ry', ry + 'deg');
+    card.style.transform =
+      `translate(-50%, -50%) translate3d(${dx}%, 0, ${dz}px) rotateY(${ry}deg)`;
+    card.style.opacity = op;
+    card.style.zIndex = 100 - Math.abs(offset);
+  });
+
+  // Bottom dock meta
+  const stage = STAGES[idx];
+  const tier = TIERS[stage.tier - 1];
+  document.querySelector('#stage-meta .num').textContent =
+    `STAGE ${String(idx + 1).padStart(2, '0')} OF ${String(STAGES.length).padStart(2, '0')}`;
+  document.querySelector('#stage-meta .tier-name').textContent =
+    `TIER ${stage.tier} · ${tier.name}`;
+
+  // Tier pip bar
+  const pips = document.getElementById('tier-bar');
+  pips.innerHTML = '';
+  for (let t = 1; t <= 10; t++) {
+    const pip = document.createElement('div');
+    pip.className = 'tier-pip';
+    if (cleared.has(t)) pip.classList.add('cleared');
+    if (t === stage.tier) pip.classList.add('current');
+    pip.title = TIERS[t - 1].name;
+    pips.appendChild(pip);
+  }
+
+  // SELECT button state
+  const btnSel = document.getElementById('btn-select');
+  btnSel.classList.toggle('locked', !isTierUnlocked(stage.tier));
+  btnSel.textContent = isTierUnlocked(stage.tier)
+    ? (visited.has(stage.slug) ? 'PLAY AGAIN' : 'SELECT STAGE')
+    : 'LOCKED';
+}
+
+// ── Navigation ────────────────────────────────────────────────
+function goto(i) {
+  idx = Math.max(0, Math.min(STAGES.length - 1, i));
+  navBlip();
+  layout();
+  hideHint();
+}
+function next() { goto(idx + 1); }
+function prev() { goto(idx - 1); }
+
+function select() {
+  const stage = STAGES[idx];
+  if (!isTierUnlocked(stage.tier)) {
+    // Locked → shake + buzz
+    lockedBuzz();
+    const card = deck.children[idx];
+    card.classList.remove('shake'); void card.offsetWidth; card.classList.add('shake');
+    return;
+  }
+  // Mark cleared + visited (visiting any stage = clearing its tier).
+  visited.add(stage.slug);  saveSet(LS_VISITED, visited);
+  cleared.add(stage.tier);  saveSet(LS_CLEARED, cleared);
+
+  selectChunk();
+  document.getElementById('flash').classList.remove('fire');
+  void document.getElementById('flash').offsetWidth;
+  document.getElementById('flash').classList.add('fire');
+
+  const splash = document.getElementById('load-splash');
+  splash.querySelector('.stage-name').textContent = stage.name.toUpperCase();
+  splash.querySelector('.stage-tier').textContent =
+    `TIER ${stage.tier} · ${TIERS[stage.tier - 1].name}`;
+  setTimeout(() => splash.classList.add('show'), 250);
+
+  setTimeout(() => {
+    location.href = `/road-to-${stage.slug}.html`;
+  }, 1100);
+}
+
+// ── Inputs ────────────────────────────────────────────────────
+document.getElementById('btn-prev').addEventListener('click', prev);
+document.getElementById('btn-next').addEventListener('click', next);
+document.getElementById('btn-select').addEventListener('click', select);
+document.getElementById('btn-home').addEventListener('click', () => location.href = '/');
+
+window.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft')  prev();
+  if (e.key === 'ArrowRight') next();
+  if (e.key === 'Enter' || e.key === ' ') select();
+});
+
+// Swipe gestures on the deck
+let touchX = null;
+deck.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; }, { passive:true });
+deck.addEventListener('touchend',   e => {
+  if (touchX === null) return;
+  const dx = e.changedTouches[0].clientX - touchX;
+  if (dx <  -40) next();
+  if (dx >   40) prev();
+  touchX = null;
+}, { passive:true });
+
+// "Insert coin" hint hides on first interaction
+let hintHidden = false;
+function hideHint() {
+  if (hintHidden) return;
+  hintHidden = true;
+  document.getElementById('coin-hint').classList.add('gone');
+}
+window.addEventListener('touchstart', hideHint, { once:true, passive:true });
+window.addEventListener('keydown',    hideHint, { once:true });
+
+// ── Service worker ───────────────────────────────────────────
+if ('serviceWorker' in navigator) {
+  try { navigator.serviceWorker.register('/sw.js'); } catch (e) {}
+}
+
+// Initial paint
+layout();
+</script>
+</body>
+</html>
