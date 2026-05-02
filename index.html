@@ -1,1435 +1,703 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Baccarat Gladiator — Play Free Now</title>
-<meta name="description" content="Live baccarat action across 6 iconic cities — Las Vegas, Macau, Monte Carlo and more. Free to play, no deposit required."/>
-<meta property="og:type"        content="website"/>
-<meta property="og:url"         content="https://baccaratgladiator.com/"/>
-<meta property="og:title"       content="Baccarat Gladiator — Play Free Now"/>
-<meta property="og:description" content="Conquer the baccarat arena across Las Vegas, Macau, Monte Carlo and beyond. Free to play · No deposit required."/>
-<meta property="og:image"       content="https://upload.wikimedia.org/wikipedia/commons/0/04/Das_Casino_von_Monte_Carlo_bei_Nacht_-_panoramio.jpg"/>
-<meta property="og:image:width"  content="3964"/>
-<meta property="og:image:height" content="2642"/>
-<meta property="og:image:alt"   content="Casino de Monte Carlo at night — Baccarat Gladiator"/>
-<meta name="twitter:card"        content="summary_large_image"/>
-<meta name="twitter:title"       content="Baccarat Gladiator — Play Free Now"/>
-<meta name="twitter:description" content="Conquer the baccarat arena across Las Vegas, Macau, Monte Carlo and beyond. Free to play · No deposit required."/>
-<meta name="twitter:image"       content="https://upload.wikimedia.org/wikipedia/commons/0/04/Das_Casino_von_Monte_Carlo_bei_Nacht_-_panoramio.jpg"/>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Cinzel+Decorative:wght@400;700&family=Raleway:wght@300;400;600&display=swap" rel="stylesheet">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#070012">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Stage Select — Baccarat Gladiator</title>
+<meta name="description" content="60 themed baccarat venues across 10 tiers. Clear a stage to unlock the next tier — final boss: The Colosseum.">
+<meta property="og:title" content="Baccarat Gladiator — Stage Select">
+<meta property="og:description" content="60 themed baccarat venues across 10 tiers. Clear a stage to unlock the next tier.">
+<meta property="og:image" content="https://baccaratgladiator.com/preview-nine.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://baccaratgladiator.com/preview-nine.jpg">
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="/baccarat-gladiator-logo.svg" type="image/svg+xml">
+<link rel="preload" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Orbitron:wght@500;700;900&family=Press+Start+2P&display=swap" as="style">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Orbitron:wght@500;700;900&family=Press+Start+2P&display=swap">
+
 <style>
-*{ margin:0; padding:0; box-sizing:border-box; }
-html,body{ width:100%; height:100%; background:#000; overflow:hidden; font-family:'Cinzel',serif; }
-
-/* ── LAYOUT ─────────────────────────────────────────────────── */
-#splash{
-  position:relative; width:100vw; height:100vh;
-  display:flex; overflow:hidden;
-}
-
-/* LEFT PANEL — city tour (full screen on mobile, ~62% on desktop) */
-#city-panel{
-  position:relative; flex:1; min-width:0; height:100%; overflow:hidden;
-}
-
-/* RIGHT PANEL — baccarat action */
-#bacc-panel{
-  position:relative; width:340px; flex-shrink:0; height:100%;
-  background:#000; overflow:hidden;
-  border-left:1px solid rgba(201,168,76,0.25);
-  display:flex; flex-direction:column;
-}
-@media(max-width:820px){
-  #splash{ flex-direction:column; }
-  #city-panel{ flex:1 1 0; min-height:0; }
-  #bacc-panel{
-    display:flex; width:100%; height:200px; flex-shrink:0;
-    border-left:none; border-top:1px solid rgba(201,168,76,0.2);
-  }
-  #bacc-panel-header{ padding:7px 14px 5px; }
-  .bacc-panel-title{ font-size:0.6rem; }
-}
-
-/* ── CITY BACKGROUNDS ────────────────────────────────────────── */
-.city-bg{
-  position:absolute; inset:0;
-  opacity:0; transition:opacity 1.4s ease;
-  will-change:opacity;
-}
-.city-bg.active{ opacity:1; }
-.city-bg img{
-  position:absolute; inset:0;
-  width:100%; height:100%; object-fit:cover; object-position:center 30%;
-}
-.city-bg .grad-fallback{
-  position:absolute; inset:0;
-}
-
-/* Cinematic layers */
-.city-vignette{
-  position:absolute; inset:0; z-index:2;
-  background:radial-gradient(ellipse at 50% 40%, transparent 20%, rgba(0,0,0,0.5) 70%, rgba(0,0,0,0.85) 100%);
-  pointer-events:none;
-}
-.city-bottom-fade{
-  position:absolute; bottom:0; left:0; right:0; height:60%; z-index:3;
-  background:linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.6) 40%, transparent 100%);
-  pointer-events:none;
-}
-.city-left-fade{
-  position:absolute; top:0; left:0; bottom:0; width:15%; z-index:3;
-  background:linear-gradient(to right, rgba(0,0,0,0.6), transparent);
-  pointer-events:none;
-}
-
-/* SVG skylines sit at bottom of each city-bg */
-.city-skyline{
-  position:absolute; bottom:0; left:0; right:0; z-index:4;
-  pointer-events:none;
-}
-
-/* ── CITY ANNOUNCE ───────────────────────────────────────────── */
-#city-announce{
-  position:absolute; top:0; left:0; right:0; bottom:0; z-index:10;
-  display:flex; flex-direction:column; align-items:center; justify-content:center;
-  pointer-events:none;
-}
-.city-flag-emoji{
-  font-size:clamp(2rem,6vw,4rem);
-  opacity:0; transform:scale(0.5);
-  transition:opacity 0.5s ease, transform 0.5s ease;
-  filter:drop-shadow(0 0 20px rgba(255,255,255,0.3));
-}
-.city-flag-emoji.show{ opacity:1; transform:scale(1); }
-
-.city-name-text{
-  font-family:'Cinzel Decorative',serif;
-  font-size:clamp(1.8rem,5.5vw,4.2rem);
-  font-weight:700; letter-spacing:0.06em;
-  color:#fff;
-  text-shadow:0 0 40px var(--city-accent,#c9a84c), 0 2px 12px rgba(0,0,0,0.9);
-  margin:6px 0 4px; text-align:center; padding:0 20px;
-  opacity:0; transform:translateY(20px);
-  transition:opacity 0.6s ease 0.15s, transform 0.6s ease 0.15s;
-}
-.city-name-text.show{ opacity:1; transform:translateY(0); }
-
-.city-tagline-text{
-  font-family:'Raleway',sans-serif;
-  font-size:clamp(0.65rem,2vw,0.95rem);
-  letter-spacing:0.22em; color:var(--city-accent,#c9a84c);
-  text-transform:uppercase; text-align:center;
-  opacity:0; transform:translateY(10px);
-  transition:opacity 0.5s ease 0.35s, transform 0.5s ease 0.35s;
-}
-.city-tagline-text.show{ opacity:1; transform:translateY(0); }
-
-/* ── GLADIATOR TRAVELER ──────────────────────────────────────── */
-#gladiator-wrap{
-  position:absolute; bottom:clamp(90px,18%,200px); z-index:12;
-  pointer-events:none;
-  transition:left 0.6s cubic-bezier(0.4,0,0.2,1);
-}
-#gladiator-svg{
-  width:clamp(54px,8vw,90px); height:auto;
-  filter:drop-shadow(0 4px 16px rgba(201,168,76,0.45));
-  animation:glad-walk 0.55s steps(2) infinite;
-}
-@keyframes glad-walk{
-  0%  { transform:translateY(0) scaleX(1); }
-  50% { transform:translateY(-4px) scaleX(1); }
-  100%{ transform:translateY(0) scaleX(1); }
-}
-#gladiator-wrap.traveling #gladiator-svg{
-  animation:glad-run 0.3s steps(2) infinite;
-}
-@keyframes glad-run{
-  0%  { transform:translateY(0) skewX(-5deg); }
-  50% { transform:translateY(-6px) skewX(-8deg); }
-  100%{ transform:translateY(0) skewX(-5deg); }
-}
-#gladiator-wrap.exiting{ animation:glad-exit 0.45s ease forwards; }
-@keyframes glad-exit{
-  to{ transform:translateX(120px); opacity:0; }
-}
-#gladiator-wrap.entering{ animation:glad-enter 0.45s ease forwards; }
-@keyframes glad-enter{
-  from{ transform:translateX(-100px); opacity:0; }
-  to  { transform:translateX(0); opacity:1; }
-}
-
-/* ── JOURNEY DOTS ────────────────────────────────────────────── */
-#journey-track{
-  position:absolute; bottom:clamp(12px,3vh,22px); left:50%; transform:translateX(-50%);
-  z-index:20; display:flex; align-items:center; gap:10px;
-}
-.j-dot{
-  width:8px; height:8px; border-radius:50%;
-  background:rgba(255,255,255,0.2);
-  border:1px solid rgba(201,168,76,0.3);
-  cursor:pointer; transition:all 0.3s;
-}
-.j-dot.active{
-  background:var(--city-accent,#c9a84c);
-  border-color:var(--city-accent,#c9a84c);
-  box-shadow:0 0 10px var(--city-accent,#c9a84c);
-  transform:scale(1.4);
-}
-.j-dot:hover:not(.active){ background:rgba(201,168,76,0.5); }
-
-/* ── TITLE OVERLAY ───────────────────────────────────────────── */
-#title-overlay{
-  position:absolute; bottom:0; left:0; right:0; z-index:15;
-  display:flex; flex-direction:column; align-items:center;
-  padding-bottom:max(clamp(60px,12vh,100px), calc(env(safe-area-inset-bottom, 0px) + 48px));
-  text-align:center;
-}
-.splash-sub{ font-size:clamp(0.55rem,1.6vw,0.78rem); letter-spacing:0.18em; color:rgba(201,168,76,0.65); margin-bottom:4px; }
-.splash-title{
-  font-family:'Cinzel Decorative',serif;
-  font-size:clamp(2rem,6vw,4.2rem); font-weight:700; line-height:1;
-  color:#fff; letter-spacing:0.06em;
-  text-shadow:0 0 50px rgba(201,168,76,0.55), 0 0 100px rgba(201,168,76,0.2), 2px 2px 12px rgba(0,0,0,0.95);
-}
-.splash-title span{ color:#c9a84c; }
-.splash-divider{
-  width:clamp(100px,25vw,240px); height:1px;
-  background:linear-gradient(90deg, transparent, #c9a84c, transparent);
-  margin:clamp(8px,2vh,16px) auto;
-}
-.splash-tagline{ font-size:clamp(0.55rem,1.6vw,0.78rem); letter-spacing:0.16em; color:rgba(240,230,200,0.55); margin-bottom:clamp(18px,3.5vh,36px); }
-.enter-btn{
-  font-family:'Cinzel',serif; font-size:clamp(0.82rem,2.4vw,0.96rem);
-  letter-spacing:0.1em; text-transform:uppercase; color:#0a0800;
-  background:linear-gradient(135deg,#f0d080,#c9a84c,#a07830);
-  border:none; border-radius:3px;
-  padding:clamp(14px,2.5vh,17px) clamp(32px,6vw,52px);
-  min-height:52px; min-width:220px;
-  cursor:pointer; position:relative; overflow:hidden;
-  box-shadow:0 0 24px rgba(201,168,76,0.55), 0 4px 22px rgba(0,0,0,0.65);
-  animation:fadeUp 1s ease 0.6s both;
-  transition:transform 0.14s, box-shadow 0.14s;
-  -webkit-tap-highlight-color:transparent;
+* { margin:0; padding:0; box-sizing:border-box;
+    -webkit-tap-highlight-color:transparent; -webkit-user-select:none;
+    user-select:none; -webkit-touch-callout:none; }
+html,body {
+  width:100%; height:100vh; height:100dvh; overflow:hidden;
+  overscroll-behavior:none; -webkit-overflow-scrolling:auto;
+  background:#040008;
+  color:#f0e3c0;
+  font-family:'Orbitron','Inter',-apple-system,sans-serif;
   touch-action:manipulation;
 }
-.enter-btn::before{ content:''; position:absolute; inset:0; background:linear-gradient(135deg,rgba(255,255,255,0.28),transparent); pointer-events:none; }
-.enter-btn:hover{ transform:scale(1.05); box-shadow:0 0 40px rgba(201,168,76,0.75),0 6px 28px rgba(0,0,0,0.7); }
-.enter-btn:active{ transform:scale(0.97); }
-.trial-note{ margin-top:10px; font-size:clamp(0.5rem,1.3vw,0.6rem); color:rgba(240,230,200,0.3); letter-spacing:0.12em; animation:fadeIn 1s ease 1.2s both; }
 
-/* ── TOP CONTROLS ────────────────────────────────────────────── */
-#top-controls{
-  position:absolute; top:clamp(10px,3vh,22px); right:clamp(10px,3vw,22px);
-  z-index:30; display:flex; gap:8px; align-items:center;
+/* ── CRT cabinet backdrop ──────────────────────────────────────
+   Deep purple haze + soft starfield, with subtle scanlines for the
+   arcade-cabinet feel. */
+#cabinet-bg { position:fixed; inset:0; z-index:0;
+  background:
+    radial-gradient(ellipse at 50% 35%, #1a0530 0%, #0a0218 45%, #040008 100%),
+    radial-gradient(circle at 20% 80%, rgba(255,40,180,0.08) 0%, transparent 40%),
+    radial-gradient(circle at 80% 20%, rgba(80,200,255,0.10) 0%, transparent 45%);
 }
-.ctrl-btn{
-  background:rgba(0,0,0,0.5); border:1px solid rgba(201,168,76,0.35);
-  border-radius:6px; color:rgba(201,168,76,0.8);
-  font-size:clamp(0.72rem,1.8vw,0.9rem); padding:6px 11px;
-  cursor:pointer; font-family:'Cinzel',serif; transition:all 0.2s;
-}
-.ctrl-btn:hover{ border-color:#c9a84c; color:#c9a84c; background:rgba(0,0,0,0.65); }
-.spqr-badge{ font-size:clamp(0.5rem,1.2vw,0.62rem); color:rgba(201,168,76,0.4); letter-spacing:0.2em; }
+#scanlines { position:fixed; inset:0; z-index:50; pointer-events:none;
+  background:repeating-linear-gradient(0deg,
+    rgba(0,0,0,0)   0px, rgba(0,0,0,0)   2px,
+    rgba(0,0,0,0.18) 2px, rgba(0,0,0,0.18) 3px);
+  mix-blend-mode:multiply; opacity:0.55; }
 
-/* ── BACCARAT PANEL ──────────────────────────────────────────── */
-#bacc-panel-header{
-  padding:12px 14px 8px;
-  border-bottom:1px solid rgba(201,168,76,0.2);
-  background:rgba(5,12,6,0.9); flex-shrink:0;
+/* Subtle drifting star specks behind everything */
+#starfield { position:fixed; inset:0; z-index:1; pointer-events:none;
+  background-image:
+    radial-gradient(1px 1px at 12% 14%, rgba(255,210,255,0.6), transparent),
+    radial-gradient(1px 1px at 24% 70%, rgba(180,220,255,0.5), transparent),
+    radial-gradient(1px 1px at 41% 22%, rgba(255,255,255,0.4), transparent),
+    radial-gradient(1px 1px at 67% 48%, rgba(255,200,150,0.5), transparent),
+    radial-gradient(1px 1px at 82% 78%, rgba(200,180,255,0.5), transparent),
+    radial-gradient(1px 1px at 91% 18%, rgba(255,255,255,0.5), transparent);
+  animation: stars 80s linear infinite;
 }
-.bacc-panel-title{
-  font-family:'Cinzel',serif; font-size:0.68rem; color:#c9a84c;
-  letter-spacing:0.12em; text-align:center;
-}
-.live-badge{
-  display:inline-flex; align-items:center; gap:4px;
-  background:rgba(180,20,20,0.7); color:#fff;
-  font-size:0.55rem; letter-spacing:0.1em;
-  padding:2px 7px; border-radius:10px;
-  margin-left:6px; font-family:'Cinzel',serif;
-}
-.live-dot{ width:5px; height:5px; border-radius:50%; background:#ff4444; animation:live-blink 1s infinite; }
-@keyframes live-blink{ 0%,100%{opacity:1}50%{opacity:0.2} }
+@keyframes stars { from { background-position:0 0; } to { background-position:0 -200px; } }
 
-#bacc-canvas-wrap{
-  flex:1; position:relative; background:linear-gradient(180deg,#020e05,#031508);
+/* ── Marquee — chrome/neon header ──────────────────────────── */
+#marquee { position:fixed; top:0; left:0; right:0; z-index:20;
+  padding:14px 16px max(12px,env(safe-area-inset-top)) 16px;
+  padding-top:max(14px,env(safe-area-inset-top));
+  text-align:center;
+  background:linear-gradient(180deg, rgba(20,4,30,0.92), rgba(20,4,30,0.4) 70%, transparent);
+  backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); }
+#marquee .pre { font-family:'Press Start 2P','Orbitron',monospace;
+  font-size:0.55rem; letter-spacing:4px; color:#ff6cfa;
+  text-shadow:0 0 6px #ff48d8, 0 0 12px #c818a8;
+  margin-bottom:6px; }
+#marquee .title { font-family:'Cinzel',serif; font-weight:900;
+  font-size:1.5rem; letter-spacing:5px;
+  background:linear-gradient(180deg, #ffe7a0 0%, #f5c450 35%, #b07f1c 60%, #ffe7a0 80%, #fff5c8 100%);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  filter:drop-shadow(0 0 6px rgba(255,200,80,0.55));
+  text-shadow:0 2px 0 rgba(0,0,0,0.6);
+  display:inline-block; padding:0 14px; }
+#marquee .sub { font-family:'Orbitron',sans-serif; font-weight:700;
+  font-size:0.62rem; letter-spacing:7px; color:#9affe7;
+  text-shadow:0 0 4px #4adfd3, 0 0 10px #1a8a85;
+  margin-top:4px; animation: pre-blink 1.2s steps(2) infinite; }
+@keyframes pre-blink { from { opacity:1; } 50% { opacity:0.65; } to { opacity:1; } }
+
+/* Chrome rail under marquee */
+#marquee::after { content:""; display:block; height:2px; margin:14px auto 0; max-width:80%;
+  background:linear-gradient(90deg, transparent, #c5b358 12%, #fff5c8 50%, #c5b358 88%, transparent);
+  filter:drop-shadow(0 0 4px rgba(255,200,80,0.6)); }
+
+/* ── 3D carousel deck ──────────────────────────────────────── */
+#deck-frame { position:fixed; left:50%; top:50%; transform:translate(-50%, -52%);
+  width:100%; max-width:600px; height:64vh; max-height:640px;
+  perspective:1200px; perspective-origin:50% 50%; z-index:10;
+  pointer-events:none; }
+
+#deck { position:absolute; inset:0;
+  transform-style:preserve-3d; pointer-events:auto; }
+
+.card { position:absolute; left:50%; top:50%;
+  width:78%; aspect-ratio:1200/630;
+  transform:translate(-50%, -50%);
+  border-radius:14px; overflow:hidden;
+  background:#1a0a2a;
+  box-shadow:
+    0 12px 28px rgba(0,0,0,0.7),
+    0 0 0 2px rgba(255,255,255,0.06),
+    inset 0 0 0 1px rgba(255,255,255,0.1);
+  transition: transform 360ms cubic-bezier(.2,.7,.25,1),
+              opacity   360ms ease,
+              filter    360ms ease;
+  cursor:pointer; }
+
+/* Card art: preview JPG fills, name + tagline overlay */
+.card .art { position:absolute; inset:0; background-size:cover; background-position:center;
+  background-color:#1a0a2a; }
+.card .art-mask { position:absolute; inset:0;
+  background:linear-gradient(180deg,
+    rgba(0,0,0,0)   0%,
+    rgba(0,0,0,0.0) 50%,
+    rgba(0,0,0,0.55) 78%,
+    rgba(0,0,0,0.85) 100%); }
+.card .meta { position:absolute; left:14px; right:14px; bottom:12px;
+  text-align:left; }
+.card .meta .name { font-family:'Cinzel',serif; font-weight:900;
+  font-size:1.15rem; letter-spacing:2px; color:#fff;
+  text-shadow:0 2px 6px rgba(0,0,0,0.85); line-height:1.05; }
+.card .meta .tag { font-family:'Orbitron',sans-serif; font-weight:500;
+  font-size:0.62rem; letter-spacing:1.5px; color:#ffe1a8;
+  text-shadow:0 2px 4px rgba(0,0,0,0.85);
+  margin-top:3px; }
+.card .corner { position:absolute; top:9px; left:9px;
+  font-family:'Press Start 2P','Orbitron',monospace; font-size:0.5rem;
+  letter-spacing:2px; padding:5px 8px; border-radius:4px;
+  background:rgba(0,0,0,0.65); border:1px solid rgba(255,200,80,0.45);
+  color:#ffe1a8; text-shadow:0 0 4px rgba(255,200,80,0.6); }
+.card .region { position:absolute; top:9px; right:9px;
+  font-size:1rem; padding:4px 7px; border-radius:4px;
+  background:rgba(0,0,0,0.55); }
+
+/* Tier-color accent rail across the top of every card */
+.card::before { content:""; position:absolute; top:0; left:0; right:0; height:4px;
+  background:var(--tier-color, #c5b358);
+  box-shadow:0 0 14px var(--tier-color, #c5b358); z-index:2; }
+
+/* Locked card overlay */
+.card.locked .art { filter:grayscale(0.85) brightness(0.45); }
+.card.locked .art-mask { background:linear-gradient(180deg,
+    rgba(20,5,30,0.55) 0%, rgba(20,5,30,0.85) 100%); }
+.card.locked .meta .name { color:#888; text-shadow:0 0 8px rgba(120,80,160,0.4); }
+.card .lock { display:none; }
+.card.locked .lock { display:flex; position:absolute; inset:0;
+  align-items:center; justify-content:center; flex-direction:column;
+  z-index:3; pointer-events:none; }
+.card.locked .lock .icon { font-size:3.4rem;
+  filter:drop-shadow(0 0 12px rgba(255,180,80,0.4)); opacity:0.7; }
+.card.locked .lock .req { font-family:'Press Start 2P',monospace;
+  font-size:0.5rem; letter-spacing:2px; color:#ffc060;
+  text-shadow:0 0 4px rgba(255,160,40,0.6);
+  margin-top:10px; padding:6px 10px;
+  background:rgba(0,0,0,0.7); border-radius:4px;
+  border:1px solid rgba(255,180,80,0.4); text-align:center; }
+.card.locked.shake { animation:lock-shake 0.45s ease-in-out; }
+@keyframes lock-shake {
+  0%,100% { transform:translate(-50%, -50%) rotateY(var(--ry,0deg)) translateX(0); }
+  20%     { transform:translate(-50%, -50%) rotateY(var(--ry,0deg)) translateX(-8px); }
+  40%     { transform:translate(-50%, -50%) rotateY(var(--ry,0deg)) translateX(8px); }
+  60%     { transform:translate(-50%, -50%) rotateY(var(--ry,0deg)) translateX(-5px); }
+  80%     { transform:translate(-50%, -50%) rotateY(var(--ry,0deg)) translateX(5px); }
+}
+
+/* Centered card glows hot */
+.card.center {
+  filter:drop-shadow(0 0 18px var(--tier-color, #c5b358)); }
+.card.center::after { content:""; position:absolute; inset:-3px; border-radius:16px;
+  border:2px solid var(--tier-color, #c5b358);
+  box-shadow:inset 0 0 14px var(--tier-color, #c5b358),
+             0 0 18px var(--tier-color, #c5b358);
+  opacity:0.85; pointer-events:none; animation:center-pulse 2.4s ease-in-out infinite; }
+@keyframes center-pulse {
+  0%,100% { opacity:0.55; }
+  50%     { opacity:0.95; }
+}
+
+/* ── Bottom controls ─────────────────────────────────────── */
+#dock { position:fixed; bottom:0; left:0; right:0; z-index:30;
+  padding:12px 14px max(14px,env(safe-area-inset-bottom));
+  background:linear-gradient(0deg, rgba(20,4,30,0.92), rgba(20,4,30,0.55) 70%, transparent);
+  backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); }
+
+#tier-bar { display:flex; gap:5px; justify-content:center;
+  margin-bottom:10px; flex-wrap:nowrap; padding:0 4px; }
+.tier-pip { flex:1; height:5px; max-width:24px; border-radius:2px;
+  background:rgba(255,255,255,0.12); transition:background 200ms;
+  box-shadow:inset 0 1px 0 rgba(0,0,0,0.4); }
+.tier-pip.cleared { background:linear-gradient(90deg, #c5b358, #ffe7a0);
+  box-shadow:0 0 6px rgba(255,200,80,0.7); }
+.tier-pip.current { background:linear-gradient(90deg, #ff6cfa, #c818a8);
+  box-shadow:0 0 8px rgba(255,108,250,0.9); }
+
+#stage-meta { text-align:center; margin-bottom:10px; }
+#stage-meta .num { font-family:'Press Start 2P',monospace; font-size:0.55rem;
+  letter-spacing:3px; color:#9affe7; text-shadow:0 0 4px #4adfd3; }
+#stage-meta .tier-name { font-family:'Cinzel',serif; font-weight:700;
+  font-size:0.78rem; letter-spacing:4px; color:#ffe1a8;
+  text-shadow:0 0 6px rgba(255,200,80,0.5);
+  margin-top:3px; }
+
+#controls { display:flex; align-items:center; gap:10px; }
+.arrow {
+  flex:0 0 56px; height:56px; border-radius:14px;
+  background:linear-gradient(180deg, #2a0d40 0%, #1a0220 100%);
+  border:2px solid rgba(255,200,80,0.45);
+  color:#ffe1a8; font-size:1.5rem;
   display:flex; align-items:center; justify-content:center;
-}
-#bacc-canvas{ display:block; }
+  cursor:pointer; touch-action:manipulation;
+  box-shadow:
+    0 4px 0 #4a0820,
+    0 6px 14px rgba(0,0,0,0.6),
+    inset 0 1px 0 rgba(255,255,255,0.15);
+  transition:transform 60ms ease, box-shadow 60ms ease; }
+.arrow:active { transform:translateY(3px);
+  box-shadow:0 1px 0 #4a0820, 0 2px 6px rgba(0,0,0,0.5),
+             inset 0 1px 0 rgba(255,255,255,0.15); }
 
-/* Instruction overlay shown at start */
-#bacc-instruction{
-  position:absolute; inset:0; z-index:5; display:flex; flex-direction:column;
-  align-items:center; justify-content:center; background:rgba(0,0,0,0.7);
-  cursor:pointer; transition:opacity 0.4s;
+#btn-select {
+  flex:1; height:62px; border-radius:14px; border:none;
+  background:
+    linear-gradient(180deg, #fff5c8 0%, #ffd75a 30%, #d8a430 60%, #8a6418 100%);
+  color:#3a1810; cursor:pointer; touch-action:manipulation;
+  font-family:'Cinzel',serif; font-weight:900; letter-spacing:6px;
+  font-size:1.05rem;
+  text-shadow:0 1px 0 rgba(255,255,255,0.4);
+  box-shadow:
+    0 5px 0 #6a3818,
+    0 7px 18px rgba(255,180,40,0.45),
+    inset 0 1px 0 rgba(255,255,255,0.6),
+    inset 0 -2px 0 rgba(0,0,0,0.25);
+  transition:transform 80ms ease, box-shadow 80ms ease, filter 200ms ease;
+  position:relative; overflow:hidden; }
+#btn-select::after { content:""; position:absolute; inset:0;
+  background:linear-gradient(180deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0) 50%);
+  pointer-events:none; }
+#btn-select:active { transform:translateY(4px);
+  box-shadow:0 1px 0 #6a3818, 0 3px 8px rgba(255,180,40,0.4),
+             inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -2px 0 rgba(0,0,0,0.25); }
+#btn-select.locked { filter:grayscale(0.65) brightness(0.55); cursor:not-allowed; }
+#btn-select { animation: select-pulse 1.6s ease-in-out infinite; }
+@keyframes select-pulse {
+  0%,100% { filter:brightness(1); }
+  50%     { filter:brightness(1.15) drop-shadow(0 0 12px rgba(255,200,80,0.7)); }
 }
-#bacc-instruction p{ font-size:0.7rem; color:rgba(240,230,200,0.55); letter-spacing:0.08em; text-align:center; margin-top:8px; }
-.play-icon{ font-size:2.8rem; color:rgba(201,168,76,0.8); animation:pulse-play 2s infinite; }
-@keyframes pulse-play{ 0%,100%{transform:scale(1);opacity:0.8}50%{transform:scale(1.12);opacity:1} }
+#btn-select.locked { animation:none; }
 
-/* Result flash for canvas */
-#bacc-result{
-  position:absolute; bottom:0; left:0; right:0; z-index:6;
-  padding:8px; text-align:center;
-  font-family:'Cinzel',serif; font-size:0.82rem; letter-spacing:0.08em;
-  opacity:0; transition:opacity 0.3s;
-}
-#bacc-result.show{ opacity:1; }
+/* "Insert coin" hint that fades after first interaction */
+#coin-hint { position:fixed; left:50%; bottom:calc(120px + env(safe-area-inset-bottom));
+  transform:translateX(-50%); z-index:25; pointer-events:none;
+  font-family:'Press Start 2P',monospace; font-size:0.55rem; letter-spacing:3px;
+  color:#ffe1a8; text-shadow:0 0 6px rgba(255,200,80,0.6);
+  animation: pre-blink 0.9s steps(2) infinite; opacity:0.92;
+  transition:opacity 600ms ease; }
+#coin-hint.gone { opacity:0; }
 
-/* ── FLASH ───────────────────────────────────────────────────── */
-#flash{
-  position:fixed; inset:0; z-index:999; background:#fff;
-  opacity:0; pointer-events:none; transition:opacity 0.08s;
-}
-#flash.on{ opacity:0.75; }
-
-/* ── PARTICLES ───────────────────────────────────────────────── */
-.particle{
-  position:absolute; width:3px; height:3px; border-radius:50%;
-  background:#c9a84c; pointer-events:none; z-index:8;
-  animation:floatUp var(--dur) ease-in var(--delay) infinite;
-  left:var(--x); bottom:-8px; opacity:0;
-}
-@keyframes floatUp{
-  0%  { transform:translateY(0) scale(1); opacity:0; }
-  8%  { opacity:0.7; }
-  85% { opacity:0.25; }
-  100%{ transform:translateY(-88vh) translateX(var(--drift)) scale(0); opacity:0; }
+/* Card flash on SELECT */
+#flash { position:fixed; inset:0; z-index:60; pointer-events:none;
+  background:radial-gradient(circle at 50% 50%, #fff 0%, #ffd75a 30%, transparent 60%);
+  opacity:0; transition:opacity 200ms ease; }
+#flash.fire { animation: flash-burst 750ms ease-out forwards; }
+@keyframes flash-burst {
+  0%   { opacity:0; }
+  20%  { opacity:1; }
+  100% { opacity:0; }
 }
 
-/* ── ANIMATIONS ──────────────────────────────────────────────── */
-@keyframes fadeUp{ from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)} }
-@keyframes fadeIn{ from{opacity:0}to{opacity:1} }
+/* Loading splash that briefly shows the chosen stage's name before nav */
+#load-splash { position:fixed; inset:0; z-index:70; pointer-events:none;
+  background:#040008; display:flex; align-items:center; justify-content:center;
+  flex-direction:column; opacity:0; transition:opacity 200ms ease; }
+#load-splash.show { opacity:1; pointer-events:auto; }
+#load-splash .stage-name { font-family:'Cinzel',serif; font-weight:900;
+  font-size:2rem; letter-spacing:6px; color:#ffe1a8;
+  text-shadow:0 0 16px rgba(255,200,80,0.85); }
+#load-splash .stage-tier { font-family:'Press Start 2P',monospace;
+  font-size:0.65rem; letter-spacing:4px; color:#9affe7;
+  text-shadow:0 0 8px rgba(74,223,211,0.6); margin-top:14px; }
+#load-splash .bar { margin-top:24px; width:60%; max-width:300px; height:5px;
+  border-radius:2px; background:rgba(255,255,255,0.1);
+  overflow:hidden; position:relative; }
+#load-splash .bar::after { content:""; position:absolute; inset:0;
+  background:linear-gradient(90deg, #ff6cfa, #ffe7a0);
+  width:0; transition:width 700ms ease-out; }
+#load-splash.show .bar::after { width:100%; }
 
-/* nav arrows */
-.city-nav{
-  position:absolute; top:50%; transform:translateY(-50%); z-index:20;
-  background:rgba(0,0,0,0.45); border:1px solid rgba(201,168,76,0.3);
-  color:rgba(201,168,76,0.7); width:36px; height:52px; border-radius:4px;
-  display:flex; align-items:center; justify-content:center;
-  font-size:1.1rem; cursor:pointer; transition:all 0.2s; user-select:none;
-}
-.city-nav:hover{ background:rgba(0,0,0,0.65); border-color:#c9a84c; color:#c9a84c; }
-#city-prev{ left:8px; }
-#city-next{ right:8px; }
-@media(max-width:480px){ .city-nav{ display:none; } }
-@media(max-width:600px){
-  #title-overlay{
-    bottom:auto;
-    top:50%;
-    transform:translateY(-50%);
-    padding-bottom:0;
-    justify-content:center;
-  }
+/* Top-left back-to-home */
+#btn-home { position:fixed; top:max(14px,env(safe-area-inset-top));
+  left:14px; width:42px; height:42px; padding:0; z-index:25;
+  border-radius:10px; border:1px solid rgba(255,200,80,0.45);
+  background:rgba(0,0,0,0.55); color:#ffe1a8; font-size:0.85rem;
+  backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+  cursor:pointer;
+  font-family:'Press Start 2P','Orbitron',monospace; letter-spacing:1px; }
+
+/* Visited badge — stamped on cards you've already cleared */
+.card.visited .visited-badge { display:flex; }
+.card .visited-badge { display:none; position:absolute; top:9px;
+  right:48px; font-family:'Press Start 2P',monospace; font-size:0.4rem;
+  letter-spacing:2px; padding:4px 6px; border-radius:3px;
+  background:rgba(40,180,90,0.85); color:#fff; text-shadow:0 1px 0 rgba(0,0,0,0.5);
+  z-index:3; border:1px solid rgba(255,255,255,0.25); }
+
+/* iOS short-screen tweak */
+@media (max-height: 700px) {
+  #marquee .title { font-size:1.25rem; letter-spacing:4px; }
+  #marquee .pre   { font-size:0.5rem; }
+  #marquee .sub   { font-size:0.55rem; }
+  #deck-frame { height:54vh; }
+  .card .meta .name { font-size:1rem; }
 }
 </style>
 </head>
 <body>
 
+<div id="cabinet-bg"></div>
+<div id="starfield"></div>
+
+<header id="marquee">
+  <div class="pre">★ INSERT COIN ★</div>
+  <h1 class="title">BACCARAT GLADIATOR</h1>
+  <div class="sub">SELECT YOUR STAGE</div>
+</header>
+
+<button id="btn-home" aria-label="About" title="Marketing splash">i</button>
+
+<div id="deck-frame">
+  <div id="deck"></div>
+</div>
+
+<div id="coin-hint">SWIPE OR TAP ◀ ▶</div>
+
+<div id="dock">
+  <div id="tier-bar" aria-label="Tier progress"></div>
+  <div id="stage-meta">
+    <div class="num"></div>
+    <div class="tier-name"></div>
+  </div>
+  <div id="controls">
+    <button class="arrow" id="btn-prev" aria-label="Previous stage">◀</button>
+    <button id="btn-select">SELECT STAGE</button>
+    <button class="arrow" id="btn-next" aria-label="Next stage">▶</button>
+  </div>
+</div>
+
 <div id="flash"></div>
 
-<div id="splash">
-
-  <!-- ═══════ LEFT: CITY PANEL ═══════ -->
-  <div id="city-panel">
-
-    <!-- Six city backgrounds (photo + gradient fallback + skyline SVG) -->
-
-    <!-- 0: Las Vegas -->
-    <div class="city-bg active" id="city-bg-0">
-      <div class="grad-fallback" style="background:linear-gradient(180deg,#06001a 0%,#140035 25%,#2d0068 50%,#6600aa 72%,#bb3300 88%,#ff7700 100%)"></div>
-      <img src="https://images.unsplash.com/photo-1605833556294-ea5c7a74f57d?auto=format&fit=crop&w=1200&q=80" alt="Las Vegas" onerror="this.style.display='none'">
-      <div class="city-vignette"></div><div class="city-bottom-fade"></div><div class="city-left-fade"></div>
-      <svg class="city-skyline" viewBox="0 0 1200 220" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-        <!-- Vegas: pyramid, hotels, Eiffel replica, strip towers -->
-        <polygon points="80,180 140,60 200,180" fill="rgba(0,0,0,0.85)"/>
-        <rect x="210" y="80" width="50" height="100" fill="rgba(0,0,0,0.85)"/><rect x="215" y="60" width="40" height="22" fill="rgba(0,0,0,0.85)"/>
-        <rect x="275" y="50" width="70" height="130" fill="rgba(0,0,0,0.85)"/><rect x="290" y="30" width="40" height="22" fill="rgba(0,0,0,0.85)"/>
-        <!-- Eiffel-style tower -->
-        <polygon points="370,180 380,100 400,80 420,100 430,180" fill="rgba(0,0,0,0.85)"/>
-        <line x1="400" y1="80" x2="400" y2="45" stroke="rgba(0,0,0,0.85)" stroke-width="4"/>
-        <rect x="355" y="115" width="90" height="8" fill="rgba(0,0,0,0.85)"/><rect x="368" y="98" width="64" height="6" fill="rgba(0,0,0,0.85)"/>
-        <rect x="450" y="60" width="80" height="120" fill="rgba(0,0,0,0.85)"/><rect x="460" y="40" width="60" height="22" fill="rgba(0,0,0,0.85)"/>
-        <rect x="545" y="90" width="55" height="90" fill="rgba(0,0,0,0.85)"/>
-        <rect x="615" y="45" width="90" height="135" fill="rgba(0,0,0,0.85)"/><rect x="625" y="25" width="70" height="22" fill="rgba(0,0,0,0.85)"/>
-        <rect x="720" y="70" width="60" height="110" fill="rgba(0,0,0,0.85)"/>
-        <rect x="795" y="55" width="75" height="125" fill="rgba(0,0,0,0.85)"/><rect x="808" y="35" width="49" height="22" fill="rgba(0,0,0,0.85)"/>
-        <rect x="885" y="80" width="50" height="100" fill="rgba(0,0,0,0.85)"/>
-        <rect x="950" y="50" width="80" height="130" fill="rgba(0,0,0,0.85)"/>
-        <rect x="1045" y="75" width="60" height="105" fill="rgba(0,0,0,0.85)"/>
-        <rect x="1120" y="95" width="80" height="85" fill="rgba(0,0,0,0.85)"/>
-        <!-- ground -->
-        <rect x="0" y="178" width="1200" height="42" fill="rgba(0,0,0,0.88)"/>
-        <!-- neon windows glow -->
-        <rect x="278" y="55" width="64" height="14" fill="rgba(204,102,255,0.25)" rx="2"/>
-        <rect x="460" y="44" width="58" height="14" fill="rgba(255,100,0,0.2)" rx="2"/>
-        <rect x="618" y="28" width="66" height="16" fill="rgba(100,200,255,0.2)" rx="2"/>
-      </svg>
-    </div>
-
-    <!-- 1: Atlantic City -->
-    <div class="city-bg" id="city-bg-1">
-      <div class="grad-fallback" style="background:linear-gradient(180deg,#020810 0%,#040e20 30%,#071530 55%,#0a1c44 72%,#0d2458 88%,#08183c 100%)"></div>
-      <img src="https://images.unsplash.com/photo-1519046904884-53103b34b206?auto=format&fit=crop&w=1200&q=80" alt="Atlantic City Boardwalk" onerror="this.style.display='none'">
-      <div class="city-vignette"></div><div class="city-bottom-fade"></div><div class="city-left-fade"></div>
-      <svg class="city-skyline" viewBox="0 0 1200 220" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-        <!-- Atlantic City: casino hotels, boardwalk, lighthouse -->
-        <!-- Lighthouse -->
-        <rect x="40" y="80" width="22" height="100" fill="rgba(0,0,0,0.85)"/>
-        <polygon points="40,80 51,55 62,80" fill="rgba(0,0,0,0.85)"/>
-        <ellipse cx="51" cy="55" rx="12" ry="8" fill="rgba(255,240,150,0.3)"/>
-        <rect x="100" y="60" width="80" height="120" fill="rgba(0,0,0,0.85)"/>
-        <rect x="195" y="40" width="100" height="140" fill="rgba(0,0,0,0.85)"/><rect x="205" y="22" width="80" height="20" fill="rgba(0,0,0,0.85)"/>
-        <rect x="310" y="55" width="90" height="125" fill="rgba(0,0,0,0.85)"/>
-        <rect x="415" y="35" width="110" height="145" fill="rgba(0,0,0,0.85)"/><rect x="430" y="18" width="80" height="18" fill="rgba(0,0,0,0.85)"/>
-        <rect x="540" y="65" width="80" height="115" fill="rgba(0,0,0,0.85)"/>
-        <rect x="635" y="30" width="120" height="150" fill="rgba(0,0,0,0.85)"/><rect x="650" y="12" width="90" height="20" fill="rgba(0,0,0,0.85)"/>
-        <rect x="770" y="50" width="95" height="130" fill="rgba(0,0,0,0.85)"/>
-        <rect x="880" y="70" width="80" height="110" fill="rgba(0,0,0,0.85)"/>
-        <rect x="975" y="45" width="100" height="135" fill="rgba(0,0,0,0.85)"/>
-        <rect x="1090" y="80" width="110" height="100" fill="rgba(0,0,0,0.85)"/>
-        <!-- boardwalk + ocean -->
-        <rect x="0" y="178" width="1200" height="15" fill="rgba(15,30,60,0.9)"/>
-        <!-- ocean waves -->
-        <path d="M0 195 Q60 188 120 195 Q180 202 240 195 Q300 188 360 195 Q420 202 480 195 Q540 188 600 195 Q660 202 720 195 Q780 188 840 195 Q900 202 960 195 Q1020 188 1080 195 Q1140 202 1200 195 L1200 220 L0 220 Z" fill="rgba(10,40,80,0.9)"/>
-        <path d="M0 205 Q50 198 100 205 Q150 212 200 205 Q250 198 300 205 Q350 212 400 205 Q450 198 500 205 Q550 212 600 205 Q650 198 700 205 Q750 212 800 205 Q850 198 900 205 Q950 212 1000 205 Q1050 198 1100 205 Q1150 212 1200 205 L1200 220 L0 220 Z" fill="rgba(5,25,60,0.95)"/>
-        <rect x="200" y="42" width="98" height="14" fill="rgba(100,180,255,0.18)" rx="2"/>
-        <rect x="638" y="15" width="86" height="14" fill="rgba(80,160,255,0.15)" rx="2"/>
-      </svg>
-    </div>
-
-    <!-- 2: Marrakesh -->
-    <div class="city-bg" id="city-bg-2">
-      <div class="grad-fallback" style="background:linear-gradient(180deg,#080300 0%,#1a0800 28%,#3d1400 52%,#7a2800 72%,#bb4400 88%,#e05500 100%)"></div>
-      <img src="https://images.unsplash.com/photo-1539020140153-e479b8c22e70?auto=format&fit=crop&w=1200&q=80" alt="Marrakesh" onerror="this.style.display='none'">
-      <div class="city-vignette"></div><div class="city-bottom-fade"></div><div class="city-left-fade"></div>
-      <svg class="city-skyline" viewBox="0 0 1200 220" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-        <!-- Marrakesh: Koutoubia minaret, medina walls, arches, palms -->
-        <!-- Koutoubia minaret (left) -->
-        <rect x="60" y="40" width="45" height="140" fill="rgba(0,0,0,0.85)"/>
-        <rect x="55" y="32" width="55" height="10" fill="rgba(0,0,0,0.85)"/>
-        <polygon points="55,32 82,10 110,32" fill="rgba(0,0,0,0.85)"/>
-        <line x1="82" y1="10" x2="82" y2="0" stroke="rgba(0,0,0,0.85)" stroke-width="3"/>
-        <rect x="65" y="55" width="35" height="8" fill="rgba(200,120,30,0.25)" rx="1"/>
-        <rect x="65" y="70" width="35" height="8" fill="rgba(200,120,30,0.25)" rx="1"/>
-        <rect x="65" y="85" width="35" height="8" fill="rgba(200,120,30,0.25)" rx="1"/>
-        <!-- Arched gate -->
-        <rect x="140" y="100" width="120" height="80" fill="rgba(0,0,0,0.85)"/>
-        <path d="M140 100 Q200 60 260 100" fill="rgba(0,0,0,0.85)"/>
-        <path d="M155 100 Q200 68 245 100" fill="rgba(60,30,10,0.7)"/>
-        <!-- Medina wall -->
-        <rect x="270" y="110" width="500" height="70" fill="rgba(0,0,0,0.8)"/>
-        <!-- Merlons (castle battlements) -->
-        <rect x="270" y="100" width="22" height="12" fill="rgba(0,0,0,0.85)"/>
-        <rect x="300" y="100" width="22" height="12" fill="rgba(0,0,0,0.85)"/>
-        <rect x="330" y="100" width="22" height="12" fill="rgba(0,0,0,0.85)"/>
-        <rect x="360" y="100" width="22" height="12" fill="rgba(0,0,0,0.85)"/>
-        <rect x="390" y="100" width="22" height="12" fill="rgba(0,0,0,0.85)"/>
-        <rect x="420" y="100" width="22" height="12" fill="rgba(0,0,0,0.85)"/>
-        <rect x="450" y="100" width="22" height="12" fill="rgba(0,0,0,0.85)"/>
-        <rect x="480" y="100" width="22" height="12" fill="rgba(0,0,0,0.85)"/>
-        <rect x="510" y="100" width="22" height="12" fill="rgba(0,0,0,0.85)"/>
-        <rect x="540" y="100" width="22" height="12" fill="rgba(0,0,0,0.85)"/>
-        <rect x="570" y="100" width="22" height="12" fill="rgba(0,0,0,0.85)"/>
-        <rect x="600" y="100" width="22" height="12" fill="rgba(0,0,0,0.85)"/>
-        <rect x="630" y="100" width="22" height="12" fill="rgba(0,0,0,0.85)"/>
-        <rect x="660" y="100" width="22" height="12" fill="rgba(0,0,0,0.85)"/>
-        <rect x="690" y="100" width="22" height="12" fill="rgba(0,0,0,0.85)"/>
-        <rect x="720" y="100" width="22" height="12" fill="rgba(0,0,0,0.85)"/>
-        <!-- Domes -->
-        <ellipse cx="850" cy="102" rx="55" ry="38" fill="rgba(0,0,0,0.85)"/>
-        <ellipse cx="950" cy="108" rx="45" ry="30" fill="rgba(0,0,0,0.85)"/>
-        <ellipse cx="1050" cy="105" rx="50" ry="34" fill="rgba(0,0,0,0.85)"/>
-        <!-- Palm trees -->
-        <rect x="780" y="100" width="6" height="80" fill="rgba(0,0,0,0.85)"/>
-        <ellipse cx="783" cy="100" rx="22" ry="14" fill="rgba(0,0,0,0.82)" transform="rotate(-15,783,100)"/>
-        <rect x="1130" y="110" width="6" height="70" fill="rgba(0,0,0,0.85)"/>
-        <ellipse cx="1133" cy="110" rx="20" ry="13" fill="rgba(0,0,0,0.82)" transform="rotate(12,1133,110)"/>
-        <rect x="0" y="178" width="1200" height="42" fill="rgba(0,0,0,0.88)"/>
-      </svg>
-    </div>
-
-    <!-- 3: Buenos Aires -->
-    <div class="city-bg" id="city-bg-3">
-      <div class="grad-fallback" style="background:linear-gradient(180deg,#010610 0%,#030d24 28%,#061535 52%,#091c45 72%,#0e2458 88%,#0a1c4a 100%)"></div>
-      <img src="https://images.unsplash.com/photo-1589909202802-8f4aadce1849?auto=format&fit=crop&w=1200&q=80" alt="Buenos Aires" onerror="this.style.display='none'">
-      <div class="city-vignette"></div><div class="city-bottom-fade"></div><div class="city-left-fade"></div>
-      <svg class="city-skyline" viewBox="0 0 1200 220" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-        <!-- Buenos Aires: Obelisk, European-style buildings, wide avenues -->
-        <!-- Obelisk (center) -->
-        <polygon points="590,180 596,20 604,20 610,180" fill="rgba(0,0,0,0.85)"/>
-        <polygon points="586,180 596,162 604,162 614,180" fill="rgba(0,0,0,0.85)"/>
-        <polygon points="593,20 600,5 607,20" fill="rgba(0,0,0,0.85)"/>
-        <!-- Buildings left -->
-        <rect x="0" y="90" width="70" height="90" fill="rgba(0,0,0,0.85)"/>
-        <rect x="4" y="75" width="62" height="17" fill="rgba(0,0,0,0.85)"/>
-        <rect x="80" y="70" width="85" height="110" fill="rgba(0,0,0,0.85)"/>
-        <rect x="84" y="55" width="77" height="17" fill="rgba(0,0,0,0.85)"/>
-        <rect x="175" y="80" width="70" height="100" fill="rgba(0,0,0,0.85)"/>
-        <rect x="255" y="55" width="90" height="125" fill="rgba(0,0,0,0.85)"/>
-        <rect x="258" y="38" width="84" height="19" fill="rgba(0,0,0,0.85)"/>
-        <rect x="355" y="75" width="75" height="105" fill="rgba(0,0,0,0.85)"/>
-        <rect x="440" y="60" width="65" height="120" fill="rgba(0,0,0,0.85)"/>
-        <rect x="515" y="85" width="60" height="95" fill="rgba(0,0,0,0.85)"/>
-        <!-- Buildings right -->
-        <rect x="625" y="85" width="60" height="95" fill="rgba(0,0,0,0.85)"/>
-        <rect x="695" y="60" width="65" height="120" fill="rgba(0,0,0,0.85)"/>
-        <rect x="770" y="75" width="75" height="105" fill="rgba(0,0,0,0.85)"/>
-        <rect x="855" y="55" width="90" height="125" fill="rgba(0,0,0,0.85)"/>
-        <rect x="858" y="38" width="84" height="19" fill="rgba(0,0,0,0.85)"/>
-        <rect x="955" y="80" width="70" height="100" fill="rgba(0,0,0,0.85)"/>
-        <rect x="1035" y="70" width="85" height="110" fill="rgba(0,0,0,0.85)"/>
-        <rect x="1038" y="55" width="79" height="17" fill="rgba(0,0,0,0.85)"/>
-        <rect x="1130" y="90" width="70" height="90" fill="rgba(0,0,0,0.85)"/>
-        <!-- Wide avenue glow -->
-        <rect x="0" y="178" width="1200" height="42" fill="rgba(0,0,0,0.88)"/>
-        <rect x="0" y="176" width="1200" height="4" fill="rgba(220,180,80,0.15)"/>
-        <rect x="258" y="40" width="82" height="16" fill="rgba(180,220,255,0.12)" rx="2"/>
-      </svg>
-    </div>
-
-    <!-- 4: Macau -->
-    <div class="city-bg" id="city-bg-4">
-      <div class="grad-fallback" style="background:linear-gradient(180deg,#010100 0%,#060400 25%,#140c00 50%,#2e1800 70%,#5a3200 88%,#8a4c00 100%)"></div>
-      <img src="https://upload.wikimedia.org/wikipedia/commons/c/c4/Casino_Grand_Lisboa%2C_Macao%2C_2013-08-08%2C_DD_01.jpg" alt="Grand Lisboa Macau" style="object-position:center top" onerror="this.style.display='none'">
-      <div class="city-vignette"></div><div class="city-bottom-fade"></div><div class="city-left-fade"></div>
-      <svg class="city-skyline" viewBox="0 0 1200 220" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <!-- Casino Lisboa's iconic circular-dot facade -->
-          <pattern id="lisboa-dots" x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse">
-            <circle cx="5" cy="5" r="3.6" fill="rgba(255,168,8,0.58)"/>
-          </pattern>
-          <!-- Grand Lisboa diamond-mesh tower -->
-          <pattern id="gl-mesh" x="0" y="0" width="11" height="11" patternUnits="userSpaceOnUse">
-            <path d="M5.5,0 L11,5.5 L5.5,11 L0,5.5 Z" fill="none" stroke="rgba(255,196,30,0.45)" stroke-width="0.9"/>
-          </pattern>
-        </defs>
-
-        <!-- ── Grand Lisboa Tower (diamond-mesh, left) ── -->
-        <ellipse cx="140" cy="178" rx="72" ry="18" fill="#060300" opacity=".95"/>
-        <ellipse cx="140" cy="168" rx="56" ry="12" fill="#090500" opacity=".95"/>
-        <ellipse cx="140" cy="160" rx="40" ry="9"  fill="#0c0700" opacity=".95"/>
-        <rect x="123" y="32" width="34" height="130" fill="#040200"/>
-        <rect x="123" y="32" width="34" height="130" fill="url(#gl-mesh)"/>
-        <ellipse cx="140" cy="32" rx="30" ry="12" fill="#060300"/>
-        <polygon points="130,32 140,10 150,32" fill="#060300"/>
-        <circle cx="140" cy="9" r="5" fill="rgba(255,220,60,0.85)"/>
-        <ellipse cx="140" cy="9" rx="10" ry="5" fill="rgba(255,200,40,0.2)"/>
-
-        <!-- ── Casino Lisboa — ICONIC circular-dot facade ── -->
-        <!-- Body -->
-        <rect x="255" y="14" width="168" height="162" fill="#050200" rx="1"/>
-        <!-- Signature dot-pattern lit facade -->
-        <rect x="259" y="18" width="160" height="154" fill="url(#lisboa-dots)"/>
-        <!-- Warm amber wash over dots -->
-        <rect x="259" y="18" width="160" height="154" fill="rgba(200,90,0,0.10)" rx="1"/>
-        <!-- Crown cornice (stepped top) -->
-        <rect x="248" y="8"  width="182" height="8"  fill="#060300"/>
-        <rect x="260" y="2"  width="158" height="8"  fill="#070400"/>
-        <ellipse cx="339" cy="2" rx="80" ry="7" fill="#070400"/>
-        <!-- Lisboa glow halo on street -->
-        <ellipse cx="339" cy="178" rx="130" ry="22" fill="rgba(255,130,0,0.18)"/>
-        <!-- CASINO sign bar -->
-        <rect x="268" y="72" width="142" height="20" fill="rgba(0,0,0,0.55)" rx="2"/>
-        <rect x="270" y="74" width="138" height="16" fill="rgba(255,120,0,0.22)" rx="1"/>
-        <!-- LISBOA sign bar -->
-        <rect x="268" y="98" width="142" height="20" fill="rgba(0,0,0,0.55)" rx="2"/>
-        <rect x="270" y="100" width="138" height="16" fill="rgba(255,100,0,0.18)" rx="1"/>
-
-        <!-- ── Wynn Macau (right of Lisboa) ── -->
-        <rect x="438" y="18" width="78" height="158" fill="rgba(0,0,0,0.85)" rx="1"/>
-        <rect x="442" y="10" width="70" height="10" fill="rgba(255,140,0,0.28)"/>
-
-        <!-- ── Background casino towers ── -->
-        <rect x="55"  y="48" width="52" height="128" fill="rgba(0,0,0,0.82)"/>
-        <rect x="530" y="28" width="68" height="148" fill="rgba(0,0,0,0.85)"/>
-        <rect x="615" y="50" width="54" height="126" fill="rgba(0,0,0,0.85)"/>
-        <rect x="684" y="22" width="76" height="154" fill="rgba(0,0,0,0.85)"/>
-        <rect x="776" y="40" width="62" height="136" fill="rgba(0,0,0,0.85)"/>
-        <rect x="854" y="26" width="72" height="150" fill="rgba(0,0,0,0.85)"/>
-        <rect x="942" y="50" width="56" height="126" fill="rgba(0,0,0,0.85)"/>
-        <rect x="1013" y="32" width="76" height="144" fill="rgba(0,0,0,0.85)"/>
-        <rect x="1104" y="54" width="96" height="122" fill="rgba(0,0,0,0.85)"/>
-
-        <!-- Neon signage glow on towers -->
-        <rect x="532" y="34"  width="64" height="10" fill="rgba(255,130,0,0.28)" rx="1"/>
-        <rect x="686" y="28"  width="70" height="10" fill="rgba(255,50,30,0.22)" rx="1"/>
-        <rect x="856" y="32"  width="68" height="10" fill="rgba(255,190,0,0.25)" rx="1"/>
-        <rect x="1015" y="38" width="70" height="10" fill="rgba(0,160,255,0.18)" rx="1"/>
-
-        <!-- Harbor water -->
-        <rect x="0" y="178" width="1200" height="42" fill="rgba(0,0,0,0.88)"/>
-        <!-- Lisboa amber reflections in water -->
-        <rect x="272" y="182" width="134" height="5" fill="rgba(255,150,10,0.28)" rx="2"/>
-        <rect x="288" y="190" width="94"  height="3" fill="rgba(255,130,8,0.18)"  rx="2"/>
-        <rect x="126" y="183" width="34"  height="3" fill="rgba(255,200,40,0.22)" rx="2"/>
-      </svg>
-    </div>
-
-    <!-- 5: Monte Carlo -->
-    <div class="city-bg" id="city-bg-5">
-      <div class="grad-fallback" style="background:linear-gradient(180deg,#010608 0%,#020e18 28%,#041828 52%,#072240 72%,#0d325c 88%,#123868 100%)"></div>
-      <img src="https://images.unsplash.com/photo-1533104816931-20fa691ff6ca?auto=format&fit=crop&w=1200&q=80" alt="Monte Carlo Harbor" onerror="this.style.display='none'">
-      <div class="city-vignette"></div><div class="city-bottom-fade"></div><div class="city-left-fade"></div>
-      <svg class="city-skyline" viewBox="0 0 1200 220" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-        <!-- Monte Carlo: Casino, cliffs, Mediterranean, villas -->
-        <!-- Rocky cliff -->
-        <path d="M0 220 L0 100 Q40 80 80 90 Q120 100 140 85 Q180 65 220 75 L220 220 Z" fill="rgba(0,0,0,0.85)"/>
-        <!-- Casino building -->
-        <rect x="240" y="70" width="130" height="110" fill="rgba(0,0,0,0.85)"/>
-        <rect x="235" y="60" width="140" height="12" fill="rgba(0,0,0,0.85)"/>
-        <!-- Casino turrets -->
-        <rect x="240" y="40" width="18" height="32" fill="rgba(0,0,0,0.85)"/><polygon points="240,40 249,28 258,40" fill="rgba(0,0,0,0.85)"/>
-        <rect x="352" y="40" width="18" height="32" fill="rgba(0,0,0,0.85)"/><polygon points="352,40 361,28 370,40" fill="rgba(0,0,0,0.85)"/>
-        <!-- Casino window row -->
-        <rect x="248" y="74" width="114" height="10" fill="rgba(255,240,180,0.18)" rx="2"/>
-        <rect x="248" y="90" width="114" height="10" fill="rgba(255,240,180,0.14)" rx="2"/>
-        <!-- Hillside villas -->
-        <rect x="385" y="90" width="55" height="90" fill="rgba(0,0,0,0.82)"/>
-        <rect x="450" y="80" width="60" height="100" fill="rgba(0,0,0,0.82)"/>
-        <rect x="520" y="70" width="70" height="110" fill="rgba(0,0,0,0.82)"/>
-        <rect x="600" y="85" width="55" height="95" fill="rgba(0,0,0,0.82)"/>
-        <rect x="665" y="65" width="80" height="115" fill="rgba(0,0,0,0.82)"/>
-        <rect x="755" y="80" width="65" height="100" fill="rgba(0,0,0,0.82)"/>
-        <rect x="830" y="55" width="85" height="125" fill="rgba(0,0,0,0.82)"/>
-        <rect x="925" y="75" width="70" height="105" fill="rgba(0,0,0,0.82)"/>
-        <rect x="1005" y="60" width="80" height="120" fill="rgba(0,0,0,0.82)"/>
-        <rect x="1095" y="80" width="105" height="100" fill="rgba(0,0,0,0.82)"/>
-        <!-- Mediterranean water -->
-        <rect x="0" y="178" width="1200" height="42" fill="rgba(0,0,0,0.88)"/>
-        <path d="M0 185 Q100 180 200 185 Q300 190 400 185 Q500 180 600 185 Q700 190 800 185 Q900 180 1000 185 Q1100 190 1200 185 L1200 220 L0 220 Z" fill="rgba(0,30,80,0.6)"/>
-      </svg>
-    </div>
-
-    <!-- City announce overlay (gladiator + city name) -->
-    <div id="city-announce">
-      <div class="city-flag-emoji" id="city-flag-el">🎰</div>
-      <div class="city-name-text" id="city-name-el">Las Vegas</div>
-      <div class="city-tagline-text" id="city-tagline-el">The Neon Strip · Nevada USA</div>
-    </div>
-
-    <!-- Gladiator traveler -->
-    <div id="gladiator-wrap" style="left:12%">
-      <svg id="gladiator-svg" viewBox="0 0 60 85" xmlns="http://www.w3.org/2000/svg">
-        <!-- helmet -->
-        <ellipse cx="30" cy="16" rx="16" ry="10" fill="#888"/>
-        <rect x="14" y="12" width="32" height="6" rx="3" fill="#777"/>
-        <!-- plume -->
-        <path d="M30 6 Q26 0 20 2 Q24 5 26 8 Q28 3 30 6Z" fill="#cc2200"/>
-        <path d="M30 6 Q34 0 40 2 Q36 5 34 8 Q32 3 30 6Z" fill="#cc2200"/>
-        <!-- face -->
-        <ellipse cx="30" cy="26" rx="10" ry="11" fill="#e8c090"/>
-        <!-- visor -->
-        <path d="M20 20 Q30 17 40 20" stroke="#555" stroke-width="2.5" fill="none"/>
-        <!-- body / cuirass -->
-        <rect x="20" y="36" width="20" height="22" rx="3" fill="#888"/>
-        <path d="M20 36 Q30 32 40 36" fill="#999"/>
-        <!-- shoulder guards -->
-        <ellipse cx="17" cy="38" rx="7" ry="4" fill="#777"/>
-        <ellipse cx="43" cy="38" rx="7" ry="4" fill="#777"/>
-        <!-- arm + sword -->
-        <line x1="17" y1="38" x2="10" y2="55" stroke="#e8c090" stroke-width="5" stroke-linecap="round"/>
-        <line x1="10" y1="52" x2="4" y2="68" stroke="#aaa" stroke-width="2.5" stroke-linecap="round"/>
-        <!-- shield arm -->
-        <line x1="43" y1="38" x2="52" y2="54" stroke="#e8c090" stroke-width="5" stroke-linecap="round"/>
-        <ellipse cx="54" cy="57" rx="7" ry="9" fill="#884400" transform="rotate(-10,54,57)"/>
-        <!-- cape -->
-        <path d="M20 36 Q12 50 14 65 Q22 58 24 58 L20 36Z" fill="#cc2200" opacity="0.85"/>
-        <!-- legs -->
-        <rect x="22" y="57" width="7" height="20" rx="3" fill="#cca060"/>
-        <rect x="31" y="57" width="7" height="20" rx="3" fill="#cca060"/>
-        <!-- sandals -->
-        <rect x="20" y="76" width="11" height="5" rx="2" fill="#888"/>
-        <rect x="29" y="76" width="11" height="5" rx="2" fill="#888"/>
-        <!-- gold trim -->
-        <path d="M20 36 Q30 32 40 36 Q40 46 30 46 Q20 46 20 36Z" fill="none" stroke="#c9a84c" stroke-width="1.2"/>
-      </svg>
-    </div>
-
-    <!-- Gold particles -->
-    <div class="particle" style="--x:12%;--dur:8s;--delay:0s;--drift:18px"></div>
-    <div class="particle" style="--x:25%;--dur:11s;--delay:2s;--drift:-14px"></div>
-    <div class="particle" style="--x:40%;--dur:7s;--delay:4s;--drift:10px"></div>
-    <div class="particle" style="--x:55%;--dur:9s;--delay:1s;--drift:-20px"></div>
-    <div class="particle" style="--x:70%;--dur:12s;--delay:3s;--drift:16px"></div>
-    <div class="particle" style="--x:85%;--dur:6s;--delay:5s;--drift:-10px"></div>
-
-    <!-- City nav arrows -->
-    <div class="city-nav" id="city-prev" onclick="stepCity(-1)">◀</div>
-    <div class="city-nav" id="city-next" onclick="stepCity(1)">▶</div>
-
-    <!-- Journey dots -->
-    <div id="journey-track"></div>
-
-    <!-- Title + CTA -->
-    <div id="title-overlay" style="animation:fadeIn 1s ease 0.5s both;opacity:0">
-      <div class="splash-sub">The Ultimate</div>
-      <div class="splash-title">BACCARAT<br><span>GLADIATOR</span></div>
-      <div class="splash-divider"></div>
-      <div class="splash-tagline">MASTER THE CARDS · CONQUER THE ARENA</div>
-      <button class="enter-btn" onclick="enterArena()">⚔ &nbsp; ENTER THE ARENA &nbsp; ⚔</button>
-      <div class="trial-note">FREE TRIAL · 10 HANDS · NO REGISTRATION REQUIRED</div>
-    </div>
-
-    <!-- Top controls -->
-    <div id="top-controls">
-      <span class="spqr-badge ctrl-btn" style="cursor:default;pointer-events:none;">SPQR · MMXXVI</span>
-      <button class="ctrl-btn" id="snd-btn" onclick="toggleSplashSound()" title="Toggle sound">🔊</button>
-    </div>
-
-  </div><!-- end city-panel -->
-
-  <!-- ═══════ RIGHT: BACCARAT ACTION PANEL ═══════ -->
-  <div id="bacc-panel">
-    <div id="bacc-panel-header">
-      <div class="bacc-panel-title">
-        LIVE BACCARAT ACTION
-        <span class="live-badge"><span class="live-dot"></span>LIVE</span>
-      </div>
-    </div>
-    <div id="bacc-canvas-wrap">
-      <canvas id="bacc-canvas"></canvas>
-      <div id="bacc-instruction" onclick="dismissInstruction()">
-        <div class="play-icon">🃏</div>
-        <p>BACCARAT<br>IN ACTION</p>
-      </div>
-      <div id="bacc-result"></div>
-    </div>
-  </div>
-
-</div><!-- end splash -->
+<div id="load-splash">
+  <div class="stage-name">—</div>
+  <div class="stage-tier">—</div>
+  <div class="bar"></div>
+</div>
 
 <script>
-'use strict';
+//
+// ═══════════════════════════════════════════════════════════════════
+//   BACCARAT GLADIATOR — STAGE SELECT
+//   60 themed venues across 10 tiers. Clear any stage in tier N to
+//   unlock tier N+1. Final boss tier is the Colosseum + KTV + Speakeasy.
+// ═══════════════════════════════════════════════════════════════════
+//
 
-// Skip splash when launched via PWA shortcut or direct ?skip_splash=1 link
-if(new URLSearchParams(location.search).get('skip_splash')==='1'){
-  window.location.replace('baccarat-scoreboard.html');
-}
-
-// ══════════════════════════════════════════════════════════════════
-//  CITY DATA
-// ══════════════════════════════════════════════════════════════════
-const CITIES = [
-  { name:'Las Vegas',    country:'Nevada · USA',        flag:'🎰', accent:'#ff88cc', tagline:'The Neon Strip · Nevada USA' },
-  { name:'Atlantic City',country:'New Jersey · USA',    flag:'🌊', accent:'#44aaff', tagline:'The Boardwalk · New Jersey USA' },
-  { name:'Marrakesh',    country:'Morocco',             flag:'🏜️', accent:'#ff8833', tagline:'Pearl of the South · Morocco' },
-  { name:'Buenos Aires', country:'Argentina',           flag:'💃', accent:'#88aaff', tagline:'Paris of the South · Argentina' },
-  { name:'Macau',        country:'SAR China',           flag:'🐉', accent:'#cc66ff', tagline:'Baccarat Capital of the World' },
-  { name:'Monte Carlo',  country:'Monaco',              flag:'👑', accent:'#66ccff', tagline:'Côte d\'Azur · Monaco' },
+// Tier metadata — color used for the accent rail and centered glow.
+const TIERS = [
+  { id:1,  name:'WELCOME PIT',     subtitle:'unlocked',                  color:'#9affe7' },
+  { id:2,  name:'INDIE BLOCK',     subtitle:'clear 1 in WELCOME PIT',    color:'#7adfff' },
+  { id:3,  name:'FAR HORIZONS',    subtitle:'clear 1 in INDIE BLOCK',    color:'#80e090' },
+  { id:4,  name:'UNDERGROUND',     subtitle:'clear 1 in FAR HORIZONS',   color:'#ff8ad0' },
+  { id:5,  name:'POSTCARD CITIES', subtitle:'clear 1 in UNDERGROUND',    color:'#ffc060' },
+  { id:6,  name:'CHAMPIONSHIP',    subtitle:'clear 1 in POSTCARD CITIES',color:'#ffa040' },
+  { id:7,  name:'NEON STREETS',    subtitle:'clear 1 in CHAMPIONSHIP',   color:'#ff48d8' },
+  { id:8,  name:'VIP ESCAPE',      subtitle:'clear 1 in NEON STREETS',   color:'#c060ff' },
+  { id:9,  name:'CASINO ROYALTY',  subtitle:'clear 1 in VIP ESCAPE',     color:'#ffe7a0' },
+  { id:10, name:'FINAL ARENA',     subtitle:'clear 1 in CASINO ROYALTY', color:'#ff4040' },
 ];
 
-const GLAD_POSITIONS = ['12%','18%','14%','16%','13%','15%'];
+// ── Stage roster ────────────────────────────────────────────────
+// Sorted by tier (lowest demand first). The slug matches the variant's
+// /road-to-<slug>.html path. Region emoji is purely decorative.
+const STAGES = [
+  // T1 — WELCOME PIT
+  { slug:'nine',           name:'Road to Nine',     tag:'The original baccarat',                region:'♠',  tier:1 },
+  { slug:'cat-cafe',       name:'Cat Cafe',         tag:'Tokyo paw bets',                       region:'🐱', tier:1 },
+  { slug:'canine-club',    name:'Canine Club',      tag:'Westminster · best in show',           region:'🐶', tier:1 },
+  { slug:'labubu',         name:'Labubu Lab',       tag:'Plush mascot energy',                  region:'🧸', tier:1 },
+  { slug:'huff-puff',      name:'Huff & Puff',      tag:'Three little pigs',                    region:'🐷', tier:1 },
+  { slug:'toy-story',      name:'Toy Story',        tag:"Andy's room · to infinity",            region:'🚀', tier:1 },
+  { slug:'bricks',         name:'Bricks',           tag:'Block-by-block builder',               region:'🧱', tier:1 },
 
-let currentCity = 0;
-let cityTimer   = null;
-let transitioning = false;
+  // T2 — INDIE BLOCK
+  { slug:'hipster',        name:'Hipster',          tag:'Brooklyn · single origin',             region:'☕', tier:2 },
+  { slug:'portlandia',     name:'Portlandia',       tag:'Keep it weird',                        region:'🦅', tier:2 },
+  { slug:'mockingbird',    name:'Mockingbird',      tag:'Maycomb · sleepy south',               region:'🌳', tier:2 },
+  { slug:'breaking',       name:'Breaking',         tag:'B-boy battle · cardboard arena',       region:'💃', tier:2 },
+  { slug:'cali-surfer',    name:'Cali Surfer',      tag:'Pacific point · sunset surf',          region:'🏄', tier:2 },
+  { slug:'marrakech',      name:'Marrakech',        tag:'Medina · spice & saffron',             region:'🇲🇦', tier:2 },
 
-// ── BUILD JOURNEY DOTS ──────────────────────────────────────────
-(function buildDots(){
-  const track = document.getElementById('journey-track');
-  CITIES.forEach((c,i) => {
-    const d = document.createElement('div');
-    d.className = 'j-dot' + (i===0?' active':'');
-    d.title = c.name;
-    d.onclick = () => goToCity(i);
-    track.appendChild(d);
-  });
-})();
+  // T3 — FAR HORIZONS
+  { slug:'kenya',          name:'Kenya',            tag:'Maasai Mara · safari sunset',          region:'🇰🇪', tier:3 },
+  { slug:'batumi',         name:'Batumi',           tag:'Black Sea · high-roller riviera',      region:'🇬🇪', tier:3 },
+  { slug:'cyprus',         name:'Cyprus',           tag:"Aphrodite's coast",                    region:'🇨🇾', tier:3 },
+  { slug:'jiufen-tea',     name:'Jiufen 九份',       tag:'Lantern-red tea-house mountain',       region:'🇹🇼', tier:3 },
+  { slug:'mexico',         name:'Mexico',           tag:'Día de muertos · marigold',            region:'🇲🇽', tier:3 },
+  { slug:'uruguay',        name:'Uruguay',          tag:'Punta del Este · summer crown',        region:'🇺🇾', tier:3 },
+  { slug:'ktown',          name:'K-Town',           tag:'Koreatown · soju & static',            region:'🇰🇷', tier:3 },
 
-// ── CITY TRANSITIONS ────────────────────────────────────────────
-function goToCity(idx, skipGlad) {
-  if (transitioning || idx === currentCity) return;
-  transitioning = true;
-  clearTimeout(cityTimer);
+  // T4 — UNDERGROUND
+  { slug:'disco',          name:'Disco',            tag:'Studio 54 · mirror ball',              region:'🪩', tier:4 },
+  { slug:'coachella',      name:'Coachella',        tag:'Festival ferris wheel',                region:'🎡', tier:4 },
+  { slug:'techno-rave',    name:'Techno Rave',      tag:'Berghain bunker',                      region:'🔊', tier:4 },
+  { slug:'muay-thai',      name:'Muay Thai',        tag:'Lumpinee · art of eight limbs',        region:'🥊', tier:4 },
+  { slug:'wing-chun',      name:'Wing Chun',        tag:'Foshan · centerline theory',           region:'🥋', tier:4 },
+  { slug:'canada-f1',      name:'Montréal F1',      tag:'Île Notre-Dame · pole position',       region:'🏎', tier:4 },
 
-  const prev = currentCity;
-  currentCity = idx;
+  // T5 — POSTCARD CITIES
+  { slug:'spain',          name:'Spain',            tag:'Madrid · feria flamenca',              region:'🇪🇸', tier:5 },
+  { slug:'neo-tokyo-anime',name:'Neo Tokyo',        tag:'Akira · neo tokyo 2099',               region:'🇯🇵', tier:5 },
+  { slug:'texas',          name:'Texas',            tag:'Lone Star · everything bigger',        region:'🤠', tier:5 },
+  { slug:'silicon-valley', name:'Silicon Valley',   tag:'Sand Hill · Series A',                 region:'💻', tier:5 },
+  { slug:'cycling',        name:'Cycling',          tag:'Tour breakaway · alpine pass',         region:'🚴', tier:5 },
+  { slug:'pga',            name:'PGA',              tag:'Augusta · 18th green',                 region:'⛳', tier:5 },
 
-  // Set CSS accent var
-  document.documentElement.style.setProperty('--city-accent', CITIES[idx].accent);
+  // T6 — CHAMPIONSHIP
+  { slug:'baseball',       name:'Baseball',         tag:'Stadium lights · ninth inning',        region:'⚾', tier:6 },
+  { slug:'ufc',            name:'UFC',              tag:'Octagon · championship rounds',        region:'🥊', tier:6 },
+  { slug:'boxing',         name:'Boxing',           tag:'Title fight · championship night',     region:'🥊', tier:6 },
+  { slug:'melbourne',      name:'Melbourne',        tag:'Crown · southern cross',               region:'🇦🇺', tier:6 },
+  { slug:'manila',         name:'Manila',           tag:'Manila bay · Pasay strip',             region:'🇵🇭', tier:6 },
+  { slug:'seoul',          name:'Seoul',            tag:'Gangnam · K-Casino',                   region:'🇰🇷', tier:6 },
+  { slug:'skydiving',      name:'Skydiving',        tag:'12,000 ft · canopy out',               region:'🪂', tier:6 },
 
-  // Fade backgrounds
-  document.getElementById('city-bg-' + prev).classList.remove('active');
-  document.getElementById('city-bg-' + idx).classList.add('active');
+  // T7 — NEON STREETS
+  { slug:'nyc',            name:'New York',         tag:'Times Square · midnight',              region:'🗽', tier:7 },
+  { slug:'miami',          name:'Miami',            tag:'South Beach · neon vice',              region:'🌴', tier:7 },
+  { slug:'hawaii',         name:'Hawaii',           tag:'Lava lounge · big island',             region:'🌺', tier:7 },
+  { slug:'mad-max',        name:'Mad Max',          tag:'Wasteland · fury road',                region:'🏜', tier:7 },
+  { slug:'fast-furious',   name:'Fast & Furious',   tag:'Quarter mile · family',                region:'🏁', tier:7 },
+  { slug:'cyberpunk',      name:'Cyberpunk',        tag:'Night city · neon noir',               region:'🤖', tier:7 },
 
-  // Update dots
-  document.querySelectorAll('.j-dot').forEach((d,i) => d.classList.toggle('active', i===idx));
+  // T8 — VIP ESCAPE
+  { slug:'jet',            name:'Private Jet',      tag:'40,000 ft · private suite',            region:'✈',  tier:8 },
+  { slug:'cruise',         name:'Cruise',           tag:'Top deck · sea breeze',                region:'🛳', tier:8 },
+  { slug:'orbit',          name:'Orbit',            tag:'Low Earth orbit · zero G',             region:'🛰', tier:8 },
+  { slug:'gta',            name:'Vinewood',         tag:'Grand theft baccarat',                 region:'🎮', tier:8 },
+  { slug:'vegas-hangover', name:'Vegas Hangover',   tag:'Caesars · what happens here',          region:'🎰', tier:8 },
+  { slug:'oceans-11',      name:'Ocean\'s 11',      tag:'Bellagio heist · five for five',       region:'🎩', tier:8 },
+  { slug:'bond',           name:'Bond',             tag:'MI6 · shaken not stirred',             region:'🎲', tier:8 },
 
-  // Dismiss city announce then re-animate
-  const flagEl    = document.getElementById('city-flag-el');
-  const nameEl    = document.getElementById('city-name-el');
-  const taglineEl = document.getElementById('city-tagline-el');
-  flagEl.classList.remove('show');
-  nameEl.classList.remove('show');
-  taglineEl.classList.remove('show');
+  // T9 — CASINO ROYALTY
+  { slug:'mc',             name:'Monte Carlo',      tag:'Belle Époque · 5% commission',         region:'🇲🇨', tier:9 },
+  { slug:'lv',             name:'Las Vegas',        tag:'Tiger Bonus · the Strip',              region:'🇺🇸', tier:9 },
+  { slug:'ac',             name:'Atlantic City',    tag:'Boardwalk classic',                    region:'🇺🇸', tier:9 },
+  { slug:'bahamas',        name:'Bahamas',          tag:'Atlantis · Dragon Bonus',              region:'🇧🇸', tier:9 },
+  { slug:'sg',             name:'Singapore',        tag:'Marina Bay · Merlion',                 region:'🇸🇬', tier:9 },
+  { slug:'pnw',            name:'Pacific NW',       tag:'EZ Baccarat · Dragon 7 / Panda 8',     region:'🌲', tier:9 },
+  { slug:'london',         name:'London',           tag:'Mayfair · pinstripe pit',              region:'🇬🇧', tier:9 },
 
-  // Move gladiator
-  if (!skipGlad) {
-    const wrap = document.getElementById('gladiator-wrap');
-    wrap.classList.add('exiting');
-    setTimeout(() => {
-      wrap.classList.remove('exiting');
-      wrap.style.left = GLAD_POSITIONS[idx];
-      wrap.classList.add('entering');
-      setTimeout(() => wrap.classList.remove('entering'), 460);
-    }, 450);
+  // T10 — FINAL ARENA (boss tier)
+  { slug:'gladiator',      name:'The Colosseum',    tag:'Imperial Rome · Tyrian Purple',        region:'🛡', tier:10 },
+  { slug:'ktv-karaoke',    name:'KTV Afterparty',   tag:'Neon midnight · Cashbox suite',        region:'🎤', tier:10 },
+  { slug:'prohibition-jazz',name:'Prohibition Jazz',tag:'Speakeasy · Bourbon Gold',             region:'🥃', tier:10 },
+];
+
+// ── Persistence ────────────────────────────────────────────────
+const LS_VISITED  = 'bg_visited_slugs';
+const LS_CLEARED  = 'bg_cleared_tiers';
+function loadSet(key) {
+  try { return new Set(JSON.parse(localStorage.getItem(key) || '[]')); }
+  catch (e) { return new Set(); }
+}
+function saveSet(key, set) {
+  try { localStorage.setItem(key, JSON.stringify([...set])); } catch (e) {}
+}
+const visited = loadSet(LS_VISITED);
+const cleared = loadSet(LS_CLEARED);
+
+function isTierUnlocked(t) {
+  // Tier 1: always playable. Tier N (N>1): requires clearing any stage
+  // in tier N-1. Clearing = clicking SELECT on that stage at least once.
+  if (t === 1) return true;
+  return cleared.has(t - 1);
+}
+
+// ── Audio (Web Audio API blips) ──────────────────────────────
+let audio = null;
+function ensureAudio() {
+  if (!audio) {
+    try { audio = new (window.AudioContext || window.webkitAudioContext)(); }
+    catch (e) { audio = null; }
   }
-
-  // Show new city name after background fades in
-  setTimeout(() => {
-    const c = CITIES[idx];
-    flagEl.textContent    = c.flag;
-    nameEl.textContent    = c.name;
-    nameEl.style.color    = '#fff';
-    nameEl.style.textShadow = `0 0 40px ${c.accent}, 0 2px 12px rgba(0,0,0,0.9)`;
-    taglineEl.textContent = c.tagline;
-    taglineEl.style.color = c.accent;
-    flagEl.classList.add('show');
-    nameEl.classList.add('show');
-    taglineEl.classList.add('show');
-    transitioning = false;
-    startCityTimer();
-  }, 700);
 }
-
-function stepCity(dir) {
-  const next = (currentCity + dir + CITIES.length) % CITIES.length;
-  goToCity(next);
+function blip(freq = 440, dur = 0.06, type = 'square', vol = 0.06) {
+  ensureAudio();
+  if (!audio) return;
+  if (audio.state === 'suspended') audio.resume();
+  const o = audio.createOscillator();
+  const g = audio.createGain();
+  o.type = type; o.frequency.value = freq;
+  g.gain.value = vol;
+  g.gain.exponentialRampToValueAtTime(0.0001, audio.currentTime + dur);
+  o.connect(g); g.connect(audio.destination);
+  o.start();
+  o.stop(audio.currentTime + dur);
 }
-
-function startCityTimer() {
-  clearTimeout(cityTimer);
-  cityTimer = setTimeout(() => stepCity(1), 5000);
+function selectChunk() {
+  // Two-blip "ka-CHUNK" arcade select sound
+  blip(660, 0.05, 'square', 0.08);
+  setTimeout(() => blip(220, 0.12, 'square', 0.10), 60);
+  setTimeout(() => blip(140, 0.18, 'sawtooth', 0.08), 140);
 }
+function lockedBuzz() {
+  blip(110, 0.18, 'sawtooth', 0.12);
+}
+function navBlip() { blip(540, 0.04, 'square', 0.04); }
 
-// ── INIT: Show first city announce, start auto-rotate ───────────
-window.addEventListener('DOMContentLoaded', () => {
-  document.documentElement.style.setProperty('--city-accent', CITIES[0].accent);
-  const c = CITIES[0];
-  setTimeout(() => {
-    document.getElementById('city-flag-el').textContent    = c.flag;
-    document.getElementById('city-name-el').textContent    = c.name;
-    document.getElementById('city-tagline-el').textContent = c.tagline;
-    document.getElementById('city-tagline-el').style.color = c.accent;
-    document.getElementById('city-flag-el').classList.add('show');
-    document.getElementById('city-name-el').classList.add('show');
-    document.getElementById('city-tagline-el').classList.add('show');
-    startCityTimer();
-  }, 800);
+// ── Build deck ────────────────────────────────────────────────
+const deck = document.getElementById('deck');
+let idx = 0;
 
-  // Touch/swipe support
-  let tx = 0;
-  const cp = document.getElementById('city-panel');
-  cp.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, {passive:true});
-  cp.addEventListener('touchend',   e => {
-    const dx = e.changedTouches[0].clientX - tx;
-    if (Math.abs(dx) > 50) stepCity(dx < 0 ? 1 : -1);
-  }, {passive:true});
-
-  startBaccCanvas();
+STAGES.forEach((s, i) => {
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.dataset.slug = s.slug;
+  card.dataset.tier = s.tier;
+  const tier = TIERS[s.tier - 1];
+  card.style.setProperty('--tier-color', tier.color);
+  card.innerHTML = `
+    <div class="art" style="background-image:url('/preview-${s.slug}.jpg')"></div>
+    <div class="art-mask"></div>
+    <div class="corner">T${String(s.tier).padStart(2,'0')} · ${String(i+1).padStart(2,'0')}/${STAGES.length}</div>
+    <div class="region">${s.region}</div>
+    <div class="visited-badge">CLEARED</div>
+    <div class="meta">
+      <div class="name">${s.name}</div>
+      <div class="tag">${s.tag}</div>
+    </div>
+    <div class="lock">
+      <div class="icon">🔒</div>
+      <div class="req">${tier.subtitle.toUpperCase()}</div>
+    </div>
+  `;
+  card.addEventListener('click', () => {
+    if (i !== idx) { goto(i); return; }
+    select();
+  });
+  deck.appendChild(card);
 });
 
-// ══════════════════════════════════════════════════════════════════
-//  BACCARAT ACTION CANVAS ANIMATION
-// ══════════════════════════════════════════════════════════════════
-const RANKS = ['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
-const SUITS = ['♠','♥','♦','♣'];
+// Find the first stage that's unlocked but not yet visited; that's the
+// "next play" target. If everything's cleared, default to last cleared.
+const firstUncleared = STAGES.findIndex(s => isTierUnlocked(s.tier) && !visited.has(s.slug));
+if (firstUncleared >= 0) idx = firstUncleared;
 
-function cardVal(r) {
-  if(r==='A') return 1;
-  if(['10','J','Q','K'].includes(r)) return 0;
-  return parseInt(r);
-}
-function handTotal(cards) {
-  return cards.reduce((s,c) => (s + cardVal(c.rank)) % 10, 0);
-}
-function randomCard() {
-  return { rank: RANKS[Math.floor(Math.random()*RANKS.length)], suit: SUITS[Math.floor(Math.random()*SUITS.length)] };
-}
-function bankerDraws(bT, pThirdVal) {
-  if(bT<=2) return true; if(bT===7) return false;
-  if(pThirdVal===null) return bT<=5;
-  if(bT===3) return pThirdVal!==8;
-  if(bT===4) return pThirdVal>=2&&pThirdVal<=7;
-  if(bT===5) return pThirdVal>=4&&pThirdVal<=7;
-  if(bT===6) return pThirdVal===6||pThirdVal===7;
-  return false;
-}
+// ── Layout the carousel ───────────────────────────────────────
+function layout() {
+  STAGES.forEach((s, i) => {
+    const card = deck.children[i];
+    const tier = TIERS[s.tier - 1];
+    const offset = i - idx;
+    const isCenter = offset === 0;
+    const unlocked = isTierUnlocked(s.tier);
 
-let baccAnimId = null;
+    card.classList.toggle('center', isCenter);
+    card.classList.toggle('locked', !unlocked);
+    card.classList.toggle('visited', visited.has(s.slug));
 
-function startBaccCanvas() {
-  const wrap  = document.getElementById('bacc-canvas-wrap');
-  const canvas= document.getElementById('bacc-canvas');
-  if (!canvas || !wrap) return;
-
-  function resize() {
-    canvas.width  = wrap.clientWidth  || 340;
-    canvas.height = wrap.clientHeight || 480;
-  }
-  resize();
-  window.addEventListener('resize', resize);
-
-  // Auto-start after short delay
-  setTimeout(() => {
-    document.getElementById('bacc-instruction').style.opacity = '0';
-    setTimeout(() => {
-      const el = document.getElementById('bacc-instruction');
-      if(el) el.style.display = 'none';
-    }, 400);
-    runBaccLoop(canvas);
-  }, 2200);
-}
-
-function dismissInstruction() {
-  const el = document.getElementById('bacc-instruction');
-  if(el){ el.style.opacity='0'; setTimeout(()=>el.style.display='none',400); }
-  const canvas = document.getElementById('bacc-canvas');
-  if (canvas) runBaccLoop(canvas);
-}
-
-function runBaccLoop(canvas) {
-  if (baccAnimId) return;
-
-  const ctx = canvas.getContext('2d');
-  const resultEl = document.getElementById('bacc-result');
-
-  // Preload bg-card.png for card backs
-  const bgCardImg = new Image();
-  bgCardImg.src = 'bg-card.png';
-
-  // Deal a hand
-  function dealHand() {
-    let pH = [randomCard(), randomCard()];
-    let bH = [randomCard(), randomCard()];
-    let pT = handTotal(pH), bT = handTotal(bH);
-    const natural = pT>=8||bT>=8;
-    let pThird=null, bThird=null;
-    if(!natural){
-      if(pT<=5){ pThird=randomCard(); pH.push(pThird); pT=handTotal(pH); }
-      if(bankerDraws(bT, pThird?cardVal(pThird.rank):null)){ bThird=randomCard(); bH.push(bThird); bT=handTotal(bH); }
-    }
-    let winner = pT===bT?'T':(bT>pT?'B':'P');
-    return {pH,bH,pT,bT,winner,natural};
-  }
-
-  // ── RENDERING ──────────────────────────────────────────────────
-  function drawTable(w, h) {
-    // Felt
-    const feltGrad = ctx.createRadialGradient(w/2,h*0.45,20,w/2,h*0.45,Math.max(w,h)*0.7);
-    feltGrad.addColorStop(0,  '#1a5c2a');
-    feltGrad.addColorStop(0.6,'#0f3a1a');
-    feltGrad.addColorStop(1,  '#071208');
-    ctx.fillStyle = feltGrad;
-    ctx.fillRect(0, 0, w, h);
-
-    // Table border ring
-    ctx.strokeStyle = 'rgba(201,168,76,0.5)';
-    ctx.lineWidth   = 2;
-    ctx.beginPath();
-    ctx.ellipse(w/2, h*0.42, w*0.44, h*0.38, 0, 0, Math.PI*2);
-    ctx.stroke();
-    ctx.strokeStyle = 'rgba(201,168,76,0.2)';
-    ctx.lineWidth   = 1;
-    ctx.beginPath();
-    ctx.ellipse(w/2, h*0.42, w*0.41, h*0.35, 0, 0, Math.PI*2);
-    ctx.stroke();
-
-    // Labels
-    ctx.fillStyle   = 'rgba(201,168,76,0.55)';
-    ctx.font        = `bold ${Math.floor(w*0.048)}px Cinzel,serif`;
-    ctx.textAlign   = 'center';
-    ctx.fillText('BANKER', w/2, h*0.18);
-    ctx.fillText('PLAYER', w/2, h*0.72);
-
-    // Shoe (top right corner) — red casino shoe with cards sticking out
-    const sx = w*0.78, sy = h*0.03, sw = w*0.19, sh = h*0.15;
-    const sr = 6; // corner radius
-
-    // Cards peeking out the back of the shoe (left side)
-    const cardStub = sw * 0.22;
-    const csh = sh * 0.72; // card stub height
-    const csOffsets = [-sh*0.04, sh*0.01, sh*0.06];
-    csOffsets.forEach((off, i) => {
-      const cx2 = sx - cardStub * 0.6 + i * 2;
-      const cy2 = sy + (sh - csh) / 2 + off;
-      // Card stub back
-      if (bgCardImg.complete && bgCardImg.naturalWidth > 0) {
-        ctx.save();
-        roundRect(ctx, cx2, cy2, cardStub, csh, 2);
-        ctx.clip();
-        ctx.drawImage(bgCardImg, cx2, cy2, cardStub, csh);
-        ctx.restore();
-      } else {
-        const cg = ctx.createLinearGradient(cx2, cy2, cx2 + cardStub, cy2 + csh);
-        cg.addColorStop(0, '#1a3a8a'); cg.addColorStop(1, '#0e2060');
-        ctx.fillStyle = cg;
-        roundRect(ctx, cx2, cy2, cardStub, csh, 2); ctx.fill();
-      }
-      ctx.strokeStyle = 'rgba(255,255,255,0.15)'; ctx.lineWidth = 0.5;
-      roundRect(ctx, cx2, cy2, cardStub, csh, 2); ctx.stroke();
-    });
-
-    // Shoe body shadow
-    ctx.fillStyle = 'rgba(0,0,0,0.4)';
-    roundRect(ctx, sx+3, sy+4, sw, sh, sr); ctx.fill();
-
-    // Shoe body — red gradient
-    const shoeGrad = ctx.createLinearGradient(sx, sy, sx + sw, sy + sh);
-    shoeGrad.addColorStop(0,   '#d42020');
-    shoeGrad.addColorStop(0.3, '#b81818');
-    shoeGrad.addColorStop(0.7, '#8a0e0e');
-    shoeGrad.addColorStop(1,   '#600808');
-    ctx.fillStyle = shoeGrad;
-    roundRect(ctx, sx, sy, sw, sh, sr); ctx.fill();
-
-    // Top highlight
-    const shoeHL = ctx.createLinearGradient(sx, sy, sx, sy + sh * 0.4);
-    shoeHL.addColorStop(0, 'rgba(255,160,160,0.35)');
-    shoeHL.addColorStop(1, 'rgba(255,80,80,0)');
-    ctx.fillStyle = shoeHL;
-    roundRect(ctx, sx, sy, sw, sh * 0.5, sr); ctx.fill();
-
-    // Card slot opening — dark slit on the front
-    const slotX = sx + sw * 0.12, slotY = sy + sh * 0.28;
-    const slotW = sw * 0.72, slotH = sh * 0.2;
-    ctx.fillStyle = 'rgba(0,0,0,0.65)';
-    roundRect(ctx, slotX, slotY, slotW, slotH, 3); ctx.fill();
-    ctx.strokeStyle = 'rgba(0,0,0,0.8)'; ctx.lineWidth = 1;
-    roundRect(ctx, slotX, slotY, slotW, slotH, 3); ctx.stroke();
-
-    // Shoe border
-    ctx.strokeStyle = 'rgba(201,168,76,0.55)'; ctx.lineWidth = 1;
-    roundRect(ctx, sx, sy, sw, sh, sr); ctx.stroke();
-
-    // SHOE label
-    ctx.fillStyle  = 'rgba(255,220,180,0.75)';
-    ctx.font       = `bold ${Math.floor(w*0.03)}px Cinzel,serif`;
-    ctx.textAlign  = 'center';
-    ctx.fillText('SHOE', sx + sw/2, sy + sh * 0.76);
-  }
-
-  function roundRect(ctx, x, y, w, h, r) {
-    ctx.beginPath();
-    ctx.moveTo(x+r, y);
-    ctx.lineTo(x+w-r, y); ctx.arcTo(x+w,y,x+w,y+r,r);
-    ctx.lineTo(x+w, y+h-r); ctx.arcTo(x+w,y+h,x+w-r,y+h,r);
-    ctx.lineTo(x+r, y+h); ctx.arcTo(x,y+h,x,y+h-r,r);
-    ctx.lineTo(x, y+r); ctx.arcTo(x,y,x+r,y,r);
-    ctx.closePath();
-  }
-
-  function drawCard(x, y, card, revealed, w, h) {
-    const cw = w*0.14, ch = cw*1.42;
-    const isRed = card.suit==='♥'||card.suit==='♦';
-
-    // Shadow
-    ctx.fillStyle = 'rgba(0,0,0,0.45)';
-    roundRect(ctx, x+3, y+3, cw, ch, 4);
-    ctx.fill();
-
-    // Card body
-    if (!revealed) {
-      // Back: bg-card.png
-      ctx.save();
-      roundRect(ctx, x, y, cw, ch, 4);
-      ctx.clip();
-      if (bgCardImg.complete && bgCardImg.naturalWidth > 0) {
-        ctx.drawImage(bgCardImg, x, y, cw, ch);
-      } else {
-        const bg = ctx.createLinearGradient(x, y, x+cw, y+ch);
-        bg.addColorStop(0, '#1a3a8a'); bg.addColorStop(1, '#0e2060');
-        ctx.fillStyle = bg; ctx.fillRect(x, y, cw, ch);
-      }
-      ctx.restore();
-    } else {
-      ctx.fillStyle = '#f8f4ee';
-      roundRect(ctx, x, y, cw, ch, 4);
-      ctx.fill();
-    }
-
-    if (!revealed) {
-      // nothing extra for back
-    } else {
-      // Face
-      ctx.fillStyle  = isRed ? '#cc1100' : '#111';
-      ctx.font       = `bold ${Math.floor(cw*0.38)}px serif`;
-      ctx.textAlign  = 'left';
-      ctx.fillText(card.rank, x+3, y+cw*0.38);
-      ctx.font       = `${Math.floor(cw*0.32)}px serif`;
-      ctx.fillText(card.suit, x+2, y+cw*0.62);
-      // Center suit
-      ctx.font       = `${Math.floor(cw*0.55)}px serif`;
-      ctx.textAlign  = 'center';
-      ctx.fillText(card.suit, x+cw/2, y+ch*0.62);
-    }
-
-    // Border
-    ctx.strokeStyle = revealed ? 'rgba(180,160,120,0.6)' : 'rgba(60,100,200,0.5)';
-    ctx.lineWidth   = 1;
-    roundRect(ctx, x, y, cw, ch, 4);
-    ctx.stroke();
-
-    return { cw, ch };
-  }
-
-  function drawScore(x, y, score, w) {
-    const sz = w*0.13;
-    const grad = ctx.createRadialGradient(x, y, 0, x, y, sz);
-    grad.addColorStop(0, 'rgba(201,168,76,0.25)');
-    grad.addColorStop(1, 'rgba(201,168,76,0)');
-    ctx.fillStyle = grad;
-    ctx.beginPath(); ctx.arc(x, y, sz, 0, Math.PI*2); ctx.fill();
-
-    ctx.fillStyle  = '#f0d080';
-    ctx.font       = `bold ${Math.floor(w*0.12)}px Cinzel,serif`;
-    ctx.textAlign  = 'center';
-    ctx.fillText(score, x, y + w*0.04);
-  }
-
-  function drawResultBanner(text, color, w, h) {
-    ctx.fillStyle = color + '22';
-    roundRect(ctx, w*0.1, h*0.4, w*0.8, h*0.12, 6);
-    ctx.fill();
-    ctx.strokeStyle = color;
-    ctx.lineWidth   = 1.5;
-    roundRect(ctx, w*0.1, h*0.4, w*0.8, h*0.12, 6);
-    ctx.stroke();
-    ctx.fillStyle  = color;
-    ctx.font       = `bold ${Math.floor(w*0.1)}px Cinzel,serif`;
-    ctx.textAlign  = 'center';
-    ctx.fillText(text, w/2, h*0.4 + h*0.08);
-  }
-
-  // ── ANIMATION STATE MACHINE ─────────────────────────────────────
-  let hand      = null;
-  let phase     = 'idle';
-  let phaseT    = 0;
-  let cardAnim  = []; // per-card reveal progress 0→1
-  let resultShown = false;
-
-  const PHASE_DURATIONS = { idle:60, dealing:120, revealing:180, result:140, clear:40 };
-
-  function nextHand() {
-    hand         = dealHand();
-    phase        = 'dealing';
-    phaseT       = 0;
-    resultShown  = false;
-    const nCards = hand.pH.length + hand.bH.length;
-    cardAnim     = new Array(nCards).fill(0);
-  }
-
-  // Card positions: banker top row, player bottom row
-  function cardPositions(w, h, hand) {
-    const cw   = w*0.14, ch = cw*1.42;
-    const gap  = cw*1.2;
-    const bCount = hand.bH.length, pCount = hand.pH.length;
-    const bY   = h*0.12, pY = h*0.62;
-    const bX0  = w/2 - gap*(bCount-1)/2;
-    const pX0  = w/2 - gap*(pCount-1)/2;
-    const pos  = [];
-    for(let i=0;i<bCount;i++) pos.push({x:bX0+i*gap, y:bY, card:hand.bH[i]});
-    for(let i=0;i<pCount;i++) pos.push({x:pX0+i*gap, y:pY, card:hand.pH[i]});
-    return pos;
-  }
-
-  function tick() {
-    const w = canvas.width, h = canvas.height;
-    ctx.clearRect(0, 0, w, h);
-
-    if (phase === 'idle') {
-      drawTable(w, h);
-      phaseT++;
-      if (phaseT > PHASE_DURATIONS.idle) nextHand();
-      baccAnimId = requestAnimationFrame(tick);
+    if (Math.abs(offset) > 4) {
+      card.style.display = 'none';
       return;
     }
+    card.style.display = 'block';
 
-    drawTable(w, h);
-    phaseT++;
-
-    const pos = hand ? cardPositions(w, h, hand) : [];
-    const totalCards = pos.length;
-
-    if (phase === 'dealing') {
-      // Cards slide in one at a time every 18 frames
-      pos.forEach((p, i) => {
-        const startFrame = i * 18;
-        const prog = Math.min(1, Math.max(0, (phaseT - startFrame) / 14));
-        const revProg = Math.min(1, Math.max(0, (phaseT - startFrame - 8) / 10));
-
-        if (prog > 0) {
-          // Slide from top
-          const slideY = p.y - 60 * (1 - prog) * (1 - prog);
-          const scale  = 0.6 + 0.4 * prog;
-          ctx.save();
-          ctx.globalAlpha = prog;
-          ctx.translate(p.x, slideY); ctx.scale(scale, scale); ctx.translate(-p.x, -slideY);
-          drawCard(p.x - w*0.07, slideY, p.card, false, w, h);
-          ctx.restore();
-        }
-      });
-
-      // Score during deal (face-down so shows ?)
-      drawScore(w/2, h*0.38, '?', w);
-      drawScore(w/2, h*0.56, '?', w);
-
-      if (phaseT > totalCards*18+20) {
-        phase  = 'revealing';
-        phaseT = 0;
-      }
-    }
-
-    if (phase === 'revealing') {
-      // Cards revealed one at a time, flipping open
-      pos.forEach((p, i) => {
-        const startFrame = i * 22;
-        const prog    = Math.min(1, Math.max(0, (phaseT - startFrame) / 18));
-        const isFlipped = prog > 0.5;
-        const scaleX  = Math.abs(Math.cos(prog * Math.PI));
-
-        ctx.save();
-        ctx.translate(p.x, p.y + w*0.02);
-        ctx.scale(scaleX < 0.05 ? 0.05 : scaleX, 1);
-        ctx.translate(-p.x, -(p.y + w*0.02));
-        drawCard(p.x - w*0.07, p.y, p.card, isFlipped, w, h);
-        ctx.restore();
-      });
-
-      // Running totals
-      const pRevealed = pos.slice(hand.bH.length).filter((_,i) => phaseT > hand.bH.length*22 + i*22 + 11);
-      const bRevealed = pos.slice(0, hand.bH.length).filter((_,i) => phaseT > i*22 + 11);
-      const pScore = pRevealed.length ? handTotal(pRevealed.map(p=>p.card)) : '?';
-      const bScore = bRevealed.length ? handTotal(bRevealed.map(p=>p.card)) : '?';
-      drawScore(w/2, h*0.38, bScore, w);
-      drawScore(w/2, h*0.56, pScore, w);
-
-      if (phaseT > totalCards*22+30 && !resultShown) {
-        resultShown = true;
-        const labels = { B:'BANKER WINS', P:'PLAYER WINS', T:'TIE' };
-        const colors = { B:'#6688ff', P:'#ff8888', T:'#66dd66' };
-        drawResultBanner(labels[hand.winner], colors[hand.winner], w, h);
-        // Show HTML result overlay too
-        if (resultEl) {
-          resultEl.textContent = labels[hand.winner];
-          resultEl.style.background = hand.winner==='B'?'rgba(20,40,140,0.75)':hand.winner==='P'?'rgba(140,20,20,0.75)':'rgba(20,100,20,0.75)';
-          resultEl.style.color = colors[hand.winner];
-          resultEl.classList.add('show');
-        }
-        phase  = 'result';
-        phaseT = 0;
-      }
-    }
-
-    if (phase === 'result') {
-      // Keep cards visible, show result banner
-      pos.forEach((p) => drawCard(p.x - w*0.07, p.y, p.card, true, w, h));
-      drawScore(w/2, h*0.38, hand.bT, w);
-      drawScore(w/2, h*0.56, hand.pT, w);
-      const labels = { B:'BANKER WINS', P:'PLAYER WINS', T:'TIE' };
-      const colors = { B:'#6688ff', P:'#ff8888', T:'#66dd66' };
-      drawResultBanner(labels[hand.winner], colors[hand.winner], w, h);
-
-      if (phaseT > PHASE_DURATIONS.result) {
-        phase  = 'clear';
-        phaseT = 0;
-        if (resultEl) resultEl.classList.remove('show');
-      }
-    }
-
-    if (phase === 'clear') {
-      const fade = 1 - phaseT / PHASE_DURATIONS.clear;
-      ctx.globalAlpha = fade;
-      pos.forEach((p) => drawCard(p.x - w*0.07, p.y, p.card, true, w, h));
-      drawScore(w/2, h*0.38, hand.bT, w);
-      drawScore(w/2, h*0.56, hand.pT, w);
-      ctx.globalAlpha = 1;
-
-      if (phaseT > PHASE_DURATIONS.clear) {
-        phase  = 'idle';
-        phaseT = 0;
-        hand   = null;
-      }
-    }
-
-    baccAnimId = requestAnimationFrame(tick);
-  }
-
-  tick();
-}
-
-// ══════════════════════════════════════════════════════════════════
-//  GLADIATOR THEME AUDIO (preserved from original)
-// ══════════════════════════════════════════════════════════════════
-let audioCtx = null;
-let themeNodes = [];
-let splashSoundOn = true;
-let themeStarted = false;
-
-function getCtx(){
-  if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)();
-  if(audioCtx.state==='suspended') audioCtx.resume();
-  return audioCtx;
-}
-
-function toggleSplashSound(){
-  splashSoundOn = !splashSoundOn;
-  document.getElementById('snd-btn').textContent = splashSoundOn ? '🔊' : '🔇';
-  if(splashSoundOn){ if(!themeStarted) startTheme(); }
-  else { stopTheme(); }
-}
-
-function stopTheme(){
-  themeNodes.forEach(n=>{ try{ n.stop(); }catch(e){} });
-  themeNodes=[];
-}
-
-function startTheme(){
-  if(!splashSoundOn) return;
-  themeStarted = true;
-  const ctx = getCtx();
-
-  // Master output — fade in gently over 4s
-  const master = ctx.createGain();
-  master.gain.setValueAtTime(0, ctx.currentTime);
-  master.gain.linearRampToValueAtTime(0.28, ctx.currentTime + 4);
-  master.connect(ctx.destination);
-
-  // Reverb using a decaying noise impulse
-  const irLen = Math.floor(ctx.sampleRate * 2.8);
-  const irBuf = ctx.createBuffer(2, irLen, ctx.sampleRate);
-  for(let ch=0; ch<2; ch++){
-    const d = irBuf.getChannelData(ch);
-    for(let i=0; i<irLen; i++) d[i] = (Math.random()*2-1) * Math.pow(1 - i/irLen, 2.2);
-  }
-  const reverb = ctx.createConvolver(); reverb.buffer = irBuf;
-  const rvbGain = ctx.createGain(); rvbGain.gain.value = 0.38;
-  reverb.connect(rvbGain); rvbGain.connect(master);
-
-  // Soft piano-like note: sine + slight triangle harmonic, sharp attack, long decay
-  function pianoNote(freq, t, dur, vol){
-    [1, 2, 3].forEach((harm, i) => {
-      const osc = ctx.createOscillator();
-      osc.type = 'sine'; osc.frequency.value = freq * harm;
-      const env = ctx.createGain();
-      const harmVol = vol * [1, 0.18, 0.06][i];
-      env.gain.setValueAtTime(0, t);
-      env.gain.linearRampToValueAtTime(harmVol, t + 0.012);
-      env.gain.exponentialRampToValueAtTime(harmVol * 0.55, t + 0.18);
-      env.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-      const lp = ctx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value = 3200 / harm;
-      osc.connect(lp); lp.connect(env);
-      env.connect(master); env.connect(reverb);
-      osc.start(t); osc.stop(t + dur + 0.05);
-      themeNodes.push(osc);
-    });
-  }
-
-  // Warm bass pad (sine, very low, long sustain)
-  function bassPad(freq, t, dur, vol){
-    const osc = ctx.createOscillator(); osc.type='sine'; osc.frequency.value=freq;
-    const env = ctx.createGain();
-    env.gain.setValueAtTime(0, t);
-    env.gain.linearRampToValueAtTime(vol, t + 1.2);
-    env.gain.setValueAtTime(vol, t + dur - 1.0);
-    env.gain.linearRampToValueAtTime(0, t + dur);
-    const lp = ctx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=220; lp.Q.value=0.5;
-    osc.connect(lp); lp.connect(env); env.connect(master);
-    osc.start(t); osc.stop(t + dur + 0.1);
-    themeNodes.push(osc);
-  }
-
-  // Jazz lounge chord progression: Fmaj7 → Dm7 → Bbmaj7 → C9
-  // Soft arpeggiated upward, one note every 0.14s
-  const BPM = 54, beat = 60/BPM, bar = beat * 4;
-
-  // chord = [root_bass, ...chord_notes]  (all in Hz)
-  const chords = [
-    { bass:87.3,  notes:[174.6, 220.0, 261.6, 329.6] }, // Fmaj7
-    { bass:73.4,  notes:[146.8, 174.6, 220.0, 261.6] }, // Dm7
-    { bass:116.5, notes:[116.5, 146.8, 174.6, 220.0] }, // Bbmaj7
-    { bass:130.8, notes:[130.8, 164.8, 196.0, 246.9] }, // C9
-  ];
-
-  function playChordBar(chord, t){
-    bassPad(chord.bass, t, bar * 0.92, 0.18);
-    chord.notes.forEach((freq, i) => {
-      pianoNote(freq, t + i * 0.14, bar * 0.78, 0.11);
-      // add octave above very quietly for shimmer
-      pianoNote(freq * 2, t + i * 0.14 + 0.07, bar * 0.5, 0.035);
-    });
-  }
-
-  // Very subtle brushed cymbal (barely audible texture)
-  function brush(t){
-    const bufLen = Math.floor(ctx.sampleRate * 0.06);
-    const buf = ctx.createBuffer(1, bufLen, ctx.sampleRate);
-    const d = buf.getChannelData(0);
-    for(let i=0; i<bufLen; i++) d[i] = (Math.random()*2-1) * (1-i/bufLen) * 0.6;
-    const src = ctx.createBufferSource(); src.buffer = buf;
-    const hp = ctx.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=7000;
-    const g = ctx.createGain(); g.gain.setValueAtTime(0.018, t); g.gain.exponentialRampToValueAtTime(0.0001, t+0.06);
-    src.connect(hp); hp.connect(g); g.connect(master);
-    src.start(t); themeNodes.push(src);
-  }
-
-  // Schedule loops using setTimeout to avoid pre-creating hundreds of nodes
-  const now = ctx.currentTime;
-  let loopRep = 0;
-  const maxReps = 40;
-
-  function scheduleLoop(loopOffset){
-    if(!splashSoundOn || loopRep >= maxReps) return;
-    loopRep++;
-    chords.forEach((chord, bi) => {
-      const t = now + loopOffset + bi * bar;
-      playChordBar(chord, t);
-      // brushes on beats 1, 2.5, 3, 4.5 of each bar
-      [0, beat*1.5, beat*2, beat*3.5].forEach(bOff => brush(t + bOff));
-    });
-    const loopDur = bar * chords.length;
-    setTimeout(() => scheduleLoop(loopOffset + loopDur), (loopDur - beat) * 1000);
-  }
-
-  // Start first loop after a 1.5s atmospheric fade-in delay
-  setTimeout(() => scheduleLoop(0), 1500);
-}
-
-let themeArmed=false;
-function armTheme(){
-  if(themeArmed) return; themeArmed=true;
-  if(splashSoundOn) startTheme();
-}
-document.addEventListener('click',     armTheme, {once:true});
-document.addEventListener('touchstart',armTheme, {once:true});
-
-// ── ENTER ARENA ──────────────────────────────────────────────────
-function enterArena(){
-  armTheme();
-  if(baccAnimId){ cancelAnimationFrame(baccAnimId); baccAnimId=null; }
-  clearTimeout(cityTimer);
-  const flash=document.getElementById('flash');
-  flash.classList.add('on');
-  stopTheme();
-  swordClash();
-  setTimeout(()=>{ window.location.href='baccarat-scoreboard.html'; }, 200);
-}
-
-function swordClash(){
-  const ctx=getCtx(), now=ctx.currentTime;
-  [880,1320,1760,2200].forEach((f,i)=>{
-    const o=ctx.createOscillator(); o.type='triangle'; o.frequency.value=f;
-    const g=ctx.createGain(); g.gain.setValueAtTime(0.15-i*0.025,now); g.gain.exponentialRampToValueAtTime(0.001,now+0.6);
-    o.connect(g); g.connect(ctx.destination); o.start(now); o.stop(now+0.65);
+    const dx = offset * 64;             // % horizontal spread
+    const dz = -Math.abs(offset) * 180; // depth
+    const ry = offset * -22;            // rotateY
+    const op = Math.max(0, 1 - Math.abs(offset) * 0.30);
+    card.style.setProperty('--ry', ry + 'deg');
+    card.style.transform =
+      `translate(-50%, -50%) translate3d(${dx}%, 0, ${dz}px) rotateY(${ry}deg)`;
+    card.style.opacity = op;
+    card.style.zIndex = 100 - Math.abs(offset);
   });
-  const bufLen=Math.floor(ctx.sampleRate*0.08), buf=ctx.createBuffer(1,bufLen,ctx.sampleRate), d=buf.getChannelData(0);
-  for(let i=0;i<bufLen;i++) d[i]=(Math.random()*2-1)*(1-i/bufLen)*0.8;
-  const src=ctx.createBufferSource(); src.buffer=buf;
-  const g=ctx.createGain(); g.gain.value=0.5;
-  src.connect(g); g.connect(ctx.destination); src.start(now);
+
+  // Bottom dock meta
+  const stage = STAGES[idx];
+  const tier = TIERS[stage.tier - 1];
+  document.querySelector('#stage-meta .num').textContent =
+    `STAGE ${String(idx + 1).padStart(2, '0')} OF ${String(STAGES.length).padStart(2, '0')}`;
+  document.querySelector('#stage-meta .tier-name').textContent =
+    `TIER ${stage.tier} · ${tier.name}`;
+
+  // Tier pip bar
+  const pips = document.getElementById('tier-bar');
+  pips.innerHTML = '';
+  for (let t = 1; t <= 10; t++) {
+    const pip = document.createElement('div');
+    pip.className = 'tier-pip';
+    if (cleared.has(t)) pip.classList.add('cleared');
+    if (t === stage.tier) pip.classList.add('current');
+    pip.title = TIERS[t - 1].name;
+    pips.appendChild(pip);
+  }
+
+  // SELECT button state
+  const btnSel = document.getElementById('btn-select');
+  btnSel.classList.toggle('locked', !isTierUnlocked(stage.tier));
+  btnSel.textContent = isTierUnlocked(stage.tier)
+    ? (visited.has(stage.slug) ? 'PLAY AGAIN' : 'SELECT STAGE')
+    : 'LOCKED';
 }
+
+// ── Navigation ────────────────────────────────────────────────
+function goto(i) {
+  idx = Math.max(0, Math.min(STAGES.length - 1, i));
+  navBlip();
+  layout();
+  hideHint();
+}
+function next() { goto(idx + 1); }
+function prev() { goto(idx - 1); }
+
+function select() {
+  const stage = STAGES[idx];
+  if (!isTierUnlocked(stage.tier)) {
+    // Locked → shake + buzz
+    lockedBuzz();
+    const card = deck.children[idx];
+    card.classList.remove('shake'); void card.offsetWidth; card.classList.add('shake');
+    return;
+  }
+  // Mark cleared + visited (visiting any stage = clearing its tier).
+  visited.add(stage.slug);  saveSet(LS_VISITED, visited);
+  cleared.add(stage.tier);  saveSet(LS_CLEARED, cleared);
+
+  selectChunk();
+  document.getElementById('flash').classList.remove('fire');
+  void document.getElementById('flash').offsetWidth;
+  document.getElementById('flash').classList.add('fire');
+
+  const splash = document.getElementById('load-splash');
+  splash.querySelector('.stage-name').textContent = stage.name.toUpperCase();
+  splash.querySelector('.stage-tier').textContent =
+    `TIER ${stage.tier} · ${TIERS[stage.tier - 1].name}`;
+  setTimeout(() => splash.classList.add('show'), 250);
+
+  setTimeout(() => {
+    location.href = `/road-to-${stage.slug}.html`;
+  }, 1100);
+}
+
+// ── Inputs ────────────────────────────────────────────────────
+document.getElementById('btn-prev').addEventListener('click', prev);
+document.getElementById('btn-next').addEventListener('click', next);
+document.getElementById('btn-select').addEventListener('click', select);
+document.getElementById('btn-home').addEventListener('click', () => location.href = '/landing.html');
+
+window.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft')  prev();
+  if (e.key === 'ArrowRight') next();
+  if (e.key === 'Enter' || e.key === ' ') select();
+});
+
+// Swipe gestures on the deck
+let touchX = null;
+deck.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; }, { passive:true });
+deck.addEventListener('touchend',   e => {
+  if (touchX === null) return;
+  const dx = e.changedTouches[0].clientX - touchX;
+  if (dx <  -40) next();
+  if (dx >   40) prev();
+  touchX = null;
+}, { passive:true });
+
+// "Insert coin" hint hides on first interaction
+let hintHidden = false;
+function hideHint() {
+  if (hintHidden) return;
+  hintHidden = true;
+  document.getElementById('coin-hint').classList.add('gone');
+}
+window.addEventListener('touchstart', hideHint, { once:true, passive:true });
+window.addEventListener('keydown',    hideHint, { once:true });
+
+// ── Service worker ───────────────────────────────────────────
+if ('serviceWorker' in navigator) {
+  try { navigator.serviceWorker.register('/sw.js'); } catch (e) {}
+}
+
+// Initial paint
+layout();
 </script>
 </body>
 </html>

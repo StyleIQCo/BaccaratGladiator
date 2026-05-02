@@ -298,9 +298,10 @@ html,body {
 #btn-home { position:fixed; top:max(14px,env(safe-area-inset-top));
   left:14px; width:42px; height:42px; padding:0; z-index:25;
   border-radius:10px; border:1px solid rgba(255,200,80,0.45);
-  background:rgba(0,0,0,0.55); color:#ffe1a8; font-size:1rem;
+  background:rgba(0,0,0,0.55); color:#ffe1a8; font-size:0.85rem;
   backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
-  cursor:pointer; }
+  cursor:pointer;
+  font-family:'Press Start 2P','Orbitron',monospace; letter-spacing:1px; }
 
 /* Visited badge — stamped on cards you've already cleared */
 .card.visited .visited-badge { display:flex; }
@@ -331,7 +332,7 @@ html,body {
   <div class="sub">SELECT YOUR STAGE</div>
 </header>
 
-<button id="btn-home" aria-label="Home" title="Home">⌂</button>
+<button id="btn-home" aria-label="About" title="Marketing splash">i</button>
 
 <div id="deck-frame">
   <div id="deck"></div>
@@ -661,7 +662,7 @@ function select() {
 document.getElementById('btn-prev').addEventListener('click', prev);
 document.getElementById('btn-next').addEventListener('click', next);
 document.getElementById('btn-select').addEventListener('click', select);
-document.getElementById('btn-home').addEventListener('click', () => location.href = '/');
+document.getElementById('btn-home').addEventListener('click', () => location.href = '/landing.html');
 
 window.addEventListener('keydown', e => {
   if (e.key === 'ArrowLeft')  prev();
