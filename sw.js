@@ -4,7 +4,7 @@
   On install: pre-cache core shell. On activate: purge old caches.
 */
 
-const CACHE_VERSION = 'bg-v63';
+const CACHE_VERSION = 'bg-v69';
 const SHELL_CACHE   = `${CACHE_VERSION}-shell`;
 const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`;
 
@@ -66,6 +66,7 @@ self.addEventListener('fetch', event => {
   const isActiveBuild = url.pathname === '/' ||
                         url.pathname === '/index.html' ||
                         url.pathname === '/road-to-nine.html' ||
+                        url.pathname === '/road-to-lv.html' ||
                         url.pathname === '/baccarat-scoreboard.html' ||
                         url.pathname === '/three.module.js';
   if (isActiveBuild) {

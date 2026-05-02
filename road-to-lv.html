@@ -373,21 +373,22 @@ body.compact .slot.side .pay { font-size:0.4rem; margin-top:1px; }
   background:radial-gradient(ellipse at 50% 0%, rgba(50,32,4,0.55), rgba(20,12,2,0.3)); }
 .slot.side.tiger-tie   { color:#9fffd0; border-color:rgba(80,220,150,0.5);
   background:radial-gradient(ellipse at 50% 0%, rgba(0,60,32,0.55), rgba(0,20,12,0.3)); }
-.slot.side.tiger-pair-p { color:#9fbfff; border-color:rgba(140,170,255,0.5);
-  background:radial-gradient(ellipse at 50% 0%, rgba(8,24,72,0.5), rgba(4,8,24,0.25)); }
-.slot.side.tiger-pair-b { color:#ff9c9c; border-color:rgba(255,140,140,0.5);
-  background:radial-gradient(ellipse at 50% 0%, rgba(72,8,8,0.5), rgba(24,4,4,0.25)); }
 .slot.side.tie         { color:#9fffa9; border-color:rgba(140,255,170,0.45);
   background:radial-gradient(ellipse at 50% 0%, rgba(0,40,15,0.55), rgba(0,15,5,0.25)); }
 .slot.side.active      { transform:scale(1.04); box-shadow:0 0 22px currentColor; }
 
 /* Banker / Player — full-width rows */
 .slot.main {
-  width:100%; min-height:50px; padding:7px 14px;
+  flex:2 1 0; min-width:0; min-height:50px; padding:7px 14px;
   border:2px solid rgba(201,168,76,0.55);
   border-radius:12px;
 }
+/* Banker | Tie | Player on one row: mains take 2/5 each, Tie centre 1/5. */
+#bet-panel .main-row { gap:6px; pointer-events:auto; }
+#bet-panel .main-row .slot.main { flex:2 1 0; }
+#bet-panel .main-row .slot.center-tie { flex:1 1 0; min-height:50px; }
 body.compact .slot.main { min-height:40px; padding:5px 12px; }
+body.compact #bet-panel .main-row .slot.center-tie { min-height:40px; }
 body.compact .slot.main .lbl { font-size:0.78rem; letter-spacing:4px; }
 body.compact .slot.main .pay { font-size:0.4rem; }
 body.compact .slot.main .amt { font-size:0.62rem; margin-top:1px; }
@@ -431,28 +432,6 @@ body.compact .slot.main .amt { font-size:0.62rem; margin-top:1px; }
   50%     { box-shadow:inset 0 0 24px rgba(255,255,255,0.35); border-color:rgba(255,255,255,0.6); }
 }
 
-/* Twin Tiger Pair: massive theatrical full-screen flash. */
-#twin-tiger-splash {
-  position:fixed; inset:0; z-index:60; pointer-events:none;
-  display:flex; align-items:center; justify-content:center;
-  background:radial-gradient(ellipse at center, rgba(0,0,0,0) 0%, rgba(0,0,0,0.85) 80%);
-  opacity:0; transition:opacity 0.18s ease;
-}
-#twin-tiger-splash.go { opacity:1; }
-#twin-tiger-splash .twin-title {
-  font-family:'Cinzel',serif; font-weight:800; color:#ffd770;
-  font-size:clamp(2.2rem, 12vw, 6rem); letter-spacing:0.18em;
-  text-shadow:0 0 38px #ff8a30, 0 4px 22px rgba(0,0,0,0.85);
-  transform:scale(0.6); opacity:0;
-}
-#twin-tiger-splash.go .twin-title { animation:twin-title 1.8s cubic-bezier(.16,1,.3,1) forwards; }
-@keyframes twin-title {
-  0%   { transform:scale(0.5); opacity:0; }
-  20%  { transform:scale(1.12); opacity:1; }
-  35%  { transform:scale(1.0); }
-  85%  { transform:scale(1.0); opacity:1; }
-  100% { transform:scale(0.95); opacity:0; }
-}
 
 /* Felt-side particle canvas for the Big Tiger / Small Tiger burst */
 #fx-canvas { position:fixed; inset:0; pointer-events:none; z-index:7; }
@@ -778,8 +757,6 @@ body.compact.show-totals #btn-clear { transform: translateY(180%); opacity:0; po
     <div class="stat"><span class="k">SM TIGER</span><span class="v" id="bs-st">0</span></div>
     <div class="stat"><span class="k">TIGER</span><span class="v" id="bs-ti">0</span></div>
     <div class="stat"><span class="k">TIGER TIE</span><span class="v" id="bs-tt">0</span></div>
-    <div class="stat"><span class="k">PAIR P</span><span class="v vP" id="bs-pp">0</span></div>
-    <div class="stat"><span class="k">PAIR B</span><span class="v vB" id="bs-pb">0</span></div>
     <div class="stat"><span class="k">NAT 9</span><span class="v" id="bs-n9">0</span></div>
     <div class="stat"><span class="k">NAT 8</span><span class="v" id="bs-n8">0</span></div>
   </div>
@@ -800,24 +777,13 @@ body.compact.show-totals #btn-clear { transform: translateY(180%); opacity:0; po
      screen on any 3-card banker 7. Particle trail handled in JS. -->
 <div id="tiger-flyby" aria-hidden="true">🐅</div>
 
-<!-- Twin Tiger Pair: massive theatrical full-screen flash. -->
-<div id="twin-tiger-splash" aria-hidden="true">
-  <div class="twin-title">🐅  TWIN TIGER  🐅</div>
-</div>
 
 <!-- Seat-5 betting layout: side bets (Tiger Bonus suite) closest to the
      dealer arc, then Banker stacked, then Player closest to the player.
      Mirrors a real Las Vegas half-moon Tiger Baccarat felt seen from a single seat. -->
 <footer id="bet-panel">
-  <!-- Top arc: Tiger Bonus suite (Vegas high-limit standard).
-       Big Tiger 50:1, Small Tiger 22:1, Tiger 12:1, Tiger Tie 35:1. -->
+  <!-- Top arc, left -> right: Small Tiger, Tiger, Big Tiger, Tiger Tie. -->
   <div class="bet-row sides tiger-row">
-    <button type="button" class="slot side tiger-big" data-side="bigtiger">
-      <span class="lbl">BIG TIGER</span>
-      <span class="pay">50:1</span>
-      <span class="lim">$25–$500</span>
-      <span class="amt" id="amt-bigtiger">$0</span>
-    </button>
     <button type="button" class="slot side tiger-small" data-side="smalltiger">
       <span class="lbl">SMALL TIGER</span>
       <span class="pay">22:1</span>
@@ -830,6 +796,12 @@ body.compact.show-totals #btn-clear { transform: translateY(180%); opacity:0; po
       <span class="lim">$25–$500</span>
       <span class="amt" id="amt-tiger">$0</span>
     </button>
+    <button type="button" class="slot side tiger-big" data-side="bigtiger">
+      <span class="lbl">BIG TIGER</span>
+      <span class="pay">50:1</span>
+      <span class="lim">$25–$500</span>
+      <span class="amt" id="amt-bigtiger">$0</span>
+    </button>
     <button type="button" class="slot side tiger-tie" data-side="tigertie">
       <span class="lbl">TIGER TIE</span>
       <span class="pay">35:1</span>
@@ -837,39 +809,27 @@ body.compact.show-totals #btn-clear { transform: translateY(180%); opacity:0; po
       <span class="amt" id="amt-tigertie">$0</span>
     </button>
   </div>
-  <!-- Pair row + standard Tie. Tiger Pair pays 4:1 single, 20:1 same colour pair. -->
-  <div class="bet-row pairs">
-    <button type="button" class="slot side tiger-pair-p" data-side="pair_p">
-      <span class="lbl">PLAYER PAIR</span>
-      <span class="pay">11:1</span>
-      <span class="lim">$25–$500</span>
-      <span class="amt" id="amt-pair_p">$0</span>
+  <!-- Main row, left -> right: Player | Tie | Banker. -->
+  <div class="bet-row main-row">
+    <button type="button" class="slot main player" data-side="player">
+      <span class="lbl">PLAYER</span>
+      <span class="pay">1:1</span>
+      <span class="lim">$100–$5,000</span>
+      <span class="amt" id="amt-player">$0</span>
     </button>
-    <button type="button" class="slot side tie" data-side="tie">
+    <button type="button" class="slot side tie center-tie" data-side="tie">
       <span class="lbl">TIE</span>
       <span class="pay">8:1</span>
       <span class="lim">$25–$500</span>
       <span class="amt" id="amt-tie">$0</span>
     </button>
-    <button type="button" class="slot side tiger-pair-b" data-side="pair_b">
-      <span class="lbl">BANKER PAIR</span>
-      <span class="pay">11:1</span>
-      <span class="lim">$25–$500</span>
-      <span class="amt" id="amt-pair_b">$0</span>
+    <button type="button" class="slot main banker" data-side="banker">
+      <span class="lbl">BANKER</span>
+      <span class="pay">1:1</span>
+      <span class="lim">$100–$5,000</span>
+      <span class="amt" id="amt-banker">$0</span>
     </button>
   </div>
-  <button type="button" class="slot main banker" data-side="banker">
-    <span class="lbl">BANKER</span>
-    <span class="pay">1:1</span>
-    <span class="lim">$100–$5,000</span>
-    <span class="amt" id="amt-banker">$0</span>
-  </button>
-  <button type="button" class="slot main player" data-side="player">
-    <span class="lbl">PLAYER</span>
-    <span class="pay">1:1</span>
-    <span class="lim">$100–$5,000</span>
-    <span class="amt" id="amt-player">$0</span>
-  </button>
 </footer>
 
 <canvas id="fx-canvas"></canvas>
@@ -1733,13 +1693,16 @@ function addSideBetPrint(emoji, label, payout, color, x, z, size = 0.105) {
 // the visible camera frustum at z=-0.26. Centres are 0.115 apart, circles
 // are 0.105 wide → ~0.01 visible gap between them, no overlap.
 // Vegas Tiger Bonus felt artwork — top arc of tigers, then pair row + tie.
-addSideBetPrint('🐅', 'BIG TIGER',  '50:1', '#ffd770', -0.180, -0.32);
-addSideBetPrint('🐅', 'SMALL TGR',  '22:1', '#aac4ff', -0.060, -0.32);
-addSideBetPrint('🐅', 'TIGER',      '12:1', '#ffd070',  0.060, -0.32);
-addSideBetPrint('🐅', 'TGR TIE',    '35:1', '#9fffd0',  0.180, -0.32);
-addSideBetPrint('♣',  'PAIR P',     '11:1', '#9fbfff', -0.180, -0.26);
-addSideBetPrint('⚖️', 'TIE',         '8:1', '#9fffa9',  0.000, -0.26);
-addSideBetPrint('♣',  'PAIR B',     '11:1', '#ff9c9c',  0.180, -0.26);
+// Pulled toward the user (less negative z) so the dealer video at the
+// top of the screen no longer overlaps the side-bet prints. The Tiger
+// row now sits in front of the Player/Banker felt zone, like a real
+// Vegas table where the side-bet circles live closest to the seat.
+// Left -> right: Small Tiger, Tiger, Big Tiger, Tiger Tie.
+addSideBetPrint('🐅', 'SMALL TGR',  '22:1', '#aac4ff', -0.180, -0.06);
+addSideBetPrint('🐅', 'TIGER',      '12:1', '#ffd070', -0.060, -0.06);
+addSideBetPrint('🐅', 'BIG TIGER',  '50:1', '#ffd770',  0.060, -0.06);
+addSideBetPrint('🐅', 'TGR TIE',    '35:1', '#9fffd0',  0.180, -0.06);
+addSideBetPrint('⚖️', 'TIE',         '8:1', '#9fffa9',  0.000, -0.10);
 
 // ════════════════════════════════════════════════════════════════
 //  CARD — geometry with corner-peel deformation
@@ -1947,19 +1910,18 @@ if (ambientChipsGroup) scene.add(ambientChipsGroup);
 // Traditional baccarat orientation: Player on the LEFT (-x), Banker on the
 // RIGHT (+x). Ambient chips spawn near these zones to make the table feel
 // populated by other VIP players betting alongside.
-// Vegas Tiger felt geometry: top arc holds the Tiger Bonus suite, then a
-// pair row, then standard Tie centered, with Banker / Player as the two
-// large bottom zones nearest the seat.
+// Vegas Tiger felt geometry: Banker/Player anchor the back arc (closer
+// to dealer), Tie sits a bit toward the user, and the Tiger Bonus suite
+// is brought all the way forward so the dealer video at the top of the
+// screen no longer overlaps the felt prints / chip stacks.
 const ZONE_FELT_POS = {
   player:    { x: -0.16,  z: -0.20 },
   banker:    { x:  0.16,  z: -0.20 },
-  tie:       { x:  0.000, z: -0.26 },
-  bigtiger:  { x: -0.180, z: -0.32 },
-  smalltiger:{ x: -0.060, z: -0.32 },
-  tiger:     { x:  0.060, z: -0.32 },
-  tigertie:  { x:  0.180, z: -0.32 },
-  pair_p:    { x: -0.180, z: -0.26 },
-  pair_b:    { x:  0.180, z: -0.26 },
+  tie:       { x:  0.000, z: -0.10 },
+  smalltiger:{ x: -0.180, z: -0.06 },
+  tiger:     { x: -0.060, z: -0.06 },
+  bigtiger:  { x:  0.060, z: -0.06 },
+  tigertie:  { x:  0.180, z: -0.06 },
 };
 
 function clearGroup(g) {
@@ -1996,13 +1958,13 @@ if (userChipsGroup) scene.add(userChipsGroup);
 function refreshUserChipStacks() {
   if (!userChipsGroup) return;
   clearGroup(userChipsGroup);
-  for (const side of ['banker','player','tie','bigtiger','smalltiger','tiger','tigertie','pair_p','pair_b']) {
+  for (const side of ['banker','player','tie','bigtiger','smalltiger','tiger','tigertie']) {
     const amt = state.bets[side]; if (!amt) continue;
     const base = ZONE_FELT_POS[side];
     // Tie / Big Tiger / Small Tiger chips land directly on their felt artwork.
     // Banker / Player chips sit a touch closer to the camera so they stand
     // clear of the cards landing zone.
-    const sideBetRow = (['bigtiger','smalltiger','tiger','tigertie','pair_p','pair_b','tie'].includes(side));
+    const sideBetRow = (['bigtiger','smalltiger','tiger','tigertie','tie'].includes(side));
     const dz = sideBetRow ? 0.005 : 0.06;
     placeStack(userChipsGroup, base.x, base.z + dz, decomposeAmount(amt), 0.0008);
   }
@@ -2022,7 +1984,10 @@ const dealController = new (class {
   // the rank corner of the bottom card is always visible.
   positions(side, idx) {
     const X = side === 'P' ? -0.105 : 0.105;
-    const baseZ = -0.13;
+    // Cards land deeper into the felt (more negative z) than the Tiger
+    // Bonus row at z=-0.06 so the card sprites no longer clip the top of
+    // the side-bet circles.
+    const baseZ = -0.18;
     if (idx === 2) {
       return { x: X + (side === 'P' ? -0.082 : 0.082), z: baseZ - 0.042 };
     }
@@ -2246,13 +2211,12 @@ canvas.addEventListener('pointercancel', () => { activeSqueeze = null; });
 const state = {
   phase: 'betting',  // betting → dealing → squeeze → resolving → payout → betting
   balance: 1000,
-  bets: { player: 0, banker: 0, tie: 0, bigtiger: 0, smalltiger: 0, tiger: 0, tigertie: 0, pair_p: 0, pair_b: 0 },
+  bets: { player: 0, banker: 0, tie: 0, bigtiger: 0, smalltiger: 0, tiger: 0, tigertie: 0 },
   selectedChip: 25,
   shoeCount: 0,
   stats: { hands: 0, B: 0, P: 0, T: 0, pnl: 0,
            nat8: 0, nat9: 0,
-           bigtiger: 0, smalltiger: 0, tiger: 0, tigertie: 0,
-           pair_p: 0, pair_b: 0, twin: 0 },
+           bigtiger: 0, smalltiger: 0, tiger: 0, tigertie: 0 },
 };
 let shoe = newShoe();
 
@@ -2464,7 +2428,7 @@ bus.on('cardRevealed', card => {
 function totalBet() { return state.bets.player + state.bets.banker + state.bets.tie; }
 
 function syncBetUI() {
-  ['player','banker','tie','bigtiger','smalltiger','tiger','tigertie','pair_p','pair_b'].forEach(side => {
+  ['player','banker','tie','bigtiger','smalltiger','tiger','tigertie'].forEach(side => {
     const el = document.getElementById('amt-' + side);
     if (el) el.textContent = '$' + state.bets[side].toLocaleString();
   });
@@ -2541,24 +2505,10 @@ function celebrateZone(side, kind, betAmount){
   else                 { sfx.win(); haptic([20, 30, 60, 30, 80]); }
 
   // Theatrical full-screen splash — fires for every Tiger Bonus outcome.
-  const PAYOUT_ODDS = { bigtiger:50, smalltiger:22, tiger:12, tigertie:35, pair_p:11, pair_b:11 };
+  const PAYOUT_ODDS = { bigtiger:50, smalltiger:22, tiger:12, tigertie:35 };
   const odds = PAYOUT_ODDS[side] || 0;
   showBonusSplash(side, kind, betAmount > 0 ? betAmount * odds : 0);
   if (side === 'bigtiger' || side === 'tiger') triggerTigerFlyby();
-}
-
-// Twin Tiger Pair: full-viewport dim + dual gold spotlights + title.
-// Fires when both hands' first two cards form identical pairs.
-function triggerTwinTigerSplash(){
-  const el = document.getElementById('twin-tiger-splash');
-  if (!el) return;
-  el.classList.remove('go'); void el.offsetWidth;
-  el.classList.add('go');
-  // Heavy haptic + extended particle storm from screen center.
-  haptic([40, 50, 100, 50, 200]);
-  fxParticleBurst({ left:0, top:0, width:window.innerWidth, height:window.innerHeight }, 'gold');
-  setTimeout(() => fxParticleBurst({ left:0, top:0, width:window.innerWidth, height:window.innerHeight }, 'gold'), 400);
-  setTimeout(() => el.classList.remove('go'), 2000);
 }
 
 // Tiger flyby — emoji tiger swoops across the screen with a fire
@@ -2602,14 +2552,12 @@ function showBonusSplash(side, kind, payoutAmt){
   const splash = document.getElementById('bonus-splash');
   if (!splash) return;
   const TITLES = { bigtiger:'BIG TIGER', smalltiger:'SMALL TIGER', tiger:'TIGER',
-                   tigertie:'TIGER TIE', pair_p:'PLAYER PAIR', pair_b:'BANKER PAIR' };
+                   tigertie:'TIGER TIE' };
   const SUBS   = {
     bigtiger:   'BANKER 3-CARD 6 · 50 TO 1',
     smalltiger: 'BANKER 2-CARD 6 · 22 TO 1',
     tiger:      'BANKER WINS ON 6 · 12 TO 1',
     tigertie:   'TIE AT 6 · 35 TO 1',
-    pair_p:     'PLAYER FIRST PAIR · 11 TO 1',
-    pair_b:     'BANKER FIRST PAIR · 11 TO 1',
   };
   const title    = TITLES[side] || side.toUpperCase();
   const subtitle = SUBS[side]   || '';
@@ -2696,8 +2644,6 @@ const LIMITS = {
   smalltiger: { min:  25, max:  500 },
   tiger:      { min:  25, max:  500 },
   tigertie:   { min:  25, max:  500 },
-  pair_p:     { min:  25, max:  500 },
-  pair_b:     { min:  25, max:  500 },
 };
 function fmtMoney(n){ return '$' + n.toLocaleString(); }
 
@@ -2748,7 +2694,7 @@ document.querySelectorAll('.slot').forEach(slot => {
 document.getElementById('btn-clear').addEventListener('click', () => {
   if (state.phase !== 'betting') return;
   state.balance += totalBet();
-  state.bets = { player: 0, banker: 0, tie: 0, bigtiger: 0, smalltiger: 0, tiger: 0, tigertie: 0, pair_p: 0, pair_b: 0 };
+  state.bets = { player: 0, banker: 0, tie: 0, bigtiger: 0, smalltiger: 0, tiger: 0, tigertie: 0 };
   syncBetUI();
 });
 
@@ -2943,7 +2889,7 @@ function mainBet() {
 }
 function sideBet() {
   return state.bets.bigtiger + state.bets.smalltiger + state.bets.tiger
-       + state.bets.tigertie + state.bets.pair_p + state.bets.pair_b;
+       + state.bets.tigertie;
 }
 
 async function playHand() {
@@ -3003,17 +2949,10 @@ async function playHand() {
   //   Small Tiger  22:1 — Banker wins on a 2-card 6
   //   Tiger        12:1 — Banker wins on any 6 (covers both above)
   //   Tiger Tie    35:1 — Tie hand on 6 / 6
-  //   Player Pair  11:1 — Player's first 2 cards same rank
-  //   Banker Pair  11:1 — Banker's first 2 cards same rank
-  const bRank = c => c && c.r;            // shoe items use {r, s}
   const isBigTiger    = winner === 'B' && bankerCards.length === 3 && bT === 6;
   const isSmallTiger  = winner === 'B' && bankerCards.length === 2 && bT === 6;
   const isTiger       = winner === 'B' && bT === 6;
   const isTigerTie    = winner === 'T' && pT === 6 && bT === 6;
-  const isPairP       = playerCards.length >= 2 && bRank(playerCards[0]) === bRank(playerCards[1]);
-  const isPairB       = bankerCards.length >= 2 && bRank(bankerCards[0]) === bRank(bankerCards[1]);
-  // Twin Tiger Pair: both hands' first two cards are identical pairs.
-  const isTwinPair    = isPairP && isPairB;
 
   // Winnings = cash returned (includes original stake on a win/push).
   // Vegas Tiger Baccarat banker rule: 1:1 on regular wins, 1:2 (half-pay)
@@ -3034,8 +2973,8 @@ async function playHand() {
   if (isSmallTiger) winnings += state.bets.smalltiger * 23;   // 22:1
   if (isTiger)      winnings += state.bets.tiger      * 13;   // 12:1
   if (isTigerTie)   winnings += state.bets.tigertie   * 36;   // 35:1
-  if (isPairP)      winnings += state.bets.pair_p     * 12;   // 11:1
-  if (isPairB)      winnings += state.bets.pair_b     * 12;   // 11:1
+
+
 
   const net = winnings - totalBet();
   state.balance += winnings;
@@ -3045,9 +2984,9 @@ async function playHand() {
   if (isSmallTiger) celebrateZone('smalltiger', 'sapphire', state.bets.smalltiger);
   if (isTiger)      celebrateZone('tiger',      'gold',     state.bets.tiger);
   if (isTigerTie)   celebrateZone('tigertie',   'emerald',  state.bets.tigertie);
-  if (isPairP)      celebrateZone('pair_p',     'sapphire', state.bets.pair_p);
-  if (isPairB)      celebrateZone('pair_b',     'crimson',  state.bets.pair_b);
-  if (isTwinPair)   triggerTwinTigerSplash();
+
+
+
 
   // Tag the winning side on the totals panel.
   highlightWinner(winner);
@@ -3056,7 +2995,7 @@ async function playHand() {
   //   Small win                   → playful_smirk.jpeg
   //   Tie                         → laughing.jpeg
   //   Loss                        → sympathetic.jpeg
-  if (isBigTiger || isSmallTiger || isTiger || isTigerTie || isTwinPair || net > 100) playCongratsVideo();
+  if (isBigTiger || isSmallTiger || isTiger || isTigerTie || net > 100) playCongratsVideo();
   else if (net > 0)                            showSmirkDealer();
   else if (winner === 'T' && state.bets.tie===0) showLaughingDealer();
   else if (net < 0)                            showSympatheticDealer();
@@ -3076,9 +3015,9 @@ async function playHand() {
   if (isSmallTiger) state.stats.smalltiger++;
   if (isTiger)      state.stats.tiger++;
   if (isTigerTie)   state.stats.tigertie++;
-  if (isPairP)      state.stats.pair_p++;
-  if (isPairB)      state.stats.pair_b++;
-  if (isTwinPair)   state.stats.twin++;
+
+
+
   repaintBoardStats();
 
   // Add to roads
@@ -3096,7 +3035,7 @@ async function playHand() {
   setPhase('payout');
   await wait(2200);
   dealController.clear();
-  state.bets = { player: 0, banker: 0, tie: 0, bigtiger: 0, smalltiger: 0, tiger: 0, tigertie: 0, pair_p: 0, pair_b: 0 };
+  state.bets = { player: 0, banker: 0, tie: 0, bigtiger: 0, smalltiger: 0, tiger: 0, tigertie: 0 };
   syncBetUI();
   setPhase('betting');
   updateMenuStats();
@@ -3198,8 +3137,6 @@ function repaintBoardStats() {
   set('bs-st',   s.smalltiger);
   set('bs-ti',   s.tiger);
   set('bs-tt',   s.tigertie);
-  set('bs-pp',   s.pair_p);
-  set('bs-pb',   s.pair_b);
   set('bs-n9',   s.nat9);
   set('bs-n8',   s.nat8);
 }
