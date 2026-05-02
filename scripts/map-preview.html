@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8"/>
+<style>
+*{ margin:0;padding:0;box-sizing:border-box; }
+body{
+  width:1200px;height:630px;overflow:hidden;
+  font-family:'Raleway',sans-serif;background:#0a0a0a;color:#e8dfc4;
+  display:flex;flex-direction:column;
+}
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Raleway:wght@300;400;600&display=swap');
+
+.header{
+  height:52px;background:rgba(0,0,0,0.95);border-bottom:1px solid rgba(201,168,76,0.3);
+  display:flex;align-items:center;padding:0 20px;gap:12px;flex-shrink:0;
+}
+.logo{font-family:'Cinzel',serif;font-size:1rem;font-weight:700;color:#c9a84c;letter-spacing:.06em;}
+.sep{color:rgba(201,168,76,0.3);font-size:1rem;}
+.subtitle{font-family:'Cinzel',serif;font-size:.7rem;color:rgba(255,255,255,0.5);letter-spacing:.18em;text-transform:uppercase;}
+
+.main{display:flex;flex:1;overflow:hidden;}
+
+/* Map area */
+.map-area{
+  flex:1;
+  background:
+    radial-gradient(ellipse at 30% 60%, rgba(40,80,60,0.3) 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 30%, rgba(20,50,80,0.3) 0%, transparent 50%),
+    #1a2530;
+  position:relative;overflow:hidden;
+}
+.map-grid{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px);
+  background-size:40px 40px;
+}
+/* Stylized continent shapes */
+.continent{position:absolute;border-radius:40%;opacity:0.12;background:#4a7c59;}
+.c-na{width:220px;height:160px;top:80px;left:80px;transform:rotate(-10deg);}
+.c-sa{width:120px;height:160px;top:230px;left:180px;transform:rotate(5deg);}
+.c-eu{width:100px;height:80px;top:80px;left:380px;transform:rotate(-5deg);}
+.c-af{width:130px;height:180px;top:130px;left:380px;transform:rotate(3deg);}
+.c-as{width:240px;height:160px;top:60px;left:500px;transform:rotate(-8deg);}
+.c-au{width:120px;height:100px;top:260px;left:640px;transform:rotate(5deg);}
+
+/* Map pins */
+.pin{position:absolute;transform:translate(-50%,-50%);}
+.pin-dot{width:10px;height:10px;border-radius:50%;border:2px solid #c9a84c;background:rgba(201,168,76,0.4);}
+.pin-dot.active{background:#c9a84c;box-shadow:0 0 12px rgba(201,168,76,0.8);width:14px;height:14px;border-width:2.5px;}
+.pin-ring{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:26px;height:26px;border-radius:50%;border:2px solid rgba(201,168,76,0.5);
+  animation:none;}
+
+/* Sidebar */
+.sidebar{
+  width:340px;background:#0d0d0d;border-left:1px solid rgba(201,168,76,0.2);
+  display:flex;flex-direction:column;flex-shrink:0;overflow:hidden;
+}
+.sidebar-header{
+  padding:12px 18px 10px;border-bottom:1px solid rgba(201,168,76,0.15);
+}
+.sidebar-header h2{font-family:'Cinzel',serif;font-size:.75rem;font-weight:700;color:#c9a84c;letter-spacing:.1em;text-transform:uppercase;}
+
+/* Detail panel */
+.detail{flex:1;overflow:hidden;padding:0 18px 16px;}
+.detail-name{font-family:'Cinzel',serif;font-size:.92rem;font-weight:700;color:#c9a84c;padding-top:14px;margin-bottom:2px;}
+.detail-city{font-size:.63rem;color:rgba(255,255,255,0.38);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;}
+
+/* Photo area */
+.photo{
+  width:100%;height:130px;border-radius:5px;overflow:hidden;margin-bottom:10px;
+  border:1px solid rgba(201,168,76,0.15);position:relative;
+}
+.photo img{width:100%;height:100%;object-fit:cover;}
+.photo-credit{position:absolute;bottom:0;right:0;background:rgba(0,0,0,0.55);font-size:.42rem;color:rgba(255,255,255,0.5);padding:2px 5px;}
+
+.divider{height:1px;background:linear-gradient(90deg,rgba(201,168,76,0.35),transparent);margin:7px 0;}
+.dlabel{font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(201,168,76,0.48);margin-bottom:3px;}
+.dval{font-size:.73rem;color:#e8dfc4;line-height:1.5;margin-bottom:8px;}
+
+/* Mini map preview in detail */
+.mini-map{
+  width:100%;height:80px;border-radius:5px;overflow:hidden;
+  background:linear-gradient(135deg,#1e3040,#2a4a30);
+  margin-bottom:10px;border:1px solid rgba(201,168,76,0.12);
+  display:flex;align-items:center;justify-content:center;position:relative;
+}
+.mini-map-grid{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px);
+  background-size:18px 18px;
+}
+.mini-street-h{position:absolute;left:0;right:0;height:8px;background:rgba(255,255,255,0.08);}
+.mini-street-v{position:absolute;top:0;bottom:0;width:8px;background:rgba(255,255,255,0.08);}
+.mini-pin{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);}
+.mini-pin-dot{width:10px;height:10px;border-radius:50%;background:#c9a84c;box-shadow:0 0 8px rgba(201,168,76,0.8);}
+.osm-label{position:absolute;bottom:3px;right:5px;font-size:.42rem;color:rgba(255,255,255,0.3);}
+
+.nav-btns{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:8px;}
+.nav-btn{
+  text-align:center;padding:6px;border-radius:5px;
+  background:rgba(201,168,76,0.07);border:1px solid rgba(201,168,76,0.25);
+  font-size:.58rem;color:#c9a84c;letter-spacing:.08em;text-transform:uppercase;
+}
+
+.note{
+  background:rgba(201,168,76,0.04);border:1px solid rgba(201,168,76,0.15);border-radius:5px;
+  padding:9px 11px;font-size:.68rem;line-height:1.55;color:rgba(255,255,255,0.6);font-style:italic;
+}
+
+/* Branding badge */
+.badge{
+  position:absolute;bottom:20px;left:20px;
+  background:rgba(0,0,0,0.75);border:1px solid rgba(201,168,76,0.35);
+  border-radius:6px;padding:10px 16px;
+}
+.badge-title{font-family:'Cinzel',serif;font-size:.85rem;font-weight:700;color:#c9a84c;letter-spacing:.06em;}
+.badge-sub{font-size:.58rem;color:rgba(255,255,255,0.45);letter-spacing:.1em;text-transform:uppercase;margin-top:3px;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <span class="logo">Baccarat Gladiator</span>
+  <span class="sep">·</span>
+  <span class="subtitle">World Casino Map</span>
+</div>
+
+<div class="main">
+  <div class="map-area">
+    <div class="map-grid"></div>
+    <div class="continent c-na"></div>
+    <div class="continent c-sa"></div>
+    <div class="continent c-eu"></div>
+    <div class="continent c-af"></div>
+    <div class="continent c-as"></div>
+    <div class="continent c-au"></div>
+
+    <!-- Pins: Las Vegas cluster -->
+    <div class="pin" style="top:41%;left:13%"><div class="pin-ring"></div><div class="pin-dot active"></div></div>
+    <div class="pin" style="top:38%;left:15%"><div class="pin-dot"></div></div>
+    <div class="pin" style="top:36%;left:12%"><div class="pin-dot"></div></div>
+    <!-- Atlantic City -->
+    <div class="pin" style="top:35%;left:20%"><div class="pin-dot"></div></div>
+    <!-- Miami area -->
+    <div class="pin" style="top:45%;left:22%"><div class="pin-dot"></div></div>
+    <!-- Monte Carlo -->
+    <div class="pin" style="top:32%;left:45%"><div class="pin-dot"></div></div>
+    <!-- London -->
+    <div class="pin" style="top:27%;left:43%"><div class="pin-dot"></div></div>
+    <!-- Singapore -->
+    <div class="pin" style="top:55%;left:73%"><div class="pin-dot"></div></div>
+    <!-- Macau -->
+    <div class="pin" style="top:42%;left:77%"><div class="pin-dot"></div></div>
+    <div class="pin" style="top:44%;left:79%"><div class="pin-dot"></div></div>
+    <!-- Sydney -->
+    <div class="pin" style="top:70%;left:83%"><div class="pin-dot"></div></div>
+    <!-- Auckland -->
+    <div class="pin" style="top:74%;left:87%"><div class="pin-dot"></div></div>
+    <!-- Bahamas -->
+    <div class="pin" style="top:47%;left:24%"><div class="pin-dot"></div></div>
+
+    <div class="badge">
+      <div class="badge-title">70+ Premier Baccarat Rooms</div>
+      <div class="badge-sub">6 Continents · Tap any pin for details</div>
+    </div>
+  </div>
+
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <h2>🇺🇸 Bellagio — Las Vegas</h2>
+    </div>
+    <div class="detail">
+      <div class="detail-name">🇺🇸 Bellagio</div>
+      <div class="detail-city">Las Vegas, Nevada</div>
+
+      <div class="photo">
+        <img src="../bellagio.jpg" alt="Bellagio Las Vegas"/>
+        <div class="photo-credit">© Wikimedia Commons</div>
+      </div>
+
+      <div class="divider"></div>
+      <div class="dlabel">Address</div>
+      <div class="dval">3600 Las Vegas Blvd S, Las Vegas, NV</div>
+
+      <div class="nav-btns">
+        <div class="nav-btn">📍 Google Maps</div>
+        <div class="nav-btn">🚗 Waze</div>
+      </div>
+
+      <div class="mini-map">
+        <div class="mini-map-grid"></div>
+        <div class="mini-street-h" style="top:40%"></div>
+        <div class="mini-street-h" style="top:62%"></div>
+        <div class="mini-street-v" style="left:35%"></div>
+        <div class="mini-street-v" style="left:60%"></div>
+        <div class="mini-pin"><div class="mini-pin-dot"></div></div>
+        <div class="osm-label">OpenStreetMap</div>
+      </div>
+
+      <div class="dlabel">Baccarat Minimums</div>
+      <div class="dval">$25–$50 · High-limit from $200</div>
+
+      <div class="dlabel">Tables</div>
+      <div class="dval">15–18 main floor · 4–6 high-limit salon · 24 hrs</div>
+
+      <div class="note">The benchmark for Las Vegas baccarat. Highest-volume baccarat on the Strip outside Asian-branded rooms.</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

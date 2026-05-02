@@ -1,0 +1,5 @@
+﻿"Error: This error will block the book from publishing. The error needs to be fixed in order to publish."
+"Notice: This issue will not block the book from publishing and can be safely ignored as there will be no impact."
+"Type","Description","Source File","Line Number","Text Preceding Warning or Error","Recommended Fix"
+"Notice","W14019: Cover is too small :   /private/var/folders/k4/dfxk1_q50wx3n0zr6__m3hl80000gn/T/311acae8-21da-44ae-9b45-dc47fdef7ce4/cTemp/mTemp/mobi-Nzb0Hq/OEBPS/bg-card.png","","","",""
+"Notice","W14019: Cover is too small :   Road_to_Nine-ladiator_Guide","","","",""

@@ -4,7 +4,7 @@
   On install: pre-cache core shell. On activate: purge old caches.
 */
 
-const CACHE_VERSION = 'bg-v1';
+const CACHE_VERSION = 'bg-v63';
 const SHELL_CACHE   = `${CACHE_VERSION}-shell`;
 const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`;
 
@@ -34,9 +34,15 @@ self.addEventListener('activate', event => {
           .filter(k => k.startsWith('bg-') && k !== SHELL_CACHE && k !== RUNTIME_CACHE)
           .map(k => caches.delete(k))
       )
-    )
+    ).then(() => self.clients.claim())
+     .then(() => {
+        // Tell all controlled tabs to reload — they were rendered with the previous
+        // SW's cached HTML and won't see the new build until they reload.
+        self.clients.matchAll({ type: 'window' }).then(clients => {
+          clients.forEach(c => { try { c.postMessage({ type: 'sw-updated', version: CACHE_VERSION }); } catch (e) {} });
+        });
+      })
   );
-  self.clients.claim();
 });
 
 // ── FETCH: cache-first for assets, network-first for API ────
@@ -54,18 +60,37 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  // Cache-first for everything else
+  // Network-first for the active build pages and their JS module — these are the
+  // pages users actively reload and we never want them stuck on a stale build.
+  // Cache acts as offline fallback only.
+  const isActiveBuild = url.pathname === '/' ||
+                        url.pathname === '/index.html' ||
+                        url.pathname === '/road-to-nine.html' ||
+                        url.pathname === '/baccarat-scoreboard.html' ||
+                        url.pathname === '/three.module.js';
+  if (isActiveBuild) {
+    event.respondWith(
+      fetch(request).then(response => {
+        if (response && response.status === 200) {
+          const clone = response.clone();
+          caches.open(RUNTIME_CACHE).then(cache => cache.put(request, clone));
+        }
+        return response;
+      }).catch(() => caches.match(request))
+    );
+    return;
+  }
+
+  // Cache-first for everything else (images, fonts, smaller assets)
   event.respondWith(
     caches.match(request).then(cached => {
       if (cached) return cached;
       return fetch(request).then(response => {
-        // Only cache successful same-origin responses
         if (!response || response.status !== 200 || response.type === 'error') return response;
         const clone = response.clone();
         caches.open(RUNTIME_CACHE).then(cache => cache.put(request, clone));
         return response;
       }).catch(() => {
-        // Offline fallback: return cached shell
         if (request.destination === 'document') {
           return caches.match('/baccarat-scoreboard.html');
         }

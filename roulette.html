@@ -168,18 +168,6 @@ canvas{display:block;border-radius:50%;}
   box-shadow:0 0 26px rgba(201,168,76,0.42),0 4px 16px rgba(0,0,0,0.7);transition:all 0.2s;}
 #btn-spin:hover:not(:disabled){box-shadow:0 0 42px rgba(201,168,76,0.65),0 6px 22px rgba(0,0,0,0.8);}
 #btn-spin:disabled{opacity:0.38;cursor:not-allowed;}
-#btn-free{font-family:'Cinzel',serif;font-size:0.75rem;letter-spacing:3px;padding:10px 38px;
-  background:linear-gradient(135deg,#d8d8d8,#a8a8a8,#686868);
-  border:none;border-radius:4px;cursor:pointer;color:#111;font-weight:700;
-  box-shadow:0 0 16px rgba(180,180,180,0.22),0 3px 12px rgba(0,0,0,0.6);transition:all 0.2s;
-  position:relative;}
-#btn-free:hover:not(:disabled){box-shadow:0 0 28px rgba(200,200,200,0.38),0 4px 16px rgba(0,0,0,0.7);}
-#btn-free:disabled{opacity:0.35;cursor:not-allowed;}
-#btn-free .fh-sub{display:block;font-size:0.42rem;letter-spacing:2px;color:rgba(0,0,0,0.5);margin-top:3px;font-weight:600;}
-#fh-tier{position:absolute;top:-7px;right:-4px;
-  background:linear-gradient(135deg,#f0d080,#c9a84c);
-  color:#000;font-size:0.35rem;font-weight:900;letter-spacing:1.5px;
-  padding:2px 5px;border-radius:3px;display:none;}
 
 .payouts{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;
   margin:4px 0;font-size:0.58rem;color:rgba(232,223,192,0.3);letter-spacing:1px;}
@@ -315,12 +303,7 @@ canvas{display:block;border-radius:50%;}
 </div>
 <div id="bets-summary">Place your bets</div>
 <div class="spin-area">
-  <button id="btn-spin" onclick="spin(false)">SPIN</button>
-  <button id="btn-free" onclick="spin(true)">
-    <span id="fh-tier">VIP</span>
-    FREE HAND
-    <span class="fh-sub" id="fh-count">20 remaining</span>
-  </button>
+  <button id="btn-spin" onclick="spin()">SPIN</button>
 </div>
 
 <script>
@@ -366,40 +349,6 @@ function checkDailyBonus(){
     localStorage.setItem(ECONOMY_KEY,JSON.stringify(p));
     updateBal(); showToast('Daily Roulette Bonus: +$500!',3000);
   }catch(e){}
-}
-
-// ── Free Hand ────────────────────────────────────────────────────
-function getFreeState(){
-  try{
-    const p=JSON.parse(localStorage.getItem(ECONOMY_KEY)||'{}');
-    const tier=p.tier||'normal';
-    const max=(tier==='vip'||tier==='premium')?30:20;
-    const today=new Date().toISOString().slice(0,10);
-    const used=(p.freeHandsDate===today)?(p.freeHandsUsed||0):0;
-    return {max, used, remaining:Math.max(0,max-used), tier};
-  }catch(e){ return {max:20,used:0,remaining:20,tier:'normal'}; }
-}
-function consumeFreeHand(){
-  try{
-    const p=JSON.parse(localStorage.getItem(ECONOMY_KEY)||'{}');
-    const today=new Date().toISOString().slice(0,10);
-    if(p.freeHandsDate!==today){ p.freeHandsDate=today; p.freeHandsUsed=0; }
-    p.freeHandsUsed=(p.freeHandsUsed||0)+1;
-    localStorage.setItem(ECONOMY_KEY,JSON.stringify(p));
-  }catch(e){}
-}
-function updateFreeBtn(){
-  const s=getFreeState();
-  const btn=document.getElementById('btn-free');
-  const cnt=document.getElementById('fh-count');
-  const badge=document.getElementById('fh-tier');
-  if(!btn||!cnt) return;
-  const isVip=(s.tier==='vip'||s.tier==='premium');
-  if(badge) badge.style.display=isVip?'block':'none';
-  cnt.textContent=s.remaining>0
-    ?`${s.remaining} of ${s.max} remaining today`
-    :'None remaining today';
-  btn.disabled=(s.remaining<=0||spinning);
 }
 
 // ── Sound engine (Web Audio API — no external files) ─────────────
@@ -878,24 +827,17 @@ function targetAngle(n){ return -(WHEEL.indexOf(n)*SEC + SEC/2); }
 let _lastBounce=0, _bounceCount=0;
 const CLACK_LABELS=['CLACK!','CLACK!','CLACK!','CLACK!'];
 
-function spin(isFree=false){
+function spin(){
   if(spinning) return;
   hideShareBtn();
 
-  let total=0;
-  if(isFree){
-    const fs=getFreeState();
-    if(fs.remaining<=0){ showToast('No free hands remaining today!',2200); return; }
-  } else {
-    total=totalBet();
-    if(total<=0){ showToast('Place a bet first!'); return; }
-    if(total>balance){ showToast('Not enough chips!'); return; }
-    balance-=total; updateBal(); saveEconomy();
-  }
+  const total=totalBet();
+  if(total<=0){ showToast('Place a bet first!'); return; }
+  if(total>balance){ showToast('Not enough chips!'); return; }
+  balance-=total; updateBal(); saveEconomy();
 
   spinning=true;
   document.getElementById('btn-spin').disabled=true;
-  document.getElementById('btn-free').disabled=true;
   document.getElementById('result-panel').textContent='';
   _bounceRings=[]; _sparks=[]; _floats=[];
 
@@ -974,16 +916,15 @@ function spin(isFree=false){
       sfxStopRolling(400);
       wheelAngle=finalWheel; ballAngle=finalBallAngle; ballRadius=SETTLE;
       drawWheel(finalWheel,finalBallAngle,SETTLE,winIdx);
-      finishSpin(winner,total,isFree);
+      finishSpin(winner,total);
     }
   }
   requestAnimationFrame(frame);
 }
 
-function finishSpin(winner,total,isFree=false){
+function finishSpin(winner,total){
   spinning=false;
   document.getElementById('btn-spin').disabled=false;
-  updateFreeBtn();
 
   const isZero = winner===0||winner===37;
   const isRed  = RED.has(winner);
@@ -991,19 +932,6 @@ function finishSpin(winner,total,isFree=false){
   const winLabel = winner===37?'00':String(winner);
   const suitColor = isZero?'#40ee80':isRed?'#ff6666':'#cccccc';
   const flashCls  = isZero?'flash-green':isRed?'flash-red':'flash-gold';
-
-  if(isFree){
-    consumeFreeHand(); updateFreeBtn();
-    wheelFlash(flashCls, 700);
-    rHaptic(isZero?[60,30,80,30,120]:[60,30,60]);
-    if(isZero||!isBk) sfxWin(isZero); else sfxWin(false);
-    const rp=document.getElementById('result-panel');
-    rp.innerHTML=`<span style="color:${suitColor}">${winLabel}</span>&nbsp;&nbsp;<span style="font-size:0.55rem;color:rgba(255,255,255,0.35);letter-spacing:2px">FREE HAND</span>`;
-    rp.classList.remove('pulse'); void rp.offsetWidth; rp.classList.add('pulse');
-    const fs=getFreeState();
-    showToast(fs.remaining>0?`${winLabel} · ${fs.remaining} free hand${fs.remaining!==1?'s':''} left`:'No more free hands today', 2200);
-    return;
-  }
 
   const col = (!isZero&&winner>=1&&winner<=36)?(winner%3===0?3:winner%3):0;
   const doz = winner>=1&&winner<=12?1:winner>=13&&winner<=24?2:winner>=25&&winner<=36?3:0;
@@ -1062,7 +990,6 @@ function finishSpin(winner,total,isFree=false){
 loadEconomy(); updateBal(); buildNumbers();
 drawWheel(wheelAngle,ballAngle,TRACK);
 checkDailyBonus();
-updateFreeBtn();
 // Apply saved sound preference
 if(!_sfxEnabled){
   document.getElementById('snd-toggle').textContent='🔇';

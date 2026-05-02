@@ -705,7 +705,7 @@ html,body{ width:100%; height:100%; background:#000; overflow:hidden; font-famil
 
 // Skip splash when launched via PWA shortcut or direct ?skip_splash=1 link
 if(new URLSearchParams(location.search).get('skip_splash')==='1'){
-  window.location.replace('baccarat-scoreboard.html');
+  window.location.replace('road-to-nine.html');
 }
 
 // ══════════════════════════════════════════════════════════════════
@@ -1414,7 +1414,7 @@ function enterArena(){
   flash.classList.add('on');
   stopTheme();
   swordClash();
-  setTimeout(()=>{ window.location.href='baccarat-scoreboard.html'; }, 200);
+  setTimeout(()=>{ window.location.href='road-to-nine.html'; }, 200);
 }
 
 function swordClash(){

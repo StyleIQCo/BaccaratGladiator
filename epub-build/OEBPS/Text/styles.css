@@ -179,7 +179,7 @@
 
   /* Session Log */
   .log-grid{display:grid;grid-template-columns:repeat(7,1fr);border-top:1.5px solid var(--felt);border-left:1.5px solid var(--felt);}
-  .log-cell{border-right:1.5px solid var(--felt);border-bottom:1.5px solid var(--felt);padding:5px 4px;font-size:8pt;min-height:24px;}
+  .log-cell{border-right:1.5px solid var(--felt);border-bottom:1.5px solid var(--felt);padding:2px 3px;font-size:7.5pt;min-height:16px;}
   .log-head{background:var(--felt);color:var(--gold-lt);font-family:'Cinzel',serif;font-size:7pt;font-weight:700;letter-spacing:.04em;text-align:center;}
   .log-meta{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.15in;margin:.15in 0;}
   .log-field{border-bottom:1px solid #999;padding-bottom:3px;}
@@ -346,3 +346,23 @@ td.bad                          { color: #cc2222 !important; }
 /* Hide decorative watermark SVGs — they're screen-only */
 .page > svg[aria-hidden] { display: none !important; }
 
+
+/* ── Ebook contrast & layout fixes ───────────────────────────────────── */
+.field-note {
+  background: #f4f2ed !important;
+  color: #1a1a1a !important;
+  border-left: 4px solid #c9a84c !important;
+  border-top: 1px solid #d0c8b0 !important;
+  border-bottom: 1px solid #d0c8b0 !important;
+  border-right: 1px solid #d0c8b0 !important;
+  border-radius: 0 6px 6px 0 !important;
+}
+.field-note::before { color: #1a4a1a !important; }
+.field-note em      { color: #444 !important; font-style: italic !important; }
+table { break-inside: avoid; page-break-inside: avoid; }
+tr { break-inside: avoid; page-break-inside: avoid; }
+thead { display: table-header-group; }
+.callout, .story-box, .field-note, .bsys, .stat-box, .script-box {
+  break-inside: avoid; page-break-inside: avoid;
+}
+img { width: 100% !important; height: auto !important; max-height: 90vh !important; }

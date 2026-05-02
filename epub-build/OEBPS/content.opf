@@ -16,7 +16,15 @@
   <manifest>
     <item id="nav" href="Text/nav.xhtml" media-type="application/xhtml+xml" properties="nav"/>
     <item id="cover-img" href="bg-card.png" media-type="image/png" properties="cover-image"/>
-    <item id="css" href="Text/styles.css" media-type="text/css"/>
+    <item id="img-triple-dragon" href="Text/triple dragon.jpg" media-type="image/jpeg"/>
+    <item id="img-dragon-banker" href="Text/dragon banker long tail.jpg" media-type="image/jpeg"/>
+    <item id="img-qr-drill" href="Text/qr-drill-72.png" media-type="image/png"/>
+    <item id="img-qr-simulator" href="Text/qr-simulator-72.png" media-type="image/png"/>
+    <item id="img-qr-scoreboard" href="Text/qr-scoreboard-80.png" media-type="image/png"/>
+    <item id="img-qr-game" href="Text/qr-game-80.png" media-type="image/png"/>
+    <item id="img-qr-home-72" href="Text/qr-home-72.png" media-type="image/png"/>
+    <item id="img-qr-home-80" href="Text/qr-home-80.png" media-type="image/png"/>
+    <item id="css" href="styles.css" media-type="text/css"/>
     <item id="front" href="Text/front.xhtml" media-type="application/xhtml+xml"/>
     <item id="sec00" href="Text/sec00.xhtml" media-type="application/xhtml+xml"/>
     <item id="ch01" href="Text/ch01.xhtml" media-type="application/xhtml+xml"/>
