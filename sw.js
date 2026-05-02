@@ -4,20 +4,19 @@
   On install: pre-cache core shell. On activate: purge old caches.
 */
 
-const CACHE_VERSION = 'bg-v1';
+const CACHE_VERSION = 'bg-v88';
 const SHELL_CACHE   = `${CACHE_VERSION}-shell`;
 const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`;
 
-// Core shell — cached on install so the game works offline
 const SHELL_ASSETS = [
   '/baccarat-scoreboard.html',
+  '/stage-select.html',
   '/manifest.json',
   '/bg-card.png',
   '/baccarat-gladiator-logo.svg',
   '/baccarat-link-preview.png',
 ];
 
-// ── INSTALL: pre-cache shell ─────────────────────────────────
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(SHELL_CACHE).then(cache => cache.addAll(SHELL_ASSETS))
@@ -25,7 +24,6 @@ self.addEventListener('install', event => {
   self.skipWaiting();
 });
 
-// ── ACTIVATE: delete stale caches ───────────────────────────
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(keys =>
@@ -34,38 +32,57 @@ self.addEventListener('activate', event => {
           .filter(k => k.startsWith('bg-') && k !== SHELL_CACHE && k !== RUNTIME_CACHE)
           .map(k => caches.delete(k))
       )
-    )
+    ).then(() => self.clients.claim())
+     .then(() => {
+        self.clients.matchAll({ type: 'window' }).then(clients => {
+          clients.forEach(c => { try { c.postMessage({ type: 'sw-updated', version: CACHE_VERSION }); } catch (e) {} });
+        });
+      })
   );
-  self.clients.claim();
 });
 
-// ── FETCH: cache-first for assets, network-first for API ────
 self.addEventListener('fetch', event => {
   const { request } = event;
   const url = new URL(request.url);
 
-  // Skip non-GET, chrome-extension, and cross-origin API requests
   if (request.method !== 'GET') return;
   if (url.origin !== self.location.origin && !url.hostname.endsWith('fonts.googleapis.com') && !url.hostname.endsWith('fonts.gstatic.com')) return;
 
-  // Network-first for API (Cognito / Lambda)
   if (url.hostname.includes('amazonaws.com') || url.hostname.includes('amazoncognito.com') || url.hostname.includes('firebase')) {
     event.respondWith(fetch(request));
     return;
   }
 
-  // Cache-first for everything else
+  // Network-first for active build pages — all /road-to-<slug>.html match the regex,
+  // plus the stage select and the standalone scoreboard.
+  const isActiveBuild = url.pathname === '/' ||
+                        url.pathname === '/index.html' ||
+                        /^\/road-to-[a-z0-9-]+\.html$/i.test(url.pathname) ||
+                        url.pathname === '/stage-select.html' ||
+                        url.pathname === '/baccarat-scoreboard.html' ||
+                        url.pathname === '/three.module.js';
+  if (isActiveBuild) {
+    event.respondWith(
+      fetch(request).then(response => {
+        if (response && response.status === 200) {
+          const clone = response.clone();
+          caches.open(RUNTIME_CACHE).then(cache => cache.put(request, clone));
+        }
+        return response;
+      }).catch(() => caches.match(request))
+    );
+    return;
+  }
+
   event.respondWith(
     caches.match(request).then(cached => {
       if (cached) return cached;
       return fetch(request).then(response => {
-        // Only cache successful same-origin responses
         if (!response || response.status !== 200 || response.type === 'error') return response;
         const clone = response.clone();
         caches.open(RUNTIME_CACHE).then(cache => cache.put(request, clone));
         return response;
       }).catch(() => {
-        // Offline fallback: return cached shell
         if (request.destination === 'document') {
           return caches.match('/baccarat-scoreboard.html');
         }
@@ -74,7 +91,6 @@ self.addEventListener('fetch', event => {
   );
 });
 
-// ── PUSH NOTIFICATIONS ───────────────────────────────────────
 self.addEventListener('push', event => {
   const data = event.data ? event.data.json() : {};
   const title = data.title || 'Baccarat Gladiator';
