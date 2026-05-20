@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Baccarat Gladiator — Vegas Handout Card</title>
+<!--
+  Print-ready 3.5" × 2" US business card, designed for FedEx Office.
+    • Cut size  : 3.5" × 2"
+    • Bleed     : 0.125" each side (full size 3.75" × 2.25")
+    • Safe zone : 1/8" inside cut line (keep text inside the dashed guide)
+    • Format    : 2 pages (front, back), each filling one @page
+
+  HOW TO PRINT FOR FEDEX
+    1. Open this file in Chrome (NOT Safari — Safari ignores @page sizes).
+    2. Cmd+P. Set:
+         Destination       → "Save as PDF"
+         Paper size        → Custom 3.75" × 2.25"  (Chrome calls it "Page Setup")
+         Margins           → None
+         Scale             → 100% (Default)
+         Background graphics → ON  (critical — without this you'll get a
+                                    blank card)
+    3. Save as `baccarat-gladiator-card.pdf`
+    4. Upload to fedex.com/office/print → Business Cards → "Upload your
+       own design" → choose 3.5×2 → upload front + back → confirm bleeds.
+
+  HOW TO PROOF
+    Open in any modern browser. The dashed magenta line is the SAFE zone;
+    keep all text inside it. The solid white line is the CUT line; bleed
+    fills outside it. Both guides are PRINT-HIDDEN — only the artwork prints.
+-->
+<style>
+  /* ── Print sizing ─────────────────────────────────────────────── */
+  @page {
+    size: 3.75in 2.25in;       /* 3.5" + 0.125" bleed each side */
+    margin: 0;
+  }
+  html, body { margin: 0; padding: 0; background: #2a2a2a; }
+  @media print {
+    html, body { background: #ffffff; }
+    .screen-frame { padding: 0; }
+    .screen-label { display: none; }
+    .card { box-shadow: none; margin: 0; page-break-after: always; }
+    .card:last-child { page-break-after: auto; }
+    .guide { display: none; }
+  }
+
+  /* ── On-screen layout (preview only) ──────────────────────────── */
+  .screen-frame {
+    padding: 40px 20px;
+    display: flex; flex-direction: column; gap: 28px; align-items: center;
+    font-family: -apple-system, sans-serif; color: #ccc;
+  }
+  .screen-label {
+    font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+    color: #aaa; margin-bottom: 4px;
+  }
+
+  /* ── Card frame (bleed area = 3.75×2.25) ──────────────────────── */
+  .card {
+    position: relative;
+    width: 3.75in; height: 2.25in;
+    background: #080e08;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    color: #f0e6c8;
+    font-family: 'Cinzel', 'Trajan Pro', Georgia, serif;
+  }
+
+  /* Felt-green background gradient + subtle vignette */
+  .card::before {
+    content: ""; position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse at 35% 30%, rgba(60,120,80,0.22) 0%, transparent 55%),
+      radial-gradient(ellipse at 70% 70%, rgba(40,80,55,0.15) 0%, transparent 60%),
+      linear-gradient(135deg, #0d3320 0%, #0a1f14 40%, #080e08 100%);
+  }
+
+  /* Inner gold border — sits inside safe area */
+  .gold-border {
+    position: absolute; inset: 0.18in;
+    border: 1.5px solid rgba(201,168,76,0.55);
+    border-radius: 0;
+    pointer-events: none;
+  }
+  .gold-border::before, .gold-border::after {
+    content: ""; position: absolute;
+    width: 0.18in; height: 0.18in;
+    border: 1.5px solid rgba(201,168,76,0.85);
+  }
+  .gold-border::before { top: -1.5px; left: -1.5px; border-right: none; border-bottom: none; }
+  .gold-border::after  { bottom: -1.5px; right: -1.5px; border-left: none; border-top: none; }
+
+  /* Safe-zone guide (screen-only) */
+  .guide {
+    position: absolute; inset: 0.25in;
+    border: 1px dashed rgba(255,80,180,0.55);
+    pointer-events: none;
+    box-sizing: border-box;
+  }
+  .guide-cut {
+    position: absolute; inset: 0.125in;
+    border: 1px solid rgba(255,255,255,0.18);
+    pointer-events: none;
+    box-sizing: border-box;
+  }
+
+  /* ── FRONT layout ────────────────────────────────────────────── */
+  .front-content {
+    position: absolute; inset: 0;
+    padding: 0.30in 0.32in;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center;
+  }
+  .gold-rule {
+    width: 1.6in; height: 1px;
+    background: linear-gradient(90deg, transparent, #c9a84c 25%, #f0d080 50%, #c9a84c 75%, transparent);
+    margin: 0.06in 0;
+  }
+  .pre-title {
+    font-family: 'Cinzel', serif;
+    font-size: 6pt; letter-spacing: 4px;
+    color: rgba(201,168,76,0.75);
+    text-transform: uppercase;
+  }
+  .brand {
+    font-family: 'Cinzel', serif;
+    font-weight: 900; font-size: 20pt;
+    letter-spacing: 3px;
+    background: linear-gradient(180deg, #fff5c8 0%, #f0d080 35%, #c9a84c 65%, #a07800 100%);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; color: transparent;
+    line-height: 1;
+    margin: 0.04in 0 0.05in;
+  }
+  .subhead {
+    font-family: 'Cinzel', serif;
+    font-size: 7pt; letter-spacing: 2.2px;
+    color: rgba(240,230,200,0.78);
+    text-transform: uppercase;
+    margin-bottom: 0.10in;
+  }
+  .tagline {
+    font-family: Georgia, 'EB Garamond', serif;
+    font-style: italic; font-size: 11pt;
+    color: #f0d080; letter-spacing: 0.5px;
+    margin-top: 0.08in;
+    text-shadow: 0 1px 0 rgba(0,0,0,0.6);
+  }
+
+  /* ── BACK layout ─────────────────────────────────────────────── */
+  .back-content {
+    position: absolute; inset: 0;
+    padding: 0.27in 0.30in;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto 1fr auto;
+    column-gap: 0.18in; row-gap: 0.06in;
+    align-items: center;
+  }
+  .back-title-area {
+    grid-column: 1 / 2; grid-row: 1 / 2;
+  }
+  .back-pre {
+    font-family: 'Cinzel', serif;
+    font-size: 5.5pt; letter-spacing: 3px;
+    color: rgba(201,168,76,0.78);
+    text-transform: uppercase;
+    margin-bottom: 0.02in;
+  }
+  .back-title {
+    font-family: 'Cinzel', serif;
+    font-weight: 900; font-size: 13pt;
+    letter-spacing: 1.5px;
+    color: #f0d080;
+    line-height: 1;
+  }
+  .back-sub {
+    font-family: Georgia, serif;
+    font-size: 6.5pt; line-height: 1.35;
+    color: rgba(240,230,200,0.72);
+    margin-top: 0.04in;
+  }
+  .qr-block {
+    grid-column: 2 / 3; grid-row: 1 / 4;
+    width: 1.05in; height: 1.05in;
+    background: #fff;
+    padding: 0.05in;
+    box-sizing: content-box;
+    align-self: center;
+    box-shadow: 0 0 0 1px rgba(201,168,76,0.55);
+  }
+  .qr-block img {
+    display: block; width: 100%; height: 100%;
+    image-rendering: crisp-edges;
+  }
+  .qr-caption {
+    grid-column: 2 / 3; grid-row: 4 / 5;
+    font-family: 'Cinzel', serif;
+    font-size: 5pt; letter-spacing: 2px;
+    text-align: center;
+    color: rgba(201,168,76,0.7);
+    text-transform: uppercase;
+    margin-top: 0.02in;
+  }
+  .back-body {
+    grid-column: 1 / 2; grid-row: 2 / 3;
+  }
+  .promo {
+    font-family: 'Cinzel', serif;
+    font-size: 6.5pt; letter-spacing: 1.5px;
+    color: rgba(240,230,200,0.85);
+    text-transform: uppercase;
+    margin-top: 0.06in; line-height: 1.45;
+  }
+  .promo strong {
+    color: #f0d080;
+    font-size: 7.5pt;
+    letter-spacing: 2px;
+  }
+  .back-footer {
+    grid-column: 1 / 2; grid-row: 3 / 4;
+    font-family: 'Cinzel', serif;
+    font-size: 6.5pt; letter-spacing: 2px;
+    color: #f0d080;
+    text-transform: lowercase;
+    align-self: end;
+  }
+
+  /* Use system serif if Cinzel can't load (FedEx printer may not fetch
+     Google Fonts when rasterizing — that's fine because Cinzel + Trajan
+     + Georgia all give a respectable result, but use the Google copy if
+     available for the cleanest look) */
+</style>
+<link rel="preload" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&display=swap" as="style">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&display=swap">
+</head>
+<body>
+
+<div class="screen-frame">
+
+  <div>
+    <div class="screen-label">Front</div>
+    <div class="card" id="card-front">
+      <div class="gold-border"></div>
+
+      <div class="front-content">
+        <div class="pre-title">A Card-Battle Saga</div>
+        <div class="brand">BACCARAT<br>GLADIATOR</div>
+        <div class="gold-rule"></div>
+        <div class="subhead">60 Stages · Free to Play</div>
+        <div class="tagline">"Are you not entertained?"</div>
+      </div>
+
+      <!-- guides — screen-only -->
+      <div class="guide-cut"></div>
+      <div class="guide"></div>
+    </div>
+  </div>
+
+  <div>
+    <div class="screen-label">Back</div>
+    <div class="card" id="card-back">
+      <div class="gold-border"></div>
+
+      <div class="back-content">
+        <div class="back-title-area">
+          <div class="back-pre">The Companion Book</div>
+          <div class="back-title">ROAD TO NINE</div>
+          <div class="back-sub">The complete strategy guide.<br>28 chapters · 18 appendices · free on Kindle.</div>
+        </div>
+
+        <div class="qr-block">
+          <img alt="QR code — baccaratgladiator.com"
+               src="https://api.qrserver.com/v1/create-qr-code/?size=600x600&ecc=H&margin=2&data=https%3A%2F%2Fbaccaratgladiator.com">
+        </div>
+        <div class="qr-caption">baccaratgladiator.com</div>
+
+        <div class="back-body">
+          <div class="promo">
+            Scan to play.<br>
+            Reader bonus: enter <strong>ROADTONINE</strong><br>
+            in-game for 250,000 chips.
+          </div>
+        </div>
+
+        <div class="back-footer">baccaratgladiator.com</div>
+      </div>
+
+      <!-- guides — screen-only -->
+      <div class="guide-cut"></div>
+      <div class="guide"></div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
