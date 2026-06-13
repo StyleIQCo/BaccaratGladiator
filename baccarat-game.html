@@ -5793,6 +5793,20 @@ function resolveHand(){
     }
   }
 
+  // ── Zero-balance acknowledgement: the instant the player busts all the way
+  // to $0, say so in the message bar — in EVERY path. The Top-Off modal and
+  // (for an expired guest trial) the sign-in overlay still pop on their own
+  // delays, but those are easy to miss and the trial overlay never mentions
+  // credits at all. This guarantees a clear "you're out" line at the moment of
+  // the bust, regardless of guest/auth state.
+  if(balance <= 0){
+    const mb = document.getElementById('msg-bar');
+    if(mb){
+      mb.className = 'msg-bar msg-lose';
+      mb.textContent = '💀 Out of credits — top off to keep playing. Good luck next time!';
+    }
+  }
+
   // ── Bust relief: the instant the player can't cover the table minimum,
   // ALWAYS surface the Top-Off modal — don't wait for the next round. A short
   // beat lets the losing result register first. If auto-play is running, stop

@@ -246,8 +246,48 @@ async function tap(page, selector) {
     const bust = await page.evaluate(() => ({
       phase, balance,
       chipOutOn: document.getElementById('chip-out-modal').classList.contains('on'),
+      msg: (document.getElementById('msg-bar') || {}).textContent || '',
     }));
     check('Top-Off modal auto-appeared at $0 without NEW ROUND', bust.chipOutOn === true, 'phase ' + bust.phase + ' bal ' + bust.balance);
+    check('Message bar acknowledges the $0 bust in words', /out of credits/i.test(bust.msg), 'msg "' + bust.msg + '"');
+
+    // ── 6c · Guest trial boundary: last credit AND last trial deal on the same
+    // hand. The Top-Off modal is intentionally suppressed (guest trial expired),
+    // and the sign-in overlay that replaces it never mentions credits — so the
+    // message-bar line is the ONLY thing telling the guest they busted. Verify it.
+    console.log('\nScenario 6c — guest busts on the deal that ends the trial');
+    await page.evaluate(() => {
+      window.__directorCut = true;
+      currentVenue = 'vegas';               // table min $1
+      authLocked = false;                   // GUEST
+      guestDealsUsed = 9;                   // next deal is #10 → trial expires this hand
+      document.getElementById('chip-out-modal').classList.remove('on');
+      balance = 1; phase = 'betting';
+      bets = { banker:0,player:0,tie:0,dragon7:0,panda8:0,bigTiger:0,smallTiger:0,tigerTie:0,playerPair:0,bankerPair:0 };
+      refreshUI(); selectSlot('tie'); addChip(1); // stake the last $1 on Tie (loses unless tie)
+      document.getElementById('chip-out-modal').classList.remove('on');
+    });
+    // Deal until this guest hand actually busts to $0 (Tie can push); reset stake each retry.
+    let gBusted = false;
+    for (let i = 0; i < 12 && !gBusted; i++) {
+      await page.evaluate(() => {
+        balance = 1; phase = 'betting'; guestDealsUsed = 9;
+        bets = { banker:0,player:0,tie:0,dragon7:0,panda8:0,bigTiger:0,smallTiger:0,tigerTie:0,playerPair:0,bankerPair:0 };
+        refreshUI(); selectSlot('tie'); addChip(1);
+        document.getElementById('chip-out-modal').classList.remove('on');
+        deal();
+      });
+      await page.waitForFunction(() => phase === 'dealt', { timeout: 8000 }).catch(() => {});
+      if (await page.evaluate(() => balance) === 0) gBusted = true;
+    }
+    await new Promise(r => setTimeout(r, 1300));
+    const gBust = await page.evaluate(() => ({
+      balance, trialExpired: guestTrialExpired(),
+      chipOutOn: document.getElementById('chip-out-modal').classList.contains('on'),
+      msg: (document.getElementById('msg-bar') || {}).textContent || '',
+    }));
+    check('Guest reached $0 with trial expired (the suppressed-modal path)', gBusted && gBust.trialExpired === true, 'bal ' + gBust.balance + ' expired ' + gBust.trialExpired);
+    check('Guest still gets the $0 message even though Top-Off modal is suppressed', /out of credits/i.test(gBust.msg) && gBust.chipOutOn === false, 'modalOn ' + gBust.chipOutOn + ' msg "' + gBust.msg + '"');
 
     // ── 7 · No uncaught page errors across the whole run ──────────────
     console.log('\nScenario 7 — no uncaught page errors (audio path included)');

@@ -4,7 +4,7 @@
   On install: pre-cache core shell. On activate: purge old caches.
 */
 
-const CACHE_VERSION = 'bg-v110';
+const CACHE_VERSION = 'bg-v111';
 const SHELL_CACHE   = `${CACHE_VERSION}-shell`;
 const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`;
 
