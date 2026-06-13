@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<link rel="icon" href="/baccarat-gladiator-logo.svg" type="image/svg+xml"/>
 <title>Baccarat Gladiator | Live Scoreboard Arena</title>
 <meta name="description" content="Baccarat Gladiator is a simulated baccarat experience with live roadmaps, side bets, and table strategy visuals. No real-money gambling or cash prizes."/>
 <meta property="og:type" content="website"/>
@@ -358,6 +359,76 @@ body.shake-heavy { animation:screenShakeHeavy 0.45s ease-out; }
   margin-left:6px;
 }
 .hdr-auth-btn:hover { border-color:#88bbff; color:#e2f2ff; }
+.hdr-auth-btn.danger {
+  border-color:rgba(220,80,80,0.45);
+  color:#ffb0b0; background:rgba(120,30,30,0.18);
+}
+.hdr-auth-btn.danger:hover { border-color:#ff8888; color:#ffd6d6; }
+
+/* ─── ACCOUNT DELETION CONFIRMATION ─── */
+.delete-acct-overlay {
+  display:none; position:fixed; inset:0; z-index:10050;
+  background:rgba(0,0,0,0.92); align-items:center; justify-content:center;
+  padding:16px;
+}
+.delete-acct-overlay.show { display:flex; }
+.delete-acct-box {
+  width:min(460px,95vw);
+  background:linear-gradient(160deg,#2a0d0d 0%,#1a0808 100%);
+  border:2px solid rgba(220,80,80,0.5);
+  border-radius:12px;
+  box-shadow:0 0 56px rgba(220,80,80,0.18);
+  padding:18px 18px 16px;
+}
+.delete-acct-title {
+  font-family:'Cinzel',serif; color:#ff9c9c;
+  font-size:1rem; letter-spacing:1px; text-align:center;
+  margin-bottom:6px;
+}
+.delete-acct-body {
+  color:rgba(255,210,200,0.75);
+  font-size:0.72rem; line-height:1.55; margin-bottom:10px;
+}
+.delete-acct-body ul { padding-left:16px; margin:6px 0; }
+.delete-acct-body li { font-size:0.7rem; margin-bottom:3px; }
+.delete-acct-confirm-label {
+  font-size:0.6rem; letter-spacing:1px; text-transform:uppercase;
+  color:rgba(255,210,200,0.7); margin-bottom:4px; display:block;
+}
+.delete-acct-confirm-input {
+  width:100%; box-sizing:border-box;
+  background:rgba(0,0,0,0.45); color:#fff;
+  border:1px solid rgba(220,80,80,0.42); border-radius:7px;
+  padding:9px 10px; font-size:0.85rem; letter-spacing:2px;
+  text-align:center; text-transform:uppercase;
+  font-family:'Orbitron','Cinzel',monospace;
+}
+.delete-acct-confirm-input:focus {
+  outline:none; border-color:#ff7878; box-shadow:0 0 0 1px rgba(220,80,80,0.3);
+}
+.delete-acct-row { display:flex; gap:8px; margin-top:12px; }
+.delete-acct-btn {
+  flex:1; padding:10px 12px;
+  border-radius:8px; cursor:pointer;
+  font-family:'Cinzel',serif; font-weight:700;
+  letter-spacing:1.1px; font-size:0.72rem;
+}
+.delete-acct-btn.cancel {
+  border:1px solid rgba(201,168,76,0.4);
+  background:rgba(201,168,76,0.08); color:#f0d080;
+}
+.delete-acct-btn.destroy {
+  border:none;
+  background:linear-gradient(135deg,#b03030,#7a1818);
+  color:#fff;
+  opacity:0.4; transition:opacity 0.2s;
+}
+.delete-acct-btn.destroy.armed { opacity:1; }
+.delete-acct-btn.destroy:not(.armed) { cursor:not-allowed; }
+.delete-acct-status {
+  text-align:center; min-height:14px; margin-top:8px;
+  font-size:0.6rem; color:rgba(255,200,200,0.65);
+}
 
 /* ─── GLOBAL LEADERBOARD ─── */
 .leaderboard-panel {
@@ -1830,9 +1901,39 @@ body { padding-bottom:185px; }
   /* Bet amounts bigger tap targets */
   .bet-slot { padding:6px 4px; }
 }
+
+/* ─── EXTENDED-THEME SAFETY ─────────────────────────────────────
+   When body[data-themed='1'] is set (i.e. ?theme=<slug> is active),
+   reaffirm that the playing cards and the road scoreboards keep
+   their high-contrast standard palette. New themes only paint the
+   page bg + glow halo; gameplay-critical surfaces stay legible. */
+body[data-themed='1'] .card-face         { background:#fffef8 !important; }
+body[data-themed='1'] .card-face.red     { color:#cc1111 !important; }
+body[data-themed='1'] .card-face.black   { color:#111 !important; }
+body[data-themed='1'] .scoreboards {
+  background:linear-gradient(180deg,#2a1a08 0%,#1e1304 100%) !important;
+  border-top-color:rgba(201,168,76,0.3) !important;
+}
+body[data-themed='1'] .road-panel {
+  border-color:rgba(140,100,30,0.5) !important;
+}
+body[data-themed='1'] .road-hdr {
+  background:linear-gradient(90deg,#1a0d04,#2a1a08,#1a0d04) !important;
+  border-bottom-color:rgba(140,100,30,0.45) !important;
+}
 </style>
 </head>
 <body>
+<!-- Extended themes (42 stages + 10 seasonal). Loads BG_THEMES_EXTENDED
+     onto window. The inline call below applies ?theme=<slug> from the URL
+     before the main game script runs, so the page bg/glow render correctly
+     on first paint. -->
+<script src="themes-extended.js"></script>
+<script>
+  if (window.BG_THEMES_EXTENDED) {
+    window.BG_THEMES_EXTENDED.applyThemeFromUrl();
+  }
+</script>
 <script>
 (function(){
   // Pre-boot splash bypass for Cognito return / existing signed-in sessions.
@@ -2211,6 +2312,7 @@ body { padding-bottom:185px; }
         <span id="hdr-user">Guest</span>
         <button class="hdr-auth-btn" id="hdr-login-btn" onclick="showAuthOverlay()">Login</button>
         <button class="hdr-auth-btn" id="hdr-logout-btn" onclick="cognitoLogout()" style="display:none;">Logout</button>
+        <button class="hdr-auth-btn danger" id="hdr-delete-btn" onclick="openDeleteAccountModal()" style="display:none;" title="Permanently delete your account">Delete</button>
         <span id="hdr-trial" class="trial-badge" style="margin-left:3px;"></span>
       </div>
     </div>
@@ -2280,6 +2382,31 @@ body { padding-bottom:185px; }
       <button class="auth-btn alt" id="auth-trial-btn" onclick="startGuestTrial()">PLAY 10-DEAL GUEST TRIAL</button>
     </div>
     <div class="auth-note" id="auth-note"></div>
+  </div>
+</div>
+
+<!-- ═══════ DELETE ACCOUNT — Apple Guideline 5.1.1(v) ═══════ -->
+<div class="delete-acct-overlay" id="delete-acct-overlay">
+  <div class="delete-acct-box">
+    <div class="delete-acct-title">⚠ Permanently delete your account?</div>
+    <div class="delete-acct-body">
+      This action cannot be undone. We will immediately delete:
+      <ul>
+        <li>Your account credentials (email, password)</li>
+        <li>Your global leaderboard entry and gameplay stats</li>
+        <li>All of your monthly tournament submissions</li>
+      </ul>
+      Local progress on this device (cleared stages, settings) is preserved
+      until you delete the app or clear its storage. The deletion is final
+      and you'll be signed out immediately.
+    </div>
+    <label class="delete-acct-confirm-label" for="delete-acct-confirm">Type <strong>DELETE</strong> to confirm:</label>
+    <input class="delete-acct-confirm-input" id="delete-acct-confirm" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="20" oninput="onDeleteAcctConfirmInput()">
+    <div class="delete-acct-row">
+      <button class="delete-acct-btn cancel" onclick="closeDeleteAccountModal()">CANCEL</button>
+      <button class="delete-acct-btn destroy" id="delete-acct-go" onclick="performAccountDelete()" disabled>DELETE FOREVER</button>
+    </div>
+    <div class="delete-acct-status" id="delete-acct-status"></div>
   </div>
 </div>
 
@@ -2578,6 +2705,8 @@ body { padding-bottom:185px; }
   <div class="sab-secondary">
     <span class="sab-stake">Stake: <strong id="bet-display">0</strong></span>
     <span class="sab-stake">·</span>
+    <span class="sab-stake">Min <strong id="min-display">1</strong></span>
+    <span class="sab-stake">·</span>
     <span class="sab-stake"><strong id="bal-display">1,000</strong> Credits</span>
     <button class="btn btn-auto" id="btn-auto" onclick="startAutoPlay()" title="Auto×5">⚡ Auto×5</button>
     <div class="bet-timer-wrap"><div class="bet-timer" id="bet-timer">2:00</div></div>
@@ -2614,6 +2743,10 @@ body { padding-bottom:185px; }
   <div class="leaderboard-header">
     <span class="leaderboard-title">🏆 GLOBAL LEADERBOARD</span>
     <button class="leaderboard-refresh" onclick="fetchGlobalLeaderboard()">Refresh</button>
+  </div>
+  <div id="lb-paused-banner">
+    <b>TODAY'S SCORES PAUSED</b><br>
+    Free top-up used · resets at midnight
   </div>
   <div class="leaderboard-body" id="leaderboard-body">
     <div class="leaderboard-empty" id="leaderboard-empty">Sign in to submit scores. Top players will appear here.</div>
@@ -2781,6 +2914,17 @@ let playerLevel=1;
 let playerTitle='Recruit';
 let dailyStreak=0;
 let lastDailyClaim='';
+// Out-of-chips modal: 4hr free top-up + 30min rewarded ad cooldown.
+// `freeChipsUsedDate` flags the player's leaderboard submission as paused
+// for the day if any free chip injection occurred (4hr, daily login, ad,
+// or silent fallback). Resets at the next calendar day boundary.
+let lastFreeTopup=0;
+let lastRewardedAd=0;
+let freeChipsUsedDate='';
+const FREE_TOPUP_INTERVAL_MS = 4 * 60 * 60 * 1000;
+const FREE_TOPUP_AMOUNT      = 1000;
+const REWARDED_AD_COOLDOWN_MS = 30 * 60 * 1000;
+const REWARDED_AD_AMOUNT     = 250;
 let currentVenue='vegas';
 let bets={banker:0,player:0,tie:0,dragon7:0,panda8:0,bigTiger:0,smallTiger:0,tigerTie:0,playerPair:0,bankerPair:0};
 let lightningMult={banker:1,player:1}; // per-hand multipliers for Lightning mode
@@ -2882,12 +3026,16 @@ function soundVenueIntro(venueId, color){
 }
 
 const VENUES=[
-  {id:'vegas', name:'Las Vegas', city:'Las Vegas Neon', requiredTitle:'Recruit', rank:5},
-  {id:'atlantic', name:'Atlantic City', city:'Atlantic City Boardwalk', requiredTitle:'Gladiator', rank:6},
-  {id:'morocco', name:'Morocco', city:'Morocco Marrakesh', requiredTitle:'Centurion', rank:4},
-  {id:'buenosaires', name:'Buenos Aires', city:'Buenos Aires Palermo', requiredTitle:'Champion', rank:3},
-  {id:'macau', name:'Macau', city:'Macau Cotai', requiredTitle:'Warlord', rank:2},
-  {id:'montecarlo', name:'Monte Carlo', city:'Monte Carlo Riviera', requiredTitle:'Emperor', rank:1}
+  // minBet = table minimum stake (virtual credits). Scales with venue prestige.
+  // Vegas stays at 1 so the entry table is unchanged for existing testers;
+  // higher cities carry a real minimum, which the Top-Off (chip-out) modal
+  // uses as its trigger floor — see tableMin() / showChipOutModal().
+  {id:'vegas', name:'Las Vegas', city:'Las Vegas Neon', requiredTitle:'Recruit', rank:5, minBet:1},
+  {id:'atlantic', name:'Atlantic City', city:'Atlantic City Boardwalk', requiredTitle:'Gladiator', rank:6, minBet:10},
+  {id:'morocco', name:'Morocco', city:'Morocco Marrakesh', requiredTitle:'Centurion', rank:4, minBet:25},
+  {id:'buenosaires', name:'Buenos Aires', city:'Buenos Aires Palermo', requiredTitle:'Champion', rank:3, minBet:50},
+  {id:'macau', name:'Macau', city:'Macau Cotai', requiredTitle:'Warlord', rank:2, minBet:100},
+  {id:'montecarlo', name:'Monte Carlo', city:'Monte Carlo Riviera', requiredTitle:'Emperor', rank:1, minBet:250}
 ];
 // ── VENUE AUDIO PROFILES (crowd ambience parameters only — music handled by ambientCasino engine) ──
 const VENUE_AUDIO={
@@ -3114,6 +3262,18 @@ function getVenueById(id){
   return VENUES.find(v=>v.id===id) || VENUES[0];
 }
 
+// Minimum stake for the table the player is currently sitting at. The Top-Off
+// (chip-out) modal triggers whenever balance < this, since the player can no
+// longer make a legal bet here. Falls back to 1 for any venue missing minBet.
+function tableMin(){
+  const v=getVenueById(currentVenue);
+  return Math.max(1, Number((v && v.minBet) || 1));
+}
+// True when the player can't cover the table minimum and needs a top-off.
+function belowTableMin(){
+  return balance < tableMin();
+}
+
 function venueUnlocked(venue){
   return getTitleIndex(playerTitle) >= getTitleIndex(venue.requiredTitle || 'Recruit');
 }
@@ -3159,6 +3319,9 @@ function loadEconomy(){
     if(Number.isFinite(Number(p.dailyStreak))) dailyStreak=Math.max(0, Number(p.dailyStreak));
     if(typeof p.lastDailyClaim==='string') lastDailyClaim=p.lastDailyClaim;
     if(typeof p.currentVenue==='string') currentVenue=p.currentVenue;
+    if(Number.isFinite(Number(p.lastFreeTopup))) lastFreeTopup=Number(p.lastFreeTopup);
+    if(Number.isFinite(Number(p.lastRewardedAd))) lastRewardedAd=Number(p.lastRewardedAd);
+    if(typeof p.freeChipsUsedDate==='string') freeChipsUsedDate=p.freeChipsUsedDate;
   }catch(e){}
   playerLevel=levelFromXp(playerXp);
   playerTitle=titleFromLevel(playerLevel);
@@ -3167,7 +3330,8 @@ function loadEconomy(){
 function saveEconomy(){
   try{
     localStorage.setItem(ECONOMY_KEY, JSON.stringify({
-      balance, hardGems, playerXp, dailyStreak, lastDailyClaim, currentVenue
+      balance, hardGems, playerXp, dailyStreak, lastDailyClaim, currentVenue,
+      lastFreeTopup, lastRewardedAd, freeChipsUsedDate
     }));
   }catch(e){}
 }
@@ -3190,10 +3354,180 @@ function claimDailyReward(){
   balance += reward;
   if(dailyStreak===7) hardGems += 5;
   lastDailyClaim=t;
+  // Daily login is a free chip injection — flag the player out of today's
+  // global leaderboard. This matches the broader rule that any free
+  // top-up path pauses competitive submission for that day.
+  flagFreeChipsToday();
   setMsg('Daily reward claimed: +' + reward.toLocaleString() + ' chips' + (dailyStreak===7?' and +5 gems!':''));
   postFeedMsg('🎁 Daily reward Day ' + dailyStreak + ' claimed: +' + reward.toLocaleString() + ' chips.', 'info');
   refreshUI();
   saveEconomy();
+  refreshChipOutModal();
+}
+
+// ── CHIP-OUT (out-of-credits) HELPERS ───────────────────────────────
+// Players never get permanently locked out (social-casino best practice)
+// but every free chip injection (4hr, daily, ad, silent fallback) flags
+// `freeChipsUsedDate` so submitHandEventToCloud pauses leaderboard entry
+// for the day. Resets at the next local-calendar-day boundary.
+function flagFreeChipsToday(){
+  freeChipsUsedDate = todayKey();
+  saveEconomy();
+  refreshLeaderboardPausedBanner();
+}
+function freeChipsTakenToday(){
+  return freeChipsUsedDate === todayKey();
+}
+function timeUntilFreeTopup(){
+  const next = (lastFreeTopup || 0) + FREE_TOPUP_INTERVAL_MS;
+  return Math.max(0, next - Date.now());
+}
+function timeUntilRewardedAd(){
+  const next = (lastRewardedAd || 0) + REWARDED_AD_COOLDOWN_MS;
+  return Math.max(0, next - Date.now());
+}
+function fmtCountdown(ms){
+  if(ms <= 0) return 'AVAILABLE NOW';
+  const h = Math.floor(ms / 3600000);
+  const m = Math.floor((ms % 3600000) / 60000);
+  const s = Math.floor((ms % 60000) / 1000);
+  if(h > 0) return h + 'h ' + m + 'm';
+  if(m > 0) return m + 'm ' + s + 's';
+  return s + 's';
+}
+
+function claimFreeTopup(){
+  if(timeUntilFreeTopup() > 0){
+    setMsg('Free top-up not yet available.');
+    return false;
+  }
+  balance += FREE_TOPUP_AMOUNT;
+  lastFreeTopup = Date.now();
+  flagFreeChipsToday();
+  setMsg('Free top-up claimed: +' + FREE_TOPUP_AMOUNT.toLocaleString() + ' chips. Play responsibly.');
+  postFeedMsg('⏱ Free top-up: +' + FREE_TOPUP_AMOUNT.toLocaleString() + ' chips. Leaderboard paused for today.', 'info');
+  refreshUI();
+  saveEconomy();
+  refreshChipOutModal();
+  return true;
+}
+
+// Simulated rewarded video ad. In production this would call the ad-SDK
+// callback (AdMob, Unity Ads, IronSource, etc.). For now, a 2.5s overlay
+// stands in for the ad playback so the flow is end-to-end testable.
+function watchRewardedAdRefill(){
+  if(timeUntilRewardedAd() > 0){
+    setMsg('Ad already watched recently.');
+    return false;
+  }
+  const overlay = document.getElementById('ad-sim-overlay');
+  if(overlay) overlay.classList.add('on');
+  setTimeout(() => {
+    if(overlay) overlay.classList.remove('on');
+    balance += REWARDED_AD_AMOUNT;
+    lastRewardedAd = Date.now();
+    flagFreeChipsToday();
+    setMsg('Ad reward: +' + REWARDED_AD_AMOUNT.toLocaleString() + ' chips. Play responsibly.');
+    postFeedMsg('📺 Watched ad: +' + REWARDED_AD_AMOUNT.toLocaleString() + ' chips. Leaderboard paused for today.', 'info');
+    refreshUI();
+    saveEconomy();
+    refreshChipOutModal();
+  }, 2500);
+  return true;
+}
+
+function showChipOutModal(){
+  const m = document.getElementById('chip-out-modal');
+  if(!m) return;
+  // Close any competing book-promo overlay so the Top-Off prompt is the focus —
+  // the book "zero-credit" modal fires on the same bust moment and would
+  // otherwise sit in front of (or alongside) the refill prompt.
+  document.querySelectorAll('.bg-book-modal.open, #book-zero-credit-modal.open').forEach(function(el){
+    el.classList.remove('open');
+  });
+  m.classList.add('on');     // add first so refreshChipOutModal's guard passes
+  refreshChipOutModal();
+}
+function hideChipOutModal(){
+  const m = document.getElementById('chip-out-modal');
+  if(m) m.classList.remove('on');
+  // Safety net: if the user dismissed without claiming and still can't cover
+  // the table minimum, restore them to a playable floor so they're never
+  // permanently stuck. Counts as a free top-up for leaderboard purposes.
+  if(belowTableMin()){
+    balance = Math.max(1000, tableMin());
+    flagFreeChipsToday();
+    setMsg('Credits restored to ' + balance.toLocaleString() + '. Play responsibly.');
+    refreshUI();
+    saveEconomy();
+  }
+}
+
+function refreshChipOutModal(){
+  const m = document.getElementById('chip-out-modal');
+  if(!m || !m.classList.contains('on')) return;
+
+  // Context-aware header: fully busted vs simply below the table minimum.
+  const titleEl = m.querySelector('#cm-title-text');
+  const subEl   = m.querySelector('.cm-sub');
+  if(balance <= 0){
+    if(titleEl) titleEl.textContent = 'OUT OF CREDITS';
+    if(subEl)   subEl.textContent   = 'PICK A PATH BACK TO THE TABLE';
+  } else {
+    if(titleEl) titleEl.textContent = 'BELOW THE $' + tableMin().toLocaleString() + ' MINIMUM';
+    if(subEl)   subEl.textContent   = 'CLAIM A FREE REFILL TO STAY AT THE TABLE';
+  }
+
+  // 4hr top-up card
+  const topupCd  = m.querySelector('.cm-card.topup .cm-cd');
+  const topupBtn = m.querySelector('.cm-card.topup .cm-btn');
+  const topupMs  = timeUntilFreeTopup();
+  if(topupCd)  topupCd.textContent  = fmtCountdown(topupMs);
+  if(topupBtn){
+    topupBtn.disabled = topupMs > 0;
+    topupBtn.textContent = topupMs > 0 ? 'WAIT' : 'CLAIM +' + FREE_TOPUP_AMOUNT.toLocaleString();
+  }
+
+  // Daily login card
+  const dailyCd  = m.querySelector('.cm-card.daily .cm-cd');
+  const dailyBtn = m.querySelector('.cm-card.daily .cm-btn');
+  const dailyAmt = m.querySelector('.cm-card.daily .cm-amount');
+  const todayClaimed = lastDailyClaim === todayKey();
+  // Compute the streak day they would land on if they claimed right now
+  const t = todayKey();
+  const gap = lastDailyClaim ? dayDiff(t, lastDailyClaim) : 1;
+  let nextStreakDay = (gap === 1) ? (dailyStreak + 1) : 1;
+  if(nextStreakDay > 7) nextStreakDay = 1;
+  const nextReward = DAILY_REWARDS[nextStreakDay - 1] || DAILY_REWARDS[0];
+  if(dailyAmt) dailyAmt.textContent = '+' + nextReward.toLocaleString();
+  if(dailyCd)  dailyCd.textContent  = todayClaimed
+    ? 'CLAIMED TODAY · DAY ' + dailyStreak + '/7'
+    : 'DAY ' + nextStreakDay + ' OF 7 STREAK';
+  if(dailyBtn){
+    dailyBtn.disabled = todayClaimed;
+    dailyBtn.textContent = todayClaimed ? 'CLAIMED' : 'CLAIM +' + nextReward.toLocaleString();
+  }
+
+  // Rewarded ad card
+  const adCd  = m.querySelector('.cm-card.ad .cm-cd');
+  const adBtn = m.querySelector('.cm-card.ad .cm-btn');
+  const adMs  = timeUntilRewardedAd();
+  if(adCd)  adCd.textContent  = fmtCountdown(adMs);
+  if(adBtn){
+    adBtn.disabled = adMs > 0;
+    adBtn.textContent = adMs > 0 ? 'WAIT' : 'WATCH +' + REWARDED_AD_AMOUNT;
+  }
+
+  // Live tick the countdowns while the modal is open
+  clearTimeout(_chipOutTickTimer);
+  _chipOutTickTimer = setTimeout(refreshChipOutModal, 1000);
+}
+let _chipOutTickTimer = 0;
+
+function refreshLeaderboardPausedBanner(){
+  const b = document.getElementById('lb-paused-banner');
+  if(!b) return;
+  b.style.display = freeChipsTakenToday() ? 'block' : 'none';
 }
 
 function watchAdForChips(){
@@ -3278,6 +3612,9 @@ function selectVenue(id){
   applyVenueTheme();
   saveEconomy();
   refreshUI();
+  // Moving to a higher-minimum table may leave the player short — offer Top-Off
+  // immediately rather than waiting for them to fail a bet.
+  if(phase==='betting' && belowTableMin()) showChipOutModal();
 }
 
 function showEconomyFriction(msg){
@@ -3336,6 +3673,8 @@ function setHeaderUser(){
   }
   if(loginBtn) loginBtn.style.display = authLocked ? 'none' : 'inline-block';
   if(logoutBtn) logoutBtn.style.display = authLocked ? 'inline-block' : 'none';
+  const delBtn=document.getElementById('hdr-delete-btn');
+  if(delBtn) delBtn.style.display = authLocked ? 'inline-block' : 'none';
   // Update avatar label with username
   const avLabel = document.getElementById('av-player-label');
   if(avLabel){
@@ -3694,6 +4033,64 @@ function cognitoLogout(){
   window.location.href = CLOUD_CONFIG.cognitoDomain.replace(/\/$/,'') + '/logout?' + q.toString();
 }
 
+// ── Account deletion (Apple Guideline 5.1.1(v)) ───────────────────
+// Two-step confirmation: open modal, user must type "DELETE", which arms
+// the destroy button. On confirm, we call DELETE /account (Cognito JWT
+// authorized — the backend uses the verified sub, never a client-supplied
+// user id). On success we clear all local state and route through the
+// standard Cognito logout to revoke the hosted-UI session.
+function openDeleteAccountModal(){
+  if(!authLocked){ return; }
+  const o=document.getElementById('delete-acct-overlay');
+  const inp=document.getElementById('delete-acct-confirm');
+  const go=document.getElementById('delete-acct-go');
+  const st=document.getElementById('delete-acct-status');
+  if(inp) inp.value='';
+  if(go){ go.classList.remove('armed'); go.disabled=true; }
+  if(st) st.textContent='';
+  if(o) o.classList.add('show');
+  setTimeout(function(){ if(inp) inp.focus(); }, 60);
+}
+function closeDeleteAccountModal(){
+  const o=document.getElementById('delete-acct-overlay');
+  if(o) o.classList.remove('show');
+}
+function onDeleteAcctConfirmInput(){
+  const inp=document.getElementById('delete-acct-confirm');
+  const go=document.getElementById('delete-acct-go');
+  if(!inp || !go) return;
+  const armed = (inp.value||'').trim().toUpperCase() === 'DELETE';
+  go.classList.toggle('armed', armed);
+  go.disabled = !armed;
+}
+async function performAccountDelete(){
+  const go=document.getElementById('delete-acct-go');
+  const cancel=document.querySelector('#delete-acct-overlay .delete-acct-btn.cancel');
+  const st=document.getElementById('delete-acct-status');
+  if(go) go.disabled=true;
+  if(cancel) cancel.disabled=true;
+  if(st){ st.textContent='Deleting your account...'; st.style.color='rgba(255,210,200,0.7)'; }
+  try{
+    await apiFetch('/account', { method:'DELETE' });
+    // Clear every local trace before signing out.
+    try{ localStorage.clear(); }catch(e){}
+    try{ sessionStorage.clear(); }catch(e){}
+    if(st){ st.textContent='Account deleted. Signing out...'; st.style.color='#aaf0a8'; }
+    // Force a clean Cognito logout to revoke the hosted-UI session too.
+    setTimeout(function(){ try{ cognitoLogout(); } catch(e) { window.location.href='/'; } }, 900);
+  }catch(err){
+    if(go) go.disabled=false;
+    if(cancel) cancel.disabled=false;
+    if(st){
+      st.style.color='#ff8888';
+      const detail = err && err.data && err.data.error;
+      if(detail === 'unauthorized') st.textContent='Session expired — sign in again, then retry.';
+      else if(detail) st.textContent='Server error: ' + detail + '. Email frankie@styleiq.co.';
+      else st.textContent='Request failed. Check connection and retry, or email frankie@styleiq.co.';
+    }
+  }
+}
+
 async function apiFetch(path, opts){
   const url = CLOUD_CONFIG.apiBaseUrl.replace(/\/$/,'') + path;
   const headers = Object.assign({}, (opts && opts.headers) ? opts.headers : {});
@@ -3796,6 +4193,12 @@ function makeHandEventPayload(r, b){
 async function submitHandEventToCloud(r, b, retry){
   if(!authLocked) return;
   if(CLOUD_CONFIG.apiBaseUrl.includes('YOUR_HTTP_API_ID')) return;
+  // Players who took ANY free top-up today (4hr timer, daily login,
+  // rewarded ad, or silent fallback when they hit $0) do not submit
+  // hands to the global leaderboard for the rest of the calendar day.
+  // Hands are still played and saved locally — only the leaderboard
+  // submission is paused. Resets at next local midnight.
+  if(freeChipsTakenToday()) return;
   const attemptRetry = !!retry;
   try{
     const data = await apiFetch('/hand-event', {
@@ -3981,7 +4384,18 @@ function selectSlot(slot){
 function addChip(val){
   if(phase!=='betting') return;
   if(checkTrialBlock()) return;
-  if(balance<val){ setMsg('Not enough credits!'); showEconomyFriction('Not enough chips for that stake.'); return; }
+  if(balance<val){
+    // Below the table minimum → can't make any legal bet here, so offer the
+    // Top-Off path. Otherwise they just can't afford this particular chip.
+    if(belowTableMin()){
+      setMsg('Below the $' + tableMin().toLocaleString() + ' table minimum — claim a refill to stay at the table.');
+      showChipOutModal();
+    } else {
+      setMsg('Not enough credits!');
+      showEconomyFriction('Not enough chips for that stake.');
+    }
+    return;
+  }
   // House rule: cannot bet on both Banker AND Player simultaneously
   if(selSlot==='player' && bets.banker>0){
     setMsg('⚠️ You cannot bet on both Banker and Player. Clear your Banker bet first.');
@@ -4871,6 +5285,17 @@ function deal(){
     return;
   }
   if(!_isFreeHand && totalBet()===0){ setMsg('Place virtual chips first!'); return; }
+  // Enforce the table minimum. If they can't even cover it, route to Top-Off;
+  // if they just under-staked, prompt them to add more.
+  if(!_isFreeHand && totalBet() < tableMin()){
+    if(belowTableMin()){
+      setMsg('Below the $' + tableMin().toLocaleString() + ' table minimum — claim a refill to stay at the table.');
+      showChipOutModal();
+    } else {
+      setMsg('Table minimum is $' + tableMin().toLocaleString() + '. Add more chips to your stake.');
+    }
+    return;
+  }
   if(checkTrialBlock()) return;  // trial block applies to ALL deals, including free hands
   clearBetTimer();
   const playerWager = totalBet();
@@ -4932,10 +5357,11 @@ function deal(){
   renderInitialCards();
 
   // Speed Baccarat: hide squeeze controls, auto-reveal all cards
-  if(gameMode==='speed'){
+  // Director's Cut also gets auto-reveal regardless of mode for clean replay.
+  if(gameMode==='speed' || window.__directorCut){
     document.getElementById('dealer-controls').style.display='none';
     document.getElementById('player-controls').style.display='none';
-    setMsg('⚡ Speed deal — revealing…');
+    setMsg(window.__directorCut ? '🎬 Director\'s Cut — auto-reveal' : '⚡ Speed deal — revealing…');
     setTimeout(()=>revealCards(['pc0','bc0','pc1','bc1'],90),350);
   } else {
     // Show dealer/player controls
@@ -5006,7 +5432,7 @@ function renderThirdCards(){
     zone.classList.add('visible');
     // deal sounds for third card(s)
     let tc=0; if(pThird){ soundDeal(tc*0.14); tc++; } if(bThird){ soundDeal(tc*0.14); }
-    if(gameMode==='speed'){
+    if(gameMode==='speed' || window.__directorCut){
       const speedIds=[]; if(pThird) speedIds.push('pc2'); if(bThird) speedIds.push('bc2');
       setTimeout(()=>revealCards(speedIds,110),260);
     } else {
@@ -5234,7 +5660,7 @@ function resolveHand(){
   // Special win celebrations (priority: Dragon7 > Panda8 > Tiger > Natural)
   if(r.isDragon7){ triggerSpecialAnim('dragon7'); soundDragon7(); }
   else if(r.isPanda8){ triggerSpecialAnim('panda8'); soundPanda8(); }
-  else if((r.isBigTiger||r.isSmallTiger||r.isTigerTie)&&gameMode==='tiger'){ triggerSpecialAnim('tiger'); soundTiger(); }
+  else if((r.isBigTiger||r.isSmallTiger||r.isTigerTie)&&(gameMode==='tiger'||window.__directorCut)){ triggerSpecialAnim('tiger'); soundTiger(); }
   else if(isNatural){ triggerSpecialAnim(isNatural9?'natural9':'natural8'); soundNatural(); }
 
   // ── Centralized haptic feedback — unique pattern per outcome ──────
@@ -5296,8 +5722,8 @@ function resolveHand(){
   }
 
   // ── KALBI KOREAN BBQ: initial 2-card totals are 7 on one side and 6 on the other
-  const p2Total = (cardValue(r.pH[0]) + cardValue(r.pH[1])) % 10;
-  const b2Total = (cardValue(r.bH[0]) + cardValue(r.bH[1])) % 10;
+  const p2Total = (cardVal(r.pH[0]) + cardVal(r.pH[1])) % 10;
+  const b2Total = (cardVal(r.bH[0]) + cardVal(r.bH[1])) % 10;
   if((p2Total===7 && b2Total===6) || (p2Total===6 && b2Total===7)){
     const kbPhrases = [
       '🥩 KALBI KOREAN BBQ! 7 and 6 on the initial deal — the table is sizzling!',
@@ -5367,6 +5793,19 @@ function resolveHand(){
     }
   }
 
+  // ── Bust relief: the instant the player can't cover the table minimum,
+  // ALWAYS surface the Top-Off modal — don't wait for the next round. A short
+  // beat lets the losing result register first. If auto-play is running, stop
+  // it (it would otherwise try to bet with no chips and drive balance negative).
+  if(belowTableMin() && !guestTrialExpired()){
+    if(autoPlayRemaining>0){
+      autoPlayRemaining=0;
+      document.getElementById('auto-progress').style.display='none';
+      document.getElementById('btn-auto').disabled=false;
+    }
+    setTimeout(function(){ if(belowTableMin()) showChipOutModal(); }, 900);
+  }
+
   // ── auto-play continuation ──
   if(autoPlayRemaining>0){
     autoPlayRemaining--;
@@ -5413,7 +5852,12 @@ function newRound(){
   // Reset AI current bet display for new round
   aiCurrentBet = { slot: null, amount: 0 };
   updateAIPanel();
-  if(balance<=0){ balance=1000; setMsg('Credits reloaded to 1,000. Play responsibly.'); }
+  if(belowTableMin()){
+    // At the start of a hand, if the player can't cover the table minimum,
+    // surface the Top-Off modal so they pick a path back. The modal also
+    // handles the silent-restore safety net if dismissed.
+    showChipOutModal();
+  }
   else if(guestTrialExpired()) setMsg('Guest trial complete. Sign in to continue.');
   else setMsg('Select a side, place virtual chips, then DEAL');
   if(!guestTrialExpired()) dealerCall('place_bets', {}, {feed:false, caption:true});
@@ -5434,6 +5878,7 @@ function setMsg(t){ document.getElementById('msg-bar').className='msg-bar'; docu
 function refreshUI(){
   document.getElementById('bal-display').textContent=balance.toLocaleString();
   document.getElementById('hdr-balance').textContent=balance.toLocaleString();
+  const _minEl=document.getElementById('min-display'); if(_minEl) _minEl.textContent='$'+tableMin().toLocaleString();
   const hp=document.getElementById('hdr-premium');
   if(hp) hp.textContent='LVL '+playerLevel+' '+playerTitle; // hidden, kept for compat
   // During and after a hand (phase==='revealing'|'dealt'), show the staked amounts
@@ -5776,8 +6221,15 @@ function renderDerived(canvasId,scrollId,countId,entries,preds,cockroach){
   if(ce) ce.textContent=entries.length>0?`${entries.length} entries`:'—';
 }
 
-// ─── Dragon 7 / Panda 8 Celebration Animation ────────────────
+// ─── Dragon 7 / Panda 8 / Tiger 6 Celebration Animation ───────
 function triggerSpecialAnim(type){
+  // Legendary side-bet wins use the no-emoji SVG/canvas module.
+  // Naturals (8/9) keep using the emoji card renderer below.
+  if((type==='dragon7'||type==='panda8'||type==='tiger')
+     && window.LegendaryWin){
+    window.LegendaryWin.fire(type);
+    return;
+  }
   // Remove any existing anim
   const old=document.getElementById('special-anim-overlay');
   if(old) old.remove();
@@ -5900,6 +6352,15 @@ let _activeVenueAudio = '';
 let soundEnabled  = true;   // SFX toggle (backward compat)
 let musicEnabled  = true;
 let masterVolume  = 0.8;
+// Ambient music-engine state. Declared here (not beside the engine below)
+// because the init-time refreshUI() at load reaches applyVenueAudioTheme →
+// start/stopOrchestral before the engine section runs — declaring these
+// later left them in the temporal dead zone and threw on first venue audio.
+let _ambPadNodes   = [];  // running pad oscillators per chord voice
+let _ambLFOs       = [];  // pad filter LFOs
+let _ambLoopTimer  = null;
+let _ambChordIndex = 0;
+let _ambVariation  = 0;   // micro-variation counter (0-3)
 
 function getVenueAudioProfile(){
   return VENUE_AUDIO[currentVenue] || VENUE_AUDIO.vegas;
@@ -6237,6 +6698,8 @@ function renderTimer(){
 
 // ── INIT ──────────────────────────────────────────────────────────
 loadEconomy();
+// Reflect leaderboard-paused state from any prior free top-up taken today
+try { refreshLeaderboardPausedBanner(); } catch(e) {}
 if(!VENUES.some(v=>v.id===currentVenue)) currentVenue='vegas';
 const currentVenueDef=getVenueById(currentVenue);
 if(currentVenueDef && !venueUnlocked(currentVenueDef)) currentVenue='vegas';
@@ -6653,13 +7116,9 @@ function stopCrowdAmbience(){
 // ══════════════════════════════════════════════════════════════════
 //  AMBIENT CASINO MUSIC ENGINE
 //  Texture over tune · slow pads · sparse plucks · seamless loop
+//  (engine state _ambPadNodes/_ambLFOs/… is declared up in the audio-state
+//   block near musicEnabled, so it's initialized before init-time refreshUI.)
 // ══════════════════════════════════════════════════════════════════
-let _ambPadNodes   = [];  // running pad oscillators per chord voice
-let _ambLFOs       = [];  // pad filter LFOs
-let _ambLoopTimer  = null;
-let _ambChordIndex = 0;
-let _ambVariation  = 0;   // micro-variation counter (0-3)
-
 function _getAmbProfile(){
   return AMBIENT_PROFILES[currentVenue] || AMBIENT_PROFILES.vegas;
 }
@@ -7199,17 +7658,28 @@ function checkTrialBlock(){
 function startAutoPlay(){
   if(phase!=='betting'){ setMsg('Finish the current hand first!'); return; }
   if(checkTrialBlock()) return;
-  // If no active bet, reuse last bet or default $5 on Banker
+  // Can't cover the table minimum → route to Top-Off instead of auto-playing.
+  if(belowTableMin()){
+    setMsg('Below the $' + tableMin().toLocaleString() + ' table minimum — claim a refill to stay at the table.');
+    showChipOutModal();
+    return;
+  }
+  // If no active bet, reuse last bet or default to the table minimum on Banker
   if(totalBet()===0){
-    const fallback = lastBet && Object.values(lastBet).reduce((a,b)=>a+b,0)>0
+    const fallback = lastBet && Object.values(lastBet).reduce((a,b)=>a+b,0)>=tableMin()
       ? lastBet
-      : {banker:5,player:0,tie:0,dragon7:0,panda8:0,bigTiger:0,smallTiger:0,tigerTie:0,natural9:0,natural8:0};
+      : {banker:Math.max(5,tableMin()),player:0,tie:0,dragon7:0,panda8:0,bigTiger:0,smallTiger:0,tigerTie:0,natural9:0,natural8:0};
     // apply fallback bet
     const cost = Object.values(fallback).reduce((a,b)=>a+b,0);
     if(balance < cost){ setMsg('Not enough credits for auto-play!'); showEconomyFriction('You need more chips for auto-play.'); return; }
     bets = {...fallback};
     balance -= cost;
     refreshUI();
+  }
+  // Enforce table minimum on the auto-play stake.
+  if(totalBet() < tableMin()){
+    setMsg('Table minimum is $' + tableMin().toLocaleString() + '. Add more chips before auto-play.');
+    return;
   }
   // snapshot bets so we repeat them each hand
   autoPlayBetsSnapshot={...bets};
@@ -8215,6 +8685,700 @@ body[data-room='macau-vip'] .bet-slot.active { border-color:var(--gold); box-sha
 .pred-chip.follow-player{background:rgba(20,50,200,0.35);border-color:rgba(70,120,240,0.5);color:#aaccff}
 .pred-chip.break-banker{background:rgba(20,50,200,0.35);border-color:rgba(70,120,240,0.5);color:#aaccff}
 .pred-chip.break-player{background:rgba(180,20,20,0.35);border-color:rgba(220,60,60,0.5);color:#ffaaaa}
+
+/* ════════════════════════════════════════════════════════════════
+   VIP LEGENDARY WIN MODULE — Dragon 7 / Panda 8 / Tiger 6
+   "Modern Vegas VIP Luxury" — abstract typography + cinematic
+   lighting + glassmorphism + canvas particle physics. No literal
+   illustrations. Self-contained: window.LegendaryWin.fire(type)
+════════════════════════════════════════════════════════════════ */
+:root {
+  --lw-ease-slam:    cubic-bezier(0.16, 1.40, 0.30, 1);
+  --lw-ease-rise:    cubic-bezier(0.18, 0.95, 0.30, 1);
+  --lw-ease-out:     cubic-bezier(0.40, 0,    0.60, 1);
+  --lw-ease-laser:   cubic-bezier(0.86, 0,    0.07, 1);
+}
+
+/* Dim layer — softens the table felt during the celebration */
+#lw-dim {
+  position:fixed; inset:0; z-index:9100; pointer-events:none;
+  background:rgba(0,0,0,0); transition:background 360ms var(--lw-ease-out);
+}
+#lw-dim.on { background:var(--lw-dim-bg, rgba(0,0,0,0.72)); }
+
+/* Spotlight — radial vignette focusing the eye on the title */
+#lw-spot {
+  position:fixed; inset:0; z-index:9105; pointer-events:none;
+  opacity:0; transition:opacity 420ms var(--lw-ease-out);
+  background:radial-gradient(ellipse at 50% 50%,
+    var(--lw-spot-hot, rgba(255,180,40,0.42)) 0%,
+    var(--lw-spot-mid, rgba(255,80,0,0.16)) 30%,
+    transparent 62%);
+  mix-blend-mode:screen;
+}
+#lw-spot.on { opacity:1; }
+
+/* Canvas particle layer (embers / sparks) */
+#lw-fx {
+  position:fixed; inset:0; z-index:9110; pointer-events:none;
+  opacity:0; transition:opacity 220ms ease-out;
+}
+#lw-fx.on { opacity:1; }
+
+/* Stage — holds motif + title + sub */
+#lw-stage {
+  position:fixed; inset:0; z-index:9120; pointer-events:none;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:8px; opacity:0;
+}
+#lw-stage.on { opacity:1; }
+
+/* Screen shake — Dragon gets heavy, Tiger medium, Panda none */
+@keyframes lw-shake-heavy {
+  0%,100% { transform:translate(0,0); }
+  8% { transform:translate(-9px, 6px); }
+  20% { transform:translate(10px, -5px); }
+  34% { transform:translate(-7px, -7px); }
+  48% { transform:translate(8px, 6px); }
+  62% { transform:translate(-5px, 4px); }
+  78% { transform:translate(4px, -3px); }
+  92% { transform:translate(-1px, 1px); }
+}
+@keyframes lw-shake-light {
+  0%,100% { transform:translate(0,0); }
+  20% { transform:translate(-3px, 2px); }
+  45% { transform:translate(4px, -2px); }
+  70% { transform:translate(-2px, 1px); }
+}
+body.lw-shake-heavy { animation:lw-shake-heavy 700ms cubic-bezier(0.36,0.07,0.19,0.97); }
+body.lw-shake-light { animation:lw-shake-light 380ms cubic-bezier(0.36,0.07,0.19,0.97); }
+
+/* ── DRAGON 7 — expanding gold ring + crimson backdrop ── */
+.lw-d7-ring {
+  position:absolute; left:50%; top:50%;
+  width:840px; height:840px; max-width:96vw; max-height:96vw;
+  border-radius:50%;
+  transform:translate(-50%,-50%) scale(0.05);
+  opacity:0;
+  border:6px solid #ffb000;
+  box-shadow:
+    0 0 140px 18px rgba(255,176,0,0.55),
+    0 0 280px 40px rgba(184,0,31,0.35),
+    inset 0 0 100px 14px rgba(255,200,80,0.45);
+  animation:lw-d7-ring-out 1100ms var(--lw-ease-slam) 80ms forwards;
+}
+.lw-d7-ring.inner {
+  width:520px; height:520px; max-width:62vw; max-height:62vw;
+  border-width:3px; border-style:dashed;
+  animation:lw-d7-ring-out 1300ms var(--lw-ease-slam) 240ms forwards,
+            lw-d7-ring-spin 8s linear 1400ms infinite;
+}
+.lw-d7-ring.outer {
+  width:1200px; height:1200px; max-width:140vw; max-height:140vw;
+  border-width:2px; opacity:0;
+  border-color:rgba(255,176,0,0.6);
+  animation:lw-d7-ring-far 1500ms var(--lw-ease-out) 0ms forwards;
+}
+@keyframes lw-d7-ring-out {
+  0%   { opacity:0; transform:translate(-50%,-50%) scale(0.05); }
+  60%  { opacity:1; }
+  100% { opacity:0.95; transform:translate(-50%,-50%) scale(1); }
+}
+@keyframes lw-d7-ring-far {
+  0%   { opacity:0; transform:translate(-50%,-50%) scale(0.2); }
+  50%  { opacity:0.6; }
+  100% { opacity:0; transform:translate(-50%,-50%) scale(1.4); }
+}
+@keyframes lw-d7-ring-spin {
+  to { transform:translate(-50%,-50%) rotate(360deg); }
+}
+
+/* ── PANDA 8 — frosted-glass slab + light-streak sweeps ── */
+.lw-p8-slab {
+  position:absolute; left:50%; top:50%;
+  width:88vw; max-width:840px; height:380px; max-height:46vh;
+  transform:translate(-150%,-50%) skewX(-8deg);
+  border-radius:18px;
+  background:rgba(255,255,255,0.06);
+  backdrop-filter:blur(22px) saturate(140%);
+  -webkit-backdrop-filter:blur(22px) saturate(140%);
+  border:1px solid rgba(255,255,255,0.32);
+  box-shadow:
+    0 30px 80px rgba(0,0,0,0.5),
+    inset 0 1px 0 rgba(255,255,255,0.55),
+    inset 0 -1px 0 rgba(0,0,0,0.3),
+    0 0 60px rgba(120,255,200,0.35);
+  animation:lw-p8-slab-in 920ms var(--lw-ease-slam) 100ms forwards;
+}
+@keyframes lw-p8-slab-in {
+  0%   { transform:translate(-150%,-50%) skewX(-8deg); opacity:0; }
+  60%  { transform:translate(-50%,-50%) skewX(-8deg); opacity:1; }
+  100% { transform:translate(-50%,-50%) skewX(0deg); opacity:1; }
+}
+.lw-p8-streak {
+  position:absolute; left:-30vw; top:50%;
+  width:60vw; height:6px;
+  background:linear-gradient(90deg,
+    transparent 0%,
+    rgba(255,255,255,0.95) 40%,
+    rgba(168,245,208,1) 50%,
+    rgba(255,255,255,0.95) 60%,
+    transparent 100%);
+  filter:blur(0.5px);
+  box-shadow:0 0 22px rgba(255,255,255,0.85), 0 0 44px rgba(168,245,208,0.65);
+  transform:translateY(-50%);
+  animation:lw-p8-streak 700ms var(--lw-ease-laser) forwards;
+}
+.lw-p8-streak.s1 { top:32%; height:4px; animation-delay:120ms; animation-duration:600ms; }
+.lw-p8-streak.s2 { top:50%; height:8px; animation-delay:280ms; animation-duration:540ms; }
+.lw-p8-streak.s3 { top:68%; height:3px; animation-delay:440ms; animation-duration:680ms; }
+.lw-p8-streak.s4 { top:42%; height:5px; animation-delay:780ms; animation-duration:520ms; }
+.lw-p8-streak.s5 { top:58%; height:4px; animation-delay:1100ms; animation-duration:600ms; }
+@keyframes lw-p8-streak {
+  0%   { left:-65vw; opacity:0; }
+  20%  { opacity:1; }
+  85%  { opacity:1; }
+  100% { left:140vw; opacity:0; }
+}
+
+/* ── TIGER 6 — three diagonal light slashes ── */
+.lw-t6-slash {
+  position:absolute; left:50%; top:50%;
+  width:160vw; height:24px;
+  background:linear-gradient(90deg,
+    transparent 0%,
+    rgba(255,170,26,0) 5%,
+    rgba(255,200,80,0.95) 30%,
+    rgba(255,140,0,1) 50%,
+    rgba(255,200,80,0.95) 70%,
+    rgba(255,170,26,0) 95%,
+    transparent 100%);
+  box-shadow:
+    0 0 28px rgba(255,170,26,0.8),
+    0 0 60px rgba(255,140,0,0.5);
+  transform-origin:50% 50%;
+  filter:blur(0.4px);
+  opacity:0;
+  animation:lw-t6-slash 700ms var(--lw-ease-laser) forwards;
+}
+.lw-t6-slash.a {
+  transform:translate(-50%,-50%) rotate(-22deg) scaleX(0);
+  animation-delay:120ms;
+}
+.lw-t6-slash.b {
+  top:42%; height:18px;
+  transform:translate(-50%,-50%) rotate(-26deg) scaleX(0);
+  animation-delay:260ms; animation-duration:600ms;
+}
+.lw-t6-slash.c {
+  top:62%; height:22px;
+  transform:translate(-50%,-50%) rotate(-19deg) scaleX(0);
+  animation-delay:400ms;
+}
+@keyframes lw-t6-slash {
+  0%   { opacity:0; }
+  35%  { opacity:1; }
+  100% { opacity:1; transform:translate(-50%,-50%) rotate(var(--rot,-22deg)) scaleX(1); }
+}
+.lw-t6-slash.a { --rot:-22deg; }
+.lw-t6-slash.b { --rot:-26deg; }
+.lw-t6-slash.c { --rot:-19deg; }
+@keyframes lw-t6-slash-anim-a { 0%{opacity:0; transform:translate(-50%,-50%) rotate(-22deg) scaleX(0);} 35%{opacity:1;} 100%{opacity:1; transform:translate(-50%,-50%) rotate(-22deg) scaleX(1);} }
+@keyframes lw-t6-slash-anim-b { 0%{opacity:0; transform:translate(-50%,-50%) rotate(-26deg) scaleX(0);} 35%{opacity:1;} 100%{opacity:1; transform:translate(-50%,-50%) rotate(-26deg) scaleX(1);} }
+@keyframes lw-t6-slash-anim-c { 0%{opacity:0; transform:translate(-50%,-50%) rotate(-19deg) scaleX(0);} 35%{opacity:1;} 100%{opacity:1; transform:translate(-50%,-50%) rotate(-19deg) scaleX(1);} }
+.lw-t6-slash.a { animation:lw-t6-slash-anim-a 700ms var(--lw-ease-laser) 120ms forwards; }
+.lw-t6-slash.b { animation:lw-t6-slash-anim-b 600ms var(--lw-ease-laser) 260ms forwards; }
+.lw-t6-slash.c { animation:lw-t6-slash-anim-c 700ms var(--lw-ease-laser) 400ms forwards; }
+
+/* ── Title — type-driven font + scale slam ── */
+.lw-title {
+  position:relative; z-index:3;
+  font-weight:900;
+  letter-spacing:0.20em; line-height:1;
+  margin-top:18px;
+  opacity:0;
+  background:var(--lw-title-grad);
+  background-size:200% 100%;
+  -webkit-background-clip:text; background-clip:text;
+  -webkit-text-fill-color:transparent; color:transparent;
+  text-shadow:0 0 40px var(--lw-glow, rgba(255,180,40,0.55));
+  filter:drop-shadow(0 6px 18px rgba(0,0,0,0.92));
+  font-size:clamp(2.6rem, 11vw, 4.6rem);
+}
+.lw-title.dragon  { font-family:'Cinzel', serif; }
+.lw-title.panda   { font-family:'Orbitron','Cinzel',sans-serif; font-weight:900;
+                    letter-spacing:0.22em; }
+.lw-title.tiger   { font-family:'Cinzel', serif; font-style:italic;
+                    letter-spacing:0.24em; }
+
+@keyframes lw-title-slam {
+  0%   { opacity:0; transform:scale(0.4) translateY(20px); letter-spacing:0; }
+  55%  { opacity:1; transform:scale(1.16) translateY(-6px); letter-spacing:0.28em; }
+  78%  { transform:scale(0.96) translateY(2px); }
+  100% { opacity:1; transform:scale(1) translateY(0); letter-spacing:0.20em; }
+}
+@keyframes lw-title-pulse {
+  0%,100% { transform:scale(1); }
+  50%     { transform:scale(1.05); filter:drop-shadow(0 6px 28px rgba(255,140,0,0.85)); }
+}
+@keyframes lw-shimmer {
+  0%,100% { background-position:0% 50%; }
+  50%     { background-position:200% 50%; }
+}
+.lw-title.dragon { animation:lw-title-slam 720ms var(--lw-ease-slam) 380ms forwards,
+                              lw-shimmer 2.4s ease 1180ms infinite; }
+.lw-title.panda  { animation:lw-title-slam 720ms var(--lw-ease-slam) 480ms forwards,
+                              lw-shimmer 3.0s ease 1280ms infinite; }
+.lw-title.tiger  { animation:lw-title-slam 700ms var(--lw-ease-slam) 360ms forwards,
+                              lw-title-pulse 0.9s ease 1100ms 4; }
+
+/* ── Sub line ── */
+.lw-sub {
+  position:relative; z-index:3;
+  font-family:'Cinzel', serif; font-weight:700;
+  font-size:clamp(0.78rem, 2.8vw, 1.05rem);
+  letter-spacing:0.45em;
+  color:var(--lw-sub, #ffe0a0);
+  text-shadow:0 1px 8px rgba(0,0,0,0.85), 0 0 18px var(--lw-glow, rgba(255,180,40,0.45));
+  opacity:0; transform:translateY(8px);
+  animation:lw-sub-rise 600ms var(--lw-ease-rise) 720ms forwards;
+}
+@keyframes lw-sub-rise { to { opacity:1; transform:translateY(0); } }
+
+/* Out animation — graceful fade for everything inside the stage */
+.lw-out .lw-d7-ring,
+.lw-out .lw-p8-slab,
+.lw-out .lw-p8-streak,
+.lw-out .lw-t6-slash,
+.lw-out .lw-title,
+.lw-out .lw-sub {
+  animation:lw-fade-out 480ms var(--lw-ease-out) forwards;
+}
+@keyframes lw-fade-out { to { opacity:0; } }
+
+/* ── Promo-Sequencer venue themes ──────────────────────────────
+   Each venue applies a distinct backdrop overlay so the same game
+   stage feels like a different place between celebrations. Used
+   only during the Promo Sequencer — never in normal play. */
+#venue-overlay {
+  position:fixed; inset:0; z-index:9000; pointer-events:none;
+  opacity:0; transition:opacity 600ms var(--lw-ease-out);
+  mix-blend-mode:multiply;
+}
+#venue-overlay.on { opacity:1; }
+#venue-light {
+  position:fixed; inset:0; z-index:9001; pointer-events:none;
+  opacity:0; transition:opacity 700ms var(--lw-ease-out);
+  mix-blend-mode:screen;
+}
+#venue-light.on { opacity:1; }
+#venue-name {
+  position:fixed; left:0; right:0; top:14%; z-index:9002;
+  text-align:center; pointer-events:none;
+  font-family:'Cinzel', serif; font-weight:900;
+  font-size:clamp(1.4rem, 5.2vw, 2.2rem); letter-spacing:0.3em;
+  color:rgba(255,230,180,0.92);
+  text-shadow:0 2px 14px rgba(0,0,0,0.85), 0 0 22px var(--vn-glow, rgba(255,200,80,0.6));
+  opacity:0; transform:translateY(-12px);
+  transition:opacity 540ms ease, transform 720ms var(--lw-ease-rise);
+}
+#venue-name.on { opacity:1; transform:translateY(0); }
+#venue-name .sub {
+  display:block; margin-top:8px;
+  font-family:'Press Start 2P', monospace; font-size:0.42em;
+  letter-spacing:0.5em; color:rgba(154,255,231,0.75);
+  text-shadow:0 0 10px rgba(74,223,211,0.6);
+}
+
+/* Venue: Octagon — crimson + obsidian, fight-night top-light */
+body.venue-octagon #venue-overlay {
+  background:radial-gradient(ellipse at 50% 20%,
+    rgba(255,80,40,0.20) 0%,
+    rgba(120,0,18,0.38) 40%,
+    rgba(20,0,4,0.92) 92%);
+}
+body.venue-octagon #venue-light {
+  background:
+    radial-gradient(ellipse 50% 22% at 50% 18%, rgba(255,170,80,0.45), transparent 70%),
+    repeating-linear-gradient(180deg,
+      rgba(255,140,40,0.04) 0px, rgba(255,140,40,0.04) 1px,
+      transparent 1px, transparent 8px);
+}
+body.venue-octagon { --vn-glow:rgba(255,90,30,0.7); }
+
+/* Venue: Disco — magenta + cyan, mirror-ball spotlights + scanline */
+body.venue-disco #venue-overlay {
+  background:radial-gradient(ellipse at 50% 50%,
+    rgba(180,40,200,0.20) 0%,
+    rgba(40,10,80,0.55) 60%,
+    rgba(8,0,28,0.92) 100%);
+}
+body.venue-disco #venue-light {
+  background:
+    radial-gradient(circle 22vw at 22% 28%, rgba(255,80,200,0.30), transparent 70%),
+    radial-gradient(circle 18vw at 82% 22%, rgba(80,200,255,0.30), transparent 70%),
+    radial-gradient(circle 26vw at 50% 78%, rgba(255,200,255,0.18), transparent 70%);
+  animation:venue-disco-pulse 2.8s ease-in-out infinite;
+}
+@keyframes venue-disco-pulse {
+  0%,100% { filter:hue-rotate(0deg); }
+  50%     { filter:hue-rotate(40deg); }
+}
+body.venue-disco { --vn-glow:rgba(255,80,200,0.7); }
+
+/* Venue: Speakeasy — amber lamp + obsidian smoke */
+body.venue-speakeasy #venue-overlay {
+  background:radial-gradient(ellipse at 50% 60%,
+    rgba(255,170,40,0.16) 0%,
+    rgba(80,30,5,0.55) 50%,
+    rgba(8,4,0,0.95) 100%);
+}
+body.venue-speakeasy #venue-light {
+  background:
+    radial-gradient(ellipse 38% 16% at 50% 64%, rgba(255,200,90,0.40), transparent 70%),
+    radial-gradient(ellipse 60% 30% at 50% 100%, rgba(120,60,10,0.30), transparent 70%);
+}
+body.venue-speakeasy { --vn-glow:rgba(255,170,40,0.7); }
+
+/* ── Promo Sequencer auto-outro slate ─────────────────────────
+   Appears at the end of the auto-promo sequence with title +
+   tagline + game URL + QR code so the recorded YouTube Short
+   has a clean call-to-action without an external composite. */
+#promo-outro {
+  position:fixed; inset:0; z-index:9300;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  gap:16px; padding:0 32px;
+  background:radial-gradient(ellipse at 50% 35%,
+    rgba(40,16,80,0.92) 0%,
+    rgba(8,0,20,0.96) 60%,
+    rgba(0,0,0,1) 100%);
+  pointer-events:none;
+  opacity:0;
+  transition:opacity 700ms var(--lw-ease-out);
+}
+#promo-outro.on { opacity:1; }
+#promo-outro .po-tagline {
+  font-family:'Press Start 2P', monospace;
+  font-size:0.6rem; letter-spacing:6px;
+  color:#9affe7; text-shadow:0 0 12px rgba(74,223,211,0.65);
+}
+#promo-outro .po-logo {
+  font-family:'Cinzel', serif; font-weight:900;
+  font-size:clamp(2.4rem, 9vw, 3.6rem); line-height:0.95;
+  letter-spacing:0.18em; text-align:center;
+  background:linear-gradient(90deg, #ffd76e, #ff7a1a, #ffd76e);
+  background-size:200% 100%;
+  -webkit-background-clip:text; background-clip:text;
+  -webkit-text-fill-color:transparent; color:transparent;
+  filter:drop-shadow(0 6px 18px rgba(0,0,0,0.85));
+  animation:lw-shimmer 3.2s ease infinite;
+}
+#promo-outro .po-bullets {
+  font-family:'Orbitron', sans-serif; font-weight:600;
+  font-size:0.78rem; letter-spacing:3px; line-height:1.6;
+  color:#ffe1a8; text-align:center;
+}
+#promo-outro .po-cta {
+  margin-top:6px;
+  font-family:'Press Start 2P', monospace; font-size:0.78rem;
+  letter-spacing:5px;
+  padding:14px 28px; border-radius:10px;
+  background:linear-gradient(180deg, #2a1a08, #15090a);
+  border:2px solid #ffb000;
+  color:#ffe7a0; text-shadow:0 0 12px rgba(255,200,80,0.7);
+  box-shadow:0 8px 22px rgba(0,0,0,0.7),
+             0 0 24px rgba(255,176,0,0.4),
+             inset 0 0 16px rgba(255,200,80,0.12);
+  animation:po-cta-pulse 1.4s ease infinite;
+}
+@keyframes po-cta-pulse {
+  0%,100% { box-shadow:0 8px 22px rgba(0,0,0,0.7), 0 0 24px rgba(255,176,0,0.4), inset 0 0 16px rgba(255,200,80,0.12); }
+  50%     { box-shadow:0 8px 22px rgba(0,0,0,0.7), 0 0 48px rgba(255,176,0,0.8), inset 0 0 28px rgba(255,200,80,0.22); }
+}
+#promo-outro .po-qr-row {
+  display:flex; gap:24px; margin-top:14px;
+  align-items:flex-start;
+}
+#promo-outro .po-qr {
+  display:flex; flex-direction:column; align-items:center; gap:6px;
+}
+#promo-outro .po-qr img {
+  width:120px; height:120px;
+  border-radius:10px; padding:5px;
+  background:#ffe7a0;
+  border:2px solid rgba(255,200,80,0.7);
+  box-shadow:0 6px 16px rgba(0,0,0,0.6),
+             0 0 22px rgba(255,176,0,0.4);
+}
+#promo-outro .po-qr.book img {
+  border-color:rgba(154,255,231,0.7);
+  box-shadow:0 6px 16px rgba(0,0,0,0.6),
+             0 0 22px rgba(74,223,211,0.5);
+}
+#promo-outro .po-qr .po-qr-cap {
+  font-family:'Press Start 2P', monospace; font-size:0.42rem;
+  letter-spacing:1.5px; color:#ffd58a;
+}
+#promo-outro .po-qr .po-qr-url {
+  font-family:'Press Start 2P', monospace; font-size:0.36rem;
+  letter-spacing:1px; color:#9affe7;
+}
+
+/* ── DIRECTOR'S CUT debug panel ────────────────────────────── */
+#dc-panel {
+  position:fixed; left:14px; bottom:14px; z-index:9500;
+  display:none; flex-direction:column; gap:6px;
+  padding:10px 12px;
+  background:rgba(10,4,18,0.88);
+  border:1px solid rgba(201,168,76,0.55);
+  border-radius:8px;
+  backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+  font-family:'Press Start 2P', monospace; color:#ffe0a0;
+  box-shadow:0 8px 30px rgba(0,0,0,0.7), 0 0 16px rgba(201,168,76,0.25);
+  max-width:240px;
+}
+#dc-panel.on { display:flex; }
+#dc-panel .dc-title {
+  font-size:0.52rem; letter-spacing:2px;
+  color:#ffd76e; padding-bottom:4px;
+  border-bottom:1px solid rgba(201,168,76,0.3);
+}
+#dc-panel button {
+  font-family:'Press Start 2P', monospace;
+  font-size:0.50rem; letter-spacing:1.5px;
+  padding:7px 9px; border-radius:4px; cursor:pointer;
+  background:linear-gradient(180deg, #2a1a08, #15090a);
+  border:1px solid rgba(201,168,76,0.5);
+  color:#ffe7a0; text-align:left;
+  transition:all 160ms ease;
+}
+#dc-panel button:hover { background:linear-gradient(180deg, #3d260e, #1f0d0e); border-color:#ffb000; }
+#dc-panel button.dc-tiger  { color:#ffaa55; border-color:rgba(255,170,85,0.5); }
+#dc-panel button.dc-dragon { color:#ff7a4a; border-color:rgba(255,122,74,0.5); }
+#dc-panel button.dc-panda  { color:#9bf0c0; border-color:rgba(155,240,192,0.5); }
+#dc-panel button.dc-promo {
+  color:#0a0006; background:linear-gradient(180deg, #ffd76e, #ff9a1a);
+  border:1px solid #ffe7a0;
+  box-shadow:0 0 18px rgba(255,200,80,0.55), inset 0 1px 0 rgba(255,255,255,0.4);
+  text-align:center; font-weight:bold;
+  margin-top:6px;
+}
+#dc-panel button.dc-promo:hover {
+  background:linear-gradient(180deg, #ffe7a0, #ffaa20);
+  box-shadow:0 0 26px rgba(255,200,80,0.8), inset 0 1px 0 rgba(255,255,255,0.6);
+}
+#dc-panel .dc-divider {
+  height:1px; background:rgba(201,168,76,0.3); margin:4px 0 2px;
+}
+#dc-panel .dc-note {
+  font-size:0.42rem; letter-spacing:1px; line-height:1.4;
+  color:rgba(255,224,160,0.55); padding-top:4px;
+}
+#dc-panel .dc-status {
+  font-size:0.42rem; letter-spacing:1px;
+  color:#9bf0c0; min-height:10px;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   CHIP-OUT MODAL — out-of-credits flow
+   Three claim paths + entertainment-only disclaimer. Glass cards,
+   muted gold/green accents, large tap targets.
+════════════════════════════════════════════════════════════════ */
+#chip-out-modal {
+  position:fixed; inset:0; z-index:9700;
+  display:none; align-items:center; justify-content:center;
+  padding:20px;
+  background:radial-gradient(ellipse at 50% 30%,
+    rgba(40,16,80,0.78) 0%, rgba(8,0,20,0.92) 70%, rgba(0,0,0,0.96) 100%);
+  backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+}
+#chip-out-modal.on { display:flex; }
+#chip-out-modal .cm-frame {
+  width:100%; max-width:440px;
+  background:linear-gradient(180deg, rgba(28,12,48,0.96), rgba(10,4,18,0.98));
+  border:1.5px solid rgba(201,168,76,0.55);
+  border-radius:18px;
+  padding:22px 20px 18px;
+  box-shadow:0 20px 60px rgba(0,0,0,0.85),
+             0 0 40px rgba(201,168,76,0.25);
+  position:relative;
+  max-height:96vh; overflow-y:auto;
+}
+#chip-out-modal .cm-close {
+  position:absolute; top:10px; right:14px;
+  width:32px; height:32px; border-radius:8px;
+  background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.15);
+  color:#ffe7a0; font-size:18px; line-height:1; cursor:pointer;
+}
+#chip-out-modal .cm-close:hover { background:rgba(255,80,80,0.25); }
+#chip-out-modal .cm-title {
+  font-family:'Cinzel', serif; font-weight:900;
+  font-size:1.5rem; letter-spacing:0.18em; line-height:1;
+  text-align:center;
+  background:linear-gradient(90deg, #ffd76e, #ff7a1a, #ffd76e);
+  background-size:200% 100%;
+  -webkit-background-clip:text; background-clip:text;
+  -webkit-text-fill-color:transparent; color:transparent;
+  filter:drop-shadow(0 4px 10px rgba(0,0,0,0.85));
+  margin-bottom:4px;
+}
+#chip-out-modal .cm-sub {
+  font-family:'Press Start 2P', monospace; font-size:0.5rem;
+  letter-spacing:3px; text-align:center; color:#9affe7;
+  margin-bottom:14px;
+}
+#chip-out-modal .cm-cards {
+  display:flex; flex-direction:column; gap:10px;
+}
+.cm-card {
+  display:flex; align-items:center; gap:12px;
+  padding:12px 14px; border-radius:12px;
+  background:rgba(255,255,255,0.04);
+  backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);
+  border:1px solid rgba(255,255,255,0.10);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.06);
+}
+.cm-card.topup { border-color:rgba(255,176,0,0.35); }
+.cm-card.daily { border-color:rgba(120,255,200,0.35); }
+.cm-card.ad    { border-color:rgba(255,255,255,0.20); }
+.cm-card .cm-icon {
+  width:42px; height:42px; flex-shrink:0;
+  border-radius:10px;
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Cinzel', serif; font-size:1.1rem; font-weight:900;
+  background:linear-gradient(135deg, var(--ic-from,#2a1a08), var(--ic-to,#15090a));
+  color:var(--ic-color, #ffd76e);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.18),
+             0 4px 10px rgba(0,0,0,0.45);
+}
+.cm-card.topup .cm-icon { --ic-from:#3a1a05; --ic-to:#1a0a02; --ic-color:#ffd76e; }
+.cm-card.daily .cm-icon { --ic-from:#0a3826; --ic-to:#031c12; --ic-color:#a8f5d0; }
+.cm-card.ad    .cm-icon { --ic-from:#1f1f3a; --ic-to:#0a0a1c; --ic-color:#9ac8ff; }
+.cm-card .cm-body { flex:1; min-width:0; }
+.cm-card .cm-name {
+  font-family:'Cinzel', serif; font-weight:900;
+  font-size:0.92rem; letter-spacing:0.10em;
+  color:#fff;
+}
+.cm-card .cm-amount {
+  font-family:'Press Start 2P', monospace; font-size:0.55rem;
+  letter-spacing:0.18em; color:#ffd76e;
+  margin-top:2px;
+}
+.cm-card.daily .cm-amount { color:#a8f5d0; }
+.cm-card.ad    .cm-amount { color:#9ac8ff; }
+.cm-card .cm-cd {
+  font-family:'Press Start 2P', monospace; font-size:0.42rem;
+  letter-spacing:0.16em; color:rgba(255,255,255,0.55);
+  margin-top:2px;
+}
+.cm-card .cm-btn {
+  font-family:'Press Start 2P', monospace; font-size:0.50rem;
+  letter-spacing:1.5px;
+  padding:10px 14px; border-radius:8px; cursor:pointer;
+  border:1px solid var(--btn-border, rgba(201,168,76,0.55));
+  background:linear-gradient(180deg, var(--btn-bg-from, #2a1a08), var(--btn-bg-to, #15090a));
+  color:var(--btn-color, #ffe7a0);
+  white-space:nowrap;
+  transition:all 160ms ease;
+  flex-shrink:0;
+}
+.cm-card .cm-btn:hover:not(:disabled) {
+  background:linear-gradient(180deg, var(--btn-hover-from, #3d260e), var(--btn-hover-to, #1f0d0e));
+  filter:brightness(1.15);
+}
+.cm-card .cm-btn:disabled {
+  opacity:0.5; cursor:not-allowed;
+  background:rgba(255,255,255,0.04); color:rgba(255,255,255,0.45);
+  border-color:rgba(255,255,255,0.08);
+}
+.cm-card.topup .cm-btn { --btn-color:#ffe7a0; --btn-border:rgba(255,176,0,0.6);
+                         --btn-bg-from:#3a1a05; --btn-bg-to:#15090a;
+                         --btn-hover-from:#5a2c08; --btn-hover-to:#22110a; }
+.cm-card.daily .cm-btn { --btn-color:#a8f5d0; --btn-border:rgba(120,255,200,0.6);
+                         --btn-bg-from:#0a3826; --btn-bg-to:#031c12;
+                         --btn-hover-from:#155a3e; --btn-hover-to:#0a2e1f; }
+.cm-card.ad    .cm-btn { --btn-color:#9ac8ff; --btn-border:rgba(120,180,255,0.6);
+                         --btn-bg-from:#1f1f3a; --btn-bg-to:#0a0a1c;
+                         --btn-hover-from:#2e2e5a; --btn-hover-to:#16162a; }
+
+#chip-out-modal .cm-disclaimer {
+  margin-top:14px; padding:10px 12px;
+  border-radius:10px;
+  background:rgba(255,200,80,0.06);
+  border:1px solid rgba(255,200,80,0.18);
+  text-align:center;
+}
+#chip-out-modal .cm-disclaimer .cm-d-main {
+  font-family:'Press Start 2P', monospace; font-size:0.50rem;
+  letter-spacing:0.20em; line-height:1.6;
+  color:#ffd76e;
+}
+#chip-out-modal .cm-disclaimer .cm-d-sub {
+  font-family:'Orbitron', sans-serif; font-size:0.62rem; font-weight:500;
+  letter-spacing:0.06em;
+  color:rgba(255,224,160,0.65);
+  margin-top:6px;
+}
+#chip-out-modal .cm-disclaimer a {
+  color:#a8f5d0; text-decoration:none; font-weight:700;
+  border-bottom:1px dotted rgba(168,245,208,0.5);
+}
+#chip-out-modal .cm-disclaimer a:hover { color:#fff; }
+
+/* Simulated ad overlay (stand-in for AdMob/Unity Ads SDK callback) */
+#ad-sim-overlay {
+  position:fixed; inset:0; z-index:9750;
+  display:none; align-items:center; justify-content:center;
+  background:rgba(0,0,0,0.95);
+}
+#ad-sim-overlay.on { display:flex; }
+#ad-sim-overlay .ad-card {
+  width:88%; max-width:380px;
+  padding:36px 24px;
+  background:linear-gradient(135deg, #1a0028, #02000a);
+  border:1px solid rgba(120,180,255,0.4);
+  border-radius:14px;
+  text-align:center;
+  box-shadow:0 12px 40px rgba(0,0,0,0.85);
+}
+#ad-sim-overlay .ad-tag {
+  font-family:'Press Start 2P', monospace; font-size:0.55rem;
+  letter-spacing:0.24em; color:#9ac8ff; margin-bottom:14px;
+}
+#ad-sim-overlay .ad-title {
+  font-family:'Cinzel', serif; font-weight:900; font-size:1.4rem;
+  letter-spacing:0.12em; color:#fff; margin-bottom:10px;
+}
+#ad-sim-overlay .ad-sub {
+  font-family:'Orbitron', sans-serif; font-size:0.72rem; font-weight:500;
+  letter-spacing:0.06em; color:rgba(255,255,255,0.6); margin-bottom:18px;
+}
+#ad-sim-overlay .ad-bar {
+  width:100%; height:6px; border-radius:3px;
+  background:rgba(255,255,255,0.12); overflow:hidden;
+}
+#ad-sim-overlay .ad-bar::after {
+  content:""; display:block; width:0; height:100%;
+  background:linear-gradient(90deg, #9ac8ff, #ffd76e);
+  animation:ad-bar-fill 2.5s linear forwards;
+}
+@keyframes ad-bar-fill { to { width:100%; } }
+
+/* Leaderboard-paused banner — shown when free chips were taken today */
+#lb-paused-banner {
+  display:none;
+  margin:6px 8px 0;
+  padding:6px 8px;
+  background:rgba(255,180,40,0.10);
+  border:1px solid rgba(255,180,40,0.35);
+  border-radius:6px;
+  font-family:'Press Start 2P', monospace; font-size:0.42rem;
+  letter-spacing:0.16em; line-height:1.5;
+  color:#ffd76e; text-align:center;
+}
+#lb-paused-banner b { color:#fff; }
 </style>
 
 <!-- ROOM UNLOCK TOAST -->
@@ -8227,5 +9391,782 @@ body[data-room='macau-vip'] .bet-slot.active { border-color:var(--gold); box-sha
     <button class="room-unlock-dismiss" onclick="dismissRoomUnlock()">TAP TO ENTER</button>
   </div>
 </div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     VIP LEGENDARY WIN — Dragon 7 / Panda 8 / Tiger 6
+     Modern Vegas VIP Luxury aesthetic. No SVG illustrations — just
+     CSS lighting, glassmorphism, typography, and canvas particles.
+═══════════════════════════════════════════════════════════════ -->
+<div id="venue-overlay" aria-hidden="true"></div>
+<div id="venue-light"   aria-hidden="true"></div>
+<div id="venue-name"    aria-hidden="true"></div>
+
+<!-- Promo Sequencer auto-outro slate (hidden until __startPromo finishes) -->
+<div id="promo-outro" aria-hidden="true">
+  <div class="po-tagline">SIDE-BET LEGENDS</div>
+  <div class="po-logo">BACCARAT<br>GLADIATOR</div>
+  <div class="po-bullets">
+    DRAGON 7 · 40 TO 1<br>
+    PANDA 8 · 25 TO 1<br>
+    TIGER 6 · 50 TO 1
+  </div>
+  <div class="po-cta">PLAY FREE NOW</div>
+  <div class="po-qr-row">
+    <div class="po-qr game">
+      <img src="qr-game.png" alt="QR baccaratgladiator.com">
+      <div class="po-qr-cap">PLAY THE GAME</div>
+      <div class="po-qr-url">BACCARATGLADIATOR.COM</div>
+    </div>
+    <div class="po-qr book">
+      <img src="qr-book.png" alt="QR Road to Nine on Amazon">
+      <div class="po-qr-cap">READ THE BOOK</div>
+      <div class="po-qr-url">ROAD TO NINE · AMAZON</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CHIP-OUT MODAL — out-of-credits flow ═══ -->
+<div id="chip-out-modal" role="dialog" aria-modal="true" aria-labelledby="cm-title-text">
+  <div class="cm-frame">
+    <button class="cm-close" type="button" aria-label="Close" onclick="hideChipOutModal()">×</button>
+    <div class="cm-title" id="cm-title-text">OUT OF CREDITS</div>
+    <div class="cm-sub">PICK A PATH BACK TO THE TABLE</div>
+    <div class="cm-cards">
+      <div class="cm-card topup">
+        <div class="cm-icon">⏱</div>
+        <div class="cm-body">
+          <div class="cm-name">FREE TOP-UP</div>
+          <div class="cm-amount">+1,000 CHIPS · EVERY 4 HOURS</div>
+          <div class="cm-cd">—</div>
+        </div>
+        <button class="cm-btn" type="button" onclick="claimFreeTopup()">CLAIM</button>
+      </div>
+      <div class="cm-card daily">
+        <div class="cm-icon">★</div>
+        <div class="cm-body">
+          <div class="cm-name">DAILY LOGIN</div>
+          <div class="cm-amount">+1,000</div>
+          <div class="cm-cd">—</div>
+        </div>
+        <button class="cm-btn" type="button" onclick="claimDailyReward()">CLAIM</button>
+      </div>
+      <div class="cm-card ad">
+        <div class="cm-icon">▶</div>
+        <div class="cm-body">
+          <div class="cm-name">WATCH AD</div>
+          <div class="cm-amount">+250 CHIPS · 30 MIN COOLDOWN</div>
+          <div class="cm-cd">—</div>
+        </div>
+        <button class="cm-btn" type="button" onclick="watchRewardedAdRefill()">WATCH</button>
+      </div>
+    </div>
+    <div class="cm-disclaimer">
+      <div class="cm-d-main">ENTERTAINMENT ONLY · NO REAL MONEY · NO CASH PRIZES</div>
+      <div class="cm-d-sub">
+        Free top-ups pause your global leaderboard for today.<br>
+        Need help? <a href="https://www.1800gambler.net/" target="_blank" rel="noopener">1-800-GAMBLER</a>
+        ·
+        <a href="#" onclick="hideChipOutModal();return false;">Take a break</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Simulated rewarded-ad playback (real builds wire to AdMob/Unity SDK) -->
+<div id="ad-sim-overlay" aria-hidden="true">
+  <div class="ad-card">
+    <div class="ad-tag">SPONSORED</div>
+    <div class="ad-title">Rewarded Ad</div>
+    <div class="ad-sub">Stand-in for AdMob / Unity Ads playback. Reward: +250 chips.</div>
+    <div class="ad-bar"></div>
+  </div>
+</div>
+
+<div id="lw-dim"  aria-hidden="true"></div>
+<div id="lw-spot" aria-hidden="true"></div>
+<canvas id="lw-fx" aria-hidden="true"></canvas>
+<div id="lw-stage" aria-hidden="true"></div>
+
+<!-- DIRECTOR'S CUT panel — visible only when ?director=1 / ?promo=1 / window.__dc -->
+<div id="dc-panel">
+  <div class="dc-title">DIRECTOR'S CUT</div>
+  <button class="dc-dragon" data-target="dragon7">RUN TO DRAGON 7</button>
+  <button class="dc-panda"  data-target="panda8">RUN TO PANDA 8</button>
+  <button class="dc-tiger"  data-target="tiger6">RUN TO TIGER 6</button>
+  <div class="dc-divider"></div>
+  <button class="dc-promo" id="dc-promo-btn">START PROMO SEQUENCE</button>
+  <div class="dc-status" id="dc-status">ready.</div>
+  <div class="dc-note">3 venues · 3 wins · auto-cut.</div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+//   VIP LEGENDARY WIN — self-installing celebration module
+//   API: window.LegendaryWin.fire('dragon7' | 'panda8' | 'tiger')
+//   Renders abstract VIP-luxury motifs (lighting + glassmorphism +
+//   typography + canvas particles). No clip-art / animal drawings.
+// ═══════════════════════════════════════════════════════════════
+(function(){
+  const stage = document.getElementById('lw-stage');
+  const dim   = document.getElementById('lw-dim');
+  const spot  = document.getElementById('lw-spot');
+  const fx    = document.getElementById('lw-fx');
+  const ctx   = fx.getContext('2d');
+
+  function sizeCanvas(){
+    const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+    fx.width  = Math.floor(window.innerWidth  * dpr);
+    fx.height = Math.floor(window.innerHeight * dpr);
+    fx.style.width  = window.innerWidth  + 'px';
+    fx.style.height = window.innerHeight + 'px';
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+  }
+  sizeCanvas();
+  window.addEventListener('resize', sizeCanvas);
+
+  // ── Per-type configuration ─────────────────────────────────────
+  // Each entry defines: stage HTML template (no SVG illustrations),
+  // CSS variable overrides, particle profile, screen-shake intensity,
+  // and the timing window for fade-out.
+  const CFG = {
+    dragon7: {
+      title: 'DRAGON 7',
+      titleClass: 'dragon',
+      sub:   'BANKER · 3-CARD · 40 TO 1',
+      template: `
+        <div class="lw-d7-ring outer"></div>
+        <div class="lw-d7-ring"></div>
+        <div class="lw-d7-ring inner"></div>
+        <div class="lw-title dragon">$TITLE</div>
+        <div class="lw-sub">$SUB</div>
+      `,
+      cssVars: {
+        '--lw-dim-bg':    'rgba(40,0,8,0.78)',
+        '--lw-spot-hot':  'rgba(255,80,0,0.55)',
+        '--lw-spot-mid':  'rgba(184,0,31,0.22)',
+        '--lw-glow':      'rgba(255,140,40,0.7)',
+        '--lw-sub':       '#ffb070',
+        '--lw-title-grad':'linear-gradient(90deg,#ffd76e 0%,#ff5e00 50%,#ffd76e 100%)',
+      },
+      particle: 'ember',
+      shake: 'heavy',
+    },
+    panda8: {
+      title: 'PANDA 8',
+      titleClass: 'panda',
+      sub:   'PLAYER · 3-CARD · 25 TO 1',
+      template: `
+        <div class="lw-p8-slab"></div>
+        <div class="lw-p8-streak s1"></div>
+        <div class="lw-p8-streak s2"></div>
+        <div class="lw-p8-streak s3"></div>
+        <div class="lw-p8-streak s4"></div>
+        <div class="lw-p8-streak s5"></div>
+        <div class="lw-title panda">$TITLE</div>
+        <div class="lw-sub">$SUB</div>
+      `,
+      cssVars: {
+        '--lw-dim-bg':    'rgba(0,12,8,0.65)',
+        '--lw-spot-hot':  'rgba(168,245,208,0.42)',
+        '--lw-spot-mid':  'rgba(0,184,124,0.18)',
+        '--lw-glow':      'rgba(168,245,208,0.6)',
+        '--lw-sub':       '#a8f5d0',
+        '--lw-title-grad':'linear-gradient(90deg,#ffffff 0%,#a8f5d0 50%,#ffffff 100%)',
+      },
+      particle: 'streak',
+      shake: 'none',
+    },
+    tiger: {
+      title: 'TIGER 6',
+      titleClass: 'tiger',
+      sub:   'BANKER · 6 · TIGER STRIKE',
+      template: `
+        <div class="lw-t6-slash a"></div>
+        <div class="lw-t6-slash b"></div>
+        <div class="lw-t6-slash c"></div>
+        <div class="lw-title tiger">$TITLE</div>
+        <div class="lw-sub">$SUB</div>
+      `,
+      cssVars: {
+        '--lw-dim-bg':    'rgba(8,4,0,0.85)',
+        '--lw-spot-hot':  'rgba(255,170,26,0.50)',
+        '--lw-spot-mid':  'rgba(120,40,0,0.22)',
+        '--lw-glow':      'rgba(255,200,80,0.7)',
+        '--lw-sub':       '#ffd58a',
+        '--lw-title-grad':'linear-gradient(90deg,#ffe7a0 0%,#ff5e00 50%,#ffe7a0 100%)',
+      },
+      particle: 'spark',
+      shake: 'light',
+    },
+  };
+
+  // ── Canvas particle physics ────────────────────────────────────
+  // ember : Dragon — orange embers rising upward with slight gravity-up
+  // streak: Panda  — bright white horizontal light streaks (laser sweep)
+  // spark : Tiger  — radial burst of amber sparks with trails
+  let particles = [];
+  let rafId = null;
+  let lastFrame = 0;
+  let particleMode = 'ember';
+  let emitting = false;
+  let emitRate = 0;
+
+  function spawnEmber(){
+    const cx = window.innerWidth  * 0.5;
+    const cy = window.innerHeight * 0.55;
+    return {
+      kind:'ember',
+      x: cx + (Math.random()-0.5) * 360,
+      y: cy + (Math.random()-0.5) * 80,
+      vx: (Math.random()-0.5) * 1.6,
+      vy: -1.6 - Math.random() * 2.2,
+      r:  2.4 + Math.random() * 3.2,
+      life: 1.0,
+      decay: 0.005 + Math.random() * 0.008,
+      hue: 18 + Math.random() * 22,
+      glow: 0.7 + Math.random() * 0.3,
+    };
+  }
+  function spawnStreak(){
+    const w = window.innerWidth;
+    const fromLeft = Math.random() > 0.5;
+    return {
+      kind:'streak',
+      x: fromLeft ? -120 : w + 120,
+      y: window.innerHeight * (0.20 + Math.random() * 0.60),
+      vx: fromLeft ? (12 + Math.random() * 10) : -(12 + Math.random() * 10),
+      vy: 0,
+      len: 140 + Math.random() * 200,
+      thick: 1.5 + Math.random() * 2.5,
+      life: 1.0,
+      decay: 0.02 + Math.random() * 0.015,
+    };
+  }
+  function spawnSpark(){
+    const cx = window.innerWidth  * 0.5;
+    const cy = window.innerHeight * 0.5;
+    const a  = Math.random() * Math.PI * 2;
+    const v  = 6 + Math.random() * 9;
+    return {
+      kind:'spark',
+      x: cx, y: cy,
+      vx: Math.cos(a) * v, vy: Math.sin(a) * v,
+      r:  1.8 + Math.random() * 2.6,
+      life: 1.0,
+      decay: 0.018 + Math.random() * 0.014,
+      hue: 36 + Math.random() * 22,
+      trail: [],
+    };
+  }
+  function spawnByMode(){
+    if(particleMode==='ember')  particles.push(spawnEmber());
+    else if(particleMode==='streak') particles.push(spawnStreak());
+    else if(particleMode==='spark')  particles.push(spawnSpark());
+  }
+  function burst(n, mode){
+    for(let i=0;i<n;i++){
+      if(mode==='spark')  particles.push(spawnSpark());
+      else if(mode==='streak') particles.push(spawnStreak());
+      else                particles.push(spawnEmber());
+    }
+  }
+
+  function drawEmber(p){
+    ctx.globalAlpha = Math.max(0, p.life) * p.glow;
+    const grd = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 4.5);
+    grd.addColorStop(0,    `hsla(${p.hue},100%,70%,1)`);
+    grd.addColorStop(0.45, `hsla(${p.hue},100%,50%,0.7)`);
+    grd.addColorStop(1,    'rgba(180,20,0,0)');
+    ctx.fillStyle = grd;
+    ctx.beginPath(); ctx.arc(p.x, p.y, p.r * 4.5, 0, Math.PI*2); ctx.fill();
+    ctx.globalAlpha = Math.max(0, p.life);
+    ctx.fillStyle = `hsl(${p.hue},100%,82%)`;
+    ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); ctx.fill();
+  }
+  function drawStreak(p){
+    ctx.globalAlpha = Math.max(0, p.life);
+    const dir = Math.sign(p.vx) || 1;
+    const grd = ctx.createLinearGradient(p.x, p.y, p.x - dir * p.len, p.y);
+    grd.addColorStop(0,   'rgba(255,255,255,0.95)');
+    grd.addColorStop(0.4, 'rgba(168,245,208,0.85)');
+    grd.addColorStop(1,   'rgba(168,245,208,0)');
+    ctx.strokeStyle = grd;
+    ctx.lineCap = 'round';
+    ctx.lineWidth = p.thick;
+    ctx.beginPath();
+    ctx.moveTo(p.x, p.y);
+    ctx.lineTo(p.x - dir * p.len, p.y);
+    ctx.stroke();
+    // Inner core highlight
+    ctx.globalAlpha = Math.max(0, p.life) * 0.85;
+    ctx.strokeStyle = 'rgba(255,255,255,0.9)';
+    ctx.lineWidth = p.thick * 0.4;
+    ctx.beginPath();
+    ctx.moveTo(p.x, p.y);
+    ctx.lineTo(p.x - dir * p.len * 0.6, p.y);
+    ctx.stroke();
+  }
+  function drawSpark(p){
+    if(p.trail && p.trail.length){
+      ctx.lineCap = 'round';
+      ctx.strokeStyle = `hsla(${p.hue},100%,72%,${Math.max(0,p.life)*0.85})`;
+      ctx.lineWidth = p.r * 0.95;
+      ctx.beginPath();
+      ctx.moveTo(p.trail[0].x, p.trail[0].y);
+      for(let i=1;i<p.trail.length;i++) ctx.lineTo(p.trail[i].x, p.trail[i].y);
+      ctx.stroke();
+    }
+    ctx.globalAlpha = Math.max(0, p.life);
+    const grd = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 4);
+    grd.addColorStop(0,   `hsla(${p.hue},100%,90%,1)`);
+    grd.addColorStop(0.5, `hsla(${p.hue},100%,50%,0.85)`);
+    grd.addColorStop(1,   'rgba(255,80,0,0)');
+    ctx.fillStyle = grd;
+    ctx.beginPath(); ctx.arc(p.x, p.y, p.r * 4, 0, Math.PI*2); ctx.fill();
+  }
+
+  function tick(t){
+    if(!lastFrame) lastFrame = t;
+    const dt = Math.min(40, t - lastFrame);
+    lastFrame = t;
+
+    if(emitting){
+      emitRate += dt;
+      const interval = particleMode === 'streak' ? 90 : 26;
+      while(emitRate > interval){ spawnByMode(); emitRate -= interval; }
+    }
+
+    ctx.clearRect(0, 0, fx.width, fx.height);
+    ctx.globalCompositeOperation = 'lighter';
+
+    for(let i = particles.length - 1; i >= 0; i--){
+      const p = particles[i];
+      if(p.kind === 'ember'){
+        p.vy += -0.013;          // hot air rises
+        p.vx *= 0.985;
+        p.vy *= 0.985;
+        p.x += p.vx; p.y += p.vy;
+        p.life -= p.decay;
+        if(p.life <= 0){ particles.splice(i,1); continue; }
+        drawEmber(p);
+      } else if(p.kind === 'streak'){
+        p.x += p.vx;
+        p.life -= p.decay;
+        if(p.life <= 0 || p.x < -300 || p.x > window.innerWidth + 300){
+          particles.splice(i,1); continue;
+        }
+        drawStreak(p);
+      } else if(p.kind === 'spark'){
+        if(!p.trail) p.trail = [];
+        p.trail.unshift({x:p.x, y:p.y});
+        if(p.trail.length > 6) p.trail.length = 6;
+        p.vx *= 0.94;
+        p.vy = p.vy * 0.94 + 0.18;
+        p.x += p.vx; p.y += p.vy;
+        p.life -= p.decay;
+        if(p.life <= 0){ particles.splice(i,1); continue; }
+        drawSpark(p);
+      }
+    }
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.globalAlpha = 1;
+
+    if(emitting || particles.length > 0){
+      rafId = requestAnimationFrame(tick);
+    } else { rafId = null; lastFrame = 0; }
+  }
+  function startLoop(){
+    if(rafId) return;
+    lastFrame = 0; rafId = requestAnimationFrame(tick);
+  }
+
+  // ── Public fire() — runs the full ~3.3s celebration ─────────────
+  let firing = false;
+  function fire(type){
+    const cfg = CFG[type];
+    if(!cfg || firing) return;
+    firing = true;
+
+    sizeCanvas();
+    Object.entries(cfg.cssVars).forEach(([k,v]) => {
+      stage.style.setProperty(k,v);
+      dim.style.setProperty(k,v);
+      spot.style.setProperty(k,v);
+    });
+
+    stage.innerHTML = cfg.template
+      .replace('$TITLE', cfg.title)
+      .replace('$SUB',   cfg.sub);
+
+    // Trigger cascade
+    requestAnimationFrame(() => {
+      dim.classList.add('on');
+      spot.classList.add('on');
+      fx.classList.add('on');
+      stage.classList.add('on');
+      if(cfg.shake === 'heavy'){
+        document.body.classList.add('lw-shake-heavy');
+        setTimeout(() => document.body.classList.remove('lw-shake-heavy'), 720);
+      } else if(cfg.shake === 'light'){
+        document.body.classList.add('lw-shake-light');
+        setTimeout(() => document.body.classList.remove('lw-shake-light'), 400);
+      }
+    });
+
+    // Particles: emit after the slam-in lands (~180ms)
+    particleMode = cfg.particle;
+    setTimeout(() => {
+      emitting = true;
+      const burstN = cfg.particle === 'spark' ? 60
+                   : cfg.particle === 'ember' ? 36
+                   : 0;       // streak emits steady, no big burst
+      if(burstN) burst(burstN, cfg.particle);
+      startLoop();
+      // TODO HOOK: deep-impact sting (taiko + brass for Dragon, glass tap
+      //           for Panda, sub-bass thump + cymbal for Tiger).
+    }, 180);
+
+    // Peak burst at title slam
+    setTimeout(() => {
+      const peakN = cfg.particle === 'spark' ? 80
+                  : cfg.particle === 'ember' ? 48
+                  : 6;        // a few extra streaks at peak
+      burst(peakN, cfg.particle);
+      // TODO HOOK: peak sting (cymbal crash / chime / sub-bass hit).
+    }, 600);
+
+    // Stop emission, let particles drift out
+    setTimeout(() => { emitting = false; }, 2400);
+
+    // Begin out
+    setTimeout(() => { stage.classList.add('lw-out'); }, 2800);
+
+    // Cleanup
+    setTimeout(() => {
+      stage.classList.remove('on');
+      stage.classList.remove('lw-out');
+      stage.innerHTML = '';
+      dim.classList.remove('on');
+      spot.classList.remove('on');
+      fx.classList.remove('on');
+      firing = false;
+    }, 3300);
+  }
+
+  window.LegendaryWin = { fire: fire };
+})();
+
+// ═══════════════════════════════════════════════════════════════
+//   DIRECTOR'S CUT + PROMO SEQUENCER
+//   - Single-shot: ?director=1 enables the fast-forward panel
+//   - Promo: clicking "START PROMO SEQUENCE" loops through 3
+//     venues (Octagon → Disco → Speakeasy) with one legendary
+//     win in each (Dragon 7 → Panda 8 → Tiger 6).
+// ═══════════════════════════════════════════════════════════════
+(function(){
+  const url = new URLSearchParams(location.search);
+  const enabled = url.get('director') === '1' || url.get('dc') === '1'
+               || url.get('promo')    === '1' || window.__dc === true;
+  if(!enabled) return;
+
+  const panel  = document.getElementById('dc-panel');
+  const status = document.getElementById('dc-status');
+  panel.classList.add('on');
+  function setStatus(s){ status.textContent = s; }
+
+  // ── Math-only hand simulation against a working copy of the shoe ──
+  function simHand(testShoe){
+    if(testShoe.length < 6) return null;
+    const draw = () => testShoe.pop();
+    const pH = [draw(), draw()];
+    const bH = [draw(), draw()];
+    let pT = total(pH), bT = total(bH);
+    const natural = pT >= 8 || bT >= 8;
+    let pThird = null, bThird = null;
+    if(!natural){
+      if(pT <= 5){ pThird = draw(); pH.push(pThird); pT = total(pH); }
+      if(bankerDraws(bT, pThird)){ bThird = draw(); bH.push(bThird); bT = total(bH); }
+    }
+    let winner;
+    if(pT === bT) winner = 'T'; else if(bT > pT) winner = 'B'; else winner = 'P';
+    return {
+      winner, pT, bT, pLen: pH.length, bLen: bH.length,
+      isDragon7: winner === 'B' && bH.length === 3 && bT === 7,
+      isPanda8:  winner === 'P' && pH.length === 3 && pT === 8,
+      isTiger6:  winner === 'B' && bT === 6,
+      isTigerTie: winner === 'T' && pT === 6 && bT === 6,
+    };
+  }
+
+  // ── Fast-forward the live shoe to the target outcome and deal it ──
+  function fastForward(target, opts){
+    opts = opts || {};
+    if(typeof phase === 'undefined' || phase !== 'betting'){
+      setStatus('wait — finish current hand.');
+      return false;
+    }
+    if(typeof shoe === 'undefined' || !Array.isArray(shoe)){
+      setStatus('shoe not ready.');
+      return false;
+    }
+
+    let testShoe = shoe.slice();
+    const startLen = testShoe.length;
+    let consumed = 0;
+    let found = false;
+
+    for(let n = 0; n < 4000; n++){
+      const beforeLen = testShoe.length;
+      const r = simHand(testShoe);
+      if(!r) break;
+      const hit =
+        (target === 'dragon7' && r.isDragon7) ||
+        (target === 'panda8'  && r.isPanda8)  ||
+        (target === 'tiger6'  && (r.isTiger6 || r.isTigerTie));
+      if(hit){ consumed = startLen - beforeLen; found = true; break; }
+    }
+    if(!found){
+      setStatus('no target in shoe — reshuffle & retry.');
+      return false;
+    }
+
+    if(consumed > 0) shoe.splice(shoe.length - consumed, consumed);
+    cardsDealtThisShoe += consumed;
+
+    window.__directorCut = true;
+    if(target === 'tiger6'){
+      setMode('tiger');
+      bets.bigTiger = 25;
+      bets.smallTiger = 25;
+      bets.tigerTie = 10;
+    } else {
+      setMode('ez');
+      if(target === 'dragon7') bets.dragon7 = 50;
+      if(target === 'panda8')  bets.panda8  = 50;
+    }
+    if(typeof refreshBets === 'function') try{ refreshBets(); }catch(e){}
+    if(typeof refreshUI   === 'function') try{ refreshUI();   }catch(e){}
+
+    setStatus('skipped ' + consumed + ' cards — dealing ' + target + '...');
+    setTimeout(() => {
+      try { deal(); } catch(e){ console.error('DC deal error', e); }
+      if(!opts.holdBypass){
+        setTimeout(() => { window.__directorCut = false; }, 6500);
+      }
+    }, 250);
+    return true;
+  }
+
+  panel.querySelectorAll('button[data-target]').forEach(btn => {
+    btn.addEventListener('click', () => fastForward(btn.dataset.target));
+  });
+
+  // ── Promo Sequencer ─────────────────────────────────────────────
+  // Loops through 3 venues, fast-forwards to the matching legendary
+  // win in each, and waits between rounds. Duration: ~38s end-to-end
+  // (3 wins × ~10s including deal+celebration+wait).
+  const VENUE_OVERLAY = document.getElementById('venue-overlay');
+  const VENUE_LIGHT   = document.getElementById('venue-light');
+  const VENUE_NAME    = document.getElementById('venue-name');
+
+  const PROMO_SEQUENCE = [
+    { venueClass:'venue-octagon',   target:'dragon7',
+      label:'OCTAGON',   sub:'FIGHT NIGHT · MAIN EVENT' },
+    { venueClass:'venue-disco',     target:'panda8',
+      label:'DISCO',     sub:'NEON ROOM · STUDIO 88' },
+    { venueClass:'venue-speakeasy', target:'tiger6',
+      label:'SPEAKEASY', sub:'AMBER LAMP · WHISKEY ROOM' },
+  ];
+
+  function setVenueTheme(klass, label, sub){
+    document.body.classList.remove('venue-octagon','venue-disco','venue-speakeasy');
+    if(klass) document.body.classList.add(klass);
+    VENUE_NAME.innerHTML = (label || '') +
+      (sub ? ('<span class="sub">' + sub + '</span>') : '');
+    requestAnimationFrame(() => {
+      VENUE_OVERLAY.classList.toggle('on', !!klass);
+      VENUE_LIGHT.classList.toggle('on',   !!klass);
+      VENUE_NAME.classList.toggle('on',    !!klass);
+    });
+  }
+  function clearVenueTheme(){ setVenueTheme(null, '', ''); }
+
+  // Wait until the celebration window has finished + audio/haptic tail
+  function waitForBettingPhase(timeoutMs){
+    const deadline = Date.now() + (timeoutMs || 14000);
+    return new Promise(resolve => {
+      (function poll(){
+        if(typeof phase !== 'undefined' && phase === 'betting'){
+          resolve(true); return;
+        }
+        if(Date.now() > deadline){ resolve(false); return; }
+        setTimeout(poll, 200);
+      })();
+    });
+  }
+
+  // Wait for the game to be back in betting phase (or timeout). Used
+  // between promo legs so each fastForward sees a fresh shoe state.
+  function waitForBetting(timeoutMs){
+    const deadline = Date.now() + (timeoutMs || 8000);
+    return new Promise(resolve => {
+      (function poll(){
+        if(typeof phase !== 'undefined' && phase === 'betting'){
+          resolve(true); return;
+        }
+        if(Date.now() > deadline){ resolve(false); return; }
+        setTimeout(poll, 200);
+      })();
+    });
+  }
+
+  let promoRunning = false;
+  async function runPromoSequence(){
+    if(promoRunning) return;
+    promoRunning = true;
+    setStatus('promo: starting...');
+
+    for(let i = 0; i < PROMO_SEQUENCE.length; i++){
+      const step = PROMO_SEQUENCE[i];
+      // Hold director-cut bypass across the whole sequence so Tiger 6
+      // always fires its celebration regardless of the gameMode toggle.
+      window.__directorCut = true;
+
+      // Each leg consumes 100-300 cards fast-forwarding to its target.
+      // Reset the shoe at the top of every leg so simHand has a full
+      // 416-card shoe to search — guarantees the next target is findable.
+      if(typeof buildShoe === 'function'){
+        try { buildShoe(); cardsDealtThisShoe = 0; } catch(e) {}
+      }
+
+      setStatus('promo: ' + step.label + ' — ' + step.target);
+      setVenueTheme(step.venueClass, step.label, step.sub);
+      // Brief settle so the venue tint fades in before the deal starts
+      await new Promise(r => setTimeout(r, 1100));
+
+      const ok = fastForward(step.target, { holdBypass:true });
+      if(!ok){ setStatus('promo: aborted — ' + step.target + ' not in shoe'); break; }
+
+      // Wait for the deal + reveals + celebration to finish
+      // (deal ~3-4s, celebration ~3.3s, settle ~1s ≈ 8-9s total).
+      await new Promise(r => setTimeout(r, 9500));
+      // Then hold venue tint a beat after celebration before next step
+      await new Promise(r => setTimeout(r, 1400));
+
+      // Click "NEW ROUND" so the game returns to betting phase and the
+      // next fastForward call sees phase='betting' (its precondition).
+      // Without this, leg 2 + 3 silently abort after leg 1 resolves.
+      if(typeof newRound === 'function'){
+        try { newRound(); } catch(e){ console.error('newRound failed', e); }
+      } else {
+        const btn = document.getElementById('btn-new');
+        if(btn) btn.click();
+      }
+      const ready = await waitForBetting(4000);
+      if(!ready){ setStatus('promo: stuck — phase did not return to betting'); break; }
+      // Tiny pause for visual breathing room before next leg
+      await new Promise(r => setTimeout(r, 600));
+    }
+
+    clearVenueTheme();
+    window.__directorCut = false;
+    setStatus('promo: complete.');
+    promoRunning = false;
+
+    // Auto-show outro slate so the recorded Short ends on a clean CTA
+    const outro = document.getElementById('promo-outro');
+    if(outro) outro.classList.add('on');
+    window.__promoComplete = true;
+  }
+
+  const promoBtn = document.getElementById('dc-promo-btn');
+  if(promoBtn) promoBtn.addEventListener('click', runPromoSequence);
+  window.__startPromo = runPromoSequence;
+
+  setStatus('director\'s cut armed.');
+})();
+</script>
+
+<!-- ─── Road to Nine — book-promo CSS + module ─────────────────
+     The module auto-wires two triggers when it loads:
+       • Post-win streak modal (5 wins in a row, once per session)
+       • Low-bankroll modal    (balance just dipped below $100 table min)
+     Both respect the same 7-day dismissal cooldown shared with the
+     home banner on stage-select.html. -->
+<style>
+.bg-book-modal {
+  position:fixed; inset:0; z-index:9500;
+  display:flex; align-items:center; justify-content:center;
+  padding:20px;
+  background:radial-gradient(ellipse 80% 60% at 50% 30%, rgba(201,168,76,.18), transparent 55%),
+             rgba(2,6,3,.86);
+  opacity:0;
+  transition:opacity .28s ease;
+  font-family:'Raleway',-apple-system,sans-serif;
+}
+.bg-book-modal.open { opacity:1; }
+.bg-book-modal-card {
+  position:relative;
+  width:min(420px, 92vw);
+  background:linear-gradient(180deg,#0d1f10 0%,#06120a 60%,#040806 100%);
+  border:1px solid rgba(201,168,76,.5);
+  border-radius:16px;
+  padding:24px 24px 20px;
+  text-align:center; color:#fff7d6;
+  box-shadow:0 16px 56px rgba(0,0,0,.7), 0 0 70px rgba(201,168,76,.25);
+  transform:translateY(12px) scale(.96);
+  transition:transform .35s cubic-bezier(.16,1,.3,1);
+}
+.bg-book-modal.open .bg-book-modal-card { transform:translateY(0) scale(1); }
+.bg-book-modal-close {
+  position:absolute; top:8px; right:12px;
+  background:none; border:none; color:rgba(255,247,214,.4);
+  font-size:1.6rem; line-height:1; cursor:pointer; padding:6px 10px;
+}
+.bg-book-modal-close:hover { color:#fff7d6; }
+.bg-book-modal-pre {
+  font-family:'Cinzel',serif; font-size:.62rem; letter-spacing:.36em;
+  color:#f0d080; margin-bottom:14px;
+  text-shadow:0 0 12px rgba(255,180,40,.55);
+}
+.bg-book-modal-cover {
+  display:inline-block; margin-bottom:14px;
+  filter:drop-shadow(0 6px 16px rgba(0,0,0,.6));
+}
+.bg-book-modal-cover img { width:96px; height:auto; border-radius:5px; display:block; }
+.bg-book-modal-title {
+  font-family:'Cinzel',serif; font-size:1.25rem; font-weight:900;
+  letter-spacing:.05em; color:#f0d080; margin:0 0 10px;
+}
+.bg-book-modal-body {
+  font-size:.86rem; line-height:1.55;
+  color:rgba(255,247,214,.78); margin:0 0 18px;
+}
+.bg-book-modal-cta {
+  display:block; width:100%;
+  background:linear-gradient(135deg,#c9a84c 0%,#f0d080 50%,#c9a84c 100%);
+  background-size:200% auto; color:#1a0e00; border:none;
+  font-family:'Cinzel',serif; font-size:.86rem; font-weight:700;
+  letter-spacing:.16em; text-transform:uppercase;
+  padding:13px; border-radius:6px; cursor:pointer;
+  transition:background-position .35s, transform .15s;
+}
+.bg-book-modal-cta:hover { background-position:right center; transform:translateY(-1px); }
+.bg-book-modal-foot {
+  margin-top:12px; font-size:.7rem; letter-spacing:.04em;
+  color:rgba(255,247,214,.55);
+}
+.bg-book-modal-later {
+  margin-top:6px; background:none; border:none;
+  font-family:'Raleway',sans-serif; font-size:.75rem;
+  letter-spacing:.06em; color:rgba(255,247,214,.45);
+  cursor:pointer; padding:8px;
+}
+.bg-book-modal-later:hover { color:rgba(255,247,214,.75); }
+</style>
+<script src="/book-promo.js"></script>
+<script src="/visit-beacon.js" defer></script>
+<script src="/feedback-widget.js" defer></script>
+
 </body>
 </html>

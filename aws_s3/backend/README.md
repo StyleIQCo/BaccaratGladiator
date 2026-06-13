@@ -5,6 +5,8 @@ This backend adds:
 - `POST /hand-event` endpoint (authenticated, server-validated scoring)
 - `GET /profile` endpoint (authenticated profile + sequence sync)
 - `GET /leaderboard` endpoint (global leaderboard)
+- `POST /tournament/score` endpoint (authenticated, monthly tournament submission)
+- `GET /tournament/leaderboard` endpoint (public, per-tournament leaderboard)
 
 ## 1) Deploy (AWS SAM)
 
@@ -108,6 +110,72 @@ Returns:
 }
 ```
 
+### POST `/tournament/score` (Auth required)
+
+Submits a finished monthly-tournament run. The deterministic shoe is
+seeded from the tournament ID (`hash("bg-tournament-" + id)`), so every
+player gets the same 80-hand sequence — only their bet decisions differ.
+
+Body:
+```json
+{
+  "tournament":   "2026-06",
+  "finalBalance": 14750,
+  "handsPlayed":  80,
+  "dragon7":      2,
+  "panda8":       1,
+  "submittedAt":  "2026-06-12T19:42:11Z"
+}
+```
+
+Behavior:
+- One row per `(tournamentId, userSub)` — re-submissions only overwrite
+  on a personal best.
+- Tournament window must currently be open (1st 00:00 UTC → last day
+  23:59 UTC); late submissions are rejected.
+- Server sanity-checks `finalBalance` (0–5,000,000) and
+  `handsPlayed` (1–100). Per-hand replay against the seeded shoe is
+  noted as a future hardening step.
+
+Returns:
+```json
+{
+  "ok": true,
+  "tournament": "2026-06",
+  "finalBalance": 14750,
+  "isNewBest": true,
+  "priorBest": null,
+  "rank": 17,
+  "submittedAt": "..."
+}
+```
+
+### GET `/tournament/leaderboard?id=YYYY-MM&limit=50` (Public)
+
+Returns the leaderboard for a single monthly tournament, sorted by
+`finalBalance` descending, with tie-breakers (fewer hands first, earliest
+firstAt next).  `id` defaults to the current month if omitted.
+
+```json
+{
+  "tournament": "2026-06",
+  "count": 23,
+  "items": [
+    {
+      "username":     "Late Bet Larry",
+      "finalBalance": 47900,
+      "handsPlayed":  80,
+      "dragon7":      3,
+      "panda8":       1,
+      "updatedAt":    "..."
+    }
+  ]
+}
+```
+
 ## Notes
-- This version hardens scoring by validating hand events server-side.
-- It still does not validate shoe randomness/deck integrity; move dealing server-side for maximum anti-cheat protection.
+- Hand events validated server-side; tournament scores validated for
+  range only in v1. Replay-validation against the seeded shoe is a
+  v2 hardening item — gives full anti-cheat for tournaments.
+- This version still doesn't validate shoe randomness/deck integrity
+  for casual play; move dealing server-side for maximum anti-cheat.

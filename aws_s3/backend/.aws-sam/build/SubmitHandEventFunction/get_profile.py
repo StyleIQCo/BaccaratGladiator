@@ -52,7 +52,12 @@ def handler(event, context):
     if not user_sub:
         return _resp(401, {'error': 'Unauthorized'})
 
-    username = claims.get('preferred_username') or claims.get('cognito:username') or 'Player'
+    username = (
+        claims.get('preferred_username')
+        or claims.get('cognito:username')
+        or claims.get('username')
+        or 'Player'
+    )
     email = (claims.get('email') or '').strip().lower()
 
     item = table.get_item(Key={'userSub': user_sub}).get('Item') or {}

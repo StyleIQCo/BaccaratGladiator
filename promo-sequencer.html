@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#000">
+<title>Baccarat Gladiator — Promo Sequencer</title>
+<link rel="preload" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@900&display=swap" as="style">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@900&display=swap">
+
+<style>
+* { margin:0; padding:0; box-sizing:border-box;
+    user-select:none; -webkit-user-select:none;
+    -webkit-tap-highlight-color:transparent; }
+html, body { width:100%; height:100vh; height:100dvh;
+  overflow:hidden; background:#000; color:#fff;
+  font-family:'Montserrat', 'Impact', 'Helvetica Neue', sans-serif; }
+
+#launcher { position:fixed; inset:0; display:flex;
+  flex-direction:column; align-items:center; justify-content:center;
+  background:radial-gradient(ellipse at 50% 35%, #1a0530 0%, #050010 60%, #000 100%);
+  text-align:center; padding:24px; z-index:100; }
+#launcher h1 {
+  font-family:'Montserrat', 'Impact', sans-serif; font-weight:900;
+  font-size:clamp(1.8rem, 7vw, 3rem); letter-spacing:6px;
+  color:#ffd75a;
+  text-shadow:0 4px 0 rgba(0,0,0,0.85), 0 0 24px rgba(255,200,80,0.55);
+  margin-bottom:14px; }
+#launcher .sub {
+  font-family:'Bebas Neue', sans-serif;
+  font-size:0.95rem; letter-spacing:5px; color:#ff6cfa;
+  text-shadow:0 0 8px #ff48d8, 0 0 14px #c818a8;
+  margin-bottom:36px; }
+#start-btn {
+  padding:18px 44px;
+  font-family:'Montserrat', 'Impact', sans-serif; font-weight:900;
+  font-size:1.4rem; letter-spacing:5px;
+  background:linear-gradient(180deg, #fff5c8 0%, #ffd75a 30%, #d8a430 60%, #8a6418 100%);
+  color:#1a0700; border:none; border-radius:8px; cursor:pointer;
+  box-shadow:0 6px 0 #6a3818, 0 8px 24px rgba(255,180,40,0.5),
+             inset 0 1px 0 rgba(255,255,255,0.55);
+  transition:transform 220ms cubic-bezier(0.34, 1.30, 0.64, 1),
+             box-shadow 220ms cubic-bezier(0.16, 1, 0.3, 1); }
+#start-btn:active { transform:translateY(4px);
+  box-shadow:0 2px 0 #6a3818, 0 4px 12px rgba(255,180,40,0.4),
+             inset 0 1px 0 rgba(255,255,255,0.55); }
+#launcher .hint { margin-top:28px;
+  font-family:'Bebas Neue', sans-serif;
+  font-size:0.78rem; color:rgba(255,255,255,0.55);
+  letter-spacing:3px; line-height:1.65; }
+#launcher .hint b { color:#ffd75a; font-weight:normal; }
+
+#stage { position:fixed; inset:0; overflow:hidden;
+  background:#000; z-index:50; display:none; }
+#stage.live { display:block; }
+
+#frame {
+  position:absolute; left:50%; top:50%;
+  transform:translate(-50%, -50%);
+  width:min(100vw, calc(100vh * 9 / 16));
+  aspect-ratio:9 / 16;
+  background:#000; overflow:hidden;
+}
+#frame.shake {
+  animation:shake-cam 0.46s cubic-bezier(0.5, 1.6, 0.4, 1);
+}
+@keyframes shake-cam {
+  0%   { transform:translate(-50%, -50%); }
+  15%  { transform:translate(calc(-50% - 7px), calc(-50% - 4px)) rotate(-0.5deg); }
+  30%  { transform:translate(calc(-50% + 8px), calc(-50% + 3px)) rotate(0.5deg); }
+  50%  { transform:translate(calc(-50% - 4px), calc(-50% + 4px)) rotate(-0.3deg); }
+  70%  { transform:translate(calc(-50% + 3px), calc(-50% - 2px)); }
+  100% { transform:translate(-50%, -50%) rotate(0); }
+}
+
+.vid {
+  position:absolute; inset:0;
+  width:100%; height:100%;
+  object-fit:cover;
+  opacity:0;
+  transition:opacity 500ms cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events:none;
+  background:#000;
+}
+.vid.active { opacity:1; }
+
+.text-shade {
+  position:absolute; left:0; right:0; top:0;
+  height:55%; pointer-events:none; z-index:2;
+  background:linear-gradient(180deg,
+    rgba(0,0,0,0.62) 0%,
+    rgba(0,0,0,0.45) 30%,
+    rgba(0,0,0,0.20) 65%,
+    rgba(0,0,0,0)    100%);
+}
+
+#overlay {
+  position:absolute; left:0; right:0; top:13%;
+  text-align:center; pointer-events:none;
+  padding:0 22px; z-index:3;
+}
+#overlay .line {
+  display:inline-block;
+  font-family:'Montserrat', 'Impact', sans-serif; font-weight:900;
+  font-size:clamp(2.1rem, 8vw, 3.8rem);
+  letter-spacing:3px; line-height:0.95;
+  color:#ffffff;
+  text-transform:uppercase;
+  text-shadow:
+    0 4px 0 rgba(0,0,0,0.95),
+    0 8px 18px rgba(0,0,0,0.85),
+    0 0 36px rgba(255,255,255,0.30);
+  padding:6px 18px;
+  opacity:0;
+}
+#overlay .line.fire-short { animation:slam 2.5s cubic-bezier(0.5, 0.05, 0.4, 1.4) forwards; }
+#overlay .line.fire-long  { animation:slam 5s   cubic-bezier(0.5, 0.05, 0.4, 1.4) forwards; }
+#overlay .line.fire-drop  { animation:slam-drop 5s cubic-bezier(0.5, 0.05, 0.4, 1.4) forwards; }
+@keyframes slam {
+  0%   { opacity:0;
+         transform:scale(2.6) rotate(-2.5deg) translateY(-28px);
+         filter:blur(5px); }
+  8%   { opacity:1;
+         transform:scale(0.92) rotate(1.2deg) translateY(0);
+         filter:blur(0); }
+  15%  { transform:scale(1.08) rotate(-0.6deg); }
+  22%  { transform:scale(0.99) rotate(0.3deg); }
+  30%  { transform:scale(1) rotate(0); }
+  88%  { opacity:1; transform:scale(1) rotate(0); }
+  100% { opacity:0; transform:scale(1.1) translateY(-10px); }
+}
+@keyframes slam-drop {
+  0%   { opacity:0;
+         transform:scale(3.2) rotate(-3.5deg) translateY(-36px);
+         filter:blur(7px); }
+  6%   { opacity:1; }
+  12%  { transform:scale(0.88) rotate(2deg) translateY(2px);
+         filter:blur(0); }
+  20%  { transform:scale(1.18) rotate(-1deg); }
+  30%  { transform:scale(0.96) rotate(0.4deg); }
+  40%  { transform:scale(1.04) rotate(0); }
+  48%  { transform:scale(1) rotate(0); }
+  90%  { opacity:1; transform:scale(1) rotate(0); }
+  100% { opacity:0; transform:scale(1.08) translateY(-10px); }
+}
+
+#overlay .line.drop {
+  font-size:clamp(2.5rem, 9.5vw, 4.6rem);
+  letter-spacing:4px;
+  background:linear-gradient(180deg, #fff5c8 0%, #ffd75a 35%, #b07f1c 80%, #fff5c8 100%);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  text-shadow:none;
+  filter:drop-shadow(0 4px 0 rgba(0,0,0,0.95))
+         drop-shadow(0 0 36px rgba(232,211,117,0.85))
+         drop-shadow(0 0 60px rgba(155,18,40,0.55));
+}
+#overlay .line.cta {
+  font-family:'Montserrat', sans-serif; font-weight:900;
+  font-size:clamp(1.7rem, 6.4vw, 3rem);
+  letter-spacing:4px;
+  background:linear-gradient(180deg, #fff5c8 0%, #ffd75a 50%, #b07f1c 100%);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  text-shadow:none;
+  filter:drop-shadow(0 4px 12px rgba(0,0,0,0.95))
+         drop-shadow(0 0 30px rgba(255,210,80,0.55));
+}
+
+#progress {
+  position:absolute; top:0; left:0; height:3px;
+  background:linear-gradient(90deg, #ff48d8, #ffd75a, #5fdfff);
+  width:0%; z-index:5;
+  box-shadow:0 0 8px rgba(255,200,80,0.6);
+}
+#logo {
+  position:absolute; right:14px; bottom:14px;
+  text-align:right; z-index:4; pointer-events:none;
+}
+#logo .name {
+  font-family:'Montserrat', sans-serif; font-weight:900;
+  font-size:0.85rem; letter-spacing:3px;
+  background:linear-gradient(180deg, #fff5c8, #f5c450, #b07f1c);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  filter:drop-shadow(0 2px 4px rgba(0,0,0,0.95))
+         drop-shadow(0 0 6px rgba(255,200,80,0.55));
+}
+#logo .domain {
+  font-family:'Bebas Neue', sans-serif;
+  font-size:0.7rem; letter-spacing:2px;
+  color:rgba(255,255,255,0.85);
+  margin-top:3px;
+  text-shadow:0 2px 4px rgba(0,0,0,0.95);
+}
+
+#missing { position:absolute; left:0; right:0; top:60%;
+  text-align:center; font-family:'Bebas Neue', sans-serif;
+  font-size:0.95rem; letter-spacing:3px; color:rgba(255,255,255,0.55);
+  pointer-events:none; padding:0 32px; line-height:1.6;
+  text-shadow:0 2px 4px rgba(0,0,0,0.9); display:none; }
+#stage.missing-clips #missing { display:block; }
+</style>
+</head>
+<body>
+
+<div id="launcher">
+  <h1>BACCARAT GLADIATOR</h1>
+  <div class="sub">★ PROMO SEQUENCER ★ 25s · 9:16</div>
+  <button id="start-btn">START TRAILER</button>
+  <div class="hint">
+    DROP <b>clip1.mp4 – clip5.mp4</b> NEXT TO THIS HTML FILE.<br>
+    CLICK ABOVE TO PLAY THE SEQUENCE FULLSCREEN.<br>
+    SCREEN-RECORD AT 1080×1920 FOR YOUR YOUTUBE SHORT.
+  </div>
+</div>
+
+<div id="stage">
+  <div id="frame">
+    <video class="vid" id="vidA" muted playsinline preload="auto"></video>
+    <video class="vid" id="vidB" muted playsinline preload="auto"></video>
+
+    <div class="text-shade"></div>
+
+    <div id="overlay">
+      <div class="line"></div>
+    </div>
+
+    <div id="logo">
+      <div class="name">BACCARAT GLADIATOR</div>
+      <div class="domain">baccaratgladiator.com</div>
+    </div>
+
+    <div id="progress"></div>
+
+    <div id="missing">
+      WAITING FOR CLIPS<br>
+      drop clip1.mp4 – clip5.mp4 in this folder
+    </div>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+const CLIPS = ['clip1.mp4','clip2.mp4','clip3.mp4','clip4.mp4','clip5.mp4'];
+const CLIP_DURATION_MS = 5000;
+const FADE_DURATION_MS = 500;
+const LOOP_TOTAL_MS    = CLIPS.length * CLIP_DURATION_MS;
+
+const TEXTS = [
+  { t: 0,    text: "DON'T PLAY BORING BACCARAT",            kind: 'short' },
+  { t: 2.5,  text: "50+ UNLOCKABLE STAGES",                 kind: 'short' },
+  { t: 5,    text: "STEP INTO THE OCTAGON",                 kind: 'long'  },
+  { t: 10,   text: "ARE YOU NOT ENTERTAINED?!",             kind: 'drop'  },
+  { t: 15,   text: "OWN THE DISCO FLOOR",                   kind: 'long'  },
+  { t: 20,   text: "DOWNLOAD NOW & GET THE STRATEGY BOOK",  kind: 'cta'   },
+];
+
+const vidA       = document.getElementById('vidA');
+const vidB       = document.getElementById('vidB');
+const stageEl    = document.getElementById('stage');
+const frameEl    = document.getElementById('frame');
+const overlayEl  = document.getElementById('overlay');
+const lineEl     = overlayEl.querySelector('.line');
+const progressEl = document.getElementById('progress');
+
+let front = vidA;
+let back  = vidB;
+let timers = [];
+let progressRaf = 0;
+
+function clearTimers() {
+  timers.forEach(t => clearTimeout(t));
+  timers = [];
+}
+function setTimerSecs(fn, secs) {
+  timers.push(setTimeout(fn, secs * 1000));
+}
+
+function fireText(spec) {
+  lineEl.classList.remove('fire-short', 'fire-long', 'fire-drop',
+                          'drop', 'cta');
+  void lineEl.offsetWidth;
+  lineEl.textContent = spec.text;
+
+  if (spec.kind === 'drop') lineEl.classList.add('drop');
+  if (spec.kind === 'cta')  lineEl.classList.add('cta');
+
+  const animClass =
+    spec.kind === 'drop' ? 'fire-drop'
+    : spec.kind === 'long' || spec.kind === 'cta' ? 'fire-long'
+    : 'fire-short';
+  lineEl.classList.add(animClass);
+
+  frameEl.classList.remove('shake');
+  void frameEl.offsetWidth;
+  frameEl.classList.add('shake');
+  setTimeout(() => frameEl.classList.remove('shake'), 470);
+}
+
+function crossfadeTo(nextIdx) {
+  back.currentTime = 0;
+  back.play().catch(() => {});
+
+  back.classList.add('active');
+  front.classList.remove('active');
+
+  setTimeout(() => {
+    front.pause();
+    [front, back] = [back, front];
+    const afterNext = (nextIdx + 1) % CLIPS.length;
+    back.src = CLIPS[afterNext];
+    back.load();
+  }, FADE_DURATION_MS);
+}
+
+function scheduleClipTransitions() {
+  for (let i = 1; i <= CLIPS.length; i++) {
+    const fireAtSecs = (i * CLIP_DURATION_MS - FADE_DURATION_MS) / 1000;
+    const targetClip = i % CLIPS.length;
+    setTimerSecs(() => crossfadeTo(targetClip), fireAtSecs);
+  }
+}
+function scheduleTextOverlays() {
+  TEXTS.forEach(spec => setTimerSecs(() => fireText(spec), spec.t));
+}
+function tickProgress(loopStartTs) {
+  const elapsed = Math.min(LOOP_TOTAL_MS, performance.now() - loopStartTs);
+  progressEl.style.width = (elapsed / LOOP_TOTAL_MS) * 100 + '%';
+  if (elapsed < LOOP_TOTAL_MS) {
+    progressRaf = requestAnimationFrame(() => tickProgress(loopStartTs));
+  }
+}
+
+function startLoop() {
+  clearTimers();
+  if (progressRaf) cancelAnimationFrame(progressRaf);
+  scheduleClipTransitions();
+  scheduleTextOverlays();
+  tickProgress(performance.now());
+  setTimerSecs(startLoop, LOOP_TOTAL_MS / 1000);
+}
+
+function initialLoad() {
+  front = vidA; back = vidB;
+  front.classList.add('active');
+  back.classList.remove('active');
+  front.src = CLIPS[0];
+  back.src  = CLIPS[1 % CLIPS.length];
+  front.load();
+  back.load();
+}
+
+function startTrailer() {
+  document.getElementById('launcher').style.display = 'none';
+  stageEl.classList.add('live');
+
+  const root = document.documentElement;
+  const req = root.requestFullscreen
+            || root.webkitRequestFullscreen
+            || root.mozRequestFullScreen
+            || root.msRequestFullscreen;
+  if (req) try { req.call(root); } catch (e) {}
+
+  initialLoad();
+
+  const begin = () => {
+    front.play().catch(() => {});
+    startLoop();
+  };
+  if (front.readyState >= 2) {
+    begin();
+  } else {
+    front.addEventListener('canplay', begin, { once: true });
+    setTimeout(() => {
+      if (!progressEl.style.width || progressEl.style.width === '0%') begin();
+    }, 1500);
+  }
+
+  setTimeout(() => {
+    const ok = (vidA.readyState >= 1) || (vidB.readyState >= 1);
+    stageEl.classList.toggle('missing-clips', !ok);
+  }, 2200);
+
+  [vidA, vidB].forEach(v => {
+    v.addEventListener('error', () =>
+      stageEl.classList.add('missing-clips'));
+  });
+}
+
+document.getElementById('start-btn').addEventListener('click', startTrailer);
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'r' || e.key === 'R') {
+    initialLoad();
+    front.addEventListener('canplay', () => front.play().catch(() => {}),
+                           { once: true });
+    front.play().catch(() => {});
+    startLoop();
+  }
+  if (e.key === 'Escape') {
+    const exit = document.exitFullscreen
+              || document.webkitExitFullscreen
+              || document.mozCancelFullScreen
+              || document.msExitFullscreen;
+    if (exit) try { exit.call(document); } catch (e) {}
+  }
+});
+
+if (new URLSearchParams(location.search).get('auto') === '1') {
+  setTimeout(startTrailer, 600);
+}
+</script>
+</body>
+</html>

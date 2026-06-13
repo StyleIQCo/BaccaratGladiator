@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1080,initial-scale=1">
+<title>Baccarat Gladiator — Legendary Wins Trailer</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Orbitron:wght@500;700;900&family=Press+Start+2P&display=swap');
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+  --lw-ease-slam: cubic-bezier(0.16, 1.40, 0.30, 1);
+  --lw-ease-rise: cubic-bezier(0.18, 0.95, 0.30, 1);
+  --lw-ease-out:  cubic-bezier(0.40, 0,    0.60, 1);
+}
+
+html, body {
+  width:1080px; height:1920px;
+  background:#040008; color:#f0e3c0;
+  font-family:'Orbitron','Inter',-apple-system,sans-serif;
+  overflow:hidden;
+}
+
+/* ── Cabinet backdrop (deep purple haze + starfield) ─────────── */
+#cabinet-bg {
+  position:fixed; inset:0; z-index:0;
+  background:
+    radial-gradient(ellipse at 50% 35%, #1a0530 0%, #0a0218 45%, #040008 100%),
+    radial-gradient(circle at 20% 80%, rgba(255,40,180,0.08) 0%, transparent 40%),
+    radial-gradient(circle at 80% 20%, rgba(80,200,255,0.10) 0%, transparent 45%);
+}
+#starfield {
+  position:fixed; inset:0; z-index:1; pointer-events:none;
+  background-image:
+    radial-gradient(2px 2px at 12% 14%, rgba(255,210,255,0.7), transparent),
+    radial-gradient(1px 1px at 28% 32%, rgba(180,220,255,0.7), transparent),
+    radial-gradient(2px 2px at 52% 18%, rgba(255,230,180,0.6), transparent),
+    radial-gradient(1px 1px at 76% 28%, rgba(255,180,255,0.7), transparent),
+    radial-gradient(2px 2px at 90% 12%, rgba(160,255,230,0.6), transparent),
+    radial-gradient(1px 1px at 18% 70%, rgba(255,210,255,0.5), transparent),
+    radial-gradient(2px 2px at 60% 80%, rgba(180,255,255,0.5), transparent),
+    radial-gradient(1px 1px at 88% 88%, rgba(255,200,160,0.6), transparent);
+  background-size:1080px 1920px;
+  background-repeat:repeat;
+}
+#scanlines {
+  position:fixed; inset:0; z-index:60; pointer-events:none;
+  background:repeating-linear-gradient(0deg,
+    rgba(0,0,0,0)   0px, rgba(0,0,0,0)   2px,
+    rgba(0,0,0,0.18) 2px, rgba(0,0,0,0.18) 3px);
+  mix-blend-mode:multiply; opacity:0.45;
+}
+
+/* ── Scene container ─────────────────────────────────────────── */
+.scene {
+  position:fixed; inset:0; z-index:10;
+  display:flex; align-items:center; justify-content:center;
+  flex-direction:column;
+  opacity:0; pointer-events:none;
+  transition:opacity 360ms var(--lw-ease-out);
+}
+.scene.on { opacity:1; }
+
+/* ── Headline text — slams in at scene start ─────────────────── */
+.headline {
+  position:fixed; left:0; right:0; top:140px; z-index:40;
+  text-align:center;
+  font-family:'Cinzel', serif; font-weight:900;
+  font-size:84px; letter-spacing:14px; line-height:1;
+  background:linear-gradient(90deg, #ffe7a0, #ff5e00, #ffe7a0);
+  background-size:200% 100%;
+  -webkit-background-clip:text; background-clip:text;
+  -webkit-text-fill-color:transparent; color:transparent;
+  text-shadow:0 0 60px rgba(255,180,40,0.5);
+  filter:drop-shadow(0 6px 16px rgba(0,0,0,0.85));
+  opacity:0; transform:scale(0.85) translateY(-40px);
+  transition:opacity 320ms ease, transform 420ms var(--lw-ease-slam);
+}
+.headline.on { opacity:1; transform:scale(1) translateY(0); animation:hl-shimmer 3s ease infinite; }
+@keyframes hl-shimmer {
+  0%,100% { background-position:0% 50%; }
+  50%     { background-position:200% 50%; }
+}
+.headline.dragon { background:linear-gradient(90deg,#ffd76e,#ff5e00,#ffd76e); -webkit-background-clip:text; background-clip:text; }
+.headline.panda  { background:linear-gradient(90deg,#f0f5e8,#a8f5d0,#f0f5e8); -webkit-background-clip:text; background-clip:text; }
+.headline.tiger  { background:linear-gradient(90deg,#ffe7a0,#ff8a00,#ffe7a0); -webkit-background-clip:text; background-clip:text; }
+
+/* ── Sub line under headline ─────────────────────────────────── */
+.subline {
+  position:fixed; left:0; right:0; top:248px; z-index:40;
+  text-align:center;
+  font-family:'Press Start 2P', monospace;
+  font-size:24px; letter-spacing:6px;
+  color:#ffd58a;
+  text-shadow:0 0 14px rgba(255,180,40,0.4), 0 2px 6px rgba(0,0,0,0.85);
+  opacity:0; transform:translateY(10px);
+  transition:opacity 360ms ease 80ms, transform 460ms var(--lw-ease-rise) 80ms;
+}
+.subline.on { opacity:1; transform:translateY(0); }
+
+/* ── Scene 1: Stage cards (carousel-style stack) ────────────── */
+#scene-stages {
+  z-index:15;
+  perspective:1800px; perspective-origin:50% 50%;
+}
+.stage-card {
+  position:absolute; left:50%; top:50%;
+  width:780px; aspect-ratio:1200/630;
+  border-radius:24px; overflow:hidden;
+  background:#1a0a2a;
+  box-shadow:
+    0 20px 50px rgba(0,0,0,0.8),
+    0 0 0 3px rgba(255,255,255,0.06),
+    inset 0 0 0 1px rgba(255,255,255,0.1),
+    0 0 60px var(--card-glow, rgba(255,200,80,0.3));
+  transform:translate(-50%,-50%) scale(0.7);
+  opacity:0;
+  transition:transform 900ms var(--lw-ease-slam), opacity 700ms ease;
+}
+#scene-stages.on .stage-card:nth-child(1) { transform:translate(-50%,-50%) translate3d(0, -460px, -240px) scale(0.78) rotateX(8deg); opacity:0.85; transition-delay:80ms; }
+#scene-stages.on .stage-card:nth-child(2) { transform:translate(-50%,-50%) translate3d(0,    0px,    0px) scale(1.00) rotateX(0);    opacity:1.00; transition-delay:200ms; }
+#scene-stages.on .stage-card:nth-child(3) { transform:translate(-50%,-50%) translate3d(0,  460px, -240px) scale(0.78) rotateX(-8deg); opacity:0.85; transition-delay:320ms; }
+.stage-card .art {
+  position:absolute; inset:0;
+  background-size:cover; background-position:center;
+}
+.stage-card .art-mask {
+  position:absolute; inset:0;
+  background:linear-gradient(180deg,
+    rgba(0,0,0,0)   0%,
+    rgba(0,0,0,0.0) 48%,
+    rgba(0,0,0,0.55) 78%,
+    rgba(0,0,0,0.92) 100%);
+}
+.stage-card::before {
+  content:""; position:absolute; top:0; left:0; right:0; height:6px;
+  background:var(--tier-color, #c5b358);
+  box-shadow:0 0 18px var(--tier-color, #c5b358); z-index:2;
+}
+.stage-card .corner {
+  position:absolute; top:14px; left:14px; z-index:3;
+  font-family:'Press Start 2P', monospace; font-size:14px;
+  letter-spacing:3px; padding:8px 12px; border-radius:6px;
+  background:rgba(0,0,0,0.65);
+  border:1px solid rgba(255,200,80,0.45);
+  color:#ffe1a8; text-shadow:0 0 4px rgba(255,200,80,0.6);
+}
+.stage-card .meta {
+  position:absolute; left:24px; right:24px; bottom:24px; z-index:3;
+}
+.stage-card .meta .name {
+  font-family:'Cinzel', serif; font-weight:900;
+  font-size:42px; letter-spacing:4px; color:#fff; line-height:1.05;
+  text-shadow:0 3px 8px rgba(0,0,0,0.9);
+}
+.stage-card .meta .tag {
+  font-family:'Orbitron', sans-serif; font-weight:500;
+  font-size:18px; letter-spacing:3px; color:#ffe1a8;
+  text-shadow:0 2px 4px rgba(0,0,0,0.85);
+  margin-top:6px;
+}
+.stage-card .sb-badges {
+  position:absolute; top:60px; right:14px; z-index:4;
+  display:flex; flex-direction:column; gap:8px;
+}
+.stage-card .sb-badge {
+  width:54px; height:54px; border-radius:13px;
+  display:flex; align-items:center; justify-content:center;
+  background:rgba(20,10,30,0.42);
+  backdrop-filter:blur(7px) saturate(140%);
+  -webkit-backdrop-filter:blur(7px) saturate(140%);
+  border:1.5px solid rgba(255,255,255,0.20);
+  box-shadow:
+    0 4px 10px rgba(0,0,0,0.45),
+    inset 0 1px 0 rgba(255,255,255,0.18),
+    0 0 0 1.5px var(--sb-tint, rgba(255,255,255,0.10));
+  position:relative; overflow:hidden;
+}
+.stage-card .sb-badge::before {
+  content:""; position:absolute; inset:0;
+  background:radial-gradient(ellipse at 30% 20%,
+    var(--sb-tint, rgba(255,255,255,0.18)) 0%, transparent 60%);
+  opacity:0.85;
+}
+.stage-card .sb-badge svg {
+  width:34px; height:34px;
+  color:var(--sb-color, #ffe7a0);
+  filter:drop-shadow(0 2px 3px rgba(0,0,0,0.85))
+         drop-shadow(0 0 7px var(--sb-glow, rgba(255,200,80,0.5)));
+  position:relative; z-index:1;
+}
+.sb-dragon { --sb-tint:rgba(255,90,20,0.30);  --sb-color:#ffb56a;  --sb-glow:rgba(255,140,40,0.65); }
+.sb-panda  { --sb-tint:rgba(40,200,140,0.28); --sb-color:#a8f5d0;  --sb-glow:rgba(120,240,180,0.55); }
+.sb-tiger  { --sb-tint:rgba(255,170,26,0.30); --sb-color:#ffd58a;  --sb-glow:rgba(255,200,80,0.65); }
+
+/* ── Outro slate ─────────────────────────────────────────────── */
+#scene-outro { gap:14px; padding:0 40px; }
+.outro-logo {
+  font-family:'Cinzel', serif; font-weight:900;
+  font-size:90px; letter-spacing:14px; line-height:0.95;
+  text-align:center;
+  background:linear-gradient(90deg, #ffd76e, #ff7a1a, #ffd76e);
+  background-size:200% 100%;
+  -webkit-background-clip:text; background-clip:text;
+  -webkit-text-fill-color:transparent; color:transparent;
+  text-shadow:0 0 40px rgba(255,180,40,0.5);
+  filter:drop-shadow(0 6px 18px rgba(0,0,0,0.85));
+  animation:hl-shimmer 3.2s ease infinite;
+}
+.outro-tagline {
+  font-family:'Press Start 2P', monospace;
+  font-size:20px; letter-spacing:5px;
+  color:#9affe7; text-shadow:0 0 10px rgba(74,223,211,0.55);
+  text-align:center;
+}
+.outro-bullets {
+  font-family:'Orbitron', sans-serif; font-weight:600;
+  font-size:26px; letter-spacing:3px; line-height:1.55;
+  color:#ffe1a8; text-align:center;
+  margin-top:6px;
+}
+.outro-cta {
+  margin-top:24px;
+  font-family:'Press Start 2P', monospace; font-size:30px;
+  letter-spacing:5px;
+  padding:22px 50px; border-radius:14px;
+  background:linear-gradient(180deg, #2a1a08, #15090a);
+  border:2px solid #ffb000;
+  color:#ffe7a0;
+  text-shadow:0 0 14px rgba(255,200,80,0.7);
+  box-shadow:
+    0 10px 28px rgba(0,0,0,0.7),
+    0 0 30px rgba(255,176,0,0.4),
+    inset 0 0 24px rgba(255,200,80,0.12);
+  animation:cta-pulse 1.4s ease infinite;
+}
+.outro-qr-row {
+  margin-top:36px;
+  display:flex; align-items:flex-start; gap:50px;
+}
+.outro-qr {
+  display:flex; flex-direction:column; align-items:center; gap:8px;
+}
+.outro-qr img {
+  width:220px; height:220px;
+  border-radius:14px;
+  border:3px solid rgba(255,200,80,0.7);
+  box-shadow:0 8px 22px rgba(0,0,0,0.6),
+             0 0 28px rgba(255,176,0,0.4);
+  background:#ffe7a0;
+  padding:6px;
+}
+.outro-qr .qr-cap {
+  font-family:'Press Start 2P', monospace; font-size:14px;
+  letter-spacing:2px; color:#ffd58a;
+  margin-top:6px;
+}
+.outro-qr .qr-url {
+  font-family:'Press Start 2P', monospace; font-size:11px;
+  letter-spacing:1.5px; color:#9affe7;
+  text-shadow:0 0 6px rgba(74,223,211,0.45);
+}
+.outro-qr.qr-book img {
+  border-color:rgba(154,255,231,0.7);
+  box-shadow:0 8px 22px rgba(0,0,0,0.6),
+             0 0 28px rgba(74,223,211,0.4);
+}
+@keyframes cta-pulse {
+  0%,100% { box-shadow:0 10px 28px rgba(0,0,0,0.7), 0 0 30px rgba(255,176,0,0.4), inset 0 0 24px rgba(255,200,80,0.12); }
+  50%     { box-shadow:0 10px 28px rgba(0,0,0,0.7), 0 0 60px rgba(255,176,0,0.8), inset 0 0 40px rgba(255,200,80,0.22); }
+}
+
+/* Persistent URL ribbon at the bottom — visible during all scenes for
+   immediate brand recall + click-through cue. */
+.url-ribbon {
+  position:fixed; left:0; right:0; bottom:60px; z-index:9200;
+  text-align:center;
+  font-family:'Press Start 2P', monospace; font-size:22px;
+  letter-spacing:4px; color:#ffe7a0;
+  text-shadow:0 0 10px rgba(255,200,80,0.55), 0 2px 4px rgba(0,0,0,0.85);
+  pointer-events:none;
+  opacity:0;
+  transition:opacity 600ms ease;
+}
+.url-ribbon.on { opacity:1; }
+.url-ribbon .ur-sep { color:#9affe7; margin:0 12px; }
+.url-ribbon .ur-cta { color:#9affe7; }
+
+/* ─────────────────────────────────────────────────────────────
+   LEGENDARY WIN MODULE — same as baccarat-game.html
+───────────────────────────────────────────────────────────── */
+#lw-dim {
+  position:fixed; inset:0; z-index:9100; pointer-events:none;
+  background:rgba(0,0,0,0); transition:background 360ms var(--lw-ease-out);
+}
+#lw-dim.on { background:rgba(0,0,0,0.62); }
+#lw-spot {
+  position:fixed; inset:0; z-index:9105; pointer-events:none;
+  opacity:0; transition:opacity 420ms var(--lw-ease-out);
+  background:radial-gradient(ellipse at 50% 50%,
+    var(--lw-spot-hot, rgba(255,180,40,0.42)) 0%,
+    var(--lw-spot-mid, rgba(255,80,0,0.16)) 28%,
+    transparent 58%);
+  mix-blend-mode:screen;
+}
+#lw-spot.on { opacity:1; }
+#lw-fx {
+  position:fixed; inset:0; z-index:9110; pointer-events:none;
+  opacity:0; transition:opacity 220ms ease-out;
+}
+#lw-fx.on { opacity:1; }
+#lw-stage {
+  position:fixed; inset:0; z-index:9120; pointer-events:none;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:14px; opacity:0;
+}
+#lw-stage.on { opacity:1; }
+@keyframes lw-shake {
+  0%,100% { transform:translate(0,0); }
+  10% { transform:translate(-6px, 4px); }
+  22% { transform:translate(7px, -3px); }
+  35% { transform:translate(-5px, -5px); }
+  48% { transform:translate(5px, 4px); }
+  62% { transform:translate(-3px, 2px); }
+  78% { transform:translate(3px, -2px); }
+  90% { transform:translate(-1px, 1px); }
+}
+body.lw-shake { animation:lw-shake 540ms cubic-bezier(0.36,0.07,0.19,0.97); }
+.lw-ring {
+  position:absolute; left:50%; top:50%;
+  width:920px; height:920px;
+  border-radius:50%;
+  transform:translate(-50%,-50%) scale(0.4);
+  opacity:0;
+  border:5px solid var(--lw-ring, #ffb000);
+  box-shadow:
+    0 0 120px 12px var(--lw-ring-glow, rgba(255,176,0,0.35)),
+    inset 0 0 90px 8px var(--lw-ring-glow, rgba(255,176,0,0.30));
+  animation:lw-ring-in 720ms var(--lw-ease-slam) 80ms forwards,
+            lw-ring-spin 6s linear 800ms infinite;
+}
+.lw-ring.alt {
+  width:680px; height:680px;
+  animation:lw-ring-in 720ms var(--lw-ease-slam) 220ms forwards,
+            lw-ring-spin 4.5s linear 940ms infinite reverse;
+  border-style:dashed;
+}
+@keyframes lw-ring-in {
+  to { opacity:1; transform:translate(-50%,-50%) scale(1); }
+}
+@keyframes lw-ring-spin {
+  to { transform:translate(-50%,-50%) rotate(360deg); }
+}
+.lw-motif {
+  position:relative; z-index:2;
+  width:560px; height:560px;
+  opacity:0; transform:scale(0.3) rotate(-14deg);
+  animation:lw-motif-slam 700ms var(--lw-ease-slam) 180ms forwards;
+  filter:drop-shadow(0 12px 36px rgba(0,0,0,0.7))
+         drop-shadow(0 0 60px var(--lw-glow, rgba(255,180,40,0.7)));
+}
+@keyframes lw-motif-slam {
+  0%   { opacity:0; transform:scale(0.3) rotate(-14deg); }
+  55%  { opacity:1; transform:scale(1.18) rotate(4deg); }
+  72%  { transform:scale(0.95) rotate(-2deg); }
+  88%  { transform:scale(1.04) rotate(1deg); }
+  100% { opacity:1; transform:scale(1) rotate(0); }
+}
+.lw-motif svg { width:100%; height:100%; display:block; }
+.lw-title {
+  position:relative; z-index:2;
+  font-family:'Cinzel', serif; font-weight:900;
+  font-size:140px; letter-spacing:0.18em; line-height:1;
+  margin-top:40px;
+  opacity:0; transform:scale(0.7) translateY(20px);
+  animation:lw-title-slam 600ms var(--lw-ease-slam) 360ms forwards,
+            lw-shimmer 2.6s ease 1100ms infinite;
+  background:var(--lw-title-grad, linear-gradient(90deg,#ffd76e,#ff7a1a,#ffd76e));
+  background-size:200% 100%;
+  -webkit-background-clip:text; background-clip:text;
+  -webkit-text-fill-color:transparent; color:transparent;
+  text-shadow:0 0 50px var(--lw-glow, rgba(255,180,40,0.55));
+  filter:drop-shadow(0 6px 16px rgba(0,0,0,0.85));
+}
+@keyframes lw-title-slam {
+  0%   { opacity:0; transform:scale(0.7) translateY(20px); letter-spacing:0; }
+  60%  { opacity:1; transform:scale(1.08) translateY(-6px); letter-spacing:0.22em; }
+  82%  { transform:scale(0.97) translateY(2px); }
+  100% { opacity:1; transform:scale(1) translateY(0); letter-spacing:0.18em; }
+}
+@keyframes lw-shimmer {
+  0%,100% { background-position:0% 50%; }
+  50%     { background-position:200% 50%; }
+}
+.lw-sub {
+  position:relative; z-index:2;
+  font-family:'Cinzel', serif; font-weight:700;
+  font-size:34px; letter-spacing:0.42em;
+  color:var(--lw-sub, #ffe0a0);
+  text-shadow:0 1px 8px rgba(0,0,0,0.85), 0 0 22px var(--lw-glow, rgba(255,180,40,0.4));
+  opacity:0; transform:translateY(8px);
+  animation:lw-sub-rise 540ms var(--lw-ease-rise) 620ms forwards;
+}
+@keyframes lw-sub-rise {
+  to { opacity:1; transform:translateY(0); }
+}
+.lw-motif.tiger-clawed {
+  animation:lw-motif-slam 700ms var(--lw-ease-slam) 180ms forwards,
+            lw-claw-wipe 820ms var(--lw-ease-rise) 200ms forwards;
+}
+@keyframes lw-claw-wipe {
+  0%   { clip-path:polygon(0% 0%, 0% 0%, 0% 100%, 0% 100%); }
+  100% { clip-path:polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%); }
+}
+.lw-out .lw-ring,
+.lw-out .lw-motif,
+.lw-out .lw-title,
+.lw-out .lw-sub { animation:lw-content-out 460ms var(--lw-ease-out) forwards; }
+@keyframes lw-content-out {
+  to { opacity:0; transform:scale(1.10) translateY(-12px); }
+}
+
+/* ── Vignette to anchor focus on Shorts canvas ──────────────── */
+#vignette {
+  position:fixed; inset:0; z-index:55; pointer-events:none;
+  background:radial-gradient(ellipse at 50% 50%,
+    transparent 50%, rgba(0,0,0,0.65) 100%);
+}
+</style>
+</head>
+<body>
+<div id="cabinet-bg"></div>
+<div id="starfield"></div>
+<div id="vignette"></div>
+<div id="scanlines"></div>
+
+<!-- ═══ Sprites: full motifs + small badge silhouettes ═══ -->
+<svg id="sprites" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden;">
+  <defs>
+    <linearGradient id="lw-dg-grad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%"  stop-color="#ffd76e"/>
+      <stop offset="55%" stop-color="#ff7a1a"/>
+      <stop offset="100%" stop-color="#b8001f"/>
+    </linearGradient>
+    <linearGradient id="lw-pd-grad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#a8f5d0"/>
+      <stop offset="100%" stop-color="#00b87c"/>
+    </linearGradient>
+    <linearGradient id="lw-tg-grad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffe7a0"/>
+      <stop offset="60%" stop-color="#ffaa1a"/>
+      <stop offset="100%" stop-color="#ff5e00"/>
+    </linearGradient>
+
+    <!-- Full motif: Eastern dragon -->
+    <symbol id="lw-dragon" viewBox="0 0 200 200">
+      <path d="M40 132 C 36 96, 60 70, 92 76
+               C 122 82, 138 60, 134 40
+               C 132 26, 120 18, 108 22
+               C 100 24, 96 32, 100 40"
+            fill="none" stroke="url(#lw-dg-grad)" stroke-width="9"
+            stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M40 132 C 30 142, 22 142, 14 134"
+            fill="none" stroke="url(#lw-dg-grad)" stroke-width="7" stroke-linecap="round"/>
+      <path d="M132 92
+               C 152 88, 170 96, 176 110
+               C 180 122, 174 132, 162 134
+               C 148 136, 140 130, 134 122
+               C 130 116, 130 104, 132 92 Z"
+            fill="url(#lw-dg-grad)"/>
+      <path d="M148 88 L 156 70 M160 90 L 172 76"
+            stroke="#ffd76e" stroke-width="4" stroke-linecap="round" fill="none"/>
+      <circle cx="156" cy="110" r="3" fill="#0a0000"/>
+      <path d="M170 124 C 180 130, 188 130, 192 124"
+            stroke="#ffd76e" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+      <path d="M84 78 L 80 70 M92 76 L 92 66 M100 78 L 104 70"
+            stroke="#ffd76e" stroke-width="3" stroke-linecap="round"/>
+      <path d="M52 122 Q 60 116 68 122 Q 76 116 84 122"
+            stroke="#ffd76e" stroke-width="2" fill="none" opacity="0.7"/>
+      <path d="M180 120 L 188 116 L 184 124 L 192 122 L 184 130"
+            fill="#ffd76e" opacity="0.9"/>
+    </symbol>
+
+    <!-- Full motif: panda -->
+    <symbol id="lw-panda" viewBox="0 0 200 200">
+      <g stroke="#0d4a2c" stroke-width="6" stroke-linecap="round" opacity="0.85">
+        <line x1="34" y1="186" x2="34" y2="40"/>
+        <line x1="60" y1="186" x2="60" y2="22"/>
+        <line x1="166" y1="186" x2="166" y2="34"/>
+      </g>
+      <g stroke="#1a7a4a" stroke-width="3" stroke-linecap="round">
+        <line x1="28" y1="80" x2="40" y2="80"/>
+        <line x1="28" y1="130" x2="40" y2="130"/>
+        <line x1="54" y1="60" x2="66" y2="60"/>
+        <line x1="54" y1="110" x2="66" y2="110"/>
+        <line x1="54" y1="160" x2="66" y2="160"/>
+        <line x1="160" y1="80" x2="172" y2="80"/>
+        <line x1="160" y1="140" x2="172" y2="140"/>
+      </g>
+      <g fill="url(#lw-pd-grad)">
+        <path d="M64 24 Q 80 14 96 24 Q 84 38 64 30 Z"/>
+        <path d="M170 30 Q 184 22 196 36 Q 184 46 168 38 Z"/>
+        <path d="M40 36 Q 22 28 12 42 Q 22 50 40 44 Z"/>
+      </g>
+      <g>
+        <ellipse cx="100" cy="118" rx="42" ry="46" fill="#f0f5e8"/>
+        <circle cx="68" cy="82" r="14" fill="#0d1410"/>
+        <circle cx="132" cy="82" r="14" fill="#0d1410"/>
+        <ellipse cx="86" cy="112" rx="9" ry="13" fill="#0d1410"
+                 transform="rotate(-12 86 112)"/>
+        <ellipse cx="114" cy="112" rx="9" ry="13" fill="#0d1410"
+                 transform="rotate(12 114 112)"/>
+        <circle cx="86" cy="113" r="2.5" fill="#f0f5e8"/>
+        <circle cx="114" cy="113" r="2.5" fill="#f0f5e8"/>
+        <path d="M96 130 Q 100 134 104 130 Q 100 138 96 130 Z" fill="#0d1410"/>
+        <path d="M96 138 Q 100 144 104 138" stroke="#0d1410" stroke-width="2"
+              stroke-linecap="round" fill="none"/>
+      </g>
+    </symbol>
+
+    <!-- Full motif: tiger -->
+    <symbol id="lw-tiger" viewBox="0 0 200 200">
+      <g stroke="url(#lw-tg-grad)" stroke-width="11" stroke-linecap="round" fill="none">
+        <path d="M30 50 C 50 70, 80 100, 110 130 C 130 150, 150 170, 170 188"/>
+        <path d="M14 78 C 38 96, 64 122, 92 150 C 116 172, 140 184, 160 188"/>
+        <path d="M50 22 C 72 44, 96 68, 124 96 C 150 122, 174 144, 188 162"/>
+      </g>
+      <path d="M14 78 C 38 96, 64 122, 92 150 C 116 172, 140 184, 160 188"
+            stroke="#fff7d6" stroke-width="2.4" stroke-linecap="round" fill="none"
+            opacity="0.7"/>
+      <g>
+        <ellipse cx="100" cy="100" rx="30" ry="20" fill="#0e0a05"/>
+        <ellipse cx="100" cy="100" rx="20" ry="14" fill="url(#lw-tg-grad)"/>
+        <ellipse cx="100" cy="100" rx="3" ry="14" fill="#0e0a05"/>
+        <circle cx="92" cy="92" r="3" fill="#fff7d6" opacity="0.95"/>
+      </g>
+      <g fill="#ffe7a0" opacity="0.85">
+        <path d="M40 168 L 48 158 L 56 168 L 48 162 Z"/>
+        <path d="M156 38 L 162 30 L 168 38 L 162 34 Z"/>
+      </g>
+    </symbol>
+
+    <!-- Compact silhouettes for badges -->
+    <symbol id="i-sb-dragon" viewBox="0 0 24 24">
+      <path d="M5 16c0-4 3-6 7-6 3 0 5-1.5 5-4 0-1.4-.9-2.2-2-2.2-1 0-1.7.6-1.6 1.4"
+            fill="none" stroke="currentColor" stroke-width="1.6"
+            stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M16 8c2.5 0 4.4 1.4 4.4 3.4 0 1.6-1.2 2.6-2.8 2.6-1.4 0-2.4-.7-2.6-1.8"
+            fill="currentColor"/>
+      <path d="M19 7l1.5-2M21 9l1.6-1.2" stroke="currentColor"
+            stroke-width="1.4" stroke-linecap="round"/>
+      <circle cx="18" cy="11.6" r="0.6" fill="#0a0000"/>
+      <path d="M5 16c-1.4 1.4-2 1.4-3.6.6"
+            stroke="currentColor" stroke-width="1.4"
+            stroke-linecap="round" fill="none"/>
+    </symbol>
+    <symbol id="i-sb-panda" viewBox="0 0 24 24">
+      <circle cx="12" cy="13.5" r="6.5" fill="currentColor"/>
+      <circle cx="6.8" cy="8.2" r="2.1" fill="#0d1410"/>
+      <circle cx="17.2" cy="8.2" r="2.1" fill="#0d1410"/>
+      <ellipse cx="9.5" cy="12.5" rx="1.3" ry="1.9" fill="#0d1410"
+               transform="rotate(-12 9.5 12.5)"/>
+      <ellipse cx="14.5" cy="12.5" rx="1.3" ry="1.9" fill="#0d1410"
+               transform="rotate(12 14.5 12.5)"/>
+      <circle cx="9.5" cy="12.6" r="0.4" fill="currentColor"/>
+      <circle cx="14.5" cy="12.6" r="0.4" fill="currentColor"/>
+      <path d="M11 16c.6.7 1.4.7 2 0" stroke="#0d1410"
+            stroke-width="1.2" stroke-linecap="round" fill="none"/>
+      <ellipse cx="12" cy="15.2" rx="0.9" ry="0.6" fill="#0d1410"/>
+    </symbol>
+    <symbol id="i-sb-tiger" viewBox="0 0 24 24">
+      <path d="M3 7c2 2 4.5 4.5 7 7"   stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+      <path d="M5 4c2.4 2.4 5 5 7.5 7.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+      <path d="M9 3c2.6 2.6 5.4 5.4 8 8" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+      <path d="M2.4 8.4c-.3-.5-.3-1 .2-1.4l.7-.6.4 1.4z" fill="currentColor"/>
+      <path d="M4.4 5.4c-.3-.5-.3-1 .2-1.4l.7-.6.4 1.4z" fill="currentColor"/>
+      <path d="M8.4 4.4c-.3-.5-.3-1 .2-1.4l.7-.6.4 1.4z" fill="currentColor"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- ═══ Headlines (one shared element, content swaps per scene) ═══ -->
+<div class="headline" id="hl"></div>
+<div class="subline"  id="sl"></div>
+
+<!-- Scene 1: Stage cards with badges -->
+<div class="scene" id="scene-stages">
+  <div class="stage-card" style="--tier-color:#7adfff; --card-glow:rgba(122,223,255,0.3);">
+    <div class="art" style="background-image:url('previews/preview-marrakech.jpg')"></div>
+    <div class="art-mask"></div>
+    <div class="corner">T02 · MARRAKECH</div>
+    <div class="sb-badges">
+      <div class="sb-badge sb-dragon"><svg><use href="#i-sb-dragon"/></svg></div>
+      <div class="sb-badge sb-panda"><svg><use href="#i-sb-panda"/></svg></div>
+      <div class="sb-badge sb-tiger"><svg><use href="#i-sb-tiger"/></svg></div>
+    </div>
+    <div class="meta">
+      <div class="name">MARRAKECH</div>
+      <div class="tag">MEDINA · SPICE &amp; SAFFRON</div>
+    </div>
+  </div>
+  <div class="stage-card" style="--tier-color:#ffa040; --card-glow:rgba(255,160,64,0.4);">
+    <div class="art" style="background-image:url('previews/preview-ufc.jpg')"></div>
+    <div class="art-mask"></div>
+    <div class="corner">T06 · OCTAGON</div>
+    <div class="sb-badges">
+      <div class="sb-badge sb-dragon"><svg><use href="#i-sb-dragon"/></svg></div>
+      <div class="sb-badge sb-panda"><svg><use href="#i-sb-panda"/></svg></div>
+      <div class="sb-badge sb-tiger"><svg><use href="#i-sb-tiger"/></svg></div>
+    </div>
+    <div class="meta">
+      <div class="name">OCTAGON</div>
+      <div class="tag">FIGHT NIGHT · MAIN EVENT</div>
+    </div>
+  </div>
+  <div class="stage-card" style="--tier-color:#ff4040; --card-glow:rgba(255,64,64,0.4);">
+    <div class="art" style="background-image:url('previews/preview-gladiator.jpg')"></div>
+    <div class="art-mask"></div>
+    <div class="corner">T10 · COLOSSEUM</div>
+    <div class="sb-badges">
+      <div class="sb-badge sb-dragon"><svg><use href="#i-sb-dragon"/></svg></div>
+      <div class="sb-badge sb-panda"><svg><use href="#i-sb-panda"/></svg></div>
+      <div class="sb-badge sb-tiger"><svg><use href="#i-sb-tiger"/></svg></div>
+    </div>
+    <div class="meta">
+      <div class="name">COLOSSEUM</div>
+      <div class="tag">FINAL BOSS · ARE YOU NOT ENTERTAINED?!</div>
+    </div>
+  </div>
+</div>
+
+<!-- Outro slate -->
+<div class="scene" id="scene-outro">
+  <div class="outro-tagline">SIDE-BET LEGENDS</div>
+  <div class="outro-logo">BACCARAT<br>GLADIATOR</div>
+  <div class="outro-bullets">
+    DRAGON 7 · 40 TO 1<br>
+    PANDA 8 · 25 TO 1<br>
+    TIGER 6 · 50 TO 1
+  </div>
+  <div class="outro-cta">PLAY FREE NOW</div>
+  <div class="outro-qr-row">
+    <div class="outro-qr qr-play">
+      <img src="qr-game.png" alt="QR baccaratgladiator.com">
+      <div class="qr-cap">PLAY THE GAME</div>
+      <div class="qr-url">BACCARATGLADIATOR.COM</div>
+    </div>
+    <div class="outro-qr qr-book">
+      <img src="qr-book.png" alt="QR Road to Nine on Amazon">
+      <div class="qr-cap">READ THE BOOK</div>
+      <div class="qr-url">ROAD TO NINE · AMAZON</div>
+    </div>
+  </div>
+</div>
+
+<!-- Persistent URL ribbon — visible during all the win scenes too -->
+<div class="url-ribbon" id="url-ribbon">
+  <span class="ur-text">BACCARATGLADIATOR.COM</span>
+  <span class="ur-sep">·</span>
+  <span class="ur-cta">FREE TO PLAY</span>
+</div>
+
+<!-- Legendary Win module DOM -->
+<div id="lw-dim" aria-hidden="true"></div>
+<div id="lw-spot" aria-hidden="true"></div>
+<canvas id="lw-fx" aria-hidden="true"></canvas>
+<div id="lw-stage" aria-hidden="true"></div>
+
+<script>
+// ═══ Legendary Win module (mirrors baccarat-game.html) ═══
+(function(){
+  const stage = document.getElementById('lw-stage');
+  const dim   = document.getElementById('lw-dim');
+  const spot  = document.getElementById('lw-spot');
+  const fx    = document.getElementById('lw-fx');
+  const ctx   = fx.getContext('2d');
+
+  function sizeCanvas(){
+    const dpr = 1;
+    fx.width  = window.innerWidth;
+    fx.height = window.innerHeight;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+  }
+  sizeCanvas();
+
+  const CFG = {
+    dragon7: {
+      title:'DRAGON 7', sub:'BANKER · 3-CARD · 40 TO 1',
+      symbol:'lw-dragon', particle:'ember', titleClass:'shimmer',
+      cssVars:{
+        '--lw-spot-hot':'rgba(255,80,0,0.45)', '--lw-spot-mid':'rgba(184,0,31,0.18)',
+        '--lw-ring':'#ff7a1a', '--lw-ring-glow':'rgba(255,122,26,0.45)',
+        '--lw-glow':'rgba(255,140,40,0.65)', '--lw-sub':'#ffb070',
+        '--lw-title-grad':'linear-gradient(90deg,#ffd76e,#ff5e00,#ffd76e)',
+      },
+    },
+    panda8: {
+      title:'PANDA 8', sub:'PLAYER · 3-CARD · 25 TO 1',
+      symbol:'lw-panda', particle:'leaf', titleClass:'shimmer',
+      cssVars:{
+        '--lw-spot-hot':'rgba(120,255,180,0.30)', '--lw-spot-mid':'rgba(0,184,124,0.15)',
+        '--lw-ring':'#00b87c', '--lw-ring-glow':'rgba(120,255,180,0.40)',
+        '--lw-glow':'rgba(120,255,180,0.55)', '--lw-sub':'#a8f5d0',
+        '--lw-title-grad':'linear-gradient(90deg,#f0f5e8,#a8f5d0,#f0f5e8)',
+      },
+    },
+    tiger: {
+      title:'TIGER 6', sub:'BANKER · 6 · TIGER STRIKE',
+      symbol:'lw-tiger', particle:'spark', titleClass:'shimmer', motifClass:'tiger-clawed',
+      cssVars:{
+        '--lw-spot-hot':'rgba(255,170,26,0.42)', '--lw-spot-mid':'rgba(120,40,0,0.18)',
+        '--lw-ring':'#ffaa1a', '--lw-ring-glow':'rgba(255,170,26,0.45)',
+        '--lw-glow':'rgba(255,200,80,0.62)', '--lw-sub':'#ffd58a',
+        '--lw-title-grad':'linear-gradient(90deg,#ffe7a0,#ff5e00,#ffe7a0)',
+      },
+    },
+  };
+
+  let particles = [], rafId = null, lastFrame = 0;
+  let particleMode = 'ember', emitting = false, emitRate = 0;
+
+  function spawnEmber(){
+    const cx = window.innerWidth*0.5, cy = window.innerHeight*0.55;
+    return { x:cx+(Math.random()-0.5)*620, y:cy+(Math.random()-0.5)*120,
+      vx:(Math.random()-0.5)*1.4, vy:-1.5-Math.random()*2.0,
+      r:4+Math.random()*5, life:1.0, decay:0.005+Math.random()*0.008,
+      kind:'ember', hue:18+Math.random()*22, glow:0.7+Math.random()*0.3 };
+  }
+  function spawnLeaf(){
+    return { x:Math.random()*window.innerWidth, y:-30-Math.random()*120,
+      vx:(Math.random()-0.5)*0.8, vy:0.8+Math.random()*1.2,
+      r:9+Math.random()*8, rot:Math.random()*Math.PI*2,
+      vrot:(Math.random()-0.5)*0.06, sway:Math.random()*Math.PI*2,
+      swaySpeed:0.02+Math.random()*0.03, life:1.0, decay:0.0035, kind:'leaf' };
+  }
+  function spawnSpark(angle){
+    const cx = window.innerWidth*0.5, cy = window.innerHeight*0.5;
+    const a = angle != null ? angle : Math.random()*Math.PI*2;
+    const v = 8+Math.random()*12;
+    return { x:cx, y:cy, vx:Math.cos(a)*v, vy:Math.sin(a)*v,
+      r:3+Math.random()*4, life:1.0, decay:0.018+Math.random()*0.012,
+      kind:'spark', hue:36+Math.random()*18, trail:[] };
+  }
+  function spawn(){
+    if(particleMode==='ember') particles.push(spawnEmber());
+    else if(particleMode==='leaf') particles.push(spawnLeaf());
+    else if(particleMode==='spark') particles.push(spawnSpark());
+  }
+  function burst(n,kind){
+    for(let i=0;i<n;i++){
+      if(kind==='spark') particles.push(spawnSpark());
+      else if(kind==='ember') particles.push(spawnEmber());
+      else particles.push(spawnLeaf());
+    }
+  }
+  function drawEmber(p){
+    ctx.globalAlpha = Math.max(0,p.life)*p.glow;
+    const grd = ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r*4);
+    grd.addColorStop(0, `hsla(${p.hue},100%,70%,1)`);
+    grd.addColorStop(0.4, `hsla(${p.hue},100%,50%,0.7)`);
+    grd.addColorStop(1, 'rgba(180,20,0,0)');
+    ctx.fillStyle = grd;
+    ctx.beginPath(); ctx.arc(p.x,p.y,p.r*4,0,Math.PI*2); ctx.fill();
+    ctx.globalAlpha = Math.max(0,p.life);
+    ctx.fillStyle = `hsl(${p.hue},100%,78%)`;
+    ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fill();
+  }
+  function drawLeaf(p){
+    ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot);
+    ctx.globalAlpha = Math.max(0,p.life);
+    const grd = ctx.createLinearGradient(-p.r,-p.r,p.r,p.r);
+    grd.addColorStop(0,'#a8f5d0'); grd.addColorStop(1,'#0d8a52');
+    ctx.fillStyle = grd;
+    ctx.beginPath(); ctx.ellipse(0,0,p.r*1.6,p.r*0.7,0,0,Math.PI*2); ctx.fill();
+    ctx.strokeStyle='rgba(20,80,40,0.55)'; ctx.lineWidth=1.4;
+    ctx.beginPath(); ctx.moveTo(-p.r*1.5,0); ctx.lineTo(p.r*1.5,0); ctx.stroke();
+    ctx.restore();
+  }
+  function drawSpark(p){
+    if(p.trail && p.trail.length){
+      ctx.lineCap='round';
+      ctx.strokeStyle = `hsla(${p.hue},100%,70%,${Math.max(0,p.life)*0.8})`;
+      ctx.lineWidth = p.r*1.0;
+      ctx.beginPath(); ctx.moveTo(p.trail[0].x,p.trail[0].y);
+      for(let i=1;i<p.trail.length;i++) ctx.lineTo(p.trail[i].x,p.trail[i].y);
+      ctx.stroke();
+    }
+    ctx.globalAlpha = Math.max(0,p.life);
+    const grd = ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r*3.5);
+    grd.addColorStop(0,`hsla(${p.hue},100%,88%,1)`);
+    grd.addColorStop(0.5,`hsla(${p.hue},100%,50%,0.8)`);
+    grd.addColorStop(1,'rgba(255,80,0,0)');
+    ctx.fillStyle = grd;
+    ctx.beginPath(); ctx.arc(p.x,p.y,p.r*3.5,0,Math.PI*2); ctx.fill();
+  }
+  function tick(t){
+    if(!lastFrame) lastFrame = t;
+    const dt = Math.min(40, t - lastFrame);
+    lastFrame = t;
+    if(emitting){
+      emitRate += dt;
+      const interval = particleMode==='leaf' ? 50 : 22;
+      while(emitRate > interval){ spawn(); emitRate -= interval; }
+    }
+    ctx.clearRect(0,0,fx.width,fx.height);
+    ctx.globalCompositeOperation = particleMode==='leaf' ? 'source-over' : 'lighter';
+    for(let i = particles.length-1; i >= 0; i--){
+      const p = particles[i];
+      if(p.kind==='ember'){
+        p.vy += -0.012; p.vx *= 0.985; p.vy *= 0.985;
+        p.x += p.vx; p.y += p.vy; p.life -= p.decay;
+        if(p.life <= 0){ particles.splice(i,1); continue; }
+        drawEmber(p);
+      } else if(p.kind==='leaf'){
+        p.sway += p.swaySpeed;
+        p.x += p.vx + Math.sin(p.sway)*0.7; p.y += p.vy;
+        p.rot += p.vrot; p.life -= p.decay;
+        if(p.life <= 0 || p.y > window.innerHeight+30){ particles.splice(i,1); continue; }
+        drawLeaf(p);
+      } else if(p.kind==='spark'){
+        if(!p.trail) p.trail = [];
+        p.trail.unshift({x:p.x, y:p.y});
+        if(p.trail.length > 6) p.trail.length = 6;
+        p.vx *= 0.94; p.vy = p.vy*0.94 + 0.18;
+        p.x += p.vx; p.y += p.vy; p.life -= p.decay;
+        if(p.life <= 0){ particles.splice(i,1); continue; }
+        drawSpark(p);
+      }
+    }
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.globalAlpha = 1;
+    if(emitting || particles.length > 0){
+      rafId = requestAnimationFrame(tick);
+    } else { rafId = null; lastFrame = 0; }
+  }
+  function startLoop(){
+    if(rafId) return;
+    lastFrame = 0; rafId = requestAnimationFrame(tick);
+  }
+
+  let firing = false;
+  function fire(type){
+    const cfg = CFG[type];
+    if(!cfg) return;
+    firing = true;
+    sizeCanvas();
+    Object.entries(cfg.cssVars).forEach(([k,v]) => stage.style.setProperty(k,v));
+    spot.style.setProperty('--lw-spot-hot', cfg.cssVars['--lw-spot-hot']);
+    spot.style.setProperty('--lw-spot-mid', cfg.cssVars['--lw-spot-mid']);
+    stage.innerHTML = `
+      <div class="lw-ring"></div>
+      <div class="lw-ring alt"></div>
+      <div class="lw-motif ${cfg.motifClass||''}">
+        <svg viewBox="0 0 200 200"><use href="#${cfg.symbol}"/></svg>
+      </div>
+      <div class="lw-title ${cfg.titleClass||''}">${cfg.title}</div>
+      <div class="lw-sub">${cfg.sub}</div>
+    `;
+    requestAnimationFrame(() => {
+      dim.classList.add('on');
+      spot.classList.add('on');
+      fx.classList.add('on');
+      stage.classList.add('on');
+      document.body.classList.add('lw-shake');
+      setTimeout(() => document.body.classList.remove('lw-shake'), 580);
+    });
+    particleMode = cfg.particle;
+    setTimeout(() => {
+      emitting = true;
+      const burstN = cfg.particle==='spark' ? 60 : (cfg.particle==='ember' ? 36 : 22);
+      burst(burstN, cfg.particle);
+      startLoop();
+    }, 180);
+    setTimeout(() => {
+      const peakN = cfg.particle==='spark' ? 80 : (cfg.particle==='ember' ? 46 : 28);
+      burst(peakN, cfg.particle);
+    }, 600);
+    setTimeout(() => { emitting = false; }, 2400);
+    setTimeout(() => { stage.classList.add('lw-out'); }, 2800);
+    setTimeout(() => {
+      stage.classList.remove('on'); stage.classList.remove('lw-out');
+      stage.innerHTML = '';
+      dim.classList.remove('on'); spot.classList.remove('on'); fx.classList.remove('on');
+      firing = false;
+    }, 3300);
+  }
+  window.LegendaryWin = { fire };
+})();
+
+// ═══ Scene runner ═══
+const HL = document.getElementById('hl');
+const SL = document.getElementById('sl');
+const sceneStages = document.getElementById('scene-stages');
+const sceneOutro  = document.getElementById('scene-outro');
+
+function showHeadline(text, sub, klass){
+  HL.className = 'headline';
+  if(klass) HL.classList.add(klass);
+  HL.textContent = text;
+  SL.textContent = sub || '';
+  requestAnimationFrame(() => {
+    HL.classList.add('on');
+    if(sub) SL.classList.add('on');
+  });
+}
+function hideHeadline(){
+  HL.classList.remove('on');
+  SL.classList.remove('on');
+}
+
+const urlRibbon = document.getElementById('url-ribbon');
+
+function runShow(){
+  // Persistent URL ribbon — visible during stages + 3 wins, hides at outro
+  // (the outro slate has its own URL/QR display, no need to double up).
+  setTimeout(() => urlRibbon.classList.add('on'), 600);
+
+  // ── 0–4.6s: Stage cards with badges ───────────────────────────
+  sceneStages.classList.add('on');
+  showHeadline('PICK YOUR STAGE', '60+ THEMED VENUES', 'tiger');
+  setTimeout(() => { hideHeadline(); }, 4000);
+  setTimeout(() => { sceneStages.classList.remove('on'); }, 4500);
+
+  // ── 4.6–8.5s: Dragon 7 ────────────────────────────────────────
+  setTimeout(() => {
+    showHeadline('LANDS DRAGON 7', '40 TO 1 PAYOUT', 'dragon');
+  }, 4600);
+  setTimeout(() => { window.LegendaryWin.fire('dragon7'); }, 4900);
+  setTimeout(() => { hideHeadline(); }, 7800);
+
+  // ── 8.5–12.4s: Panda 8 ────────────────────────────────────────
+  setTimeout(() => {
+    showHeadline('LANDS PANDA 8', '25 TO 1 PAYOUT', 'panda');
+  }, 8500);
+  setTimeout(() => { window.LegendaryWin.fire('panda8'); }, 8800);
+  setTimeout(() => { hideHeadline(); }, 11700);
+
+  // ── 12.4–16.3s: Tiger 6 ───────────────────────────────────────
+  setTimeout(() => {
+    showHeadline('LANDS TIGER 6', '50 TO 1 PAYOUT', 'tiger');
+  }, 12400);
+  setTimeout(() => { window.LegendaryWin.fire('tiger'); }, 12700);
+  setTimeout(() => { hideHeadline(); }, 15600);
+
+  // ── 16.3–22s: Outro ───────────────────────────────────────────
+  setTimeout(() => {
+    urlRibbon.classList.remove('on');   // outro slate has its own URL block
+    sceneOutro.classList.add('on');
+  }, 16400);
+}
+
+// Expose a recorder-friendly start signal so external capture can sync
+// frame 0 to scene 1 precisely (avoids fonts/network-idle racing the show).
+window.__startShow = runShow;
+
+// Outro-only flow for the gameplay trailer: skips scene 1 + the three
+// legendary-win modules and just shows the call-to-action with QR codes.
+function runOutroOnly(){
+  // Hide URL ribbon (outro slate has its own URL/QR display).
+  setTimeout(() => sceneOutro.classList.add('on'), 150);
+  window.__started = true;
+}
+window.__startOutroOnly = runOutroOnly;
+
+const params = new URLSearchParams(location.search);
+if(params.get('outroOnly') === '1'){
+  setTimeout(runOutroOnly, 600);
+} else if(params.get('auto') === '1' || params.get('record') === '1'){
+  // Recorder polls window.__started flag to know when scene 1 has begun
+  // and uses Page.startScreencast for real-time frame streaming.
+  setTimeout(() => { runShow(); window.__started = true; }, 800);
+} else {
+  document.body.addEventListener('click', () => { runShow(); }, { once:true });
+}
+</script>
+</body>
+</html>

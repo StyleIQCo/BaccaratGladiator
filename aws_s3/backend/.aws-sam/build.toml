@@ -7,6 +7,6 @@ architecture = "x86_64"
 handler = "submit_hand_event.handler"
 manifest_hash = ""
 packagetype = "Zip"
-functions = ["SubmitHandEventFunction", "GetProfileFunction", "GetLeaderboardFunction"]
+functions = ["SubmitHandEventFunction", "GetProfileFunction", "GetLeaderboardFunction", "SubmitTournamentScoreFunction", "GetTournamentLeaderboardFunction", "DeleteAccountFunction", "SubmitFeedbackFunction", "TrackVisitFunction", "GetVisitStatsFunction"]
 
 [layer_build_definitions]

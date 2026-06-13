@@ -1,7 +1,7 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: Baccarat Gladiator backend (Cognito + validated hand events + global
-  leaderboard)
+  leaderboard + monthly tournaments)
 Parameters:
   CognitoDomainPrefix:
     Type: String
@@ -10,6 +10,16 @@ Parameters:
     Type: String
     Default: https://example.com/baccarat-scoreboard.html
     Description: App URL used for Cognito callback/logout
+  VisitSalt:
+    Type: String
+    Default: ''
+    NoEcho: true
+    Description: Salt used to hash visitor IPs (keeps stored ids non-reversible)
+  FeedbackNotifyEmail:
+    Type: String
+    Default: frankie@styleiq.co
+    Description: Address that receives an email for each feedback submission (must
+      confirm the SNS subscription email before notifications are delivered)
 Globals:
   Function:
     Runtime: python3.12
@@ -39,6 +49,87 @@ Resources:
           KeyType: RANGE
         Projection:
           ProjectionType: ALL
+  TournamentScoresTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+      - AttributeName: tournamentId
+        AttributeType: S
+      - AttributeName: userSub
+        AttributeType: S
+      - AttributeName: finalBalance
+        AttributeType: N
+      KeySchema:
+      - AttributeName: tournamentId
+        KeyType: HASH
+      - AttributeName: userSub
+        KeyType: RANGE
+      GlobalSecondaryIndexes:
+      - IndexName: TournamentScoreIndex
+        KeySchema:
+        - AttributeName: tournamentId
+          KeyType: HASH
+        - AttributeName: finalBalance
+          KeyType: RANGE
+        Projection:
+          ProjectionType: ALL
+  VisitsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+      - AttributeName: visitorId
+        AttributeType: S
+      - AttributeName: day
+        AttributeType: S
+      - AttributeName: lastSeen
+        AttributeType: S
+      KeySchema:
+      - AttributeName: visitorId
+        KeyType: HASH
+      - AttributeName: day
+        KeyType: RANGE
+      GlobalSecondaryIndexes:
+      - IndexName: ByDay
+        KeySchema:
+        - AttributeName: day
+          KeyType: HASH
+        - AttributeName: lastSeen
+          KeyType: RANGE
+        Projection:
+          ProjectionType: ALL
+  FeedbackTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+      - AttributeName: feedbackId
+        AttributeType: S
+      - AttributeName: day
+        AttributeType: S
+      - AttributeName: createdAt
+        AttributeType: S
+      KeySchema:
+      - AttributeName: feedbackId
+        KeyType: HASH
+      GlobalSecondaryIndexes:
+      - IndexName: ByDay
+        KeySchema:
+        - AttributeName: day
+          KeyType: HASH
+        - AttributeName: createdAt
+          KeyType: RANGE
+        Projection:
+          ProjectionType: ALL
+  FeedbackTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName: BG Feedback
+      Subscription:
+      - Protocol: email
+        Endpoint:
+          Ref: FeedbackNotifyEmail
   UserPool:
     Type: AWS::Cognito::UserPool
     Properties:
@@ -74,6 +165,7 @@ Resources:
       AllowedOAuthFlowsUserPoolClient: true
       AllowedOAuthFlows:
       - implicit
+      - code
       AllowedOAuthScopes:
       - openid
       - email
@@ -103,6 +195,7 @@ Resources:
         AllowMethods:
         - GET
         - POST
+        - DELETE
         - OPTIONS
       Auth:
         Authorizers:
@@ -186,6 +279,172 @@ Resources:
             Method: GET
     Metadata:
       SamResourceId: GetLeaderboardFunction
+  SubmitTournamentScoreFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: SubmitTournamentScoreFunction
+      Handler: submit_tournament_score.handler
+      Environment:
+        Variables:
+          TOURNAMENT_TABLE:
+            Ref: TournamentScoresTable
+      Policies:
+      - DynamoDBCrudPolicy:
+          TableName:
+            Ref: TournamentScoresTable
+      Events:
+        SubmitTournamentScore:
+          Type: HttpApi
+          Properties:
+            ApiId:
+              Ref: HttpApi
+            Path: /tournament/score
+            Method: POST
+            Auth:
+              Authorizer: CognitoJwtAuthorizer
+    Metadata:
+      SamResourceId: SubmitTournamentScoreFunction
+  GetTournamentLeaderboardFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: GetTournamentLeaderboardFunction
+      Handler: get_tournament_leaderboard.handler
+      Environment:
+        Variables:
+          TOURNAMENT_TABLE:
+            Ref: TournamentScoresTable
+      Policies:
+      - DynamoDBReadPolicy:
+          TableName:
+            Ref: TournamentScoresTable
+      Events:
+        GetTournamentLeaderboard:
+          Type: HttpApi
+          Properties:
+            ApiId:
+              Ref: HttpApi
+            Path: /tournament/leaderboard
+            Method: GET
+    Metadata:
+      SamResourceId: GetTournamentLeaderboardFunction
+  DeleteAccountFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: DeleteAccountFunction
+      Handler: delete_account.handler
+      Environment:
+        Variables:
+          TABLE_NAME:
+            Ref: LeaderboardTable
+          TOURNAMENT_TABLE:
+            Ref: TournamentScoresTable
+          USER_POOL_ID:
+            Ref: UserPool
+      Policies:
+      - DynamoDBCrudPolicy:
+          TableName:
+            Ref: LeaderboardTable
+      - DynamoDBCrudPolicy:
+          TableName:
+            Ref: TournamentScoresTable
+      - Statement:
+        - Effect: Allow
+          Action:
+          - cognito-idp:AdminDeleteUser
+          Resource:
+            Fn::GetAtt:
+            - UserPool
+            - Arn
+      Events:
+        DeleteAccount:
+          Type: HttpApi
+          Properties:
+            ApiId:
+              Ref: HttpApi
+            Path: /account
+            Method: DELETE
+            Auth:
+              Authorizer: CognitoJwtAuthorizer
+    Metadata:
+      SamResourceId: DeleteAccountFunction
+  SubmitFeedbackFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: SubmitFeedbackFunction
+      Handler: submit_feedback.handler
+      Environment:
+        Variables:
+          FEEDBACK_TABLE:
+            Ref: FeedbackTable
+          FEEDBACK_TOPIC_ARN:
+            Ref: FeedbackTopic
+      Policies:
+      - DynamoDBCrudPolicy:
+          TableName:
+            Ref: FeedbackTable
+      - SNSPublishMessagePolicy:
+          TopicName:
+            Fn::GetAtt:
+            - FeedbackTopic
+            - TopicName
+      Events:
+        SubmitFeedback:
+          Type: HttpApi
+          Properties:
+            ApiId:
+              Ref: HttpApi
+            Path: /feedback
+            Method: POST
+    Metadata:
+      SamResourceId: SubmitFeedbackFunction
+  TrackVisitFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: TrackVisitFunction
+      Handler: track_visit.handler
+      Environment:
+        Variables:
+          VISITS_TABLE:
+            Ref: VisitsTable
+          VISIT_SALT:
+            Ref: VisitSalt
+      Policies:
+      - DynamoDBCrudPolicy:
+          TableName:
+            Ref: VisitsTable
+      Events:
+        TrackVisit:
+          Type: HttpApi
+          Properties:
+            ApiId:
+              Ref: HttpApi
+            Path: /visit
+            Method: POST
+    Metadata:
+      SamResourceId: TrackVisitFunction
+  GetVisitStatsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: GetVisitStatsFunction
+      Handler: get_visit_stats.handler
+      Environment:
+        Variables:
+          VISITS_TABLE:
+            Ref: VisitsTable
+      Policies:
+      - DynamoDBReadPolicy:
+          TableName:
+            Ref: VisitsTable
+      Events:
+        GetVisitStats:
+          Type: HttpApi
+          Properties:
+            ApiId:
+              Ref: HttpApi
+            Path: /visits/stats
+            Method: GET
+    Metadata:
+      SamResourceId: GetVisitStatsFunction
 Outputs:
   ApiBaseUrl:
     Description: HTTP API base URL
@@ -201,3 +460,11 @@ Outputs:
   UserPoolClientId:
     Value:
       Ref: UserPoolClient
+  TournamentScoresTableName:
+    Description: DynamoDB table for monthly tournament scores
+    Value:
+      Ref: TournamentScoresTable
+  FeedbackTableName:
+    Description: DynamoDB table for in-game feedback / bug reports
+    Value:
+      Ref: FeedbackTable

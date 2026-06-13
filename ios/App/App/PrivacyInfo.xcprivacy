@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <!-- ──────────────────────────────────────────────────────────────
+       Privacy Manifest for Baccarat Gladiator (iOS Capacitor app)
+       Required by Apple for all App Store submissions since Spring 2024.
+
+       This declares:
+         • NSPrivacyTracking — we do NOT track users across apps/sites
+         • NSPrivacyTrackingDomains — empty (no third-party tracking SDKs)
+         • NSPrivacyCollectedDataTypes — empty here; collected-data
+           categories are declared in App Store Connect's Privacy
+           Nutrition Labels (Cognito user ID, email for sign-in,
+           hiscore data — all "Linked to User" via Cognito).
+         • NSPrivacyAccessedAPITypes — required-reason API declarations
+           for the four categories Capacitor's stack triggers.
+       ────────────────────────────────────────────────────────────── -->
+
+  <key>NSPrivacyTracking</key>
+  <false/>
+
+  <key>NSPrivacyTrackingDomains</key>
+  <array/>
+
+  <key>NSPrivacyCollectedDataTypes</key>
+  <array/>
+
+  <key>NSPrivacyAccessedAPITypes</key>
+  <array>
+    <!-- UserDefaults: Capacitor's Preferences plugin + iOS WKWebView
+         use NSUserDefaults to persist app state. CA92.1 = Access info
+         from same app, per docs. -->
+    <dict>
+      <key>NSPrivacyAccessedAPIType</key>
+      <string>NSPrivacyAccessedAPICategoryUserDefaults</string>
+      <key>NSPrivacyAccessedAPITypeReasons</key>
+      <array>
+        <string>CA92.1</string>
+      </array>
+    </dict>
+
+    <!-- File timestamp: WKWebView and Capacitor's file APIs read
+         creation/modification times for app-bundled assets and the
+         service worker cache. C617.1 = inside-app file display. -->
+    <dict>
+      <key>NSPrivacyAccessedAPIType</key>
+      <string>NSPrivacyAccessedAPICategoryFileTimestamp</string>
+      <key>NSPrivacyAccessedAPITypeReasons</key>
+      <array>
+        <string>C617.1</string>
+      </array>
+    </dict>
+
+    <!-- Disk space: WKWebView caches and decides whether to evict
+         entries based on free space. E174.1 = inside-app file ops. -->
+    <dict>
+      <key>NSPrivacyAccessedAPIType</key>
+      <string>NSPrivacyAccessedAPICategoryDiskSpace</string>
+      <key>NSPrivacyAccessedAPITypeReasons</key>
+      <array>
+        <string>E174.1</string>
+      </array>
+    </dict>
+
+    <!-- System boot time: used by WKWebView and several Apple
+         frameworks for performance metrics. 35F9.1 = measure
+         time elapsed since previous in-app event. -->
+    <dict>
+      <key>NSPrivacyAccessedAPIType</key>
+      <string>NSPrivacyAccessedAPICategorySystemBootTime</string>
+      <key>NSPrivacyAccessedAPITypeReasons</key>
+      <array>
+        <string>35F9.1</string>
+      </array>
+    </dict>
+  </array>
+</dict>
+</plist>

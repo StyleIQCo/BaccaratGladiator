@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Baccarat Gladiator — Monthly Tournament</title>
+<meta name="description" content="Monthly Baccarat Gladiator tournament — same shoe, real EZ Baccarat rules, single global leaderboard. Top score earns a flair badge for life.">
+<meta property="og:title"       content="Baccarat Gladiator — Monthly Tournament">
+<meta property="og:description" content="Same shoe, same rules. Top score earns the Champion flair.">
+<meta property="og:image"       content="https://baccaratgladiator.com/preview-macau.jpg">
+<meta property="og:url"         content="https://baccaratgladiator.com/tournament.html">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Cinzel+Decorative:wght@900&family=Press+Start+2P&display=swap">
+
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --gold:        #ffd76e;
+  --gold-deep:   #ff8a1a;
+  --crimson:     #b8001f;
+  --ink:         #1a0408;
+  --cream:       #fff7d6;
+  --pink:        #ff6cfa;
+}
+html, body {
+  width:100%; min-height:100dvh;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 25%, rgba(255,180,40,0.20), transparent 55%),
+    radial-gradient(ellipse 90% 90% at 50% 70%, rgba(184,0,31,0.40), rgba(20,4,8,0.95) 80%);
+  color:var(--cream);
+  font-family:'Cinzel', serif;
+  overflow-x:hidden;
+}
+body { padding:max(20px, env(safe-area-inset-top)) 16px 60px; }
+
+/* Subtle scanline so the page reads like the rest of the site */
+body::before {
+  content:''; position:fixed; inset:0; pointer-events:none;
+  background:repeating-linear-gradient(0deg, transparent 0, transparent 2px, rgba(0,0,0,0.10) 2px, rgba(0,0,0,0.10) 3px);
+  mix-blend-mode:multiply; opacity:0.30; z-index:1;
+}
+.wrap { position:relative; z-index:2; max-width:720px; margin:0 auto; }
+
+.brand {
+  text-align:center; margin-bottom:32px;
+}
+.brand .pre {
+  font-family:'Press Start 2P', monospace; font-size:13px; letter-spacing:0.42em;
+  color:var(--pink); text-shadow:0 0 14px rgba(255,108,250,0.65); margin-bottom:14px;
+}
+.brand .title {
+  font-family:'Cinzel Decorative','Cinzel', serif; font-weight:900;
+  font-size:clamp(2.4rem, 9vw, 4.2rem); line-height:1; letter-spacing:0.04em;
+  background:linear-gradient(180deg, #fff7d6 0%, #ffd76e 35%, #ff8a1a 78%, #b8001f 100%);
+  -webkit-background-clip:text; background-clip:text;
+  -webkit-text-fill-color:transparent; color:transparent;
+  filter:drop-shadow(0 6px 18px rgba(0,0,0,0.85)) drop-shadow(0 0 22px rgba(255,180,40,0.45));
+}
+.brand .sub {
+  margin-top:10px; font-family:'Cinzel', serif; font-weight:900;
+  font-size:0.95rem; letter-spacing:0.32em; color:var(--cream);
+  text-transform:uppercase; text-shadow:0 0 10px rgba(0,0,0,0.85);
+}
+.brand a { color:var(--gold); text-decoration:none; }
+
+/* Card wrapper */
+.card {
+  background:linear-gradient(180deg, rgba(28,8,12,0.78), rgba(56,20,28,0.62));
+  border:2px solid rgba(255,215,110,0.55);
+  border-radius:18px;
+  padding:24px 22px;
+  margin-bottom:20px;
+  box-shadow:0 10px 32px rgba(0,0,0,0.5), 0 0 36px rgba(255,180,40,0.10);
+  backdrop-filter:blur(6px) saturate(1.1);
+  -webkit-backdrop-filter:blur(6px) saturate(1.1);
+}
+
+.card h2 {
+  font-family:'Cinzel', serif; font-weight:900; font-size:0.95rem;
+  letter-spacing:0.32em; color:var(--gold); text-transform:uppercase;
+  margin-bottom:14px;
+  text-shadow:0 0 10px rgba(255,180,40,0.5);
+}
+
+.tnt-current {
+  text-align:center;
+}
+.tnt-month {
+  font-family:'Cinzel Decorative','Cinzel', serif; font-weight:900;
+  font-size:clamp(2.2rem, 8vw, 3.6rem); line-height:1;
+  background:linear-gradient(180deg, #fff7d6 0%, #ffd76e 35%, #ff8a1a 78%, #b8001f 100%);
+  -webkit-background-clip:text; background-clip:text;
+  -webkit-text-fill-color:transparent; color:transparent;
+  filter:drop-shadow(0 6px 18px rgba(0,0,0,0.85));
+  margin-bottom:10px;
+}
+.tnt-status-line {
+  font-family:'Press Start 2P', monospace; font-size:0.7rem; letter-spacing:0.22em;
+  margin-bottom:18px;
+}
+.tnt-status-line.live    { color:#52d99a; text-shadow:0 0 14px rgba(82,217,154,0.55); }
+.tnt-status-line.upcoming{ color:#a8c8ff; text-shadow:0 0 14px rgba(168,200,255,0.45); }
+.tnt-status-line.ended   { color:#ff8a8a; }
+
+.tnt-window {
+  display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:18px;
+}
+.tnt-window > div {
+  padding:12px; border:1px solid rgba(255,215,110,0.35); border-radius:10px;
+  background:rgba(0,0,0,0.30);
+}
+.tnt-window .lbl {
+  display:block;
+  font-family:'Press Start 2P', monospace; font-size:0.5rem; letter-spacing:0.32em;
+  color:rgba(255,215,110,0.6); margin-bottom:6px;
+}
+.tnt-window .val {
+  font-family:'Cinzel', serif; font-weight:900; font-size:1rem; color:var(--cream);
+}
+
+.btn-enter {
+  display:inline-block; width:100%;
+  padding:18px 22px;
+  background:linear-gradient(180deg, #ffd76e 0%, #ff8a1a 70%, #b8001f 100%);
+  color:var(--ink); border:3px solid rgba(255,247,214,0.85); border-radius:60px;
+  font-family:'Cinzel', serif; font-weight:900; font-size:1.15rem; letter-spacing:0.24em;
+  cursor:pointer;
+  box-shadow:0 8px 22px rgba(0,0,0,0.55), 0 0 30px rgba(255,180,40,0.45);
+  text-shadow:0 1px 0 rgba(255,255,255,0.45);
+  text-align:center; text-transform:uppercase; text-decoration:none;
+  transition:transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s;
+}
+.btn-enter:hover { transform:translateY(-2px); box-shadow:0 12px 30px rgba(0,0,0,0.65), 0 0 36px rgba(255,180,40,0.55); }
+.btn-enter.disabled { opacity:0.45; cursor:not-allowed; pointer-events:none; }
+.btn-secondary {
+  display:inline-block; padding:10px 22px; margin-top:14px;
+  background:transparent; color:var(--gold);
+  border:1px solid rgba(255,215,110,0.55); border-radius:60px;
+  font-family:'Cinzel', serif; font-weight:900; font-size:0.85rem; letter-spacing:0.18em;
+  cursor:pointer; text-decoration:none; text-transform:uppercase;
+}
+
+/* Rules list */
+.rules ol {
+  list-style:none; counter-reset:n;
+}
+.rules li {
+  counter-increment:n;
+  padding:10px 14px 10px 50px;
+  position:relative;
+  border-bottom:1px solid rgba(255,215,110,0.15);
+  font-size:0.92rem; line-height:1.5;
+}
+.rules li:last-child { border-bottom:none; }
+.rules li::before {
+  content:counter(n);
+  position:absolute; left:14px; top:50%; transform:translateY(-50%);
+  width:28px; height:28px; line-height:28px; text-align:center;
+  font-family:'Press Start 2P', monospace; font-size:0.6rem;
+  color:var(--ink);
+  background:linear-gradient(180deg, #ffd76e 0%, #ff8a1a 100%);
+  border-radius:50%;
+}
+.rules b { color:var(--gold); font-weight:900; }
+
+/* Leaderboard */
+.lb-row {
+  display:grid; grid-template-columns:46px 1fr auto auto; gap:8px;
+  align-items:center; padding:10px 8px;
+  border-bottom:1px solid rgba(255,215,110,0.15);
+  font-size:0.9rem;
+}
+.lb-row:last-child { border-bottom:none; }
+.lb-row.gold   { background:rgba(255,180,40,0.08); }
+.lb-row.silver { background:rgba(200,200,220,0.06); }
+.lb-row.bronze { background:rgba(180,120,60,0.07); }
+.lb-rank {
+  font-family:'Press Start 2P', monospace; font-size:0.65rem; text-align:center;
+  color:var(--gold);
+}
+.lb-rank.gold   { color:#ffd76e; font-size:1rem; }
+.lb-rank.silver { color:#d8d8e8; font-size:1rem; }
+.lb-rank.bronze { color:#cd853f; font-size:1rem; }
+.lb-name { font-weight:900; color:var(--cream); }
+.lb-score { font-family:'Cinzel', serif; font-weight:900; color:var(--gold); }
+.lb-meta { font-family:'Press Start 2P', monospace; font-size:0.5rem; letter-spacing:0.18em;
+  color:rgba(255,247,214,0.6); }
+.lb-empty {
+  text-align:center; padding:28px 16px;
+  font-style:italic; color:rgba(255,247,214,0.55); font-size:0.9rem;
+}
+
+/* History */
+.hist-row {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:10px 0; border-bottom:1px solid rgba(255,215,110,0.15);
+  font-size:0.9rem;
+}
+.hist-row:last-child { border-bottom:none; }
+.hist-row .month { font-weight:900; color:var(--cream); }
+.hist-row .winner { color:var(--gold); }
+.hist-row .balance { font-family:'Cinzel', serif; font-weight:900; color:var(--gold); }
+
+footer {
+  text-align:center; margin-top:30px; padding:20px;
+  font-size:0.78rem; color:rgba(255,247,214,0.45);
+}
+footer a { color:var(--gold); text-decoration:none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="brand">
+    <div class="pre">★ INSERT COIN ★</div>
+    <div class="title">MONTHLY ARENA</div>
+    <div class="sub">Baccarat Gladiator</div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       CURRENT TOURNAMENT
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="card tnt-current">
+    <h2 id="tnt-headline">CURRENT TOURNAMENT</h2>
+    <div class="tnt-month" id="tnt-month-id">—</div>
+    <div class="tnt-status-line" id="tnt-status">Loading…</div>
+    <div class="tnt-window">
+      <div><span class="lbl">OPENS</span><span class="val" id="tnt-opens">—</span></div>
+      <div><span class="lbl">CLOSES</span><span class="val" id="tnt-closes">—</span></div>
+    </div>
+    <a id="tnt-enter-btn" class="btn-enter disabled" href="#">ENTER ARENA</a>
+    <div style="margin-top:14px;font-size:0.78rem;letter-spacing:0.04em;color:rgba(255,247,214,0.65);line-height:1.5;">
+      Same deterministic shoe for every player. Best final balance after
+      the 80-hand cap takes the <b style="color:var(--gold)">🏆 Champion flair</b> for life.
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       RULES
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="card rules">
+    <h2>HOW IT WORKS</h2>
+    <ol>
+      <li><b>Same shoe.</b> Every player draws the exact same 8-deck shoe in the exact same order. Only your bet decisions differ.</li>
+      <li><b>Same starting balance.</b> Everyone starts with $10,000. No top-ups, no bailouts.</li>
+      <li><b>EZ Baccarat rules.</b> Dragon 7 (40:1), Panda 8 (25:1), Player Pair, Banker Pair. Banker pushes on a 3-card 7.</li>
+      <li><b>80-hand cap.</b> The tournament ends after 80 hands — about one full shoe.</li>
+      <li><b>Single leaderboard.</b> Highest final balance wins. Tied scores rank by hands played to reach it.</li>
+      <li><b>Prize: lifetime flair.</b> Winners earn a <b>🏆 Month Year Champion</b> badge that shows beside your name on the global leaderboard forever.</li>
+      <li><b>Free, no real money.</b> Always.</li>
+    </ol>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       LIVE LEADERBOARD
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="card">
+    <h2>LIVE LEADERBOARD</h2>
+    <div id="tnt-leaderboard">
+      <div class="lb-empty">Loading…</div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       PAST CHAMPIONS
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="card">
+    <h2>PAST CHAMPIONS</h2>
+    <div id="tnt-history"><div class="lb-empty">First tournament — no champions yet.</div></div>
+  </div>
+
+  <footer>
+    <a href="/">← Back to Baccarat Gladiator</a>
+  </footer>
+
+</div>
+
+<script>
+// ════════════════════════════════════════════════════════════════
+//  TOURNAMENT SCHEDULER
+//  One tournament per calendar month. Window: 1st 00:00 UTC → last
+//  day 23:59 UTC. The current tournament's ID is "YYYY-MM" of the
+//  date we're inspecting; if the current month's window has fully
+//  closed (hasn't happened yet for v1), we surface next month.
+// ════════════════════════════════════════════════════════════════
+const PAST_CHAMPIONS = [
+  // Hardcoded historical winners go here. Empty for v1 launch.
+  // { tournament: '2026-05', winner: 'late-bet-larry', score: 47900, hands: 80 },
+];
+
+function pad(n) { return String(n).padStart(2, '0'); }
+function monthIdFor(date) { return date.getUTCFullYear() + '-' + pad(date.getUTCMonth() + 1); }
+function monthName(d) {
+  return d.toLocaleString('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' });
+}
+function monthWindow(monthId) {
+  const [y, m] = monthId.split('-').map(Number);
+  const start = new Date(Date.UTC(y, m - 1, 1, 0, 0, 0));
+  const end   = new Date(Date.UTC(y, m, 0, 23, 59, 59)); // last day of month
+  return { start, end };
+}
+function fmtDate(d) {
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' }) +
+         ' UTC';
+}
+
+function determineTournamentState() {
+  const now = new Date();
+  const id = monthIdFor(now);
+  const { start, end } = monthWindow(id);
+  const status = (now < start) ? 'upcoming' :
+                 (now > end)   ? 'ended'    : 'live';
+  return { id, start, end, status };
+}
+
+// ── Render ─────────────────────────────────────────────────────
+const tnt = determineTournamentState();
+document.getElementById('tnt-month-id').textContent = monthName(tnt.start).toUpperCase();
+document.getElementById('tnt-opens').textContent    = fmtDate(tnt.start);
+document.getElementById('tnt-closes').textContent   = fmtDate(tnt.end);
+
+const statusEl = document.getElementById('tnt-status');
+const enterBtn = document.getElementById('tnt-enter-btn');
+const enterUrl = `/road-to-macau.html?tournament=${tnt.id}`;
+if (tnt.status === 'live') {
+  statusEl.classList.add('live');
+  statusEl.textContent = '★ LIVE NOW ★';
+  enterBtn.classList.remove('disabled');
+  enterBtn.href = enterUrl;
+} else if (tnt.status === 'upcoming') {
+  statusEl.classList.add('upcoming');
+  statusEl.textContent = '◇ OPENS SOON ◇';
+  enterBtn.textContent = 'TOURNAMENT NOT YET OPEN';
+} else {
+  statusEl.classList.add('ended');
+  statusEl.textContent = '✕ CLOSED ✕';
+  enterBtn.textContent = 'TOURNAMENT CLOSED — WAIT FOR NEXT MONTH';
+}
+
+// ── Live leaderboard ───────────────────────────────────────────
+async function loadLeaderboard() {
+  const lbEl = document.getElementById('tnt-leaderboard');
+  // If the parent app has provided an apiFetch helper (Cognito-aware),
+  // use that. Otherwise show a placeholder list with the seed bots.
+  const seedRows = [
+    { username: 'Late Bet Larry',   finalBalance: 47900, handsPlayed: 80 },
+    { username: 'Even Steven',      finalBalance: 38400, handsPlayed: 80 },
+    { username: 'Jay Dawg',         finalBalance: 27200, handsPlayed: 80 },
+    { username: '2ndBankFrank',     finalBalance: 19800, handsPlayed: 80 },
+    { username: 'DragonSlayer',     finalBalance: 14150, handsPlayed: 80 },
+  ];
+
+  let rows = seedRows;
+  try {
+    if (typeof window.apiFetch === 'function') {
+      const data = await window.apiFetch('/tournament/leaderboard?id=' + tnt.id, { method: 'GET' });
+      const items = Array.isArray(data && data.items) ? data.items : [];
+      if (items.length) rows = items;
+    }
+  } catch (e) { /* keep seeds */ }
+
+  const sorted = rows.slice().sort((a, b) =>
+    (b.finalBalance || 0) - (a.finalBalance || 0) ||
+    (a.handsPlayed  || 0) - (b.handsPlayed  || 0)
+  );
+
+  lbEl.innerHTML = '';
+  if (!sorted.length) {
+    lbEl.innerHTML = '<div class="lb-empty">No entries yet — be first.</div>';
+    return;
+  }
+  const medalIcon = ['🥇', '🥈', '🥉'];
+  const medalClass = ['gold', 'silver', 'bronze'];
+  sorted.forEach((it, idx) => {
+    const isTop3 = idx < 3;
+    const row = document.createElement('div');
+    row.className = 'lb-row' + (isTop3 ? ' ' + medalClass[idx] : '');
+    row.innerHTML = `
+      <div class="lb-rank ${isTop3 ? medalClass[idx] : ''}">
+        ${isTop3 ? medalIcon[idx] : '#' + (idx + 1)}
+      </div>
+      <div class="lb-name">${(it.username || 'Player').replace(/[<>]/g,'')}</div>
+      <div class="lb-score">$${Number(it.finalBalance || 0).toLocaleString()}</div>
+      <div class="lb-meta">${it.handsPlayed || 0} hands</div>
+    `;
+    lbEl.appendChild(row);
+  });
+}
+loadLeaderboard();
+// Refresh every 90 seconds while the tab is open
+setInterval(loadLeaderboard, 90 * 1000);
+
+// ── Past champions ─────────────────────────────────────────────
+const histEl = document.getElementById('tnt-history');
+if (PAST_CHAMPIONS.length === 0) {
+  histEl.innerHTML = '<div class="lb-empty">First tournament — no champions yet.</div>';
+} else {
+  histEl.innerHTML = '';
+  PAST_CHAMPIONS.slice().reverse().forEach(c => {
+    const { start } = monthWindow(c.tournament);
+    const row = document.createElement('div');
+    row.className = 'hist-row';
+    row.innerHTML = `
+      <div class="month">${monthName(start)}</div>
+      <div class="winner">🏆 ${c.winner}</div>
+      <div class="balance">$${Number(c.score).toLocaleString()}</div>
+    `;
+    histEl.appendChild(row);
+  });
+}
+</script>
+
+</body>
+</html>

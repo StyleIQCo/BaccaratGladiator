@@ -6,10 +6,10 @@
 <meta name="theme-color" content="#070012">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Stage Select — Baccarat Gladiator</title>
-<meta name="description" content="60 themed baccarat venues across 10 tiers. Clear a stage to unlock the next tier — final boss: The Colosseum.">
-<meta property="og:title" content="Baccarat Gladiator — Stage Select">
-<meta property="og:description" content="60 themed baccarat venues across 10 tiers. Clear a stage to unlock the next tier.">
+<title>Baccarat Gladiator — Card-Battle Saga · 60 Stages</title>
+<meta name="description" content="A single-player strategy card-battle saga. Clear 60 themed stages across 10 tiers, baccarat-as-combat. No real money. Free to play.">
+<meta property="og:title" content="Baccarat Gladiator — Card-Battle Saga">
+<meta property="og:description" content="Clear 60 themed stages across 10 tiers — final boss: The Colosseum. Single-player strategy. No real money. Free to play.">
 <meta property="og:image" content="https://baccaratgladiator.com/preview-nine.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -468,8 +468,8 @@ const TIERS = [
   { id:6,  name:'CHAMPIONSHIP',    subtitle:'clear 1 in POSTCARD CITIES',color:'#ffa040' },
   { id:7,  name:'NEON STREETS',    subtitle:'clear 1 in CHAMPIONSHIP',   color:'#ff48d8' },
   { id:8,  name:'VIP ESCAPE',      subtitle:'clear 1 in NEON STREETS',   color:'#c060ff' },
-  { id:9,  name:'CASINO ROYALTY',  subtitle:'clear 1 in VIP ESCAPE',     color:'#ffe7a0' },
-  { id:10, name:'FINAL ARENA',     subtitle:'clear 1 in CASINO ROYALTY', color:'#ff4040' },
+  { id:9,  name:'ROYAL CIRCUIT',   subtitle:'clear 1 in VIP ESCAPE',     color:'#ffe7a0' },
+  { id:10, name:'FINAL ARENA',     subtitle:'clear 1 in ROYAL CIRCUIT',  color:'#ff4040' },
 ];
 
 // ── Stage roster ────────────────────────────────────────────────
@@ -477,12 +477,14 @@ const TIERS = [
 // /road-to-<slug>.html path. Region emoji is purely decorative.
 const STAGES = [
   // T1 — WELCOME PIT
-  { slug:'nine',           name:'Road to Nine',     tag:'The original baccarat',                region:'♠',  tier:1 },
+  // Macau leads the carousel: the spiritual home of baccarat is the
+  // first thing every new player sees.
+  { slug:'macau',          name:'Macau',            tag:'Cotai Strip · Imperial Dragon',        region:'🇲🇴', tier:1 },
   { slug:'cat-cafe',       name:'Cat Cafe',         tag:'Tokyo paw bets',                       region:'🐱', tier:1 },
   { slug:'canine-club',    name:'Canine Club',      tag:'Westminster · best in show',           region:'🐶', tier:1 },
   { slug:'labubu',         name:'Plush Club',       tag:'Plush mascots · velvet table',                  region:'🧸', tier:1 },
-  { slug:'huff-puff',      name:'Huff & Puff',      tag:'Three little pigs',                    region:'🐷', tier:1 },
-  { slug:'toy-story',      name:'Toy Story',        tag:"Andy's room · to infinity",            region:'🚀', tier:1 },
+  { slug:'huff-puff',      name:'Big Bad Wolfie',   tag:'Howl at the moon',                     region:'🐺', tier:1 },
+  { slug:'toy-story',      name:'Toy Cosmos',       tag:'Bedroom rocket · to the moon',         region:'🚀', tier:1 },
   { slug:'bricks',         name:'Block City',           tag:'Stack city · click click',               region:'🧱', tier:1 },
 
   // T2 — INDIE BLOCK
@@ -524,7 +526,7 @@ const STAGES = [
   { slug:'boxing',         name:'Boxing',           tag:'Title fight · championship night',     region:'🥊', tier:6 },
   { slug:'melbourne',      name:'Melbourne',        tag:'Crown · southern cross',               region:'🇦🇺', tier:6 },
   { slug:'manila',         name:'Manila',           tag:'Manila bay · Pasay strip',             region:'🇵🇭', tier:6 },
-  { slug:'seoul',          name:'Seoul',            tag:'Gangnam · K-Casino',                   region:'🇰🇷', tier:6 },
+  { slug:'seoul',          name:'Seoul',            tag:'Gangnam · neon nights',                region:'🇰🇷', tier:6 },
   { slug:'skydiving',      name:'Skydiving',        tag:'12,000 ft · canopy out',               region:'🪂', tier:6 },
 
   // T7 — NEON STREETS
@@ -544,7 +546,7 @@ const STAGES = [
   { slug:'oceans-11',      name:'Vault Job',          tag:'High-roller heist · five for five',       region:'🎩', tier:8 },
   { slug:'bond',           name:'Spy Noir',             tag:'Spy noir · shaken not stirred',             region:'🎲', tier:8 },
 
-  // T9 — CASINO ROYALTY
+  // T9 — ROYAL CIRCUIT
   { slug:'mc',             name:'Monte Carlo',      tag:'Belle Époque · 5% commission',         region:'🇲🇨', tier:9 },
   { slug:'lv',             name:'Las Vegas',        tag:'Tiger Bonus · the Strip',              region:'🇺🇸', tier:9 },
   { slug:'ac',             name:'Atlantic City',    tag:'Boardwalk classic',                    region:'🇺🇸', tier:9 },
@@ -923,5 +925,6 @@ document.getElementById('btn-prev').addEventListener('click', e => _pulseArrow(e
 document.getElementById('btn-next').addEventListener('click', e => _pulseArrow(e.currentTarget));
 
 </script>
+<script src="/visit-beacon.js" defer></script>
 </body>
 </html>

@@ -92,18 +92,6 @@
       window.balance = STARTING_CHIPS;
     }
 
-    // Apply any pending chip purchase from Stripe redirect
-    const pending = localStorage.getItem('bg_pending_chips');
-    if (pending) {
-      localStorage.removeItem('bg_pending_chips');
-      const chips = parseInt(pending, 10);
-      if (chips > 0) {
-        window.balance += chips;
-        await window.fbSaveBalance(window.balance);
-        localStorage.setItem('bg_chip_toast', String(chips));
-      }
-    }
-
     // Show game
     document.getElementById('auth-modal').style.display = 'none';
     document.getElementById('age-gate').style.display   = 'none';
@@ -400,7 +388,6 @@ html, body {
     <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end;">
       <span id="hdr-email" style="color:#666;font-size:.72rem;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></span>
       <div id="hdr-bal">Balance: <span id="bal">$5,000</span></div>
-      <button id="btn-chips" onclick="openChipStore()" style="background:linear-gradient(135deg,#c9a84c,#f0d080,#c9a84c);color:#1a0e00;border:none;padding:5px 12px;border-radius:4px;font-size:.78rem;font-weight:bold;cursor:pointer;letter-spacing:1px;">+ CHIPS</button>
       <button onclick="if(window.fbSignOut)window.fbSignOut()" style="background:none;border:1px solid #333;color:#666;padding:4px 8px;border-radius:4px;font-size:.7rem;cursor:pointer;">Sign out</button>
     </div>
   </div>
@@ -505,19 +492,6 @@ function passAgeGate() {
     m.style.display = 'flex';
   }
 }
-
-// Handle return from Stripe — store pending chips, auto-pass age gate
-(function handleReturn() {
-  const p = new URLSearchParams(window.location.search);
-  if (p.get('purchase') !== 'success') return;
-  window.history.replaceState({}, '', window.location.pathname);
-  const chips = parseInt(p.get('chips') || '0', 10);
-  if (chips > 0) {
-    localStorage.setItem('bg_pending_chips', String(chips));
-    sessionStorage.setItem(AGE_KEY, '1');
-  }
-  localStorage.removeItem('bg_stripe_session');
-})();
 
 window.addEventListener('DOMContentLoaded', function() {
   if(sessionStorage.getItem(AGE_KEY) === '1') {
@@ -988,20 +962,6 @@ function init() {
   postFeed('Match the Dealer side bet: Non-suited 3:1 · Suited 14:1', 'mtd');
   postFeed('Dealer stands soft 17 · BJ pays 3:2 · Split up to 4 hands', 'info');
 
-  // Show chip purchase toast if coming back from Stripe
-  const toast = localStorage.getItem('bg_chip_toast');
-  if (toast) {
-    localStorage.removeItem('bg_chip_toast');
-    const chips = parseInt(toast, 10);
-    if (chips > 0) {
-      const t = document.createElement('div');
-      t.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#0d2a10;border:2px solid #4caf50;border-radius:10px;padding:14px 24px;color:#fff;font-size:15px;font-weight:600;z-index:10000;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,0.5);';
-      t.textContent = '🎉 ' + chips.toLocaleString() + ' chips added to your balance!';
-      document.body.appendChild(t);
-      setTimeout(() => t.remove(), 5000);
-      postFeed('🎉 ' + chips.toLocaleString() + ' chips added to your balance!', 'info');
-    }
-  }
 }
 </script>
 
@@ -1023,8 +983,6 @@ async function authGoogle() {
 
 function authGuest() {
   document.getElementById('auth-modal').style.display = 'none';
-  const btnChips = document.getElementById('btn-chips');
-  if (btnChips) btnChips.style.display = 'none';
   const g = document.getElementById('game');
   g.style.display = 'flex'; g.style.flexDirection = 'column';
   init();
@@ -1048,61 +1006,6 @@ const WA_CHIP_FLOOR = 5000;
     }
   }catch(e){}
 })();
-
-// ── Chip Store ────────────────────────────────────────────────────────────
-const CHIP_STORE_URL = 'https://rtynrkj9l4.execute-api.us-east-1.amazonaws.com/prod/create-checkout';
-const CHIP_PACKAGES = [
-  { id:'starter',     name:'Starter Pack',  chips:2500,   price:'$1.99', bonus:'',      popular:false },
-  { id:'popular',     name:'Popular Pack',  chips:7500,   price:'$4.99', bonus:'+20%',  popular:true  },
-  { id:'value',       name:'Value Pack',    chips:17500,  price:'$9.99', bonus:'+40%',  popular:false },
-  { id:'best_deal',   name:'Best Deal',     chips:40000,  price:'$19.99',bonus:'+60%',  popular:false },
-  { id:'high_roller', name:'High Roller',   chips:125000, price:'$49.99',bonus:'+100%', popular:false },
-];
-
-function openChipStore() {
-  const existing = document.getElementById('chip-store-modal');
-  if (existing) existing.remove();
-  const modal = document.createElement('div');
-  modal.id = 'chip-store-modal';
-  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px;';
-  modal.innerHTML = `
-    <div style="background:#0d1f10;border:1px solid #c9a84c;border-radius:12px;max-width:480px;width:100%;padding:24px;position:relative;color:#fff;">
-      <button onclick="document.getElementById('chip-store-modal').remove()" style="position:absolute;top:10px;right:14px;background:none;border:none;color:#888;font-size:22px;cursor:pointer;">✕</button>
-      <h2 style="text-align:center;color:#c9a84c;margin:0 0 4px;">Chip Store</h2>
-      <p style="text-align:center;color:#888;font-size:12px;margin:0 0 18px;">Chips are for entertainment only · No cash value</p>
-      <div style="display:flex;flex-direction:column;gap:8px;">
-        ${CHIP_PACKAGES.map(pkg=>`
-          <button onclick="purchaseChips('${pkg.id}')" style="display:flex;align-items:center;justify-content:space-between;background:${pkg.popular?'#1a2e1a':'#0a1a0a'};border:${pkg.popular?'2px solid #c9a84c':'1px solid #2a4a2a'};border-radius:8px;padding:12px 16px;cursor:pointer;color:#fff;position:relative;">
-            ${pkg.popular?'<span style="position:absolute;top:-9px;left:50%;transform:translateX(-50%);background:#c9a84c;color:#000;font-size:11px;font-weight:700;padding:1px 10px;border-radius:10px;">POPULAR</span>':''}
-            <div style="text-align:left;">
-              <div style="font-weight:600;">${pkg.name}</div>
-              <div style="color:#c9a84c;font-size:17px;font-weight:700;">🪙 ${pkg.chips.toLocaleString()}${pkg.bonus?` <span style="font-size:11px;background:#1a3a1a;color:#7eff7e;padding:1px 6px;border-radius:4px;">${pkg.bonus}</span>`:''}</div>
-            </div>
-            <div style="font-size:18px;font-weight:700;">${pkg.price}</div>
-          </button>`).join('')}
-      </div>
-      <p style="text-align:center;color:#444;font-size:11px;margin:14px 0 0;">Secured by Stripe · 18+ only</p>
-    </div>`;
-  document.body.appendChild(modal);
-  modal.addEventListener('click', e => { if (e.target===modal) modal.remove(); });
-}
-
-async function purchaseChips(packageId) {
-  const btn = event.currentTarget;
-  btn.disabled = true; btn.style.opacity = '0.6';
-  try {
-    const res = await fetch(CHIP_STORE_URL, {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ packageId, game:'blackjack', sessionId: Math.random().toString(36).slice(2), userId: window.fbGetUserId ? window.fbGetUserId() : null }),
-    });
-    if (!res.ok) throw new Error('Server error');
-    const { url } = await res.json();
-    window.location.href = url;
-  } catch(e) {
-    alert('Could not start checkout. Please try again.');
-    btn.disabled = false; btn.style.opacity = '1';
-  }
-}
 
 </script>
 </body>

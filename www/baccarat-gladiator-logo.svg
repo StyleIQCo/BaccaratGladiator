@@ -1,0 +1,447 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 560" width="420" height="560">
+  <defs>
+    <!-- Card background -->
+    <linearGradient id="cardBg" x1="0%" y1="0%" x2="60%" y2="100%">
+      <stop offset="0%" style="stop-color:#0d1117"/>
+      <stop offset="40%" style="stop-color:#111827"/>
+      <stop offset="100%" style="stop-color:#0a0f1a"/>
+    </linearGradient>
+    <!-- Gold -->
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffe066"/>
+      <stop offset="35%" style="stop-color:#ffd700"/>
+      <stop offset="70%" style="stop-color:#c8960c"/>
+      <stop offset="100%" style="stop-color:#a07800"/>
+    </linearGradient>
+    <!-- Gold subtle -->
+    <linearGradient id="goldDim" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#d4ac30"/>
+      <stop offset="100%" style="stop-color:#8a6300"/>
+    </linearGradient>
+    <!-- Steel armor -->
+    <linearGradient id="steel" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#c8cdd4"/>
+      <stop offset="40%" style="stop-color:#9aa0ac"/>
+      <stop offset="100%" style="stop-color:#52575e"/>
+    </linearGradient>
+    <!-- Dark steel -->
+    <linearGradient id="darkSteel" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#888e96"/>
+      <stop offset="100%" style="stop-color:#3a3e44"/>
+    </linearGradient>
+    <!-- Skin -->
+    <linearGradient id="skin" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#c8895a"/>
+      <stop offset="100%" style="stop-color:#9e6030"/>
+    </linearGradient>
+    <!-- Blood red -->
+    <linearGradient id="crimson" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#9b1c1c"/>
+      <stop offset="100%" style="stop-color:#5c0a0a"/>
+    </linearGradient>
+    <!-- Shield face -->
+    <linearGradient id="shieldFace" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#7a1414"/>
+      <stop offset="50%" style="stop-color:#5c0a0a"/>
+      <stop offset="100%" style="stop-color:#3d0606"/>
+    </linearGradient>
+    <!-- Blade -->
+    <linearGradient id="blade" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#e8edf2"/>
+      <stop offset="40%" style="stop-color:#ffffff"/>
+      <stop offset="60%" style="stop-color:#c0c8d0"/>
+      <stop offset="100%" style="stop-color:#8090a0"/>
+    </linearGradient>
+    <!-- Vignette -->
+    <radialGradient id="vignette" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" style="stop-color:#1a2a1a;stop-opacity:0"/>
+      <stop offset="100%" style="stop-color:#000000;stop-opacity:0.7"/>
+    </radialGradient>
+    <!-- Gold glow filter -->
+    <filter id="goldGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur"/>
+      <feColorMatrix in="blur" type="matrix"
+        values="1 0.8 0 0 0  0.6 0.5 0 0 0  0 0 0 0 0  0 0 0 0.8 0" result="coloredBlur"/>
+      <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <!-- Subtle shadow -->
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#000" flood-opacity="0.8"/>
+    </filter>
+    <!-- Figure shadow -->
+    <filter id="figShadow" x="-10%" y="-5%" width="120%" height="115%">
+      <feDropShadow dx="3" dy="5" stdDeviation="6" flood-color="#000" flood-opacity="0.6"/>
+    </filter>
+    <!-- Blood drip filter -->
+    <filter id="blur2">
+      <feGaussianBlur stdDeviation="1.5"/>
+    </filter>
+  </defs>
+
+  <!-- ══════════════════════════════════════ -->
+  <!--  CARD FRAME                            -->
+  <!-- ══════════════════════════════════════ -->
+  <!-- Outer glow border -->
+  <rect x="2" y="2" width="416" height="556" rx="30" ry="30"
+        fill="url(#gold)" filter="url(#shadow)"/>
+  <!-- Inner border detail line -->
+  <rect x="8" y="8" width="404" height="544" rx="25" ry="25" fill="#1a1000" opacity="0.6"/>
+  <!-- Card face -->
+  <rect x="10" y="10" width="400" height="540" rx="24" ry="24"
+        fill="url(#cardBg)"/>
+  <!-- Vignette overlay -->
+  <rect x="10" y="10" width="400" height="540" rx="24" ry="24"
+        fill="url(#vignette)"/>
+  <!-- Inner fine border -->
+  <rect x="20" y="20" width="380" height="520" rx="18" ry="18"
+        fill="none" stroke="url(#gold)" stroke-width="1.2" opacity="0.45"/>
+  <!-- Second inner border -->
+  <rect x="26" y="26" width="368" height="508" rx="14" ry="14"
+        fill="none" stroke="url(#goldDim)" stroke-width="0.6" opacity="0.3"/>
+
+  <!-- ══════════════════════════════════════ -->
+  <!--  CORNER INDICES                        -->
+  <!-- ══════════════════════════════════════ -->
+  <!-- Top-left -->
+  <text x="44" y="60" font-family="'Palatino Linotype',Georgia,serif" font-size="30"
+        font-weight="bold" fill="url(#gold)" text-anchor="middle" opacity="0.95">G</text>
+  <text x="44" y="84" font-family="Georgia,serif" font-size="20"
+        fill="url(#gold)" text-anchor="middle" opacity="0.8">♠</text>
+  <!-- Bottom-right (rotated) -->
+  <g transform="translate(376,500) rotate(180)">
+    <text x="0" y="0" font-family="'Palatino Linotype',Georgia,serif" font-size="30"
+          font-weight="bold" fill="url(#gold)" text-anchor="middle" opacity="0.95">G</text>
+    <text x="0" y="24" font-family="Georgia,serif" font-size="20"
+          fill="url(#gold)" text-anchor="middle" opacity="0.8">♠</text>
+  </g>
+
+  <!-- ══════════════════════════════════════ -->
+  <!--  DECORATIVE HORIZONTAL RULES           -->
+  <!-- ══════════════════════════════════════ -->
+  <!-- Top rule + ornament -->
+  <line x1="68" y1="104" x2="352" y2="104" stroke="url(#gold)" stroke-width="0.8" opacity="0.4"/>
+  <path d="M190,104 L210,96 L230,104" fill="none" stroke="url(#gold)" stroke-width="1" opacity="0.5"/>
+  <circle cx="210" cy="96" r="2.5" fill="url(#gold)" opacity="0.6"/>
+
+  <!-- Bottom rule + ornament -->
+  <line x1="68" y1="436" x2="352" y2="436" stroke="url(#gold)" stroke-width="0.8" opacity="0.4"/>
+  <path d="M190,436 L210,444 L230,436" fill="none" stroke="url(#gold)" stroke-width="1" opacity="0.5"/>
+  <circle cx="210" cy="444" r="2.5" fill="url(#gold)" opacity="0.6"/>
+
+  <!-- ══════════════════════════════════════ -->
+  <!--  GLADIATOR FIGURE  (y: ~108 → ~430)   -->
+  <!-- ══════════════════════════════════════ -->
+  <g filter="url(#figShadow)">
+
+  <!-- ── PLUME ── -->
+  <!-- Crest mounting rail -->
+  <rect x="197" y="118" width="26" height="9" rx="4" fill="url(#gold)"/>
+  <!-- Feather cluster - dense layered plumes -->
+  <path d="M210,117 Q186,90 176,56 Q188,82 196,112" fill="#8B0000" opacity="0.9"/>
+  <path d="M210,117 Q192,84 185,48 Q196,76 202,112" fill="#A00000" opacity="0.9"/>
+  <path d="M210,117 Q198,80 196,42 Q205,74 208,112" fill="#B51C1C"/>
+  <path d="M210,117 Q212,78 214,40 Q215,74 212,112" fill="#CC2200"/>
+  <path d="M210,117 Q218,80 224,44 Q218,76 214,112" fill="#B51C1C"/>
+  <path d="M210,117 Q228,84 235,48 Q224,76 218,112" fill="#A00000" opacity="0.9"/>
+  <path d="M210,117 Q234,90 244,56 Q232,82 224,112" fill="#8B0000" opacity="0.9"/>
+  <!-- Plume highlight -->
+  <path d="M210,117 Q211,75 211,42" fill="none" stroke="#ff6060" stroke-width="1" opacity="0.35"/>
+
+  <!-- ── HELMET ── -->
+  <!-- Helmet dome -->
+  <path d="M164,185 Q164,128 210,122 Q256,128 256,185 L256,200 Q232,212 210,212 Q188,212 164,200 Z"
+        fill="url(#steel)"/>
+  <!-- Helmet dome shadow/depth -->
+  <path d="M164,185 Q164,128 210,122 Q256,128 256,185"
+        fill="none" stroke="#e0e8f0" stroke-width="2.5" opacity="0.25"/>
+  <!-- Brow ridge (heavy gold protector) -->
+  <path d="M162,184 Q210,170 258,184 L260,192 Q210,178 160,192 Z"
+        fill="url(#gold)"/>
+  <!-- Cheek guards -->
+  <path d="M166,188 Q155,205 158,228 Q164,218 172,210 Q168,205 166,188"
+        fill="url(#darkSteel)" stroke="url(#gold)" stroke-width="1.2"/>
+  <path d="M254,188 Q265,205 262,228 Q256,218 248,210 Q252,205 254,188"
+        fill="url(#darkSteel)" stroke="url(#gold)" stroke-width="1.2"/>
+  <!-- Neck guard -->
+  <path d="M168,210 Q210,228 252,210 L256,230 Q210,250 164,230 Z"
+        fill="url(#darkSteel)" stroke="#777" stroke-width="0.8"/>
+  <!-- Face guard bars (nasal + cheek bars) - vertical grill -->
+  <g stroke="#666" stroke-width="2.2" stroke-linecap="round">
+    <line x1="188" y1="193" x2="188" y2="222"/>
+    <line x1="197" y1="189" x2="197" y2="224"/>
+    <line x1="206" y1="187" x2="206" y2="225"/>
+  </g>
+  <!-- Helmet center ridge -->
+  <path d="M210,122 L210,184" fill="none" stroke="#d0d8e0" stroke-width="3" opacity="0.4"/>
+  <!-- Helmet rivets -->
+  <circle cx="176" cy="148" r="3" fill="#aaa" stroke="#888" stroke-width="0.8"/>
+  <circle cx="244" cy="148" r="3" fill="#aaa" stroke="#888" stroke-width="0.8"/>
+  <circle cx="210" cy="136" r="3" fill="#aaa" stroke="#888" stroke-width="0.8"/>
+
+  <!-- ── FACE (partially obscured behind guard bars) ── -->
+  <!-- Neck -->
+  <rect x="196" y="225" width="28" height="28" rx="6" fill="url(#skin)"/>
+  <!-- Face shape -->
+  <path d="M190,190 Q190,224 210,228 Q230,224 230,190 Q230,178 210,176 Q190,178 190,190"
+        fill="url(#skin)"/>
+  <!-- Heavy brow ridge shadow -->
+  <path d="M192,188 Q210,182 228,188" fill="none" stroke="#7a4820" stroke-width="4" opacity="0.5" stroke-linecap="round"/>
+  <!-- Eyes — narrowed, intense -->
+  <!-- Left eye (barely visible through guard) -->
+  <ellipse cx="204" cy="196" rx="6" ry="4" fill="#1a0f08"/>
+  <ellipse cx="204" cy="196" rx="3.5" ry="2.5" fill="#1a0f08"/>
+  <!-- Right eye -->
+  <ellipse cx="220" cy="196" rx="6" ry="4" fill="#1a0f08"/>
+  <ellipse cx="220" cy="196" rx="3.5" ry="2.5" fill="#1a0f08"/>
+  <!-- Eye whites -->
+  <path d="M199,195 Q204,191 209,195 Q204,193 199,195" fill="white" opacity="0.7"/>
+  <path d="M215,195 Q220,191 225,195 Q220,193 215,195" fill="white" opacity="0.7"/>
+  <!-- Fierce brow furrow -->
+  <path d="M197,189 Q204,185 209,188" fill="none" stroke="#5a3010" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M211,188 Q216,185 223,189" fill="none" stroke="#5a3010" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Battle scar across left cheek -->
+  <path d="M195,204 Q200,208 204,213" fill="none" stroke="#7a3020" stroke-width="1.5" opacity="0.8" stroke-linecap="round"/>
+  <!-- Set jaw / clenched teeth hint -->
+  <path d="M200,216 Q210,222 220,216" fill="none" stroke="#7a4828" stroke-width="2" stroke-linecap="round"/>
+  <!-- Stubble shadow -->
+  <ellipse cx="210" cy="218" rx="16" ry="8" fill="#6a3818" opacity="0.2"/>
+
+  <!-- ── SHOULDERS / PAULDRONS ── -->
+  <!-- Left shoulder (right in image) — sword arm -->
+  <path d="M248,230 Q275,220 282,235 Q285,250 275,258 Q262,265 248,255 Z"
+        fill="url(#steel)" stroke="url(#gold)" stroke-width="1.5"/>
+  <!-- Pauldron ridges -->
+  <path d="M252,232 Q272,224 278,237" fill="none" stroke="#dde" stroke-width="1.5" opacity="0.3"/>
+  <path d="M250,244 Q270,238 278,250" fill="none" stroke="#dde" stroke-width="1" opacity="0.2"/>
+  <!-- Left shoulder rivet -->
+  <circle cx="268" cy="242" r="3.5" fill="url(#gold)" stroke="#a07800" stroke-width="0.8"/>
+
+  <!-- Right shoulder (left in image) — shield arm -->
+  <path d="M172,230 Q145,220 138,235 Q135,250 145,258 Q158,265 172,255 Z"
+        fill="url(#steel)" stroke="url(#gold)" stroke-width="1.5"/>
+  <path d="M168,232 Q148,224 142,237" fill="none" stroke="#dde" stroke-width="1.5" opacity="0.3"/>
+  <circle cx="152" cy="242" r="3.5" fill="url(#gold)" stroke="#a07800" stroke-width="0.8"/>
+
+  <!-- ── BREASTPLATE ── -->
+  <!-- Main plate -->
+  <path d="M172,248 Q210,235 248,248 L252,328 Q210,345 168,328 Z"
+        fill="url(#steel)" stroke="url(#gold)" stroke-width="1.8"/>
+  <!-- Muscle anatomy engraved lines -->
+  <!-- Pectoral split -->
+  <path d="M210,248 L210,285" stroke="#666" stroke-width="1.2" opacity="0.5"/>
+  <!-- Left pectoral curve -->
+  <path d="M174,255 Q192,248 210,255" fill="none" stroke="#888" stroke-width="1.5" opacity="0.5"/>
+  <!-- Right pectoral curve -->
+  <path d="M210,255 Q228,248 246,255" fill="none" stroke="#888" stroke-width="1.5" opacity="0.5"/>
+  <!-- Ab lines -->
+  <path d="M198,282 Q210,286 222,282" fill="none" stroke="#777" stroke-width="1.2" opacity="0.45"/>
+  <path d="M196,298 Q210,302 224,298" fill="none" stroke="#777" stroke-width="1.2" opacity="0.45"/>
+  <!-- Plate highlight -->
+  <path d="M185,252 Q200,244 215,252" fill="none" stroke="white" stroke-width="1.5" opacity="0.18"/>
+  <!-- Central gold emblem — eagle/spade -->
+  <path d="M210,306 L204,295 Q210,288 216,295 Z" fill="url(#gold)" opacity="0.85"/>
+  <circle cx="210" cy="308" r="5" fill="url(#gold)" opacity="0.7"/>
+  <!-- Plate bottom edge gold trim -->
+  <path d="M168,328 Q210,345 252,328" fill="none" stroke="url(#gold)" stroke-width="2.5"/>
+
+  <!-- ── CAPE — flowing crimson behind armor ── -->
+  <!-- Right-side cape -->
+  <path d="M248,248 Q290,275 298,355 Q285,320 268,300 L252,328 Z"
+        fill="url(#crimson)" opacity="0.88"/>
+  <!-- Left-side cape -->
+  <path d="M172,248 Q130,275 122,355 Q135,320 152,300 L168,328 Z"
+        fill="url(#crimson)" opacity="0.88"/>
+  <!-- Cape edge highlight -->
+  <path d="M249,250 Q288,278 296,352" fill="none" stroke="#cc2222" stroke-width="1.5" opacity="0.4"/>
+  <path d="M171,250 Q132,278 124,352" fill="none" stroke="#cc2222" stroke-width="1.5" opacity="0.4"/>
+
+  <!-- ── PTERUGES (battle-worn leather strips) ── -->
+  <!-- Individual strips with irregular, worn edges -->
+  <g fill="#6b5228" stroke="#3e2e10" stroke-width="0.8">
+    <path d="M169,326 Q170,344 168,372 Q173,373 176,372 Q175,344 175,326 Z"/>
+    <path d="M177,326 Q178,348 175,378 Q180,379 184,378 Q182,348 182,326 Z"/>
+    <path d="M185,326 Q186,350 184,382 Q189,383 193,382 Q191,350 190,326 Z"/>
+    <path d="M193,326 Q194,352 192,386 Q197,387 201,386 Q199,352 198,326 Z"/>
+    <path d="M201,326 Q202,352 200,384 Q205,385 209,384 Q207,352 206,326 Z"/>
+    <path d="M210,326 Q211,352 209,383 Q214,384 218,383 Q216,352 215,326 Z"/>
+    <path d="M218,326 Q219,350 218,382 Q223,383 227,382 Q225,350 224,326 Z"/>
+    <path d="M227,326 Q228,348 227,378 Q232,379 236,378 Q234,348 233,326 Z"/>
+    <path d="M235,326 Q236,346 235,374 Q240,375 244,374 Q242,346 241,326 Z"/>
+    <path d="M243,326 Q244,342 244,368 Q249,369 252,368 Q251,342 250,326 Z"/>
+  </g>
+  <!-- Pteruge gold top band -->
+  <rect x="168" y="322" width="84" height="8" rx="3" fill="url(#gold)" opacity="0.7"/>
+  <!-- Worn leather texture lines on strips -->
+  <g stroke="#4a3015" stroke-width="0.6" opacity="0.4">
+    <line x1="172" y1="340" x2="172" y2="365"/>
+    <line x1="180" y1="340" x2="180" y2="370"/>
+    <line x1="188" y1="340" x2="188" y2="374"/>
+    <line x1="196" y1="340" x2="196" y2="377"/>
+    <line x1="204" y1="340" x2="204" y2="376"/>
+    <line x1="212" y1="340" x2="212" y2="375"/>
+    <line x1="220" y1="340" x2="220" y2="373"/>
+    <line x1="228" y1="340" x2="228" y2="369"/>
+    <line x1="237" y1="340" x2="237" y2="364"/>
+    <line x1="246" y1="340" x2="246" y2="358"/>
+  </g>
+
+  <!-- ── SWORD ARM (right of figure = left in image) ── -->
+  <!-- Upper arm -->
+  <path d="M248,254 Q268,262 272,285 Q265,295 255,295 Q245,285 244,264 Z"
+        fill="url(#skin)"/>
+  <!-- Arm bracer (vambrace) -->
+  <path d="M256,285 Q270,290 274,308 Q266,318 256,315 Q248,305 248,290 Z"
+        fill="url(#darkSteel)" stroke="url(#gold)" stroke-width="1.2"/>
+  <!-- Bracer detail lines -->
+  <path d="M252,292 Q264,296 270,308" fill="none" stroke="#aaa" stroke-width="0.8" opacity="0.4"/>
+  <!-- Fist / gauntlet -->
+  <path d="M260,315 Q275,320 278,332 Q268,342 258,336 Q250,326 252,318 Z"
+        fill="url(#darkSteel)" stroke="url(#gold)" stroke-width="1"/>
+  <!-- Knuckle plates -->
+  <g fill="url(#steel)" stroke="#888" stroke-width="0.6">
+    <rect x="261" y="320" width="7" height="5" rx="1" transform="rotate(-10,265,323)"/>
+    <rect x="269" y="322" width="7" height="5" rx="1" transform="rotate(-10,273,325)"/>
+  </g>
+
+  <!-- GLADIUS SWORD (raised high, dominant, angled ~35° toward upper right) -->
+  <!-- Handle (grip) -->
+  <path d="M266,326 Q272,318 278,308 Q282,310 280,316 Q276,326 270,332 Z"
+        fill="#5c3a14" stroke="#3a2008" stroke-width="1"/>
+  <!-- Grip wrap texture -->
+  <path d="M267,325 Q273,317 279,309" fill="none" stroke="#8B6030" stroke-width="2.5" stroke-dasharray="3,2" opacity="0.7"/>
+  <!-- Crossguard -->
+  <path d="M262,320 Q282,308 296,316 Q292,325 272,332 Z"
+        fill="url(#gold)" stroke="#a07800" stroke-width="0.8"/>
+  <!-- Pommel -->
+  <ellipse cx="267" cy="332" rx="8" ry="5" fill="url(#gold)" transform="rotate(-35,267,332)"/>
+  <!-- Blade — long, slightly curved, rising toward upper right -->
+  <path d="M278,308 Q305,258 322,185 Q316,182 312,183 Q298,254 268,308 Z"
+        fill="url(#blade)"/>
+  <!-- Blade center ridge (fuller) -->
+  <path d="M279,306 Q304,257 319,185" fill="none" stroke="white" stroke-width="1.5" opacity="0.5"/>
+  <!-- Blade tip -->
+  <path d="M319,185 L322,176 L312,183 Z" fill="#e0e8f0"/>
+  <!-- Blood on blade -->
+  <path d="M288,285 Q292,278 294,270 Q290,272 287,280 Z" fill="#8B0000" opacity="0.7"/>
+  <path d="M296,265 Q300,258 301,252 Q297,255 295,263 Z" fill="#8B0000" opacity="0.5"/>
+  <!-- Blade edge highlights -->
+  <path d="M280,305 Q306,256 320,186" fill="none" stroke="#c0d0e0" stroke-width="0.8" opacity="0.4"/>
+
+  <!-- ── SHIELD ARM (left of figure = right in image) ── -->
+  <!-- Upper arm -->
+  <path d="M172,254 Q152,262 148,285 Q155,295 165,295 Q175,285 176,264 Z"
+        fill="url(#skin)"/>
+  <!-- Arm bracer -->
+  <path d="M164,285 Q150,290 146,308 Q154,318 164,315 Q172,305 172,290 Z"
+        fill="url(#darkSteel)" stroke="url(#gold)" stroke-width="1.2"/>
+
+  <!-- SCUTUM SHIELD — large, battle-scarred, imposing -->
+  <!-- Shield body -->
+  <path d="M82,260 Q78,310 80,360 Q82,400 105,418 Q130,432 148,415 Q162,398 162,360 L162,260 Q145,240 120,240 Q96,240 82,260 Z"
+        fill="url(#shieldFace)" stroke="#4a0808" stroke-width="1.5"/>
+  <!-- Shield rim — thick gold band -->
+  <path d="M82,260 Q78,310 80,360 Q82,400 105,418 Q130,432 148,415 Q162,398 162,360 L162,260 Q145,240 120,240 Q96,240 82,260 Z"
+        fill="none" stroke="url(#gold)" stroke-width="4"/>
+  <!-- Shield face highlight top -->
+  <path d="M90,265 Q120,248 155,265" fill="none" stroke="#cc3333" stroke-width="1.5" opacity="0.35"/>
+  <!-- Shield central vertical spine -->
+  <rect x="118" y="248" width="6" height="168" rx="3"
+        fill="url(#darkSteel)" stroke="#555" stroke-width="0.8"/>
+  <!-- Shield boss (center dome) — imposing iron dome -->
+  <ellipse cx="122" cy="335" rx="22" ry="18" fill="url(#darkSteel)" stroke="url(#gold)" stroke-width="2.5"/>
+  <ellipse cx="122" cy="335" rx="14" ry="11" fill="#6a6e74"/>
+  <ellipse cx="122" cy="335" rx="6" ry="5" fill="#9aa0ac"/>
+  <!-- Boss highlight -->
+  <ellipse cx="118" cy="330" rx="4" ry="3" fill="white" opacity="0.2"/>
+  <!-- Shield decorative border inside rim -->
+  <path d="M88,268 Q84,312 86,358 Q88,396 109,413 Q130,426 146,411 Q158,396 158,358 L158,268 Q142,250 120,250 Q98,250 88,268 Z"
+        fill="none" stroke="url(#gold)" stroke-width="1" opacity="0.3"/>
+  <!-- Shield battle damage — deep scratches -->
+  <g stroke="#2a0404" stroke-width="1.5" opacity="0.6" stroke-linecap="round">
+    <path d="M95,280 Q102,290 98,298"/>
+    <path d="M138,268 Q145,280 140,290"/>
+    <path d="M106,370 Q115,380 110,392"/>
+    <path d="M88,345 Q96,352 93,362"/>
+    <path d="M148,350 Q155,360 150,372"/>
+  </g>
+  <!-- Lighter scratch marks -->
+  <g stroke="#5a1010" stroke-width="0.8" opacity="0.5" stroke-linecap="round">
+    <path d="M92,310 Q100,318 96,325"/>
+    <path d="M130,290 Q138,296 135,303"/>
+    <path d="M100,395 Q108,402 105,410"/>
+    <path d="M143,310 Q150,318 148,328"/>
+  </g>
+  <!-- SPQR lettering on shield -->
+  <text x="122" y="293" font-family="'Palatino Linotype',Georgia,serif" font-size="11"
+        font-weight="bold" fill="url(#gold)" text-anchor="middle" opacity="0.8" letter-spacing="2">SPQR</text>
+  <!-- Eagle emblem below SPQR -->
+  <path d="M110,300 Q122,295 134,300 Q130,310 122,313 Q114,310 110,300 Z"
+        fill="url(#gold)" opacity="0.45"/>
+
+  <!-- ── LEGS ── -->
+  <!-- Left leg (figure's right) -->
+  <path d="M196,378 Q196,405 192,430 Q205,434 212,430 Q212,405 212,378 Z"
+        fill="url(#skin)"/>
+  <!-- Right leg (figure's left) -->
+  <path d="M208,378 Q208,405 208,430 Q215,434 226,430 Q222,405 222,378 Z"
+        fill="url(#skin)"/>
+  <!-- Left greave (shin armor) -->
+  <path d="M191,400 Q192,418 194,432 Q203,438 212,432 Q213,418 212,400 Z"
+        fill="url(#steel)" stroke="url(#gold)" stroke-width="1.2"/>
+  <!-- Greave details -->
+  <path d="M193,406 Q202,402 212,406" fill="none" stroke="#bbb" stroke-width="0.8" opacity="0.4"/>
+  <path d="M193,418 Q202,414 212,418" fill="none" stroke="#bbb" stroke-width="0.8" opacity="0.4"/>
+  <!-- Right greave -->
+  <path d="M209,400 Q210,418 210,432 Q219,438 228,432 Q228,418 228,400 Z"
+        fill="url(#steel)" stroke="url(#gold)" stroke-width="1.2"/>
+  <path d="M210,406 Q219,402 228,406" fill="none" stroke="#bbb" stroke-width="0.8" opacity="0.4"/>
+  <path d="M210,418 Q219,414 228,418" fill="none" stroke="#bbb" stroke-width="0.8" opacity="0.4"/>
+  <!-- Sandal straps -->
+  <g stroke="#8B6914" stroke-width="2" stroke-linecap="round">
+    <line x1="192" y1="432" x2="212" y2="432"/>
+    <line x1="210" y1="432" x2="228" y2="432"/>
+  </g>
+
+  </g><!-- end figShadow group -->
+
+  <!-- ══════════════════════════════════════ -->
+  <!--  TITLE AREA                            -->
+  <!-- ══════════════════════════════════════ -->
+  <!-- Ribbon shadow -->
+  <path d="M50,450 L60,440 L360,440 L370,450 L360,460 L60,460 Z"
+        fill="#000" opacity="0.4"/>
+  <!-- Main ribbon -->
+  <path d="M50,448 L62,438 L358,438 L370,448 L358,458 L62,458 Z"
+        fill="url(#crimson)" stroke="url(#gold)" stroke-width="1.5"/>
+  <!-- "BACCARAT" lettering -->
+  <text x="210" y="453" font-family="'Palatino Linotype','Book Antiqua',Georgia,serif"
+        font-size="20" font-weight="bold" letter-spacing="5"
+        fill="url(#gold)" text-anchor="middle" filter="url(#goldGlow)">BACCARAT</text>
+
+  <!-- Divider with ornament -->
+  <line x1="75" y1="466" x2="345" y2="466" stroke="url(#gold)" stroke-width="1" opacity="0.5"/>
+  <path d="M200,466 L210,461 L220,466" fill="url(#gold)" opacity="0.5"/>
+
+  <!-- "GLADIATOR" - large, dominant -->
+  <text x="210" y="498" font-family="'Palatino Linotype','Book Antiqua',Georgia,serif"
+        font-size="30" font-weight="bold" letter-spacing="3"
+        fill="url(#gold)" text-anchor="middle" filter="url(#goldGlow)">GLADIATOR</text>
+
+  <!-- ══════════════════════════════════════ -->
+  <!--  BOTTOM ORNAMENT                       -->
+  <!-- ══════════════════════════════════════ -->
+  <line x1="80" y1="510" x2="340" y2="510" stroke="url(#gold)" stroke-width="0.8" opacity="0.35"/>
+  <!-- Suit row -->
+  <g font-family="Georgia,serif" font-size="15" text-anchor="middle"
+     fill="url(#gold)" opacity="0.45">
+    <text x="110" y="530">♣</text>
+    <text x="152" y="530">♦</text>
+    <text x="194" y="530">♠</text>
+    <text x="236" y="530">♥</text>
+    <text x="278" y="530">♦</text>
+    <text x="310" y="530">♣</text>
+  </g>
+  <!-- Center ornament line -->
+  <path d="M150,536 Q210,532 270,536" fill="none" stroke="url(#gold)" stroke-width="0.8" opacity="0.3"/>
+
+</svg>

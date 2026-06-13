@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Privacy Policy — Baccarat Gladiator</title>
+<meta name="description" content="How Baccarat Gladiator handles your account data, scores, and privacy.">
+<meta name="robots" content="index,follow">
+<link rel="icon" href="/baccarat-gladiator-logo.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Raleway:wght@400;600&display=swap">
+<style>
+* { box-sizing:border-box; margin:0; padding:0; }
+html,body { background:#080e08; color:#f0e6c8; min-height:100vh;
+  font-family:'Raleway',-apple-system,sans-serif; line-height:1.6;
+  -webkit-font-smoothing:antialiased; }
+body { padding:32px 22px 80px; max-width:760px; margin:0 auto; }
+header { border-bottom:1px solid rgba(201,168,76,0.32); padding-bottom:18px; margin-bottom:28px; }
+h1 { font-family:'Cinzel',serif; font-size:1.6rem; letter-spacing:3px;
+  color:#f0d080; margin-bottom:6px; }
+h2 { font-family:'Cinzel',serif; font-size:1rem; letter-spacing:2px;
+  color:#c9a84c; margin:30px 0 8px; text-transform:uppercase; }
+p, li { font-size:0.92rem; margin-bottom:10px; color:#e8dfb8; }
+ul { padding-left:22px; margin-bottom:14px; }
+a { color:#f0d080; text-decoration:underline; }
+a:hover { color:#fff7d6; }
+.meta { font-size:0.78rem; color:rgba(232,223,192,0.55);
+  letter-spacing:1.4px; text-transform:uppercase; }
+.draft-note { background:rgba(255,180,40,0.08);
+  border:1px solid rgba(255,180,40,0.32); border-radius:6px;
+  padding:12px 14px; font-size:0.82rem; color:#ffd76e;
+  margin-bottom:24px; }
+footer { margin-top:48px; padding-top:18px;
+  border-top:1px solid rgba(201,168,76,0.18); font-size:0.78rem;
+  color:rgba(232,223,192,0.55); text-align:center; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Privacy Policy</h1>
+  <div class="meta">Baccarat Gladiator · Effective 2026-05-09</div>
+</header>
+
+<div class="draft-note">
+  ⚠ Draft policy. Review with counsel before public launch — this text is
+  a faithful description of the app's actual data flow, not a legal document.
+</div>
+
+<p>
+  Baccarat Gladiator is a single-player simulated baccarat game with no
+  real-money wagering. This page explains what data we collect, why,
+  and how it's stored.
+</p>
+
+<h2>What we collect</h2>
+<ul>
+  <li><strong>Account credentials.</strong> When you sign up, AWS Cognito
+      stores your email address and a password hash. We never see or
+      store your plaintext password.</li>
+  <li><strong>High scores and gameplay stats.</strong> When you submit a
+      score, we store the result, the stage you played, and your
+      account ID so the leaderboard can attribute your entry.</li>
+  <li><strong>Tournament submissions.</strong> If you participate in a
+      monthly tournament, we store your bet history for the tournament
+      shoe so the server can replay and verify your final balance.</li>
+  <li><strong>Local app state.</strong> Sound preferences, the cleared-
+      tier list, and audio toggles are stored locally on your device
+      via the iOS UserDefaults / web localStorage. They never leave
+      your device.</li>
+</ul>
+
+<h2>What we don't collect</h2>
+<ul>
+  <li>No advertising identifiers (no IDFA, no Google Advertising ID).</li>
+  <li>No location data.</li>
+  <li>No camera, microphone, or photo-library access.</li>
+  <li>No third-party analytics SDKs (no Google Analytics, no Firebase
+      Analytics, no Mixpanel, no Segment, etc.).</li>
+  <li>No cross-app or cross-site tracking.</li>
+  <li>No real-money payment information — the app does not process
+      payments.</li>
+</ul>
+
+<h2>Where data is stored</h2>
+<p>
+  Account credentials are stored in AWS Cognito (US East 1 region).
+  Scores and tournament submissions are stored in AWS DynamoDB and
+  served via AWS Lambda. We do not share your data with any third
+  party other than these AWS infrastructure services.
+</p>
+
+<h2>Children</h2>
+<p>
+  Baccarat Gladiator is age-rated for simulated gambling and is not
+  directed to children. We do not knowingly collect data from anyone
+  below the app's rated age. If you believe an under-age user has
+  signed up, contact us and we'll delete the account.
+</p>
+
+<h2>Your rights</h2>
+<p>
+  You can request a copy of your data, ask for corrections, or
+  request full deletion of your account by emailing
+  <a href="mailto:frankie@styleiq.co?subject=Privacy%20Request">
+  frankie@styleiq.co</a>. We respond within 30 days.
+</p>
+
+<h2>Changes to this policy</h2>
+<p>
+  If we make material changes, we'll update the effective date at
+  the top of this page and notify active accounts at next sign-in.
+</p>
+
+<h2>Contact</h2>
+<p>
+  Questions about this policy:
+  <a href="mailto:frankie@styleiq.co">frankie@styleiq.co</a>
+</p>
+
+<footer>
+  <a href="/">Baccarat Gladiator</a> ·
+  <a href="/terms.html">Terms</a> ·
+  <a href="/responsible-play.html">Responsible Play</a> ·
+  <a href="/support.html">Support</a>
+</footer>
+
+</body>
+</html>

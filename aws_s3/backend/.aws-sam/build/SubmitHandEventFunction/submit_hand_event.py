@@ -258,7 +258,13 @@ def handler(event, context):
             'required': verdict['totalBet'],
         })
 
-    username = (body.get('username') or claims.get('preferred_username') or claims.get('cognito:username') or 'Player').strip()[:40]
+    username = (
+        body.get('username')
+        or claims.get('preferred_username')
+        or claims.get('cognito:username')
+        or claims.get('username')
+        or 'Player'
+    ).strip()[:40]
     email = (body.get('email') or claims.get('email') or '').strip().lower()[:120]
 
     next_score = prior_score + verdict['handDelta']

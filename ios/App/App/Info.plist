@@ -105,10 +105,15 @@
 		<string>audio</string>
 	</array>
 
-	<!-- ── Capacitor internal ── -->
+	<!-- ── App-Bound Domains ──
+	     Required because capacitor.config.json sets
+	     `limitsNavigationsToAppBoundDomains: true`. The webview will
+	     refuse to navigate anywhere outside this list, including the
+	     Cognito Hosted UI sign-in flow. Apple caps this list at 10. -->
 	<key>WKAppBoundDomains</key>
 	<array>
 		<string>baccaratgladiator.com</string>
+		<string>baccaratgladiator-prod-henry-v2.auth.us-east-1.amazoncognito.com</string>
 	</array>
 </dict>
 </plist>

@@ -1,0 +1,4077 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#1a0408">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Road to Macau — VIP Baccarat</title>
+<meta name="description" content="Imperial Dragon Suite — EZ Baccarat under Cotai Strip lanterns. Dragon 7 (40:1), Panda 8 (25:1), Player Pair, Banker Pair.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Road to Macau — Imperial Dragon Suite">
+<meta property="og:description" content="EZ Baccarat in a Cotai Strip VIP salon. Dragon 7 pays 40 to 1, Panda 8 pays 25 to 1, lantern-lit payouts.">
+<meta property="og:url" content="https://baccaratgladiator.com/road-to-macau.html">
+<meta property="og:image" content="https://baccaratgladiator.com/preview-macau.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Road to Macau — Imperial Dragon Suite">
+<meta name="twitter:description" content="Cotai Strip EZ Baccarat with Dragon 7 and Panda 8 side bets.">
+<meta name="twitter:image" content="https://baccaratgladiator.com/preview-macau.jpg">
+
+<link rel="preload" href="/three.module.js" as="script" crossorigin>
+<link rel="preload" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&display=swap" as="style">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&display=swap">
+
+<style>
+* { margin:0; padding:0; box-sizing:border-box;
+    -webkit-tap-highlight-color:transparent; -webkit-user-select:none; user-select:none;
+    -webkit-touch-callout:none; }
+/* 100dvh keeps the layout stable as Chrome Mobile's address bar shows /
+   hides; overscroll-behavior:none kills pull-to-refresh during gameplay. */
+html,body { width:100%; height:100vh; height:100dvh; overflow:hidden;
+            overscroll-behavior:none; -webkit-overflow-scrolling:auto;
+            background:#1a0408;
+            color:#f0e3c0; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+            touch-action:manipulation; }
+
+/* ── 3D stage ───────────────────────────────────────────── */
+#stage { position:fixed; inset:0; z-index:1; touch-action:none; }
+
+/* ── Macau Cotai-Strip backdrop ──
+   Deep imperial-red gradient visible through the canvas margins.
+   The 3D felt sits in the foreground; the lantern grid and ember
+   caustics below evoke the Pearl River penthouse view. */
+#bg { position:fixed; inset:0; z-index:0;
+  background:
+    /* High lamp-pool — gold spill onto the upper room */
+    radial-gradient(ellipse at 50% 14%, rgba(255,180,40,0.30) 0%, transparent 38%),
+    /* Imperial wash */
+    radial-gradient(ellipse at 50% 38%, #b8001f 0%, #5a0010 32%, #1f0408 70%, #0a0204 100%),
+    /* Floor wash */
+    linear-gradient(180deg, #1a0408 0%, #0a0204 100%);
+}
+
+/* ── Cotai skyline video (optional) ──
+   The base bahamas template streams an aquarium clip behind the WebGL
+   canvas. Macau uses a still red/gold gradient backdrop instead — the
+   video tag is preserved for forward-compat (drop a macau-loop.mp4 in
+   later if you want neon Cotai parallax) but defaults to no source so
+   the lantern grid below is the visible layer. */
+#aquarium-video {
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+  width:100vw; height:100vh; height:100dvh;
+  object-fit:cover; object-position:center;
+  background:transparent;
+  display:none;        /* hidden until a macau-loop asset is dropped in */
+}
+
+/* ── Imperial lantern grid (replaces the marine sprites) ──
+   Three rows of red/gold paper-lanterns gently swaying. Pure CSS
+   radial-gradients + keyframe sway, so the 3D render loop stays at
+   60fps and there are no clip-art assets to manage. */
+#aquarium { position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
+#aquarium .marine {
+  position:absolute; left:-15%; top:0;
+  width:62px; height:74px;
+  border-radius:50% 50% 46% 46% / 60% 60% 40% 40%;
+  background:
+    radial-gradient(circle at 50% 28%, #ffe7a0 0%, #ff8a1a 22%, #b8001f 60%, #5a0008 100%);
+  box-shadow:
+    inset 0 -4px 6px rgba(40,4,4,0.6),
+    inset 0 2px 4px rgba(255,220,140,0.55),
+    0 0 24px rgba(255,140,40,0.55),
+    0 0 60px rgba(184,0,31,0.35);
+  opacity:0.92; line-height:1;
+  filter:drop-shadow(0 6px 10px rgba(0,0,0,0.55));
+  will-change:transform; transform:translate3d(-200px, 0, 0);
+}
+#aquarium .marine::before {
+  /* Top cap — black lantern crown */
+  content:""; position:absolute; left:50%; top:-10px;
+  transform:translateX(-50%);
+  width:42%; height:14px; border-radius:4px 4px 2px 2px;
+  background:linear-gradient(180deg, #2a0a0a, #100406);
+  box-shadow:0 1px 0 rgba(255,200,80,0.35);
+}
+#aquarium .marine::after {
+  /* Tassel */
+  content:""; position:absolute; left:50%; bottom:-22px;
+  transform:translateX(-50%);
+  width:3px; height:22px; background:linear-gradient(180deg, #d4af37, #5a3a0a);
+  box-shadow:0 0 6px rgba(212,175,55,0.55);
+}
+#aquarium .marine.left {
+  left:auto; right:-15%; transform:scaleX(-1) translate3d(0, 0, 0);
+}
+@keyframes drift-rtl  { from { transform:translate3d(-200px,0,0);} to { transform:translate3d(140vw,0,0);} }
+@keyframes drift-ltr  { from { transform:scaleX(-1) translate3d(0,0,0);} to { transform:scaleX(-1) translate3d(140vw,0,0);} }
+@keyframes drift-bob  {
+  0%   { transform:translate3d(-200px, 0, 0) rotate(-2deg); }
+  50%  { transform:translate3d(60vw, -22px, 0) rotate(2deg); }
+  100% { transform:translate3d(140vw, 0, 0) rotate(-2deg); }
+}
+@keyframes bubble-up {
+  0%   { transform:translate3d(0, 100vh, 0) scale(0.6); opacity:0; }
+  10%  { opacity:0.7; }
+  90%  { opacity:0.5; }
+  100% { transform:translate3d(0, -10vh, 0) scale(1.1); opacity:0; }
+}
+
+/* Snorkeler greeting — a waving hand that rotates back and forth, plus
+   a "hi" speech bubble that pops in mid-drift. Children of the
+   snorkeler sprite so they ride along with its translation. */
+#aquarium .marine .wave {
+  position:absolute; left:-0.3em; top:-0.45em;
+  font-size:0.78em; line-height:1;
+  transform-origin:60% 90%;
+  animation: snorkeler-wave 0.55s ease-in-out 4s 6 alternate;
+  opacity:0;
+}
+@keyframes snorkeler-wave {
+  0%   { opacity:1; transform:rotate(-22deg); }
+  100% { opacity:1; transform:rotate(22deg); }
+}
+#aquarium .marine .hi {
+  position:absolute; left:100%; top:-12px;
+  font-size:0.55em; line-height:1; padding:3px 6px;
+  background:rgba(255,255,255,0.92); color:#0a3a5a;
+  border-radius:10px 10px 10px 2px;
+  white-space:nowrap;
+  animation: snorkeler-hi 4s ease-in-out 4s 1 forwards;
+  opacity:0;
+}
+@keyframes snorkeler-hi {
+  0%   { opacity:0; transform:translateY(4px) scale(0.6); }
+  20%  { opacity:1; transform:translateY(0) scale(1); }
+  80%  { opacity:1; transform:translateY(0) scale(1); }
+  100% { opacity:0; transform:translateY(-4px) scale(0.95); }
+}
+
+/* ── Lantern-glow caustics overlay ──
+   Three large soft warm-amber radial gradients drifting slowly in screen
+   mode simulate Cotai lantern-light flickering across the felt. Mobile-
+   friendly: pure CSS, no canvas, no JS frame-loop. */
+#caustics { position:fixed; inset:0; z-index:2; pointer-events:none;
+  background:
+    radial-gradient(ellipse 40vw 30vh at 30% 20%, rgba(255,200,80,0.18), transparent 60%),
+    radial-gradient(ellipse 50vw 35vh at 70% 50%, rgba(255,140,40,0.14), transparent 65%),
+    radial-gradient(ellipse 35vw 25vh at 50% 80%, rgba(184,0,31,0.16), transparent 55%);
+  mix-blend-mode:screen;
+  animation:caustics-drift 18s ease-in-out infinite alternate;
+}
+@keyframes caustics-drift {
+  0%   { background-position: 0% 0%, 0% 0%, 0% 0%; opacity:0.95; }
+  50%  { background-position: 4% 3%, -3% 2%, 2% -3%; opacity:1.0; }
+  100% { background-position: -3% 4%, 4% -2%, -2% 3%; opacity:0.85; }
+}
+
+/* ── White leather rail ──
+   Polished cream leather inlay framing the bet panel. */
+#bet-panel.rail-leather::before {
+  content:''; position:absolute; left:-8px; right:-8px; top:-8px; bottom:-8px;
+  border:6px solid #f4ede0;
+  border-radius:18px;
+  background:linear-gradient(180deg, rgba(248,242,228,0.04), rgba(180,170,150,0.06));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.55), inset 0 -2px 6px rgba(80,70,55,0.3),
+              0 2px 14px rgba(0,0,0,0.45);
+  pointer-events:none;
+}
+
+/* ── VIP milestone overlays ──
+   Triggered when balance crosses 1.5× starting bankroll. */
+#vip-rail-tray { position:fixed; right:14px; bottom:calc(170px + env(safe-area-inset-bottom));
+  z-index:9; pointer-events:none; opacity:0; transform:translateY(40px);
+  font-size:46px; line-height:1;
+  filter:drop-shadow(0 6px 14px rgba(0,0,0,0.55));
+  transition:opacity 0.6s ease, transform 0.6s ease;
+}
+#vip-rail-tray.show { opacity:1; transform:translateY(0); }
+#vip-color-up { position:fixed; left:50%; top:50%; transform:translate(-50%,-50%) scale(0.5);
+  z-index:55; pointer-events:none; opacity:0;
+  font-family:'Cinzel',serif; font-size:clamp(1.4rem,5vw,2.4rem); letter-spacing:0.18em;
+  color:#fff4e0; text-shadow:0 4px 18px rgba(0,0,0,0.7), 0 0 24px #fff;
+  padding:14px 28px; border:2px solid rgba(255,240,210,0.7); border-radius:14px;
+  background:radial-gradient(ellipse at center, rgba(255,250,235,0.18), rgba(0,0,0,0.55));
+  transition:opacity 0.4s ease, transform 0.6s cubic-bezier(.16,1,.3,1);
+}
+#vip-color-up.show { opacity:1; transform:translate(-50%,-50%) scale(1); }
+#vip-whale {
+  position:fixed; left:-260px; top:18%; z-index:1; pointer-events:none;
+  font-size:clamp(110px, 26vw, 200px); opacity:0;
+  /* Imperial gold glow replaces the marine cyan halo */
+  filter:drop-shadow(0 0 28px rgba(255,180,40,0.65));
+}
+#vip-whale.go { animation:vip-whale-glide 14s ease-in-out forwards; }
+@keyframes vip-whale-glide {
+  0%   { left:-260px; opacity:0; transform:translateY(0) rotate(-1deg); }
+  10%  { opacity:0.9; }
+  50%  { transform:translateY(-30px) rotate(1deg); }
+  90%  { opacity:0.9; }
+  100% { left:calc(100vw + 260px); opacity:0; transform:translateY(0) rotate(-1deg); }
+}
+
+/* ── Apex venue gating ──
+   Brushed-steel "Insufficient Funds" card shown when the user lands
+   in the Whale Room without the bankroll. Pointer-events block the
+   table so they can't bet behind it. */
+#apex-gate, #vip-whale-card {
+  position:fixed; inset:0; z-index:80;
+  display:flex; align-items:center; justify-content:center;
+  background:rgba(0,8,16,0.78); backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  opacity:0; pointer-events:none; transition:opacity 0.32s ease;
+}
+#apex-gate.show, #vip-whale-card.show { opacity:1; pointer-events:auto; }
+#apex-gate .card, #vip-whale-card .card {
+  width:min(86vw, 380px); padding:30px 26px; text-align:center;
+  background:
+    linear-gradient(160deg, rgba(58,62,68,0.95) 0%, rgba(28,32,38,0.95) 60%, rgba(10,12,14,0.95) 100%),
+    repeating-linear-gradient(90deg,
+      rgba(255,255,255,0.04) 0px, rgba(255,255,255,0.04) 1px,
+      transparent 1px, transparent 4px);
+  border:1px solid rgba(220,230,240,0.32);
+  border-radius:14px;
+  box-shadow:0 20px 60px rgba(0,0,0,0.7),
+             inset 0 1px 0 rgba(255,255,255,0.18);
+  color:#e8e8ec;
+  transform:scale(0.86);
+  transition:transform 0.4s cubic-bezier(.16,1,.3,1);
+}
+#apex-gate.show .card, #vip-whale-card.show .card { transform:scale(1); }
+#apex-gate .title, #vip-whale-card .title {
+  font-family:'Cinzel',serif; font-weight:800;
+  font-size:clamp(1.1rem,4.4vw,1.5rem); letter-spacing:0.22em;
+  color:#dfe6ee;
+}
+#apex-gate .sub, #vip-whale-card .sub {
+  margin-top:8px;
+  font-family:'Cinzel',serif; font-weight:600;
+  font-size:clamp(0.85rem,3.6vw,1.05rem); letter-spacing:0.16em;
+  color:#aab2bc;
+}
+#apex-gate .lim {
+  margin-top:18px; font-size:0.7rem; letter-spacing:0.08em;
+  color:rgba(220,230,240,0.6);
+}
+#apex-gate-close {
+  margin-top:22px; padding:10px 26px; border:none; cursor:pointer;
+  background:linear-gradient(180deg,#9aa3ad,#5e6770);
+  color:#0a0c10; font-weight:700; letter-spacing:0.18em;
+  border-radius:8px; font-family:'Cinzel',serif;
+  box-shadow:0 4px 12px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.4);
+}
+
+/* Imperial Dragon card: lacquered-red "VIP Dragon" emblem, spins onto the screen. */
+#vip-whale-card .card {
+  background:
+    radial-gradient(ellipse at 50% 30%, rgba(184,0,31,0.55) 0%, rgba(20,4,4,0.96) 70%),
+    linear-gradient(180deg, rgba(40,8,8,0.96), rgba(8,2,2,0.96));
+  border:2px solid rgba(212,175,55,0.65);
+  box-shadow:0 24px 80px rgba(0,0,0,0.8), 0 0 60px rgba(255,180,40,0.30),
+             inset 0 1px 0 rgba(255,220,140,0.18);
+  transform:scale(0.5) rotateY(540deg);
+  transition:transform 1s cubic-bezier(.16,1,.3,1), opacity 0.4s ease;
+}
+#vip-whale-card.show .card { transform:scale(1) rotateY(0deg); }
+#vip-whale-card .emblem {
+  font-size:clamp(72px,18vw,140px);
+  filter:drop-shadow(0 0 24px rgba(255,180,40,0.65));
+  margin-bottom:14px;
+}
+#vip-whale-card .title { color:#ffd76e;
+  text-shadow:0 0 22px rgba(255,180,40,0.55); }
+
+/* ── Top HUD ───────────────────────────────────────────── */
+#hud-top { position:fixed; top:0; left:0; right:0; z-index:10;
+  display:flex; justify-content:space-between; align-items:center;
+  padding:12px 14px; padding-top:max(12px,env(safe-area-inset-top));
+  pointer-events:none; }
+#hud-top > * { pointer-events:auto; }
+.hud-pill { background:rgba(0,0,0,0.55); border:1px solid rgba(201,168,76,0.32);
+  border-radius:10px; padding:9px 14px; backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px); }
+#btn-burger { width:42px; height:42px; padding:0; border-radius:10px;
+  border:1px solid rgba(201,168,76,0.32); background:rgba(0,0,0,0.55);
+  color:#c9a84c; font-size:18px; cursor:pointer;
+  backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); }
+.hud-right { display:flex; align-items:flex-start; gap:8px; }
+.hud-right-col { display:flex; flex-direction:column; align-items:flex-end; gap:5px; }
+#btn-sound { width:42px; height:42px; padding:0; border-radius:10px;
+  border:1px solid rgba(201,168,76,0.32); background:rgba(0,0,0,0.55);
+  color:#c9a84c; font-size:18px; cursor:pointer;
+  backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); }
+#btn-sound.on { color:#ffe39a; border-color:rgba(255,210,80,0.55); }
+#hud-balance { font-family:'Cinzel',serif; font-size:0.9rem; color:#f0d080;
+  letter-spacing:2px; }
+#hud-balance .lbl { color:rgba(232,223,192,0.55); font-size:0.55rem;
+  letter-spacing:2px; display:block; margin-bottom:1px; }
+/* Table limits pill — sits directly under the credits pill so the player
+   never has to ask "what's the min on this table?" Kept ultra-narrow
+   (values only, no labels) on compact so the dealer can stay centered. */
+#hud-limits { font-family:'Cinzel',serif; font-size:0.5rem; line-height:1.4;
+  letter-spacing:1.2px; color:rgba(240,208,128,0.92); font-weight:600;
+  padding:5px 8px; text-align:right;
+  background:rgba(0,0,0,0.45); border:1px solid rgba(201,168,76,0.22);
+  border-radius:8px; backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); }
+#hud-limits .row { display:flex; justify-content:space-between; gap:6px; }
+#hud-limits .row .k { color:rgba(232,223,192,0.55); font-weight:600; }
+#hud-limits .row .v { color:#f0d080; font-weight:600; }
+body.compact #hud-limits .row .k { display:none; }
+body.compact #hud-limits .row { min-width:0; }
+
+/* ── Dealer video frame — small on phones, prominent on desktop ──
+   Centered horizontally below the top HUD. The credits column on the
+   right is narrowed (limits pill shows values only on compact) so the
+   centered video has room without crossing the right HUD. */
+#dealer-vid { position:fixed; top:calc(76px + env(safe-area-inset-top));
+  left:50%; transform:translateX(-50%); z-index:10;
+  width:200px; height:170px; object-fit:cover;
+  border:2px solid rgba(201,168,76,0.45); border-radius:14px;
+  background:#000; box-shadow:0 4px 14px rgba(0,0,0,0.55), 0 0 18px rgba(201,168,76,0.25);
+  pointer-events:none; }
+@media (min-width:900px) {
+  /* Desktop: cinematic dealer panel — keep the top-center anchor but ~3× larger
+     so the dealer's expressions read as a real person, not a thumbnail. */
+  #dealer-vid {
+    top:18px;
+    width:200px; height:260px; border-radius:14px;
+    border-width:3px;
+    box-shadow:0 8px 26px rgba(0,0,0,0.7), 0 0 32px rgba(201,168,76,0.35);
+  }
+}
+
+/* ── Per-side running totals — only visible once cards start landing,
+       so the betting screen has more clear felt + chips real estate.
+       Pinned higher (further from the bet panel) on compact viewports so
+       the totals never overlap the cards.                              ── */
+#totals { position:fixed; bottom:calc(460px + env(safe-area-inset-bottom));
+  left:0; right:0; z-index:10;
+  display:flex; justify-content:space-between; padding:0 22px;
+  pointer-events:none;
+  opacity:0; transition:opacity 0.3s; }
+/* Compact: pin totals high enough that the win-scale animation (1.18×) still
+   clears the card landing zone (~y=235 on a 664 viewport). */
+body.compact #totals { bottom:calc(440px + env(safe-area-inset-bottom)); }
+body.dealing #totals,
+body.squeezing #totals,
+body.show-totals #totals { opacity:1; }
+.total { display:flex; flex-direction:column; align-items:center; gap:1px;
+  padding:8px 18px; min-width:90px;
+  background:rgba(0,0,0,0.6); border:2px solid rgba(201,168,76,0.4);
+  border-radius:12px; backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+  font-family:'Cinzel',serif;
+  transition:transform 0.4s cubic-bezier(.34,1.56,.64,1), border-color 0.3s,
+             box-shadow 0.3s, opacity 0.3s; }
+.total .lbl { font-size:0.55rem; letter-spacing:3px; color:rgba(232,223,192,0.7); font-weight:900; }
+.total .v   { font-size:1.9rem; font-weight:900; line-height:1; margin-top:2px;
+  font-variant-numeric:tabular-nums; }
+.total.t-player { /* Player on the right — matches felt layout */ }
+.total.t-banker { /* Banker on the left */ }
+.total.t-player .v { color:#9fbfff; }
+.total.t-banker .v { color:#ff9c9c; }
+
+/* Winner: scale up + push toward the side it sits on */
+.total.win {
+  border-color:#ffe39a;
+  box-shadow:0 0 30px rgba(255,210,80,0.55), inset 0 0 16px rgba(255,210,80,0.25);
+}
+.total.win .v { color:#ffe39a; text-shadow:0 0 14px rgba(255,210,80,0.7); }
+.total.t-player.win { transform:scale(1.18) translateX(-12px); }
+.total.t-banker.win { transform:scale(1.18) translateX(12px); }
+.total.lose { opacity:0.55; }
+
+/* ── Result toast — sits below the dealer / totals row ── */
+@media (min-width:900px) { #msg { top:300px !important; } }
+#msg { position:fixed; top:max(178px, calc(env(safe-area-inset-top) + 162px));
+  left:50%; transform:translateX(-50%) translateY(-8px);
+  z-index:11; font-family:'Cinzel',serif; color:#f0d080; font-size:0.9rem;
+  letter-spacing:3px; padding:10px 24px; border-radius:24px;
+  background:rgba(0,0,0,0.7); border:1px solid rgba(201,168,76,0.4);
+  opacity:0; transition:opacity 0.3s, transform 0.3s; pointer-events:none;
+  backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); white-space:nowrap; }
+#msg.show { opacity:1; transform:translateX(-50%) translateY(0); }
+#msg.win { color:#7fffa9; border-color:rgba(120,255,160,0.45); }
+#msg.lose { color:#ff8888; border-color:rgba(255,120,120,0.4); }
+
+/* ── Squeeze hint ─────────────────────────────────────── */
+#squeeze-hint { position:fixed; left:50%; top:38%; transform:translateX(-50%);
+  z-index:12; color:rgba(255,255,255,0.7); font-size:0.62rem; letter-spacing:3px;
+  pointer-events:none; animation:hintPulse 1.6s ease-in-out infinite; display:none;
+  font-family:'Cinzel',serif; text-transform:uppercase; white-space:nowrap;
+  background:rgba(0,0,0,0.45); padding:6px 14px; border-radius:18px;
+  border:1px solid rgba(201,168,76,0.25);
+  backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); }
+@keyframes hintPulse { 0%,100% {opacity:0.55;} 50% {opacity:1;} }
+
+/* ── FLIP ALL — quick reveal for users who skip the squeeze theatre ── */
+#btn-flip-all { position:fixed; left:50%; top:46%; transform:translateX(-50%);
+  z-index:12; padding:9px 22px;
+  font-family:'Cinzel',serif; font-size:0.72rem; letter-spacing:3px; font-weight:900;
+  color:#0a0a0a;
+  background:linear-gradient(135deg, #f7e09a, #c9a84c);
+  border:none; border-radius:24px; cursor:pointer; display:none;
+  box-shadow:0 0 18px rgba(201,168,76,0.45), 0 4px 12px rgba(0,0,0,0.55);
+  -webkit-tap-highlight-color:transparent; }
+#btn-flip-all.show { display:block; }
+#btn-flip-all:active { transform:translateX(-50%) scale(0.96); }
+
+/* ── Roads shelf ─────────────────────────────────────── */
+#roads-shelf { position:fixed; z-index:11; background:rgba(8,14,8,0.94);
+  border:1px solid rgba(201,168,76,0.28); box-shadow:0 -8px 30px rgba(0,0,0,0.7);
+  transition:transform 0.32s cubic-bezier(.25,.46,.45,.94);
+  backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); }
+/* When the shelf is open, fade the dealer video out so the boards own the
+   screen — they're the focus while the player is checking the road. */
+body:has(#roads-shelf.open) #dealer-vid { opacity:0; transition:opacity 0.22s ease; }
+@media (min-width:900px) {
+  #roads-shelf { top:78px; right:14px; width:360px; padding:12px;
+    border-radius:14px; display:flex; flex-direction:column; gap:6px; }
+}
+@media (max-width:899px) {
+  /* Right-side slide-out so the bottom edge stays free for chips + DEAL.
+     Closed by default; a vertical tab handle on the left edge of the panel
+     stays visible and is the only thing competing for thumb space — far
+     enough from the chip rail to be unambiguous. */
+  #roads-shelf {
+    top:0; bottom:0; right:0;
+    /* Almost full width so the Big Road and the three derived roads have
+       enough horizontal real estate for legible cells. The handle's 30px
+       at the left edge is the only off-panel gesture target. */
+    width:calc(100vw - 30px);
+    padding:14px 14px 14px 22px;
+    border-left:1px solid rgba(201,168,76,0.4);
+    border-radius:14px 0 0 14px;
+    display:flex; flex-direction:column; gap:6px;
+    transform:translateX(100%);
+    overflow-y:auto;
+    transition:transform 0.32s cubic-bezier(.25,.46,.45,.94);
+  }
+  #roads-shelf.open { transform:translateX(0); }
+  /* Handle is fixed to the viewport (not to the shelf) so it stays visible
+     when the shelf slides off-screen. Tapping it opens the shelf; tapping
+     again closes it. Position: just above the bet panel on the right edge,
+     out of the chip rail's way. */
+  #roads-handle {
+    position:fixed; right:0; top:38%;
+    width:30px; height:96px;
+    background:rgba(8,14,8,0.94);
+    border:1px solid rgba(201,168,76,0.4);
+    border-right:none;
+    border-radius:10px 0 0 10px;
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer; z-index:10;
+    box-shadow:-4px 4px 16px rgba(0,0,0,0.6);
+    -webkit-tap-highlight-color:transparent;
+    transition:right 0.32s cubic-bezier(.25,.46,.45,.94);
+  }
+  #roads-handle::after {
+    content:'ROADS';
+    writing-mode:vertical-rl; text-orientation:mixed;
+    font-family:'Cinzel',serif; font-size:0.62rem; letter-spacing:3px;
+    color:rgba(201,168,76,0.92);
+    transform:rotate(180deg);
+  }
+  /* When the shelf is open, slide the handle along with it so it sits on
+     the panel's left edge instead of overlapping the panel content. */
+  #roads-shelf.open ~ #roads-handle,
+  body:has(#roads-shelf.open) #roads-handle { right:calc(100vw - 30px); }
+  #roads-shelf::before {
+    content:''; position:absolute; left:8px; top:50%;
+    transform:translateY(-50%);
+    width:3px; height:34px; border-radius:2px;
+    background:rgba(201,168,76,0.45);
+  }
+}
+/* Vegas-standard order: Bead Road (chronological circles) sits on top as a
+   short horizontal strip, then Big Road takes the bulk of the space, then
+   three derived roads (Big Eye / Small / Cockroach) line up at the bottom. */
+#bead-road { width:100%; height:90px; background:#f0e8c8; border-radius:6px;
+  display:block; min-width:0; }
+#big-road { width:100%; height:180px; background:#f0e8c8; border-radius:6px;
+  display:block; min-width:0; }
+#roads-shelf .secondary { display:flex; gap:4px; min-width:0; }
+#roads-shelf .secondary canvas { flex:1 1 0; min-width:0; height:96px;
+  background:#f0e8c8; border-radius:6px; display:block; }
+/* Bottom-rail stats — what's printed under the boards on every Vegas
+   electronic baccarat display: hand count + outcome tallies + naturals
+   + EZ side-bet hits. Lives below the derived roads. */
+#board-stats {
+  display:grid; grid-template-columns:repeat(4, 1fr); gap:4px 6px;
+  margin-top:6px; padding:8px 6px;
+  background:rgba(8,14,8,0.6); border:1px solid rgba(201,168,76,0.22);
+  border-radius:8px;
+  font-family:'Cinzel',serif; color:rgba(232,223,192,0.85);
+}
+#board-stats .stat { display:flex; flex-direction:column; align-items:center; gap:2px; }
+#board-stats .k { font-size:0.5rem; letter-spacing:1.5px;
+  color:rgba(201,168,76,0.7); font-weight:600; }
+#board-stats .v { font-size:1rem; font-weight:800; color:#f0d080;
+  font-variant-numeric:tabular-nums; }
+#board-stats .vB { color:#ff9c9c; }
+#board-stats .vP { color:#9fbfff; }
+#board-stats .vT { color:#9fffa9; }
+
+/* ── Seat-5 Dragon Bonus Baccarat felt: small side-bet boxes (Panda | Tie | Dragon)
+   nearest the dealer arc, full-width Banker, full-width Player nearest the
+   player. Each row is a single radial "stripe" of one seat, like the
+   reference table image. Sits above the chip rail + DEAL action row.   ── */
+#bet-panel { position:fixed; left:14px; right:14px;
+  bottom:calc(124px + env(safe-area-inset-bottom));
+  z-index:8; display:flex; flex-direction:column; gap:5px;
+  pointer-events:none; }
+body.compact #bet-panel { bottom:calc(102px + env(safe-area-inset-bottom)); gap:3px; }
+body.compact #chip-rail { bottom:calc(8px + env(safe-area-inset-bottom)); padding:4px 12px; }
+body.compact .chip { width:46px; height:46px; font-size:0.68rem; }
+body.compact .chip::before { inset:5px; border-width:1.5px; }
+body.compact #btn-deal {
+  bottom:calc(64px + env(safe-area-inset-bottom));
+  padding:8px 22px; font-size:0.82rem; letter-spacing:3px;
+}
+body.compact #btn-clear {
+  bottom:calc(64px + env(safe-area-inset-bottom));
+  padding:7px 14px; font-size:0.62rem;
+}
+body.compact #dealer-vid { width:215px; height:180px; top:calc(80px + env(safe-area-inset-top)); left:50%; transform:translateX(-50%); transition:height 0.28s ease, width 0.28s ease; }
+/* During the deal/squeeze, gently shrink the dealer cam so the cards
+   landing in the middle of the felt aren't occluded by it. */
+body.compact.dealing   #dealer-vid,
+body.compact.squeezing #dealer-vid,
+body.compact.show-totals #dealer-vid {
+  height:130px;
+}
+/* Portrait dealer videos (pro_dealer.mp4 + warm_congrats.mp4 are both
+   400×712 = 1:1.78). Crop the bottom 20% so the head/torso fill the
+   frame, then shrink the whole box another 20% so the dealer doesn't
+   eat into the side-bet row (PLAYER DRAGON / TIE / BANKER DRAGON) below. */
+body.dealer-portrait #dealer-vid {
+  object-fit:cover;
+  object-position:50% 0%;
+  width:158px; height:226px;          /* 80% × (80% of natural-aspect) */
+  background:#000;
+}
+body.dealer-portrait.dealing   #dealer-vid,
+body.dealer-portrait.squeezing #dealer-vid {
+  width:104px; height:149px;
+}
+body.dealer-portrait.show-totals #dealer-vid {
+  width:160px; height:228px;
+}
+/* Square video (dealing.mp4 is 400×396, basically 1:1). Match the box. */
+body.dealer-square #dealer-vid {
+  object-fit:contain;
+  width:170px; height:168px;
+  background:#000;
+}
+/* Desktop overrides — the @media (min-width:900px) block below resets
+   the dealer to the cinematic 200×260 panel; portrait/square classes
+   are mobile-only concerns. */
+#bet-panel .bet-row { display:flex; gap:6px; pointer-events:none;
+  justify-content:center; }
+
+.slot { padding:0; margin:0; cursor:pointer; pointer-events:auto;
+  font-family:'Cinzel',serif;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  background:transparent;
+  -webkit-tap-highlight-color:transparent; -webkit-appearance:none;
+  transition:transform 0.12s, box-shadow 0.22s, border-color 0.18s, background 0.18s;
+  position:relative; }
+.slot .lbl { font-weight:900; line-height:1;
+  text-shadow:0 1px 3px rgba(0,0,0,0.85), 0 0 18px rgba(0,0,0,0.4); }
+.slot .pay { font-size:0.45rem; letter-spacing:2px; opacity:0.65; margin-top:3px;
+  font-weight:700; }
+.slot .lim { font-size:0.42rem; letter-spacing:1.4px; margin-top:2px;
+  opacity:0.55; font-weight:600; color:rgba(255,255,255,0.78);
+  font-family:-apple-system,sans-serif; }
+.slot .amt { font-size:0.7rem; color:#fff; letter-spacing:1px; margin-top:3px;
+  font-family:-apple-system,sans-serif; font-weight:700; opacity:0; transition:opacity 0.2s; }
+.slot.has-bet .amt { opacity:1; }
+.slot.has-bet .lim { display:none; }
+/* Brief red ring + shake when a chip would push the side past its max */
+.slot.limit-flash { animation: slot-limit-flash 0.55s ease-out; }
+@keyframes slot-limit-flash {
+  0%   { box-shadow:0 0 0 0 rgba(255,80,80,0.6); border-color:#ff6666; transform:translateX(0); }
+  20%  { transform:translateX(-3px); }
+  40%  { transform:translateX(3px); }
+  60%  { box-shadow:0 0 22px 4px rgba(255,80,80,0.5); transform:translateX(-2px); }
+  100% { box-shadow:0 0 0 0 rgba(255,80,80,0); transform:translateX(0); }
+}
+/* Under-min: keep the slot lit but with an amber warning glow until the
+   player either tops up to min or clears. DEAL stays disabled meanwhile. */
+.slot.under-min { box-shadow:0 0 0 1.5px rgba(255,180,60,0.85), 0 0 18px rgba(255,180,60,0.45); }
+.slot.under-min .lim { opacity:1; color:#ffd070; }
+
+/* Top row of three small side-bet boxes */
+.slot.side {
+  flex:1 1 0; min-height:46px; padding:5px 6px;
+  border:2px solid rgba(201,168,76,0.42);
+  border-radius:10px;
+  background:rgba(0,0,0,0.32);
+}
+/* Compact mode (short mobile viewports) — smaller controls + camera tweak
+   so cards always land safely above the bet panel even on Chrome mobile
+   with the URL bar showing. */
+body.compact .slot.side  { min-height:36px; padding:3px 4px; }
+body.compact .slot.side .lbl { font-size:0.55rem; letter-spacing:1.5px; }
+body.compact .slot.side .pay { font-size:0.4rem; margin-top:1px; }
+.slot.side .lbl { font-size:0.62rem; letter-spacing:2.5px; }
+/* Bahamas Dragon Bonus + Pair side bets — turquoise / pearl / coral. */
+.slot.side.player-dragon { color:#a8eaff; border-color:rgba(140,220,255,0.55);
+  background:radial-gradient(ellipse at 50% 0%, rgba(8,72,108,0.55), rgba(4,28,48,0.28)); }
+.slot.side.banker-dragon { color:#ffd0c0; border-color:rgba(255,170,140,0.55);
+  background:radial-gradient(ellipse at 50% 0%, rgba(96,40,12,0.55), rgba(40,12,4,0.28)); }
+.slot.side.player-pair   { color:#dff5ff; border-color:rgba(180,220,255,0.5);
+  background:radial-gradient(ellipse at 50% 0%, rgba(20,60,90,0.5), rgba(8,24,40,0.25)); }
+.slot.side.banker-pair   { color:#ffe0d8; border-color:rgba(255,200,180,0.5);
+  background:radial-gradient(ellipse at 50% 0%, rgba(72,28,12,0.5), rgba(28,12,8,0.25)); }
+.slot.side.tie           { color:#9fffe0; border-color:rgba(120,255,210,0.45);
+  background:radial-gradient(ellipse at 50% 0%, rgba(0,60,50,0.55), rgba(0,20,16,0.25)); }
+.slot.side.active        { transform:scale(1.04); box-shadow:0 0 22px currentColor; }
+
+/* Banker | Tie | Player on one row: mains take 2/5 each, Tie centre 1/5. */
+#bet-panel .main-row { gap:6px; pointer-events:auto; }
+#bet-panel .main-row .slot.main { flex:2 1 0; }
+#bet-panel .main-row .slot.center-tie { flex:1 1 0; min-height:50px; }
+body.compact #bet-panel .main-row .slot.center-tie { min-height:40px; }
+
+/* Banker / Player — full-width rows */
+.slot.main {
+  width:100%; min-height:50px; padding:7px 14px;
+  border:2px solid rgba(201,168,76,0.55);
+  border-radius:12px;
+}
+body.compact .slot.main { min-height:40px; padding:5px 12px; }
+body.compact .slot.main .lbl { font-size:0.78rem; letter-spacing:4px; }
+body.compact .slot.main .pay { font-size:0.4rem; }
+body.compact .slot.main .amt { font-size:0.62rem; margin-top:1px; }
+.slot.main .lbl { font-size:0.88rem; letter-spacing:5px; }
+.slot.main.banker { color:#ff9c9c; border-color:rgba(255,140,140,0.55);
+  background:linear-gradient(180deg, rgba(105,18,18,0.62), rgba(40,8,8,0.28)); }
+.slot.main.banker.active { box-shadow:inset 0 0 0 1px #ff8888, 0 0 28px rgba(255,120,120,0.55); border-color:#ff8888; transform:scale(1.01); }
+.slot.main.player { color:#9fbfff; border-color:rgba(140,180,255,0.55);
+  background:linear-gradient(180deg, rgba(20,32,98,0.62), rgba(8,12,32,0.28)); }
+.slot.main.player.active { box-shadow:inset 0 0 0 1px #88aaff, 0 0 28px rgba(120,160,255,0.55); border-color:#88aaff; transform:scale(1.01); }
+
+/* Locked: a different main side has been chosen — visually unavailable */
+.slot.locked { opacity:0.4; filter:saturate(0.5); cursor:not-allowed; }
+
+/* Bahamas celebrate kinds — bioluminescent deep-blue for Dragon Bonus,
+   pearl-white for Pair hits, sapphire pulse for Égalité Tie. */
+.slot.celebrate-biolum  { animation:celebrateBiolum  1.8s ease-out 2; }
+.slot.celebrate-pearl   { animation:celebratePearl   1.6s ease-out 2; }
+.slot.celebrate-sapphire{ animation:celebrateSapphire 1.6s ease-out 2; }
+.slot.celebrate-push    { animation:celebratePush    0.9s ease-out 2; }
+@keyframes celebrateBiolum {
+  0%,100% { box-shadow:0 0 0 0 rgba(80,180,255,0); border-color:rgba(140,220,255,0.55); }
+  35%     { box-shadow:0 0 80px 16px rgba(80,200,255,0.95), inset 0 0 32px rgba(180,230,255,0.85); border-color:#bce4ff; }
+}
+@keyframes celebratePearl {
+  0%,100% { box-shadow:0 0 0 0 rgba(255,255,255,0); border-color:rgba(255,240,220,0.55); }
+  35%     { box-shadow:0 0 60px 12px rgba(255,250,235,0.85), inset 0 0 28px rgba(255,250,235,0.7); border-color:#fff4e0; }
+}
+@keyframes celebrateSapphire {
+  0%,100% { box-shadow:0 0 0 0 rgba(80,180,255,0); border-color:rgba(120,170,255,0.5); }
+  35%     { box-shadow:0 0 60px 12px rgba(120,180,255,0.85), inset 0 0 28px rgba(160,200,255,0.65); border-color:#aac4ff; }
+}
+@keyframes celebratePush {
+  0%,100% { box-shadow:0 0 0 0 rgba(255,255,255,0); border-color:rgba(255,140,140,0.5); }
+  50%     { box-shadow:inset 0 0 24px rgba(255,255,255,0.35); border-color:rgba(255,255,255,0.6); }
+}
+
+/* Felt-side particle canvas for the Banker Dragon / Player Dragon burst */
+#fx-canvas { position:fixed; inset:0; pointer-events:none; z-index:7; }
+
+/* Dragon glide-by: a giant 🐉 silhouette glides across the screen on
+   the EZ Baccarat Dragon 7 / Panda 8 headline hits — Macau's imperial
+   dragon comp at the Cotai Strip VIP Suite. Molten-gold halo +
+   ember particle trail (JS).  */
+#dragon-flyby {
+  position:fixed; left:-220px; top:34%; z-index:54;
+  font-size:clamp(80px, 22vw, 160px);
+  pointer-events:none; opacity:0;
+  filter:drop-shadow(0 0 28px #ffb000)
+         drop-shadow(0 0 14px #ff5e00)
+         drop-shadow(0 0 6px #ffd76e);
+  transform:translateX(0) translateY(0);
+}
+#dragon-flyby.go {
+  animation: dragon-fly 2.1s cubic-bezier(0.45, 0.05, 0.55, 0.95) forwards;
+}
+@keyframes dragon-fly {
+  0%   { left:-220px; top:34%; opacity:0; transform:rotate(-2deg) scale(0.85); }
+  12%  { opacity:1; }
+  50%  { top:32%; transform:rotate(0deg) scale(1.0); }
+  100% { left:calc(100vw + 120px); top:36%; opacity:0.92; transform:rotate(2deg) scale(0.92); }
+}
+
+/* Panda glide-by: jade-haloed 🐼 for the EZ Baccarat Panda 8 headline.
+   Mirrors the dragon flyby's motion, but tinted bamboo/jade so the
+   celebration reads as Player-side rather than imperial Banker. */
+#panda-flyby {
+  position:fixed; left:-220px; top:34%; z-index:54;
+  font-size:clamp(80px, 22vw, 160px);
+  pointer-events:none; opacity:0;
+  filter:drop-shadow(0 0 28px #52d99a)
+         drop-shadow(0 0 14px #a8f5d0)
+         drop-shadow(0 0 6px #ffffff);
+  transform:translateX(0) translateY(0);
+}
+#panda-flyby.go {
+  animation: panda-fly 2.1s cubic-bezier(0.45, 0.05, 0.55, 0.95) forwards;
+}
+@keyframes panda-fly {
+  0%   { left:-220px; top:34%; opacity:0; transform:rotate(-2deg) scale(0.85); }
+  12%  { opacity:1; }
+  50%  { top:32%; transform:rotate(0deg) scale(1.0); }
+  100% { left:calc(100vw + 120px); top:36%; opacity:0.92; transform:rotate(2deg) scale(0.92); }
+}
+
+/* ── Theatrical splash for Player Dragon / Banker Dragon bonus hits ────────────
+   Full-viewport vignette flash + giant animated title + payout reveal.
+   Auto-dismisses; doesn't block interaction (pointer-events:none).    */
+#bonus-splash {
+  position:fixed; inset:0; z-index:55;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  pointer-events:none; opacity:0; transition:opacity 0.18s ease;
+  background:radial-gradient(ellipse at center, rgba(0,0,0,0.0) 0%, rgba(0,0,0,0.55) 80%);
+}
+#bonus-splash.show { opacity:1; }
+#bonus-splash .ring {
+  position:absolute; left:50%; top:50%; width:40vmin; height:40vmin;
+  border-radius:50%; transform:translate(-50%,-50%) scale(0.2);
+  opacity:0; mix-blend-mode:screen;
+}
+#bonus-splash.show .ring {
+  animation: bonus-ring 1.6s cubic-bezier(0.18,0.9,0.32,1) forwards;
+}
+#bonus-splash.gold .ring { background:radial-gradient(circle, rgba(255,215,90,0.55) 0%, rgba(255,180,40,0.35) 35%, rgba(255,140,30,0) 75%); }
+#bonus-splash.jade .ring { background:radial-gradient(circle, rgba(140,255,200,0.5) 0%, rgba(60,210,150,0.30) 40%, rgba(40,180,120,0) 75%); }
+@keyframes bonus-ring {
+  0%   { transform:translate(-50%,-50%) scale(0.2); opacity:0; }
+  20%  { opacity:0.95; }
+  100% { transform:translate(-50%,-50%) scale(3.4); opacity:0; }
+}
+#bonus-splash .title {
+  font-family:'Cinzel', serif; font-weight:800;
+  font-size:clamp(2.6rem, 14vw, 7rem); letter-spacing:0.18em;
+  text-transform:uppercase; line-height:1; text-align:center;
+  text-shadow:0 4px 22px rgba(0,0,0,0.85), 0 0 30px currentColor;
+  transform:translateY(28px) scale(0.85); opacity:0;
+}
+#bonus-splash.gold .title { color:#ffd980; }
+#bonus-splash.jade .title { color:#a8ffd6; }
+#bonus-splash.show .title {
+  animation: bonus-title 1.6s cubic-bezier(0.16,1,0.3,1) forwards;
+}
+@keyframes bonus-title {
+  0%   { transform:translateY(28px) scale(0.85); opacity:0; }
+  18%  { transform:translateY(-2px) scale(1.06); opacity:1; }
+  35%  { transform:translateY(0) scale(1.0); opacity:1; }
+  85%  { transform:translateY(0) scale(1.0); opacity:1; }
+  100% { transform:translateY(-12px) scale(1.0); opacity:0; }
+}
+#bonus-splash .subtitle {
+  margin-top:14px; font-family:'Cinzel', serif;
+  font-size:clamp(1rem, 4.2vw, 1.6rem); letter-spacing:0.32em; font-weight:600;
+  color:rgba(255,255,255,0.92); text-shadow:0 2px 10px rgba(0,0,0,0.7);
+  opacity:0;
+}
+#bonus-splash.show .subtitle {
+  animation: bonus-subtitle 1.6s cubic-bezier(0.16,1,0.3,1) forwards;
+  animation-delay:0.18s;
+}
+@keyframes bonus-subtitle {
+  0%   { transform:translateY(10px); opacity:0; letter-spacing:0.18em; }
+  35%  { transform:translateY(0); opacity:1; letter-spacing:0.36em; }
+  85%  { opacity:1; }
+  100% { opacity:0; }
+}
+#bonus-splash .payout {
+  margin-top:18px; font-family:'Cinzel', serif; font-weight:700;
+  font-size:clamp(1.4rem, 6vw, 2.4rem); letter-spacing:0.08em;
+  padding:6px 22px; border-radius:30px;
+  border:2px solid currentColor; background:rgba(0,0,0,0.45);
+  box-shadow:0 6px 28px rgba(0,0,0,0.6), 0 0 24px currentColor;
+  opacity:0;
+}
+#bonus-splash.gold .payout { color:#ffe9a8; }
+#bonus-splash.jade .payout { color:#caffe6; }
+#bonus-splash.show .payout {
+  animation: bonus-payout 1.4s cubic-bezier(0.16,1,0.3,1) forwards;
+  animation-delay:0.32s;
+}
+@keyframes bonus-payout {
+  0%   { transform:scale(0.4); opacity:0; }
+  30%  { transform:scale(1.16); opacity:1; }
+  45%  { transform:scale(1.0); opacity:1; }
+  85%  { transform:scale(1.0); opacity:1; }
+  100% { transform:scale(0.96); opacity:0; }
+}
+
+/* ── Chip rail — sits at the very bottom (the player's chip tray) ── */
+#chip-rail { position:fixed; left:0; right:0;
+  bottom:calc(14px + env(safe-area-inset-bottom));
+  z-index:8; padding:6px 14px;
+  display:flex; gap:8px; align-items:center; justify-content:center;
+  flex-wrap:nowrap; overflow-x:auto; pointer-events:none;
+  -webkit-overflow-scrolling:touch; scrollbar-width:none; }
+#chip-rail::-webkit-scrollbar { display:none; }
+.chip { width:54px; height:54px; padding:0;
+  border-radius:50%; border:none; cursor:pointer; flex-shrink:0; position:relative;
+  font-family:'Cinzel',serif; font-weight:900; font-size:0.78rem; color:#fff;
+  text-shadow:0 1px 3px rgba(0,0,0,0.95);
+  display:flex; align-items:center; justify-content:center;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.55),
+              inset 0 -3px 0 rgba(0,0,0,0.32),
+              inset 0 2px 0 rgba(255,255,255,0.3);
+  transition:transform 0.12s cubic-bezier(.34,1.56,.64,1), box-shadow 0.18s;
+  pointer-events:auto; outline:none; }
+.chip::before { content:''; position:absolute; inset:6px; border-radius:50%;
+  border:2px dashed rgba(255,255,255,0.42); pointer-events:none; }
+.chip::after { content:''; position:absolute; top:9px; left:13px;
+  width:14px; height:7px; background:rgba(255,255,255,0.22);
+  border-radius:50%; transform:rotate(-30deg); pointer-events:none; }
+.chip:active { transform:scale(0.92); }
+.chip.selected { transform:scale(1.14) translateY(-3px);
+  box-shadow:0 6px 24px rgba(255,210,80,0.6), inset 0 -3px 0 rgba(0,0,0,0.32),
+             inset 0 2px 0 rgba(255,255,255,0.4),
+             0 0 0 3px rgba(255,210,80,0.7); }
+.c1 { background:radial-gradient(circle at 38% 32%, #f0f0f0 0%, #7c7c7c 100%); }
+.c5 { background:radial-gradient(circle at 38% 32%, #ff7474 0%, #992222 100%); }
+.c25 { background:radial-gradient(circle at 38% 32%, #5cd25c 0%, #1c6d1c 100%); }
+.c100 { background:radial-gradient(circle at 38% 32%, #444 0%, #0a0a0a 100%); }
+.c500 { background:radial-gradient(circle at 38% 32%, #b070ff 0%, #48168a 100%); }
+.c1k { background:radial-gradient(circle at 38% 32%, #ffd84a 0%, #a07310 100%); }
+
+/* ── DEAL & CLEAR — floating gold pills above the chip rail ── */
+#btn-deal { position:fixed; right:14px;
+  bottom:calc(82px + env(safe-area-inset-bottom));
+  z-index:9;
+  padding:11px 30px; font-family:'Cinzel',serif; font-size:0.95rem;
+  font-weight:900; letter-spacing:4px; color:#000;
+  background:linear-gradient(135deg, #f7e09a, #c9a84c);
+  border:none; border-radius:24px; cursor:pointer;
+  box-shadow:0 0 24px rgba(201,168,76,0.6), 0 4px 14px rgba(0,0,0,0.6),
+             inset 0 -2px 0 rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.4);
+  transition:transform 0.12s, box-shadow 0.18s; }
+#btn-deal:active:not(:disabled) { transform:scale(0.96); }
+#btn-deal:disabled { opacity:0.4; cursor:not-allowed; }
+#btn-deal.needs-main { filter:saturate(0.55) brightness(0.85); }
+#btn-deal.blocked { filter:grayscale(0.55) brightness(0.78); box-shadow:0 0 0 1.5px rgba(255,180,60,0.7), 0 4px 14px rgba(0,0,0,0.5); }
+#btn-clear { position:fixed; left:14px;
+  bottom:calc(82px + env(safe-area-inset-bottom)); z-index:9;
+  padding:9px 16px; font-family:'Cinzel',serif; font-size:0.7rem;
+  letter-spacing:2px; color:rgba(232,223,192,0.7);
+  background:rgba(0,0,0,0.55); border:1px solid rgba(201,168,76,0.3);
+  border-radius:24px; cursor:pointer;
+  backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); }
+
+/* ── Hamburger menu overlay ───────────────────────── */
+#menu-dim { position:fixed; inset:0; background:rgba(0,0,0,0.55);
+  backdrop-filter:blur(2px); -webkit-backdrop-filter:blur(2px);
+  z-index:40; opacity:0; pointer-events:none; transition:opacity 0.3s; }
+#menu-dim.open { opacity:1; pointer-events:auto; }
+#menu-overlay { position:fixed; top:0; right:0; bottom:0;
+  width:min(86vw, 360px); z-index:50;
+  background:linear-gradient(180deg, #0a1a0a 0%, #050a05 100%);
+  border-left:1px solid rgba(201,168,76,0.35);
+  box-shadow:-12px 0 40px rgba(0,0,0,0.7);
+  transform:translateX(100%);
+  transition:transform 0.32s cubic-bezier(.25,.46,.45,.94);
+  padding:24px 22px;
+  padding-top:max(24px, calc(env(safe-area-inset-top) + 14px));
+  overflow-y:auto; }
+#menu-overlay.open { transform:translateX(0); }
+#menu-overlay h2 { font-family:'Cinzel',serif; color:#f0d080;
+  letter-spacing:5px; font-size:0.95rem; margin-bottom:6px; }
+#menu-overlay h3 { font-family:'Cinzel',serif; color:rgba(201,168,76,0.55);
+  font-size:0.65rem; letter-spacing:3px; margin:18px 0 8px; }
+.menu-row { display:flex; align-items:center; justify-content:space-between;
+  padding:14px 0; border-bottom:1px solid rgba(201,168,76,0.12);
+  font-size:0.85rem; }
+.menu-row .label { color:#e8dfc4; }
+.menu-row select { background:rgba(0,0,0,0.5); color:#e8dfc4;
+  border:1px solid rgba(201,168,76,0.3); border-radius:6px;
+  padding:7px 12px; font-family:inherit; font-size:0.78rem; }
+.menu-row .toggle { width:46px; height:26px; border-radius:13px;
+  background:rgba(255,255,255,0.12); position:relative;
+  cursor:pointer; transition:background 0.2s; flex-shrink:0; }
+.menu-row .toggle::after { content:''; position:absolute; top:3px; left:3px;
+  width:20px; height:20px; border-radius:50%; background:#fff;
+  transition:transform 0.2s; box-shadow:0 1px 3px rgba(0,0,0,0.4); }
+.menu-row .toggle.on { background:#c9a84c; }
+.menu-row .toggle.on::after { transform:translateX(20px); }
+.menu-stat { display:flex; justify-content:space-between; padding:6px 0;
+  font-size:0.78rem; color:rgba(232,223,192,0.7); }
+.menu-stat .v { color:#f0d080; font-weight:700; }
+#menu-close { position:absolute; top:max(14px, env(safe-area-inset-top));
+  right:14px; width:34px; height:34px; border:none; background:transparent;
+  color:rgba(232,223,192,0.5); font-size:1.4rem; cursor:pointer; }
+
+/* Disable interactions during deal/squeeze */
+body.dealing #btn-deal,
+body.dealing .slot,
+body.dealing .chip,
+body.dealing #btn-clear { pointer-events:none; opacity:0.55; }
+body.squeezing #btn-deal,
+body.squeezing .slot,
+body.squeezing .chip,
+body.squeezing #btn-clear { pointer-events:none; opacity:0.45; }
+
+/* Compact mobile: clear the bet panel + chip rail off-screen during the
+   action phases so the cards land in the visible felt area, then slide
+   them back in when betting resumes. The bet panel covers ~150px on a
+   short viewport — at the felt z where cards land, that's the difference
+   between the rank corner being visible vs. hidden. */
+body.compact #bet-panel,
+body.compact #chip-rail,
+body.compact #btn-deal,
+body.compact #btn-clear { transition: transform 0.32s ease, opacity 0.22s ease; }
+body.compact.dealing   #bet-panel,
+body.compact.squeezing #bet-panel,
+body.compact.show-totals #bet-panel { transform: translateY(120%); opacity:0; pointer-events:none; }
+body.compact.dealing   #chip-rail,
+body.compact.squeezing #chip-rail,
+body.compact.show-totals #chip-rail { transform: translateY(120%); opacity:0; pointer-events:none; }
+body.compact.dealing   #btn-deal,
+body.compact.squeezing #btn-deal,
+body.compact.show-totals #btn-deal,
+body.compact.dealing   #btn-clear,
+body.compact.squeezing #btn-clear,
+body.compact.show-totals #btn-clear { transform: translateY(180%); opacity:0; pointer-events:none; }
+
+/* Tiny note on first load */
+#first-tip { position:fixed; left:50%; top:50%;
+  transform:translate(-50%, -50%); z-index:13;
+  padding:18px 26px; max-width:300px; text-align:center;
+  background:rgba(8,14,8,0.92); border:1px solid rgba(201,168,76,0.4);
+  border-radius:14px; font-size:0.78rem; line-height:1.6;
+  color:rgba(232,223,192,0.85); display:none;
+  backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
+  box-shadow:0 12px 40px rgba(0,0,0,0.7); }
+#first-tip h3 { font-family:'Cinzel',serif; color:#f0d080;
+  font-size:0.95rem; letter-spacing:3px; margin-bottom:8px; }
+#first-tip button { margin-top:14px; padding:9px 20px;
+  background:linear-gradient(135deg,#f0d080,#c9a84c); border:none;
+  border-radius:20px; font-family:'Cinzel',serif; letter-spacing:2px;
+  font-size:0.72rem; color:#000; cursor:pointer; }
+
+/* ── Korean BBQ event ── one side wins exactly with a 7 vs 6. */
+#korean-bbq {
+  position:fixed; left:-40%; top:36%;
+  z-index:53; pointer-events:none; opacity:0;
+  display:flex; align-items:center; gap:14px;
+  font-size:clamp(48px,12vw,90px); line-height:1;
+  filter:drop-shadow(0 4px 22px rgba(255,140,40,0.55));
+}
+#korean-bbq .label {
+  font-family:'Cinzel',serif; font-weight:800; letter-spacing:0.18em;
+  font-size:clamp(0.9rem,3.6vw,1.6rem); color:#ffe6c0;
+  text-shadow:0 2px 10px rgba(0,0,0,0.7), 0 0 18px rgba(255,160,80,0.7);
+  padding:6px 14px; border:2px solid rgba(255,180,90,0.65);
+  border-radius:10px; background:rgba(40,12,4,0.55);
+}
+#korean-bbq.go { animation:korean-bbq-glide 2.4s cubic-bezier(.18,.9,.32,1) forwards; }
+@keyframes korean-bbq-glide {
+  0%   { left:-40%;  opacity:0; transform:translateY(0)   rotate(-3deg); }
+  10%  { opacity:1; }
+  50%  { left: 50%; transform:translate(-50%, -8px) rotate(0deg); }
+  100% { left:140%; opacity:1; transform:translate(-50%, 0)  rotate( 3deg); }
+}
+
+</style>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "/three.module.js"
+  }
+}
+</script>
+</head>
+<body>
+
+<div id="bg"></div>
+<!-- Cotai-strip layer: empty <video> kept for forward-compat — drop a
+     macau-loop.mp4/.webm here later for parallax neon skyline. The CSS
+     hides this element until a source is attached. -->
+<video id="aquarium-video" aria-hidden="true"
+       autoplay loop muted playsinline preload="none"></video>
+<!-- Lantern grid overlay — pure-CSS red/gold paper lanterns drift across
+     the screen so the room feels alive without external assets. -->
+<div id="aquarium" aria-hidden="true"></div>
+<canvas id="stage"></canvas>
+<!-- Caustics blend layer: rippling water light dancing across the felt. -->
+<div id="caustics" aria-hidden="true"></div>
+
+<!-- Apex / VIP cinematic modals — hidden until thresholds cross. -->
+<div id="apex-gate" aria-hidden="true">
+  <div class="card">
+    <div class="title">EXCLUSIVE ACCESS</div>
+    <div class="sub">INSUFFICIENT FUNDS</div>
+    <div class="lim">Imperial Dragon Suite · Cotai Strip · $1,000,000 minimum</div>
+    <button id="apex-gate-close">RETURN</button>
+  </div>
+</div>
+<div id="vip-whale-card" aria-hidden="true">
+  <div class="card">
+    <div class="emblem">🐉</div>
+    <div class="title">VIP DRAGON</div>
+    <div class="sub">Your private suite on the Cotai Strip is ready.</div>
+  </div>
+</div>
+<div id="vip-color-up" aria-hidden="true">⬛ COLOR UP ⬛</div>
+<div id="vip-rail-tray" aria-hidden="true">🍵&nbsp;🍮</div>
+<div id="vip-whale" aria-hidden="true">🐉</div>
+
+<header id="hud-top">
+  <button id="btn-burger" aria-label="Menu">⊞</button>
+  <div class="hud-right">
+    <button id="btn-sound" aria-label="Toggle dealer audio" title="Dealer audio">🔇</button>
+    <div class="hud-right-col">
+      <div class="hud-pill" id="hud-balance">
+        <span class="lbl">CREDITS</span>
+        <span id="bal-val">$1,000</span>
+      </div>
+      <div id="hud-limits">
+        <div class="row"><span class="k">MAIN</span><span class="v">$100–5K</span></div>
+        <div class="row"><span class="k">SIDE</span><span class="v">$25–500</span></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div id="msg"></div>
+
+<!-- Live dealer video — plays each clip once and stays on the last frame -->
+<video id="dealer-vid" muted playsinline preload="metadata"
+       poster="dealer/dealing.jpeg" aria-hidden="true">
+  <source src="dealer/pro_dealer.webm" type="video/webm">
+  <source src="dealer/pro_dealer.mp4"  type="video/mp4">
+</video>
+
+<!-- Running totals — Player on the LEFT, Banker on the RIGHT, matching the
+     traditional baccarat felt where Player cards sit at -x and Banker at +x. -->
+<div id="totals">
+  <div class="total t-player"><span class="lbl">PLAYER</span><span class="v" id="t-p">—</span></div>
+  <div class="total t-banker"><span class="lbl">BANKER</span><span class="v" id="t-b">—</span></div>
+</div>
+
+<div id="squeeze-hint">TAP TO FLIP &nbsp;·&nbsp; SWIPE UP TO PEEL</div>
+<button type="button" id="btn-flip-all">FLIP ALL</button>
+
+<div id="roads-handle"></div>
+<aside id="roads-shelf">
+  <!-- Vegas/Bahamas standard order: Bead Road at top (chronological dots),
+       Big Road in the middle (the dragon), three derived roads in a row
+       at the bottom: Big Eye Boy, Small Road, Cockroach Pig. -->
+  <canvas id="bead-road"></canvas>
+  <canvas id="big-road"></canvas>
+  <div class="secondary">
+    <canvas id="big-eye"></canvas>
+    <canvas id="small-road"></canvas>
+    <canvas id="cockroach"></canvas>
+  </div>
+  <!-- Live shoe stats — what the boards in Bahamas show along the bottom rail. -->
+  <div id="board-stats">
+    <div class="stat"><span class="k">HAND</span><span class="v" id="bs-hand">0</span></div>
+    <div class="stat"><span class="k">BANKER</span><span class="v vB" id="bs-b">0</span></div>
+    <div class="stat"><span class="k">PLAYER</span><span class="v vP" id="bs-p">0</span></div>
+    <div class="stat"><span class="k">TIE</span><span class="v vT" id="bs-t">0</span></div>
+    <div class="stat"><span class="k">NAT 9</span><span class="v" id="bs-n9">0</span></div>
+    <div class="stat"><span class="k">NAT 8</span><span class="v" id="bs-n8">0</span></div>
+    <div class="stat"><span class="k">PANDA 8</span><span class="v" id="bs-pa">0</span></div>
+    <div class="stat"><span class="k">DRAGON 7</span><span class="v" id="bs-dr">0</span></div>
+  </div>
+</aside>
+
+<button id="btn-clear">CLEAR</button>
+<button id="btn-deal" disabled>DEAL</button>
+
+<!-- Theatrical splash overlay for Player Dragon / Banker Dragon hits -->
+<div id="bonus-splash" aria-hidden="true">
+  <div class="ring"></div>
+  <div class="title"></div>
+  <div class="subtitle"></div>
+  <div class="payout"></div>
+</div>
+
+<!-- Banker Dragon fire-breathing flyby — emoji glyph that swoops across the
+     screen on any 3-card banker 7. Particle trail handled in JS. -->
+<div id="dragon-flyby" aria-hidden="true">🐉</div>
+<div id="panda-flyby" aria-hidden="true">🐼</div>
+
+<!-- Seat-5 betting layout: side bets (Panda | Tie | Dragon) closest to the
+     dealer arc, then Banker stacked, then Player closest to the player.
+     Mirrors a real Bahamas half-moon Dragon Bonus Baccarat felt seen from a single seat. -->
+<footer id="bet-panel">
+  <!-- Bahamas Dragon Bonus suite, top arc left -> right:
+       Player Dragon | Player Pair | Banker Pair | Banker Dragon -->
+  <div class="bet-row sides bahamas-row">
+    <button type="button" class="slot side player-dragon" data-side="pdragon">
+      <span class="lbl">PANDA 8</span>
+      <span class="pay">25:1</span>
+      <span class="lim">$25–$500</span>
+      <span class="amt" id="amt-pdragon">$0</span>
+    </button>
+    <button type="button" class="slot side player-pair" data-side="pair_p">
+      <span class="lbl">PLAYER PAIR</span>
+      <span class="pay">11:1</span>
+      <span class="lim">$25–$500</span>
+      <span class="amt" id="amt-pair_p">$0</span>
+    </button>
+    <button type="button" class="slot side banker-pair" data-side="pair_b">
+      <span class="lbl">BANKER PAIR</span>
+      <span class="pay">11:1</span>
+      <span class="lim">$25–$500</span>
+      <span class="amt" id="amt-pair_b">$0</span>
+    </button>
+    <button type="button" class="slot side banker-dragon" data-side="bdragon">
+      <span class="lbl">DRAGON 7</span>
+      <span class="pay">40:1</span>
+      <span class="lim">$25–$500</span>
+      <span class="amt" id="amt-bdragon">$0</span>
+    </button>
+  </div>
+  <!-- Main row: Player | Tie | Banker. -->
+  <div class="bet-row main-row">
+    <button type="button" class="slot main player" data-side="player">
+      <span class="lbl">PLAYER</span>
+      <span class="pay">1:1</span>
+      <span class="lim">$100–$5,000</span>
+      <span class="amt" id="amt-player">$0</span>
+    </button>
+    <button type="button" class="slot side tie center-tie" data-side="tie">
+      <span class="lbl">TIE</span>
+      <span class="pay">8:1</span>
+      <span class="lim">$25–$500</span>
+      <span class="amt" id="amt-tie">$0</span>
+    </button>
+    <button type="button" class="slot main banker" data-side="banker">
+      <span class="lbl">BANKER</span>
+      <span class="pay">1:1</span>
+      <span class="lim">$100–$5,000</span>
+      <span class="amt" id="amt-banker">$0</span>
+    </button>
+  </div>
+</footer>
+
+<canvas id="fx-canvas"></canvas>
+
+<div id="chip-rail">
+  <button class="chip c1" data-val="1">$1</button>
+  <button class="chip c5" data-val="5">$5</button>
+  <button class="chip c25 selected" data-val="25">$25</button>
+  <button class="chip c100" data-val="100">$100</button>
+  <button class="chip c500" data-val="500">$500</button>
+  <button class="chip c1k" data-val="1000">$1K</button>
+</div>
+
+<div id="menu-dim"></div>
+<aside id="menu-overlay">
+  <button id="menu-close" aria-label="Close">✕</button>
+  <h2>SETTINGS</h2>
+
+  <h3>AUDIO</h3>
+  <div class="menu-row"><span class="label">Sound effects</span><div class="toggle on" data-key="sfx"></div></div>
+  <div class="menu-row"><span class="label">Haptic feedback</span><div class="toggle on" data-key="haptics"></div></div>
+
+  <h3>TABLE</h3>
+  <div class="menu-row"><span class="label">Theme</span>
+    <select id="opt-theme">
+      <option value="bahamas">Aquamarine</option>
+      <option value="turquoise">Turquoise</option>
+      <option value="forest">Forest Green</option>
+    </select>
+  </div>
+  <div class="menu-row"><span class="label">Squeeze theatre</span><div class="toggle on" data-key="squeeze"></div></div>
+
+  <h3>SESSION</h3>
+  <div class="menu-stat"><span>Hands played</span><span class="v" id="stat-hands">0</span></div>
+  <div class="menu-stat"><span>Banker wins</span><span class="v" id="stat-b">0</span></div>
+  <div class="menu-stat"><span>Player wins</span><span class="v" id="stat-p">0</span></div>
+  <div class="menu-stat"><span>Ties</span><span class="v" id="stat-t">0</span></div>
+  <div class="menu-stat"><span>Net P&amp;L</span><span class="v" id="stat-pnl">$0</span></div>
+
+  <h3>ACCOUNT</h3>
+  <div class="menu-row"><span class="label">Sign in</span>
+    <button class="toggle off" style="background:transparent;border:1px solid rgba(201,168,76,0.4);width:auto;padding:0 12px;color:#f0d080;font-family:'Cinzel',serif;font-size:0.7rem;letter-spacing:2px;height:30px;border-radius:15px;">SIGN IN</button>
+  </div>
+</aside>
+
+<div id="first-tip">
+  <h3>WELCOME</h3>
+  Pick a chip, tap a side, then DEAL.<br>
+  When the cards land face-down, <b>slide your finger up</b> across each card to peel and reveal the value — just like the table.
+  <br><button onclick="document.getElementById('first-tip').style.display='none';localStorage.setItem('rtn_seen','1')">START</button>
+</div>
+
+<script type="module">
+import * as THREE from 'three';
+
+// ════════════════════════════════════════════════════════════════
+//  EVENT BUS — decouples logic from UI
+// ════════════════════════════════════════════════════════════════
+const bus = (() => {
+  const subs = {};
+  return {
+    on:  (e, f) => { (subs[e] = subs[e] || []).push(f); return () => bus.off(e, f); },
+    off: (e, f) => { if (subs[e]) subs[e] = subs[e].filter(x => x !== f); },
+    emit:(e, d) => { (subs[e] || []).forEach(f => { try { f(d); } catch (err) { console.error(err); } }); }
+  };
+})();
+
+// ════════════════════════════════════════════════════════════════
+//  PROCEDURAL TEXTURES (no external assets — pure canvas)
+// ════════════════════════════════════════════════════════════════
+function makeFeltTexture(themeColor = '#1a4426', size = 1024) {
+  const c = document.createElement('canvas');
+  c.width = c.height = size;
+  const ctx = c.getContext('2d');
+  // Base gradient — light in center, darker at edges (under-the-chandelier feel)
+  const g = ctx.createRadialGradient(size/2, size*0.42, size*0.05, size/2, size/2, size*0.72);
+  g.addColorStop(0, adjustHex(themeColor, +12));
+  g.addColorStop(0.45, themeColor);
+  g.addColorStop(1, adjustHex(themeColor, -54));
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, size, size);
+
+  // Dense wool fibers — two passes (dark + light) for a real anisotropic weave
+  for (let i = 0; i < 26000; i++) {
+    const x = Math.random() * size;
+    const y = Math.random() * size;
+    const len = 1.2 + Math.random() * 5;
+    const angle = (Math.random() - 0.5) * 0.22;
+    const a = 0.05 + Math.random() * 0.10;
+    ctx.strokeStyle = `rgba(0,0,0,${a})`;
+    ctx.lineWidth = 0.55;
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(x + Math.cos(angle) * len, y + Math.sin(angle) * len);
+    ctx.stroke();
+  }
+  for (let i = 0; i < 7000; i++) {
+    const x = Math.random() * size;
+    const y = Math.random() * size;
+    const len = 1.5 + Math.random() * 4;
+    const angle = (Math.random() - 0.5) * 0.18;
+    ctx.strokeStyle = `rgba(255,255,255,${0.018 + Math.random() * 0.04})`;
+    ctx.lineWidth = 0.4;
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(x + Math.cos(angle) * len, y + Math.sin(angle) * len);
+    ctx.stroke();
+  }
+  // Vignette — soft black edge falloff to suggest overhead spot lighting
+  const vg = ctx.createRadialGradient(size/2, size/2, size*0.30, size/2, size/2, size*0.72);
+  vg.addColorStop(0, 'rgba(0,0,0,0)');
+  vg.addColorStop(1, 'rgba(0,0,0,0.55)');
+  ctx.fillStyle = vg; ctx.fillRect(0, 0, size, size);
+
+  const tex = new THREE.CanvasTexture(c);
+  tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.anisotropy = 16;
+  return tex;
+}
+
+// Felt-printed label texture — subtle pale gold typography baked onto a
+// transparent plane that overlays the felt. Used for traditional
+// PLAYER / BANKER / TIE / Banker Dragon / Player Dragon zone prints.
+function makeFeltLabelTexture(text, opts = {}) {
+  const W = 512, H = 256;
+  const c = document.createElement('canvas'); c.width = W; c.height = H;
+  const ctx = c.getContext('2d');
+  ctx.clearRect(0, 0, W, H);
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillStyle = opts.color || 'rgba(225,205,140,0.45)';
+  ctx.shadowColor = 'rgba(0,0,0,0.45)';
+  ctx.shadowBlur = 4;
+  ctx.font = `${opts.weight || 900} ${opts.size || 90}px Cinzel, Georgia, serif`;
+  // Subtle multi-stroke for a "printed on felt" feel
+  ctx.lineWidth = 3;
+  ctx.strokeStyle = 'rgba(20,40,20,0.4)';
+  ctx.strokeText(text, W/2, H/2);
+  ctx.fillText(text, W/2, H/2);
+  const tex = new THREE.CanvasTexture(c);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.anisotropy = 16;
+  return tex;
+}
+function adjustHex(hex, amt) {
+  const n = parseInt(hex.slice(1), 16);
+  let r = (n >> 16) + amt, g = ((n >> 8) & 0xff) + amt, b = (n & 0xff) + amt;
+  r = Math.max(0, Math.min(255, r)); g = Math.max(0, Math.min(255, g)); b = Math.max(0, Math.min(255, b));
+  return '#' + ((r << 16) | (g << 8) | b).toString(16).padStart(6, '0');
+}
+
+function makeMahoganyTexture(size = 1024) {
+  const c = document.createElement('canvas'); c.width = c.height = size;
+  const ctx = c.getContext('2d');
+  // Base — deep mahogany red-brown
+  ctx.fillStyle = '#3a1907'; ctx.fillRect(0,0,size,size);
+  // Two layers of long-grain striations for a polished finish
+  for (let y = 0; y < size; y += 1.4) {
+    const wobble = Math.sin(y * 0.022) * 9 + Math.sin(y * 0.005) * 18;
+    const lightness = 0.45 + 0.5 * Math.sin(y * 0.013) + (Math.random()-0.5)*0.18;
+    const c1 = Math.round(70 + lightness * 50);
+    const c2 = Math.round(28 + lightness * 22);
+    ctx.fillStyle = `rgb(${c1}, ${c2}, ${Math.round(c2*0.42)})`;
+    ctx.fillRect(0, y + wobble, size, 1.4);
+  }
+  // Subtle silver-flame highlight bands
+  for (let i = 0; i < 6; i++) {
+    const y = Math.random() * size;
+    const grad = ctx.createLinearGradient(0, y - 6, 0, y + 6);
+    grad.addColorStop(0, 'rgba(255,240,210,0)');
+    grad.addColorStop(0.5, `rgba(255,225,170,${0.08 + Math.random()*0.06})`);
+    grad.addColorStop(1, 'rgba(255,240,210,0)');
+    ctx.fillStyle = grad; ctx.fillRect(0, y - 6, size, 12);
+  }
+  // Knots & figure
+  for (let k = 0; k < 9; k++) {
+    const cx = Math.random() * size, cy = Math.random() * size;
+    const r = 8 + Math.random() * 18;
+    const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
+    grad.addColorStop(0, 'rgba(15,5,1,0.9)');
+    grad.addColorStop(0.6, 'rgba(60,25,10,0.45)');
+    grad.addColorStop(1, 'rgba(20,8,2,0)');
+    ctx.fillStyle = grad;
+    ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI*2); ctx.fill();
+  }
+  // Glossy top sheen — lacquer reflection
+  const sheen = ctx.createLinearGradient(0, 0, 0, size);
+  sheen.addColorStop(0, 'rgba(255,210,160,0.10)');
+  sheen.addColorStop(0.45, 'rgba(255,210,160,0)');
+  sheen.addColorStop(1, 'rgba(0,0,0,0.18)');
+  ctx.fillStyle = sheen; ctx.fillRect(0, 0, size, size);
+
+  const tex = new THREE.CanvasTexture(c);
+  tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.anisotropy = 8;
+  return tex;
+}
+
+function makeCardBackTexture() {
+  const c = document.createElement('canvas');
+  c.width = 256; c.height = 384;
+  const ctx = c.getContext('2d');
+  // Deep oxblood
+  const g = ctx.createLinearGradient(0, 0, 0, 384);
+  g.addColorStop(0, '#5a0c0c'); g.addColorStop(1, '#2a0606');
+  ctx.fillStyle = g; ctx.fillRect(0, 0, 256, 384);
+  // Linen fiber
+  ctx.fillStyle = 'rgba(0,0,0,0.08)';
+  for (let i = 0; i < 6000; i++) ctx.fillRect(Math.random()*256, Math.random()*384, 1, 1);
+  // Gold border
+  ctx.strokeStyle = '#c9a84c'; ctx.lineWidth = 4;
+  ctx.strokeRect(10, 10, 236, 364);
+  ctx.strokeStyle = 'rgba(201,168,76,0.45)'; ctx.lineWidth = 1;
+  ctx.strokeRect(18, 18, 220, 348);
+  // Damask grid
+  ctx.fillStyle = 'rgba(201,168,76,0.16)';
+  for (let y = 32; y < 380; y += 22) {
+    for (let x = 32; x < 250; x += 22) {
+      ctx.beginPath(); ctx.arc(x, y, 3.2, 0, Math.PI*2); ctx.fill();
+    }
+  }
+  // Center monogram
+  ctx.fillStyle = '#c9a84c';
+  ctx.font = 'bold 80px serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText('♠', 128, 180);
+  ctx.font = '600 18px Cinzel, serif';
+  ctx.fillText('R T N', 128, 240);
+  const tex = new THREE.CanvasTexture(c);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.anisotropy = 8;
+  return tex;
+}
+
+// ── Vector pip shapes (font-independent, sharp at any size) ──────
+function drawSpade(ctx, x, y, s) {
+  ctx.beginPath();
+  // Top point
+  ctx.moveTo(x, y - s * 0.55);
+  // Right curve down to wide bottom
+  ctx.bezierCurveTo(x + s * 0.50, y - s * 0.10, x + s * 0.55, y + s * 0.30, x + s * 0.18, y + s * 0.32);
+  // Bottom-right notch
+  ctx.bezierCurveTo(x + s * 0.06, y + s * 0.32, x + s * 0.04, y + s * 0.42, x + s * 0.10, y + s * 0.48);
+  ctx.lineTo(x - s * 0.10, y + s * 0.48);
+  ctx.bezierCurveTo(x - s * 0.04, y + s * 0.42, x - s * 0.06, y + s * 0.32, x - s * 0.18, y + s * 0.32);
+  // Left curve up to top
+  ctx.bezierCurveTo(x - s * 0.55, y + s * 0.30, x - s * 0.50, y - s * 0.10, x, y - s * 0.55);
+  ctx.closePath();
+  ctx.fill();
+}
+function drawHeart(ctx, x, y, s) {
+  ctx.beginPath();
+  ctx.moveTo(x, y + s * 0.50);
+  ctx.bezierCurveTo(x + s * 0.62, y + s * 0.08, x + s * 0.54, y - s * 0.50, x, y - s * 0.10);
+  ctx.bezierCurveTo(x - s * 0.54, y - s * 0.50, x - s * 0.62, y + s * 0.08, x, y + s * 0.50);
+  ctx.closePath();
+  ctx.fill();
+}
+function drawDiamond(ctx, x, y, s) {
+  ctx.beginPath();
+  ctx.moveTo(x, y - s * 0.55);
+  ctx.lineTo(x + s * 0.40, y);
+  ctx.lineTo(x, y + s * 0.55);
+  ctx.lineTo(x - s * 0.40, y);
+  ctx.closePath();
+  ctx.fill();
+}
+function drawClub(ctx, x, y, s) {
+  const r = s * 0.22;
+  ctx.beginPath(); ctx.arc(x, y - s * 0.30, r, 0, Math.PI * 2);   ctx.fill();
+  ctx.beginPath(); ctx.arc(x - s * 0.28, y + s * 0.04, r, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.arc(x + s * 0.28, y + s * 0.04, r, 0, Math.PI * 2); ctx.fill();
+  // Stem
+  ctx.beginPath();
+  ctx.moveTo(x - s * 0.06, y + s * 0.10);
+  ctx.bezierCurveTo(x - s * 0.04, y + s * 0.30, x - s * 0.16, y + s * 0.46, x - s * 0.16, y + s * 0.50);
+  ctx.lineTo(x + s * 0.16, y + s * 0.50);
+  ctx.bezierCurveTo(x + s * 0.16, y + s * 0.46, x + s * 0.04, y + s * 0.30, x + s * 0.06, y + s * 0.10);
+  ctx.closePath(); ctx.fill();
+}
+function drawPip(ctx, suit, x, y, size) {
+  switch (suit) {
+    case '♠': drawSpade(ctx, x, y, size); break;
+    case '♥': drawHeart(ctx, x, y, size); break;
+    case '♦': drawDiamond(ctx, x, y, size); break;
+    case '♣': drawClub(ctx, x, y, size); break;
+  }
+}
+
+const _faceCache = new Map();
+function makeCardFaceTexture(rank, suit) {
+  const key = rank + suit;
+  if (_faceCache.has(key)) return _faceCache.get(key);
+
+  // Hi-res 512×720 — 2.5× the previous area for crisp pips at any zoom level.
+  const W = 512, H = 720;
+  const c = document.createElement('canvas'); c.width = W; c.height = H;
+  const ctx = c.getContext('2d');
+
+  // Linen ground — soft cream→ivory radial
+  const g = ctx.createRadialGradient(W*0.5, H*0.3, 40, W*0.5, H*0.55, H*0.6);
+  g.addColorStop(0, '#fffaee'); g.addColorStop(1, '#e9dcb8');
+  ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+  // Linen weave grain — subtle high-frequency noise
+  ctx.fillStyle = 'rgba(80,60,30,0.045)';
+  for (let i = 0; i < 11000; i++) ctx.fillRect(Math.random()*W, Math.random()*H, 1, 1);
+  // Beveled gold border (outer + inner hairline for depth)
+  ctx.strokeStyle = 'rgba(168,128,52,0.55)'; ctx.lineWidth = 5;
+  ctx.strokeRect(14, 14, W-28, H-28);
+  ctx.strokeStyle = 'rgba(255,235,180,0.55)'; ctx.lineWidth = 1;
+  ctx.strokeRect(20, 20, W-40, H-40);
+
+  const isRed = (suit === '♥' || suit === '♦');
+  const ink = isRed ? '#b51111' : '#0a0a0a';
+  ctx.fillStyle = ink;
+
+  // Drop shadow for the pips/letters — sells "weight"
+  ctx.shadowColor = 'rgba(0,0,0,0.18)';
+  ctx.shadowBlur = 2;
+  ctx.shadowOffsetY = 1;
+
+  // Corner rank + suit
+  const display = rank === 'T' ? '10' : rank;
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  function corner(cx, cy) {
+    ctx.font = '900 86px Georgia, serif';
+    ctx.fillText(display, cx, cy);
+    drawPip(ctx, suit, cx, cy + 78, 56);
+  }
+  corner(56, 80);
+  ctx.save(); ctx.translate(W, H); ctx.rotate(Math.PI); corner(56, 80); ctx.restore();
+
+  // Center pip layout
+  const cx = W/2;
+  const colL = 200, colR = W - 200;
+  const rowT = 220, rowM = 360, rowB = 500;
+  const cxBig = cx;
+
+  function pip(x, y, size = 110) { drawPip(ctx, suit, x, y, size); }
+
+  if (rank === 'A') {
+    // Huge centered pip with a subtle gold radiance behind
+    ctx.save();
+    const grad = ctx.createRadialGradient(cx, 360, 10, cx, 360, 200);
+    grad.addColorStop(0, isRed ? 'rgba(255,200,200,0.35)' : 'rgba(220,200,160,0.28)');
+    grad.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = grad; ctx.beginPath(); ctx.arc(cx, 360, 200, 0, Math.PI*2); ctx.fill();
+    ctx.restore();
+    ctx.fillStyle = ink;
+    pip(cx, 360, 280);
+  } else if (rank === '2') {
+    pip(cxBig, rowT); pip(cxBig, rowB);
+  } else if (rank === '3') {
+    pip(cxBig, rowT); pip(cxBig, 360); pip(cxBig, rowB);
+  } else if (rank === '4') {
+    pip(colL, rowT); pip(colR, rowT); pip(colL, rowB); pip(colR, rowB);
+  } else if (rank === '5') {
+    pip(colL, rowT); pip(colR, rowT); pip(cxBig, 360);
+    pip(colL, rowB); pip(colR, rowB);
+  } else if (rank === '6') {
+    pip(colL, rowT); pip(colR, rowT);
+    pip(colL, 360);  pip(colR, 360);
+    pip(colL, rowB); pip(colR, rowB);
+  } else if (rank === '7') {
+    pip(colL, rowT); pip(colR, rowT);
+    pip(cxBig, 280);
+    pip(colL, 360);  pip(colR, 360);
+    pip(colL, rowB); pip(colR, rowB);
+  } else if (rank === '8') {
+    pip(colL, rowT); pip(colR, rowT);
+    pip(cxBig, 280);
+    pip(colL, 360);  pip(colR, 360);
+    pip(cxBig, 440);
+    pip(colL, rowB); pip(colR, rowB);
+  } else if (rank === '9') {
+    pip(colL, 240); pip(colR, 240);
+    pip(colL, 330); pip(colR, 330);
+    pip(cxBig, 360, 80);
+    pip(colL, 420); pip(colR, 420);
+    pip(colL, 510); pip(colR, 510);
+  } else if (rank === 'T') {
+    pip(colL, 220); pip(colR, 220); pip(cxBig, 250, 90);
+    pip(colL, 320); pip(colR, 320);
+    pip(colL, 410); pip(colR, 410);
+    pip(cxBig, 480, 90);
+    pip(colL, 510); pip(colR, 510);
+  } else {
+    // Face cards — full ornamental frame with a large rank letter
+    ctx.save();
+    ctx.shadowBlur = 0; ctx.shadowOffsetY = 0;
+    // Decorative double frame
+    ctx.strokeStyle = isRed ? 'rgba(184,18,18,0.55)' : 'rgba(13,13,13,0.5)';
+    ctx.lineWidth = 4;
+    ctx.strokeRect(86, 184, W-172, H-368);
+    ctx.lineWidth = 1; ctx.setLineDash([6, 6]);
+    ctx.strokeRect(100, 198, W-200, H-396);
+    ctx.setLineDash([]);
+    // Soft gold panel behind the letter
+    const grad = ctx.createLinearGradient(0, 200, 0, H-200);
+    grad.addColorStop(0, isRed ? 'rgba(255,220,220,0.4)' : 'rgba(232,220,190,0.4)');
+    grad.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = grad;
+    ctx.fillRect(110, 208, W-220, H-416);
+    ctx.restore();
+    // Big rank letter — Georgia for a more regal serif feel
+    ctx.shadowColor = 'rgba(0,0,0,0.22)';
+    ctx.shadowBlur = 4; ctx.shadowOffsetY = 3;
+    ctx.fillStyle = ink;
+    ctx.font = '900 320px Georgia, serif';
+    ctx.fillText(rank, cx, 360);
+    // Corner suit accents inside the frame
+    ctx.shadowBlur = 0; ctx.shadowOffsetY = 0;
+    drawPip(ctx, suit, 130, 220, 56);
+    drawPip(ctx, suit, W-130, 220, 56);
+    drawPip(ctx, suit, 130, H-220, 56);
+    drawPip(ctx, suit, W-130, H-220, 56);
+  }
+
+  const tex = new THREE.CanvasTexture(c);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.anisotropy = 16;       // sharper at oblique camera angles
+  tex.minFilter = THREE.LinearMipmapLinearFilter;
+  tex.magFilter = THREE.LinearFilter;
+  tex.generateMipmaps = true;
+  _faceCache.set(key, tex);
+  return tex;
+}
+
+function makeBetCircleTexture(label, color) {
+  const c = document.createElement('canvas'); c.width = c.height = 256;
+  const ctx = c.getContext('2d');
+  ctx.clearRect(0,0,256,256);
+  // Outer ring
+  ctx.strokeStyle = 'rgba(201,168,76,0.6)';
+  ctx.lineWidth = 6;
+  ctx.beginPath(); ctx.arc(128, 128, 110, 0, Math.PI*2); ctx.stroke();
+  // Inner dashed ring
+  ctx.setLineDash([10, 8]); ctx.lineWidth = 2;
+  ctx.strokeStyle = 'rgba(201,168,76,0.45)';
+  ctx.beginPath(); ctx.arc(128, 128, 96, 0, Math.PI*2); ctx.stroke();
+  ctx.setLineDash([]);
+  // Center label
+  ctx.fillStyle = color;
+  ctx.font = '900 36px Cinzel, serif';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText(label, 128, 128);
+  const tex = new THREE.CanvasTexture(c);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  return tex;
+}
+
+// ════════════════════════════════════════════════════════════════
+//  HAPTICS + AUDIO (lightweight, no external files)
+// ════════════════════════════════════════════════════════════════
+const settings = {
+  sfx:     localStorage.getItem('rtn_sfx')     !== '0',
+  haptics: localStorage.getItem('rtn_haptics') !== '0',
+  squeeze: localStorage.getItem('rtn_squeeze') !== '0',
+  theme:   localStorage.getItem('rtn_bah_theme') || 'bahamas',
+};
+
+function haptic(p = [12]) {
+  if (!settings.haptics) return;
+  if (navigator.vibrate) try { navigator.vibrate(p); } catch (e) {}
+}
+
+let audioCtx = null;
+function ac() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+  return audioCtx;
+}
+function tone(freq, dur = 0.06, type = 'sine', gain = 0.15, delay = 0) {
+  if (!settings.sfx) return;
+  const ctx = ac();
+  const o = ctx.createOscillator(), g = ctx.createGain();
+  o.type = type; o.frequency.value = freq;
+  g.gain.value = 0; o.connect(g); g.connect(ctx.destination);
+  const t0 = ctx.currentTime + delay;
+  g.gain.setValueAtTime(0, t0);
+  g.gain.linearRampToValueAtTime(gain, t0 + 0.005);
+  g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+  o.start(t0); o.stop(t0 + dur + 0.02);
+}
+function noiseBurst(dur = 0.08, gain = 0.12) {
+  if (!settings.sfx) return;
+  const ctx = ac();
+  const buf = ctx.createBuffer(1, ctx.sampleRate * dur, ctx.sampleRate);
+  const d = buf.getChannelData(0);
+  for (let i = 0; i < d.length; i++) d[i] = (Math.random()*2 - 1) * (1 - i/d.length);
+  const src = ctx.createBufferSource(); src.buffer = buf;
+  const g = ctx.createGain(); g.gain.value = gain;
+  const f = ctx.createBiquadFilter(); f.type = 'highpass'; f.frequency.value = 800;
+  src.connect(f); f.connect(g); g.connect(ctx.destination);
+  src.start();
+}
+const sfx = {
+  cardSlide: () => { noiseBurst(0.12, 0.06); },
+  cardLand:  () => { tone(160, 0.05, 'sine', 0.12); noiseBurst(0.04, 0.04); },
+  squeezeTick: (i) => { tone(220 + i*20, 0.04, 'square', 0.04); },
+  reveal:    () => { tone(660, 0.08, 'sine', 0.10); tone(990, 0.10, 'sine', 0.08, 0.04); },
+  chip:      () => { tone(2400, 0.02, 'square', 0.06); tone(800, 0.04, 'sine', 0.04, 0.01); },
+  win:       () => { [523, 659, 784, 1047].forEach((f, i) => tone(f, 0.18, 'triangle', 0.12, i * 0.07)); },
+  lose:      () => { tone(220, 0.18, 'sine', 0.10); tone(165, 0.22, 'sine', 0.08, 0.10); },
+};
+
+// ════════════════════════════════════════════════════════════════
+//  BACCARAT RULES
+// ════════════════════════════════════════════════════════════════
+const SUITS = ['♠', '♥', '♦', '♣'];
+const RANKS = ['A', '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K'];
+const cardValue = r => r === 'A' ? 1 : ['T','J','Q','K'].includes(r) ? 0 : parseInt(r, 10);
+const handTotal = cs => cs.reduce((s, c) => s + cardValue(c.rank), 0) % 10;
+
+// ── Seedable RNG (Mulberry32) ─────────────────────────────────────
+// `Math.random()` is fine for casual play, but tournament mode needs
+// deterministic shoes — every player gets the same cards in the same
+// order. Pass a 32-bit integer seed to `mulberry32()` and call the
+// returned function in place of `Math.random()` to get a reproducible
+// stream. `hashStringToSeed` lets us derive a seed from a tournament
+// ID like "2026-06" without collisions.
+function mulberry32(seed) {
+  let s = seed >>> 0;
+  return function () {
+    s = (s + 0x6D2B79F5) >>> 0;
+    let t = s;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+function hashStringToSeed(str) {
+  let h = 2166136261 >>> 0; // FNV-1a basis
+  for (let i = 0; i < str.length; i++) {
+    h ^= str.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return h >>> 0;
+}
+
+// `newShoe(rng?)` — pass a seeded RNG for deterministic shoes (tournament
+// mode). Defaults to `Math.random` for casual play.
+function newShoe(rng) {
+  const rand = typeof rng === 'function' ? rng : Math.random;
+  const cs = [];
+  for (let d = 0; d < 8; d++) for (const s of SUITS) for (const r of RANKS) cs.push({ rank: r, suit: s });
+  for (let i = cs.length - 1; i > 0; i--) {
+    const j = Math.floor(rand() * (i + 1));
+    [cs[i], cs[j]] = [cs[j], cs[i]];
+  }
+  return cs;
+}
+function bankerDraws(bT, pThird) {
+  if (bT >= 7) return false;
+  if (bT <= 2) return true;
+  if (pThird == null) return bT <= 5;
+  const v = cardValue(pThird.rank);
+  if (bT === 3) return v !== 8;
+  if (bT === 4) return v >= 2 && v <= 7;
+  if (bT === 5) return v >= 4 && v <= 7;
+  if (bT === 6) return v === 6 || v === 7;
+  return false;
+}
+
+// ════════════════════════════════════════════════════════════════
+//  THREE.js SCENE — Bahamas Whale Room table  (3D layer is optional;
+//  if WebGL is unavailable the 2D UI still plays a full hand)
+// ════════════════════════════════════════════════════════════════
+const canvas = document.getElementById('stage');
+let renderer = null;
+let pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+let webglOK = false;
+try {
+  renderer = new THREE.WebGLRenderer({
+    canvas, antialias: true, alpha: true, powerPreference: 'high-performance', failIfMajorPerformanceCaveat: false
+  });
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.05;
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.setPixelRatio(pixelRatio);
+  webglOK = true;
+} catch (err) {
+  console.warn('[RTN] WebGL unavailable — running flat UI fallback', err);
+  // Hide the canvas; expose a simple felt background so it doesn't look broken
+  canvas.style.display = 'none';
+  document.getElementById('bg').style.background =
+    'radial-gradient(ellipse at 50% 40%, #1a4426 0%, #0a1f10 60%, #02050a 100%)';
+}
+
+const scene = new THREE.Scene();
+scene.background = null;
+
+// Camera placed at SEAT 5. Adapts to three viewport tiers:
+//   compact (< 700 tall — Chrome mobile w/ URL bar) — bird's-eye, wide FOV
+//   portrait phone (>= 700)                          — seat-5 sit-down
+//   landscape / desktop                              — flatter angle
+const camera = new THREE.PerspectiveCamera(44, 1, 0.05, 100);
+function applyDeviceClass() {
+  const compact = window.innerHeight < 720;
+  document.body.classList.toggle('compact', compact);
+  document.body.classList.toggle('mobile', window.innerWidth < 900);
+  return compact;
+}
+function setCameraForViewport() {
+  const w = window.innerWidth, h = window.innerHeight;
+  const portrait = h > w;
+  const compact  = applyDeviceClass();
+  // Compact: more top-down + wider FOV so cards stay clear of the bet panel.
+  let yEye, zEye, fov, lookZ;
+  if (!portrait)      { yEye = 0.55; zEye = 0.50; fov = 38; lookZ = -0.20; }
+  // Compact: lookAt is pulled to the user side (z≈0) so the player/banker
+  // felt circles and card landing zone project into the upper-mid of the
+  // canvas — well clear of the bet panel during betting, fully visible
+  // during the deal when the panel slides off-screen.
+  else if (compact)   { yEye = 0.85; zEye = 0.42; fov = 46; lookZ = 0.00; }
+  // Standard portrait phone (≥720 tall):
+  else                { yEye = 0.95; zEye = 0.52; fov = 48; lookZ = -0.16; }
+  camera.position.set(0, yEye, zEye);
+  camera.lookAt(0, 0, lookZ);
+  camera.fov = fov;
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+  // updateStyle=true so canvas.style.{width,height} match the viewport.
+  // Without it, the canvas's CSS box defaults to the bitmap pixel size
+  // (viewport × devicePixelRatio) — i.e. on a 390×664 phone with dpr=2
+  // the canvas displays at 780×1328 and the user only sees the upper-left
+  // quadrant. `position:fixed; inset:0` does NOT override the intrinsic
+  // canvas width/height attributes that setSize writes.
+  if (renderer) renderer.setSize(w, h, true);
+}
+
+// ── Lighting (cinematic warm key + cool rim, shadows only on cards) ──
+//   Slightly warmer than before; mahogany backdrop + gold trim now glint
+//   under the key light without crushing the dark felt edges.
+const ambient = new THREE.HemisphereLight(0xffe0b8, 0x1a0a04, 0.40);
+scene.add(ambient);
+
+const keyLight = new THREE.DirectionalLight(0xfff0c8, 1.85);
+keyLight.position.set(0.6, 1.8, 0.5);
+keyLight.castShadow = true;
+keyLight.shadow.mapSize.set(1024, 1024);
+keyLight.shadow.camera.left = -0.8; keyLight.shadow.camera.right = 0.8;
+keyLight.shadow.camera.top = 0.4; keyLight.shadow.camera.bottom = -0.8;
+keyLight.shadow.camera.near = 0.4; keyLight.shadow.camera.far = 4;
+keyLight.shadow.bias = -0.0005;
+keyLight.shadow.radius = 4;
+scene.add(keyLight);
+
+// Cool rim from camera-back-left
+const rim = new THREE.DirectionalLight(0x8ab4ff, 0.35);
+rim.position.set(-0.9, 0.6, -0.4);
+scene.add(rim);
+
+// Warm fill from below — felt bounce, sells the "lit overhead chandelier" look.
+const fill = new THREE.PointLight(0xffb066, 0.28, 2.5, 1.6);
+fill.position.set(0, 0.05, 0.4);
+scene.add(fill);
+
+// Gold-trim glint — tiny spot from the dealer side that picks out the
+// gold half-ring trim and the mahogany rail without lighting the felt.
+const glint = new THREE.PointLight(0xffd58a, 0.45, 1.2, 2.4);
+glint.position.set(0, 0.18, -0.50);
+scene.add(glint);
+
+renderer && (renderer.toneMappingExposure = 1.12);
+
+// ── Felt (half-moon, dealer arc at back, straight edge toward player) ──
+// Caribbean Whale Room theme: deep aquamarine wool felt — vibrant
+// turquoise that reads under the rippling caustics from the glass wall.
+const FELT_THEMES = {
+  bahamas:    '#0e6a72',   // deep aquamarine (default)
+  turquoise:  '#0aa19a',   // brighter Caribbean turquoise
+  forest:     '#1a4426',
+};
+let feltTex = makeFeltTexture(FELT_THEMES[settings.theme] || FELT_THEMES.bahamas);
+// CircleGeometry(radius, segments, thetaStart, thetaLength=PI) → half-disc.
+// We rotate so the disc lies flat on XZ. The geometry's local +Y axis maps to
+// world -Z after rotateX(-π/2), so the FLAT edge ends up at world z=0 (toward
+// the camera/seat 5) and the ARC ends up at z = -radius (away, toward dealer).
+const FELT_R = 0.65;
+const feltGeom = new THREE.CircleGeometry(FELT_R, 64, 0, Math.PI);
+const feltMat = new THREE.MeshStandardMaterial({
+  map: feltTex, roughness: 0.92, metalness: 0,
+});
+const felt = new THREE.Mesh(feltGeom, feltMat);
+felt.rotation.x = -Math.PI / 2;
+felt.position.y = 0;
+felt.receiveShadow = true;
+scene.add(felt);
+
+// ── Mahogany rim — curved apron hugging the felt arc + a straight player rail ──
+const woodTex = makeMahoganyTexture();
+const rimMat = new THREE.MeshStandardMaterial({ map: woodTex, roughness: 0.55, metalness: 0.05 });
+
+// Curved back rail: a slightly larger half-ring extruded as a torus segment
+const RIM_W = 0.06;
+const torusGeom = new THREE.TorusGeometry(FELT_R + RIM_W * 0.5, RIM_W * 0.5, 14, 96, Math.PI);
+const torus = new THREE.Mesh(torusGeom, rimMat);
+torus.rotation.x = -Math.PI / 2;
+torus.rotation.z = Math.PI; // flip so the half ring is the BACK of the felt
+torus.position.y = -0.005;
+torus.receiveShadow = true;
+scene.add(torus);
+
+// Straight front rail (the player's side of the felt)
+const frontRailGeom = new THREE.BoxGeometry((FELT_R + RIM_W) * 2, 0.05, RIM_W);
+const frontRail = new THREE.Mesh(frontRailGeom, rimMat);
+frontRail.position.set(0, -0.004, RIM_W * 0.5);
+frontRail.receiveShadow = true;
+scene.add(frontRail);
+
+// Card-back texture is needed by the dealer-side props (the card peeking
+// from the shoe + the discard stack), so generate it here — well before the
+// Card class declares its own const reference further down.
+const cardBackTex = makeCardBackTexture();
+
+// ── Authentic dealer-side props (replaces the placeholder tray disc) ──
+//   Card shoe (left)  ·  commission box (centre flat print)  ·  discard rack (right)
+
+// 1) CARD SHOE — angled wedge in dark mahogany + tinted acrylic top, with a
+//    glimpse of the next face-down card peeking out the front slot.
+function buildCardShoe() {
+  const g = new THREE.Group();
+  // Body — wedge approximated with a tilted box
+  const body = new THREE.Mesh(
+    new THREE.BoxGeometry(0.085, 0.038, 0.110),
+    new THREE.MeshStandardMaterial({ map: woodTex, roughness: 0.50, metalness: 0.06 })
+  );
+  body.position.y = 0.019;
+  body.rotation.x = -0.18;
+  body.castShadow = true; body.receiveShadow = true;
+  g.add(body);
+  // Tinted acrylic top window — slightly translucent dark glass
+  const top = new THREE.Mesh(
+    new THREE.BoxGeometry(0.072, 0.0015, 0.094),
+    new THREE.MeshStandardMaterial({ color: 0x1a1a22, transparent: true, opacity: 0.55,
+      roughness: 0.08, metalness: 0.55 })
+  );
+  top.position.set(0, 0.039, -0.005);
+  top.rotation.x = -0.18;
+  g.add(top);
+  // Brass-trimmed front lip (where the card emerges)
+  const lip = new THREE.Mesh(
+    new THREE.BoxGeometry(0.090, 0.004, 0.004),
+    new THREE.MeshStandardMaterial({ color: 0xc9a84c, roughness: 0.35, metalness: 0.7 })
+  );
+  lip.position.set(0, 0.003, 0.054); g.add(lip);
+  // The next card peeking from the slot (face-down)
+  const peek = new THREE.Mesh(
+    new THREE.PlaneGeometry(0.06, 0.024),
+    new THREE.MeshStandardMaterial({ map: cardBackTex, roughness: 0.6, metalness: 0 })
+  );
+  peek.rotation.x = -Math.PI / 2;
+  peek.position.set(0, 0.0035, 0.062);
+  g.add(peek);
+  return g;
+}
+const cardShoe = buildCardShoe();
+// Pushed back to the dealer arc — they're flavor props, not gameplay-critical
+// each hand, so they don't deserve mid-felt real estate.
+cardShoe.position.set(-0.22, 0, -0.48);
+cardShoe.rotation.y = 0.18;   // angled slightly toward the player
+scene.add(cardShoe);
+
+// 2) DISCARD RACK — low rectangular open holder with used cards stacked
+//    face-down. Card stack height is decorative; could be wired to shoe depth.
+function buildDiscardRack() {
+  const g = new THREE.Group();
+  // Base tray
+  const base = new THREE.Mesh(
+    new THREE.BoxGeometry(0.110, 0.006, 0.075),
+    new THREE.MeshStandardMaterial({ map: woodTex, roughness: 0.55, metalness: 0.05 })
+  );
+  base.position.y = 0.003; base.castShadow = true; g.add(base);
+  // Brass inner trim
+  const trim = new THREE.Mesh(
+    new THREE.BoxGeometry(0.094, 0.005, 0.060),
+    new THREE.MeshStandardMaterial({ color: 0x161616, roughness: 0.7, metalness: 0.1 })
+  );
+  trim.position.y = 0.0065; g.add(trim);
+  // Stack of discarded cards — single squat box textured with the card back
+  const stack = new THREE.Mesh(
+    new THREE.BoxGeometry(0.085, 0.018, 0.054),
+    new THREE.MeshStandardMaterial({ map: cardBackTex, roughness: 0.55 })
+  );
+  stack.position.y = 0.018; stack.castShadow = true; g.add(stack);
+  // Subtle striations on the stack edge (suggesting individual cards)
+  const stripeMat = new THREE.MeshStandardMaterial({ color: 0xf3e8c6, roughness: 0.65 });
+  for (let i = 0; i < 6; i++) {
+    const stripe = new THREE.Mesh(new THREE.BoxGeometry(0.0855, 0.0006, 0.0545), stripeMat);
+    stripe.position.y = 0.011 + i * 0.0024;
+    g.add(stripe);
+  }
+  return g;
+}
+const discardRack = buildDiscardRack();
+discardRack.position.set(0.22, 0, -0.48);
+discardRack.rotation.y = -0.18;
+scene.add(discardRack);
+
+// (Commission box removed — Dragon Bonus Baccarat has no commission so the prop was
+//  decorative noise. Card shoe + discard rack remain as authentic dealer props.)
+
+// ── Gold trim — a thin half-ring just inside the felt edge ─────────
+const trimGeom = new THREE.TorusGeometry(FELT_R - 0.012, 0.0015, 8, 96, Math.PI);
+const trimMat  = new THREE.MeshStandardMaterial({ color: 0xc9a84c, roughness: 0.35, metalness: 0.65 });
+const trim = new THREE.Mesh(trimGeom, trimMat);
+trim.rotation.x = -Math.PI / 2; trim.rotation.z = Math.PI;
+trim.position.y = 0.002;
+scene.add(trim);
+
+// ── Felt-printed bet zone labels — pale gold typography baked into
+//    the felt, just like a real Dragon Bonus Baccarat table.                  ──
+function addFeltLabel(text, x, z, opts = {}) {
+  const tex = makeFeltLabelTexture(text, opts);
+  const w = opts.w || 0.15, h = opts.h || (w * 0.5);
+  const m = new THREE.Mesh(
+    new THREE.PlaneGeometry(w, h),
+    new THREE.MeshStandardMaterial({ map: tex, transparent: true,
+      roughness: 0.95, metalness: 0, depthWrite: false })
+  );
+  m.rotation.x = -Math.PI / 2;
+  m.rotation.z = opts.rot || 0;
+  m.position.set(x, 0.002, z);
+  scene.add(m);
+  return m;
+}
+// Per-zone labels — Player on left, Banker on right (matches felt geometry).
+// TIE moved up to the Player Dragon / Banker Dragon row so all three side bets sit
+// in a single visual row across the felt.
+addFeltLabel('PLAYER',  -0.20, -0.16, { w: 0.16, h: 0.06, size: 70 });
+addFeltLabel('BANKER',   0.20, -0.16, { w: 0.16, h: 0.06, size: 70 });
+
+// ── Player Dragon / Banker Dragon felt artwork — sits exactly where the user's chips
+// land for those side bets so the stack reads as "chips on the artwork". ──
+function makeSideBetIcon(emoji, label, payout, accentColor) {
+  const W = 256, H = 256;
+  const c = document.createElement('canvas'); c.width = W; c.height = H;
+  const ctx = c.getContext('2d');
+  ctx.clearRect(0, 0, W, H);
+  // Soft accent halo behind the icon
+  const halo = ctx.createRadialGradient(W/2, H*0.45, 6, W/2, H/2, W*0.48);
+  halo.addColorStop(0,   accentColor + 'aa');
+  halo.addColorStop(0.5, accentColor + '38');
+  halo.addColorStop(1,   'rgba(0,0,0,0)');
+  ctx.fillStyle = halo; ctx.fillRect(0, 0, W, H);
+  // Decorative dashed ring (the "betting circle" outline)
+  ctx.strokeStyle = accentColor; ctx.lineWidth = 3;
+  ctx.setLineDash([10, 7]);
+  ctx.beginPath(); ctx.arc(W/2, H/2, W*0.40, 0, Math.PI * 2); ctx.stroke();
+  ctx.setLineDash([]);
+  // Big emoji icon
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.shadowColor = 'rgba(0,0,0,0.55)';
+  ctx.shadowBlur = 6;
+  ctx.font = '120px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif';
+  ctx.fillText(emoji, W/2, H/2 - 14);
+  // Label below
+  ctx.font = '900 26px Cinzel, Georgia, serif';
+  ctx.fillStyle = accentColor;
+  ctx.shadowBlur = 4;
+  ctx.fillText(label, W/2, H/2 + 64);
+  // Payout in tiny gold
+  ctx.font = '700 16px Cinzel, Georgia, serif';
+  ctx.fillStyle = 'rgba(225,205,140,0.9)';
+  ctx.shadowBlur = 2;
+  ctx.fillText(payout, W/2, H/2 + 92);
+  const tex = new THREE.CanvasTexture(c);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.anisotropy = 16;
+  return tex;
+}
+function addSideBetPrint(emoji, label, payout, color, x, z, size = 0.105) {
+  const tex = makeSideBetIcon(emoji, label, payout, color);
+  const m = new THREE.Mesh(
+    new THREE.PlaneGeometry(size, size),
+    new THREE.MeshStandardMaterial({
+      map: tex, transparent: true, roughness: 0.95, metalness: 0,
+      depthWrite: false
+    })
+  );
+  m.rotation.x = -Math.PI / 2;
+  m.position.set(x, 0.001, z);
+  scene.add(m);
+  return m;
+}
+// All three side bets (Player Dragon · Tie · Banker Dragon) sit in a single row inside
+// the visible camera frustum at z=-0.26. Centres are 0.115 apart, circles
+// are 0.105 wide → ~0.01 visible gap between them, no overlap.
+// Bahamas Dragon Bonus felt — top arc, left -> right, mirrors the panel.
+addSideBetPrint('🐼', 'PANDA 8', '25:1', '#a8eaff', -0.180, -0.06);
+addSideBetPrint('♠',  'P PAIR',  '11:1', '#dff5ff', -0.060, -0.06);
+addSideBetPrint('♣',  'B PAIR',  '11:1', '#ffe0d8',  0.060, -0.06);
+addSideBetPrint('🐉', 'DRAGON 7', '40:1', '#ffd0c0',  0.180, -0.06);
+addSideBetPrint('⚖️',  'TIE',      '8:1', '#9fffe0',  0.000, -0.10);
+
+// ════════════════════════════════════════════════════════════════
+//  CARD — geometry with corner-peel deformation
+// ════════════════════════════════════════════════════════════════
+// Card scaled so 4 cards (2 player + 2 banker, side by side) all fit inside
+// the portrait camera's visible x-range of ~±0.18.
+const CARD_W = 0.085;
+const CARD_H = 0.119;    // standard playing-card 64×89mm aspect ratio
+const CARD_T = 0.0006;
+// cardBackTex declared earlier (above the dealer-side props that reference it).
+
+class Card {
+  constructor(rank, suit) {
+    this.rank = rank; this.suit = suit;
+    this.peel = 0;
+    this.revealed = false;
+    this.locked = false;
+    this.faceTex = makeCardFaceTexture(rank, suit);
+
+    this.group = new THREE.Object3D();
+
+    // High-poly plane so we can deform the right edge for peel
+    const segs = 16;
+    const geo = new THREE.PlaneGeometry(CARD_W, CARD_H, segs, segs);
+    this._origPos = Float32Array.from(geo.attributes.position.array);
+
+    const matBack = new THREE.MeshStandardMaterial({
+      map: cardBackTex, roughness: 0.6, metalness: 0
+    });
+    const matFace = new THREE.MeshStandardMaterial({
+      map: this.faceTex, roughness: 0.62, metalness: 0
+    });
+
+    // Back faces up initially (the player sees the back when card lands face-down)
+    this.back = new THREE.Mesh(geo, matBack);
+    this.back.castShadow = true; this.back.receiveShadow = false;
+    this.group.add(this.back);
+
+    // Face is on the underside; flipped 180° on Y so when peeled it shows correctly
+    this.face = new THREE.Mesh(geo.clone(), matFace);
+    this.face.rotation.y = Math.PI;
+    this.face.position.y = -CARD_T;
+    this.face.castShadow = false; this.face.receiveShadow = false;
+    this.group.add(this.face);
+
+    // Cards lie flat on the felt (XZ plane) — rotate group -90° on X
+    this.group.rotation.x = -Math.PI / 2;
+  }
+
+  // Peel = lift right edge upward (toward camera) so player sees face
+  setPeel(p) {
+    if (this.locked) return;
+    this.peel = THREE.MathUtils.clamp(p, 0, 1);
+    // Geometry deformation only runs when 3D is alive — protect with try/catch
+    // so a malformed buffer or missing GL context can never wedge the squeeze flow.
+    if (webglOK) {
+      try {
+        [this.back.geometry, this.face.geometry].forEach((geom, idx) => {
+          const arr = geom.attributes.position.array;
+          const orig = this._origPos;
+          for (let i = 0; i < arr.length; i += 3) {
+            const x = orig[i], y = orig[i+1];
+            const xn = (x / CARD_W) + 0.5;
+            const w = Math.max(0, (xn - 0.05));
+            const bend = w * w * this.peel;
+            const lift = bend * 0.10;
+            const cup  = bend * 0.012 * Math.sin((y / CARD_H + 0.5) * Math.PI);
+            arr[i]   = orig[i] + bend * -0.005;
+            arr[i+1] = orig[i+1] + cup;
+            arr[i+2] = orig[i+2] + (idx === 0 ? lift : lift + 0.0003);
+          }
+          geom.attributes.position.needsUpdate = true;
+          geom.computeVertexNormals();
+        });
+      } catch (e) { /* deformation failed — proceed with reveal logic anyway */ }
+    }
+    if (this.peel > 0.05 && !this.revealed) {
+      const tickIdx = Math.floor(this.peel / 0.15);
+      if (tickIdx !== this._lastTick) {
+        this._lastTick = tickIdx;
+        sfx.squeezeTick(tickIdx);
+        haptic([8]);
+      }
+    }
+    // Live squeeze stage hint — runs every peel update
+    if (typeof setSqueezeHint === 'function') setSqueezeHint(this);
+    // NOTE: reaching peel ≥ 0.95 NO LONGER auto-reveals. flipCard() is the
+    // canonical reveal — it resets the bend, rotates 180° on X so the face
+    // lies flat face-up, and emits the cardRevealed event.
+  }
+
+  setPosition(x, y, z) { this.group.position.set(x, y, z); }
+  setRotation(rx, ry, rz) {
+    // Group is base-rotated -PI/2 on X to lie flat. Apply offsets relative to that.
+    this.group.rotation.set(-Math.PI/2 + rx, ry, rz);
+  }
+  worldRect() {
+    // Approximate screen-space rect for the card top, used by raycasting fast-path
+    return null; // unused — raycaster handles hit-testing
+  }
+  dispose() {
+    this.back.geometry.dispose(); this.face.geometry.dispose();
+    if (this.faceTex !== cardBackTex) this.faceTex.dispose();
+  }
+}
+
+// ════════════════════════════════════════════════════════════════
+//  CHIP — heavy ceramic look, GPU-instanced via shared geometry/materials
+// ════════════════════════════════════════════════════════════════
+const CHIP_R = 0.020, CHIP_H = 0.0055;
+const _chipGeom = webglOK ? new THREE.CylinderGeometry(CHIP_R, CHIP_R, CHIP_H, 36, 1) : null;
+
+// Edge-spot ring rendered as a side texture so chips don't look plastic
+function makeChipSideTex(color) {
+  const c = document.createElement('canvas'); c.width = 256; c.height = 16;
+  const ctx = c.getContext('2d');
+  ctx.fillStyle = color; ctx.fillRect(0,0,256,16);
+  // 8 edge spots
+  for (let i = 0; i < 8; i++) {
+    const x = (i + 0.5) * (256/8);
+    ctx.fillStyle = 'rgba(255,255,255,0.85)'; ctx.fillRect(x-12, 4, 24, 8);
+  }
+  // Subtle bevel shading top + bottom
+  const tg = ctx.createLinearGradient(0,0,0,16);
+  tg.addColorStop(0,'rgba(255,255,255,0.18)'); tg.addColorStop(0.5,'rgba(0,0,0,0)'); tg.addColorStop(1,'rgba(0,0,0,0.42)');
+  ctx.fillStyle = tg; ctx.fillRect(0,0,256,16);
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace;
+  t.wrapS = THREE.RepeatWrapping; return t;
+}
+function makeChipFaceTex(denomLabel, baseColor) {
+  const c = document.createElement('canvas'); c.width = c.height = 128;
+  const ctx = c.getContext('2d');
+  // Radial body
+  const g = ctx.createRadialGradient(64, 50, 4, 64, 64, 60);
+  g.addColorStop(0, '#fff7e0'); g.addColorStop(0.18, baseColor);
+  g.addColorStop(1, shadeHex(baseColor, -50));
+  ctx.fillStyle = g; ctx.beginPath(); ctx.arc(64, 64, 60, 0, Math.PI*2); ctx.fill();
+  // Inner decorative ring
+  ctx.strokeStyle = 'rgba(255,255,255,0.72)'; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.arc(64, 64, 38, 0, Math.PI*2); ctx.stroke();
+  ctx.strokeStyle = 'rgba(0,0,0,0.35)'; ctx.lineWidth = 1.2;
+  ctx.beginPath(); ctx.arc(64, 64, 36, 0, Math.PI*2); ctx.stroke();
+  // Denomination label
+  ctx.fillStyle = '#fff';
+  ctx.font = '900 26px Cinzel, serif';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText(denomLabel, 64, 64);
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace;
+  t.anisotropy = 8; return t;
+}
+function shadeHex(hex, amt) {
+  const n = parseInt(hex.slice(1),16); let r=(n>>16)+amt, g=((n>>8)&0xff)+amt, b=(n&0xff)+amt;
+  r=Math.max(0,Math.min(255,r)); g=Math.max(0,Math.min(255,g)); b=Math.max(0,Math.min(255,b));
+  return '#' + ((r<<16)|(g<<8)|b).toString(16).padStart(6,'0');
+}
+
+// Color palette by denomination — matches typical casino values
+const CHIP_LOOK = [
+  { val:1,    color:'#dcdcdc', label:'$1'  },
+  { val:5,    color:'#cc2828', label:'$5'  },
+  { val:25,   color:'#1f7a1f', label:'$25' },
+  { val:100,  color:'#1a1a1a', label:'$100'},
+  { val:500,  color:'#7430b2', label:'$500'},
+  { val:1000, color:'#c9a84c', label:'$1K' },
+];
+const _chipMats = new Map();
+function chipMaterials(val) {
+  if (!webglOK) return null;
+  if (_chipMats.has(val)) return _chipMats.get(val);
+  const look = CHIP_LOOK.find(c => c.val === val) || CHIP_LOOK[2];
+  const sideTex = makeChipSideTex(look.color);
+  const faceTex = makeChipFaceTex(look.label, look.color);
+  // [side, top, bottom] — Cylinder geometry default group order
+  const matSide  = new THREE.MeshStandardMaterial({ map:sideTex, roughness:0.45, metalness:0.04 });
+  const matFace  = new THREE.MeshStandardMaterial({ map:faceTex, roughness:0.42, metalness:0.04 });
+  const mats = [matSide, matFace, matFace];
+  _chipMats.set(val, mats); return mats;
+}
+
+// Pick the largest chips that sum to `amount` (real casino-style stacking)
+function decomposeAmount(amount) {
+  const out = []; let remain = amount;
+  for (const denom of [1000, 500, 100, 25, 5, 1]) {
+    while (remain >= denom) { out.push(denom); remain -= denom; }
+  }
+  return out;
+}
+
+// A single chip mesh
+function makeChip(val, x, y, z) {
+  if (!webglOK) return null;
+  const mats = chipMaterials(val);
+  const mesh = new THREE.Mesh(_chipGeom, mats);
+  mesh.position.set(x, y, z);
+  mesh.castShadow = true; mesh.receiveShadow = false;
+  return mesh;
+}
+
+// ── Live-table chip stacks (other "VIP players" actively betting) ──
+// On each new shoe we seed semi-random stacks on Banker / Player / Tie zones
+// at the periphery — gives the felt a populated, competitive feel.
+const ambientChipsGroup = webglOK ? new THREE.Group() : null;
+if (ambientChipsGroup) scene.add(ambientChipsGroup);
+
+// Traditional baccarat orientation: Player on the LEFT (-x), Banker on the
+// RIGHT (+x). Ambient chips spawn near these zones to make the table feel
+// populated by other VIP players betting alongside.
+// Bahamas Dragon Bonus felt geometry: top arc holds 4 side bets
+// (Player Dragon, Player Pair, Banker Pair, Banker Dragon), then Tie,
+// then Banker / Player as the two large bottom zones.
+const ZONE_FELT_POS = {
+  player:  { x: -0.16,  z: -0.20 },
+  banker:  { x:  0.16,  z: -0.20 },
+  tie:     { x:  0.000, z: -0.10 },
+  pdragon: { x: -0.180, z: -0.06 },
+  pair_p:  { x: -0.060, z: -0.06 },
+  pair_b:  { x:  0.060, z: -0.06 },
+  bdragon: { x:  0.180, z: -0.06 },
+};
+
+function clearGroup(g) {
+  if (!g) return;
+  while (g.children.length) {
+    const c = g.children.pop();
+    if (c.geometry && c.geometry !== _chipGeom) c.geometry.dispose();
+    g.remove(c);
+  }
+}
+
+function placeStack(group, x, z, denoms, jitter = 0.001) {
+  if (!group) return;
+  let yCursor = CHIP_H / 2 + 0.001;
+  for (const v of denoms) {
+    const m = makeChip(v, x + (Math.random()-0.5)*jitter, yCursor, z + (Math.random()-0.5)*jitter);
+    if (m) group.add(m);
+    yCursor += CHIP_H * 0.985;
+  }
+}
+
+function seedAmbientChips() {
+  // Ambient "other-player" chip stacks turned off — only the user's own bets
+  // appear on the felt. The function still exists (and clears the group) so
+  // any pre-existing chips from a prior session are cleaned up on reseed.
+  if (!ambientChipsGroup) return;
+  clearGroup(ambientChipsGroup);
+}
+
+// User's chips — kept in a separate group so we can refresh on every bet
+const userChipsGroup = webglOK ? new THREE.Group() : null;
+if (userChipsGroup) scene.add(userChipsGroup);
+
+function refreshUserChipStacks() {
+  if (!userChipsGroup) return;
+  clearGroup(userChipsGroup);
+  for (const side of ['banker','player','tie','bdragon','pdragon']) {
+    const amt = state.bets[side]; if (!amt) continue;
+    const base = ZONE_FELT_POS[side];
+    // Tie / Banker Dragon / Player Dragon chips land directly on their felt artwork.
+    // Banker / Player chips sit a touch closer to the camera so they stand
+    // clear of the cards landing zone.
+    const sideBetRow = (['bdragon','pdragon','pair_p','pair_b','tie'].includes(side));
+    const dz = sideBetRow ? 0.005 : 0.06;
+    placeStack(userChipsGroup, base.x, base.z + dz, decomposeAmount(amt), 0.0008);
+  }
+}
+window.refreshUserChipStacks = refreshUserChipStacks;
+
+// ════════════════════════════════════════════════════════════════
+//  DEAL CONTROLLER — animated card flight from tray to slot
+// ════════════════════════════════════════════════════════════════
+const dealController = new (class {
+  constructor() {
+    this.activeCards = []; // displayed cards on the felt
+  }
+  // Seat-5 view of a half-moon felt: traditional baccarat orientation —
+  // Player on the LEFT (-x), Banker on the RIGHT (+x). Dealer at the back arc.
+  // Card 0 lands upper-left, card 1 lower-right (diagonally staggered) so
+  // the rank corner of the bottom card is always visible.
+  positions(side, idx) {
+    const X = side === 'P' ? -0.105 : 0.105;
+    // Cards land deeper into the felt (more negative z) than the side
+    // bet row at z=-0.06 so the card sprites don't clip the top of the
+    // Dragon Bonus / Pair circles.
+    const baseZ = -0.18;
+    if (idx === 2) {
+      return { x: X + (side === 'P' ? -0.082 : 0.082), z: baseZ - 0.042 };
+    }
+    const dx = idx === 0 ? -0.038 :  0.030;
+    const dz = idx === 0 ?  0     : -0.026;
+    return { x: X + dx, z: baseZ + dz };
+  }
+
+  async dealOne(card, side, idx) {
+    if (webglOK) scene.add(card.group);
+    this.activeCards.push(card);
+    card.locked = false;
+    if (!webglOK) {
+      // Flat fallback: no animation, just register the card
+      sfx.cardSlide(); await wait(180); sfx.cardLand(); haptic([10]);
+      return;
+    }
+    // Start at the card shoe's front lip (cards visibly slide out of the
+    // shoe at the dealer's arc, then arc forward to their slot).
+    const start = { x: -0.22, y: 0.04, z: -0.43 };
+    const end = this.positions(side, idx);
+    card.setPosition(start.x, start.y, start.z);
+    card.setRotation(0, 0, (Math.random() - 0.5) * 0.1);
+    const t0 = performance.now();
+    const dur = 480;
+    sfx.cardSlide();
+    await new Promise(resolve => {
+      const tick = () => {
+        const t = Math.min(1, (performance.now() - t0) / dur);
+        const e = 1 - Math.pow(1 - t, 3);
+        const x = start.x + (end.x - start.x) * e;
+        const z = start.z + (end.z - start.z) * e;
+        const arcY = Math.sin(t * Math.PI) * 0.08;
+        const settleY = 0.005 + (1 - e) * 0.10;
+        card.setPosition(x, settleY + arcY * 0.4, z);
+        const ry = (1 - e) * 0.4;
+        const rz = (Math.random() - 0.5) * 0.02;
+        card.setRotation(0, ry, rz + (idx === 1 ? 0.35 : 0));
+        if (t < 1) requestAnimationFrame(tick);
+        else { sfx.cardLand(); haptic([10]); resolve(); }
+      };
+      requestAnimationFrame(tick);
+    });
+  }
+
+  async dealInitial() {
+    // Standard order: P, B, P, B
+    const cards = [
+      { side: 'P', idx: 0 }, { side: 'B', idx: 0 },
+      { side: 'P', idx: 1 }, { side: 'B', idx: 1 },
+    ];
+    const dealt = { P: [], B: [] };
+    for (const { side, idx } of cards) {
+      const draw = shoe.shift();
+      const card = new Card(draw.rank, draw.suit);
+      await this.dealOne(card, side, idx);
+      dealt[side].push({ data: draw, card });
+      await wait(120);
+    }
+    return dealt;
+  }
+
+  async dealThird(side, draw) {
+    const card = new Card(draw.rank, draw.suit);
+    await this.dealOne(card, side, 2);
+    return card;
+  }
+
+  clear() {
+    for (const c of this.activeCards) { if (webglOK) scene.remove(c.group); c.dispose(); }
+    this.activeCards = [];
+  }
+})();
+
+// ════════════════════════════════════════════════════════════════
+//  SQUEEZE INPUT — pointer/touch-driven peel on the active card
+// ════════════════════════════════════════════════════════════════
+const raycaster = new THREE.Raycaster();
+const ndc = new THREE.Vector2();
+let activeSqueeze = null; // { card, startY, peelStart }
+let squeezeStartedAtCard = null;
+
+function pointerToNdc(e) {
+  const r = canvas.getBoundingClientRect();
+  ndc.x = ((e.clientX - r.left) / r.width) * 2 - 1;
+  ndc.y = -((e.clientY - r.top) / r.height) * 2 + 1;
+}
+
+function pickCardAt(e) {
+  pointerToNdc(e);
+  raycaster.setFromCamera(ndc, camera);
+  const meshes = dealController.activeCards.flatMap(c => [c.back, c.face]);
+  const hits = raycaster.intersectObjects(meshes, false);
+  if (!hits.length) return null;
+  const hit = hits[0].object;
+  return dealController.activeCards.find(c => c.back === hit || c.face === hit) || null;
+}
+
+// ── Pointer model (works for both mouse and touch) ──
+//   * Slight tap on a card → flip it instantly (no drag required).
+//   * Drag upward → squeeze theatre with low-effort threshold (commits at 60%).
+//   * Drag distance is short (~80 px) so a desktop mouse-flick reveals easily.
+const SQUEEZE_DRAG_PX = 80;       // distance for a full peel
+const SQUEEZE_COMMIT_THRESHOLD = 0.6;
+const TAP_TOLERANCE_PX = 8;       // up to this Δ counts as a tap, not a drag
+
+// Determine which side the user backed and have the dealer auto-flip the
+// OTHER side's cards. Standard squeeze etiquette: you only peel your own
+// hand. Tie or no main bet → dealer flips both sides for fairness.
+function autoFlipNonUserSide() {
+  if (!dealController || !dealController.activeCards.length) return;
+  const userSide = state.bets.player > 0 ? 'P'
+                 : state.bets.banker > 0 ? 'B'
+                 : null;     // Tie or none → dealer flips both
+  const targets = dealController.activeCards.filter(c => {
+    if (!userSide) return true; // dealer flips everything
+    if (userSide === 'P') return c.group.position.x > 0;  // banker side
+    if (userSide === 'B') return c.group.position.x < 0;  // player side
+    return false;
+  });
+  // Skip already-revealed cards; stagger the flips for a "dealer-paced" feel
+  let i = 0;
+  for (const c of targets) {
+    if (c.revealed) continue;
+    setTimeout(() => flipCard(c), 420 + (i++) * 240);
+  }
+}
+
+// Properly flip a card face-up: undo any squeeze deformation, then rotate
+// the card 180° on its long axis (with a small arc lift for showmanship)
+// so the face material lies flat face-up on the felt.
+function flipCard(card){
+  if (!card || card.revealed) return;
+
+  // Restore the geometry to flat (in case the player partially squeezed first),
+  // then mark revealed so subsequent setPeel calls bail out.
+  card.locked = false;
+  card.setPeel(0);
+  card.revealed = true;
+  card.locked = true;
+  sfx.reveal(); haptic([20, 20, 30]);
+  bus.emit('cardRevealed', card);
+
+  // Only hide the squeeze hint once the user's *own* side is fully revealed.
+  // The dealer auto-flips the opposite side first, and we don't want that to
+  // dismiss the prompt before the player even gets a chance to peel.
+  const userSide = state.bets.player > 0 ? 'P'
+                 : state.bets.banker > 0 ? 'B'
+                 : null;
+  const userCardsLeft = dealController.activeCards.some(c => {
+    if (c.revealed) return false;
+    if (!userSide) return true; // tie-only: any unrevealed card counts
+    return userSide === 'P' ? c.group.position.x < 0 : c.group.position.x > 0;
+  });
+  if (!userCardsLeft) {
+    document.getElementById('squeeze-hint').style.display = 'none';
+  }
+
+  const startRotX = card.group.rotation.x;
+  const targetRotX = startRotX + Math.PI;       // 180° flip
+  const startY = card.group.position.y;
+  const t0 = performance.now(), dur = 540;
+  const tick = () => {
+    const t = Math.min(1, (performance.now() - t0) / dur);
+    const e = 1 - Math.pow(1 - t, 2.4);          // ease-out
+    card.group.rotation.x = startRotX + (targetRotX - startRotX) * e;
+    // Small arc lift at the midpoint — sells the dealer's flick of the wrist
+    card.group.position.y = startY + Math.sin(t * Math.PI) * 0.045;
+    if (t < 1) requestAnimationFrame(tick);
+    else { card.group.position.y = startY; }
+  };
+  requestAnimationFrame(tick);
+}
+
+canvas.addEventListener('pointerdown', e => {
+  if (state.phase !== 'squeeze') return;
+  const c = pickCardAt(e);
+  if (!c || c.revealed) return;
+  activeSqueeze = { card: c, startX: e.clientX, startY: e.clientY, peelStart: c.peel, moved: false };
+  canvas.setPointerCapture(e.pointerId);
+  document.getElementById('squeeze-hint').style.display = 'none';
+});
+canvas.addEventListener('pointermove', e => {
+  if (!activeSqueeze) return;
+  const dx = e.clientX - activeSqueeze.startX;
+  const dy = activeSqueeze.startY - e.clientY; // up = positive
+  if (Math.hypot(dx, dy) > TAP_TOLERANCE_PX) activeSqueeze.moved = true;
+  if (activeSqueeze.moved) {
+    const next = activeSqueeze.peelStart + dy / SQUEEZE_DRAG_PX;
+    activeSqueeze.card.setPeel(next);
+  }
+});
+canvas.addEventListener('pointerup', e => {
+  if (!activeSqueeze) return;
+  const card = activeSqueeze.card;
+  // No drag → pure tap → instant flip (handles mouse + accidental short drags)
+  if (!activeSqueeze.moved) {
+    flipCard(card);
+  } else if (card.peel < SQUEEZE_COMMIT_THRESHOLD) {
+    // Snap back to 0
+    const start = card.peel;
+    const t0 = performance.now(), dur = 240;
+    const tick = () => {
+      const t = Math.min(1, (performance.now() - t0) / dur);
+      card.setPeel(start * (1 - (1 - Math.pow(1 - t, 3))));
+      if (t < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  } else {
+    // Past the commit point → finish the peel automatically (no need to drag all the way)
+    flipCard(card);
+  }
+  try { canvas.releasePointerCapture(e.pointerId); } catch(_){}
+  activeSqueeze = null;
+});
+canvas.addEventListener('pointercancel', () => { activeSqueeze = null; });
+
+// ════════════════════════════════════════════════════════════════
+//  TOURNAMENT MODE
+//
+//  Activated by `?tournament=YYYY-MM` in the URL (e.g. ?tournament=2026-06).
+//  Every player on that URL gets the SAME deterministic 8-deck shoe so
+//  results are directly comparable. Starting balance, hand cap, and
+//  prize flair are derived from the tournament ID; final balance is
+//  posted to the leaderboard at the end of the cap.
+// ════════════════════════════════════════════════════════════════
+const TOURNAMENT = (() => {
+  try {
+    const id = new URLSearchParams(location.search).get('tournament');
+    if (!id || !/^\d{4}-\d{2}$/.test(id)) return null;
+    const seed = hashStringToSeed('bg-tournament-' + id);
+    return {
+      id,                    // e.g. "2026-06"
+      seed,                  // deterministic seed for newShoe()
+      rng: mulberry32(seed),
+      startingBalance: 10_000,
+      handCap: 80,           // ~one full 8-deck shoe
+      handsPlayed: 0,
+      submitted: false,
+      flair: `🏆 ${id} Champion`,
+    };
+  } catch (_) { return null; }
+})();
+window.__bgTournament = TOURNAMENT; // exposed read-only for the dashboard
+
+// ════════════════════════════════════════════════════════════════
+//  GAME STATE — phases, wagers, balance
+// ════════════════════════════════════════════════════════════════
+const state = {
+  phase: 'betting',  // betting → dealing → squeeze → resolving → payout → betting
+  balance: TOURNAMENT ? TOURNAMENT.startingBalance : 1000,
+  bets: { player: 0, banker: 0, tie: 0, bdragon: 0, pdragon: 0, pair_p: 0, pair_b: 0 },
+  selectedChip: 25,
+  shoeCount: 0,
+  stats: { hands: 0, B: 0, P: 0, T: 0, pnl: 0,
+           nat8: 0, nat9: 0, pdragon: 0, bdragon: 0 },
+};
+let shoe = newShoe(TOURNAMENT ? TOURNAMENT.rng : undefined);
+
+// ── Recorder bridge (read-only) ──────────────────────────────────
+// `state` is module-scoped so it isn't reachable from the global `window`.
+// Headless recorders (record-macau-dragon-loop.js) need to read state.phase
+// and state.stats to drive auto-play and detect Dragon Bonus hits, so we
+// expose a small read-only handle here. Production gameplay is unaffected.
+try {
+  Object.defineProperty(window, '__macauState', {
+    get: () => state, configurable: false, enumerable: false,
+  });
+} catch (e) { window.__macauState = state; }
+// Expose syncBetUI() for the recorder so chip stacks paint after a
+// programmatic bet is placed. The function is forward-declared here and
+// assigned later in the module — the lazy getter avoids a hoist error.
+Object.defineProperty(window, '__macauSync', {
+  get: () => (typeof syncBetUI === 'function') ? syncBetUI : (() => {}),
+});
+
+function setPhase(p) {
+  state.phase = p;
+  document.body.classList.toggle('dealing', p === 'dealing');
+  document.body.classList.toggle('squeezing', p === 'squeeze');
+  // Totals visible once any reveal phase begins, then through the payout.
+  document.body.classList.toggle('show-totals',
+    p === 'resolving' || p === 'payout');
+  document.getElementById('btn-flip-all').classList.toggle('show', p === 'squeeze');
+  if (p !== 'squeeze') document.getElementById('squeeze-hint').style.display = 'none';
+  swapDealerVideo(p);
+  if (p === 'betting') resetTotals();
+}
+
+// ── Live dealer media engine ────────────────────────────────────
+// 3 animated videos in /dealer: pro_dealer (idle), dealing, warm_congrats.
+// 7 mood JPEGs used as static posters for outcomes that don't have video:
+//   intense_focus / laughing / playful_smirk / sympathetic + the 3 video stems.
+const DEALER_POSTERS = {
+  intense:     'dealer/intense_focus.jpeg',
+  laughing:    'dealer/laughing.jpeg',
+  smirk:       'dealer/playful_smirk.jpeg',
+  sympathetic: 'dealer/sympathetic.jpeg',
+};
+function setDealerVideo(stem){
+  const v = document.getElementById('dealer-vid'); if (!v) return;
+  // Already on this clip — let it run once to its end and stay there. Don't
+  // restart from the beginning when an unrelated phase change re-asks for it.
+  if (v.dataset.stem === stem) return;
+  v.dataset.stem = stem;
+  v.innerHTML = `<source src="dealer/${stem}.webm" type="video/webm">
+                 <source src="dealer/${stem}.mp4"  type="video/mp4">`;
+  v.poster = `dealer/${stem}.jpeg`;
+  v.muted = !window.__rtnDealerAudioOn;
+  // Tag the body with the video's actual orientation so the CSS can pick
+  // a frame ratio that matches the source. ffprobe says:
+  //   pro_dealer.mp4    400×712  → portrait (9:16-ish)
+  //   warm_congrats.mp4 400×712  → portrait
+  //   dealing.mp4       400×396  → square-ish
+  const PORTRAIT_VIDS = ['pro_dealer', 'warm_congrats'];
+  const SQUARE_VIDS   = ['dealing'];
+  document.body.classList.toggle('dealer-portrait', PORTRAIT_VIDS.includes(stem));
+  document.body.classList.toggle('dealer-square',   SQUARE_VIDS.includes(stem));
+  try { v.load(); v.play(); } catch(_){}
+}
+
+// Browsers block audio autoplay until a user gesture occurs. Start the
+// dealer videos muted, then unmute on the first pointer interaction OR
+// when the user explicitly clicks the 🔇/🔊 toggle in the HUD.
+window.__rtnDealerAudioOn = false;
+function applyDealerAudioState() {
+  const v = document.getElementById('dealer-vid');
+  const btn = document.getElementById('btn-sound');
+  if (v) {
+    v.muted = !window.__rtnDealerAudioOn;
+    v.volume = 0.9;
+    if (window.__rtnDealerAudioOn) { try { v.play(); } catch(_) {} }
+  }
+  if (btn) {
+    btn.textContent = window.__rtnDealerAudioOn ? '🔊' : '🔇';
+    btn.classList.toggle('on', window.__rtnDealerAudioOn);
+  }
+}
+function unmuteDealer(e) {
+  // The 🔇/🔊 button has its own toggle — don't double-fire.
+  if (e && e.target && e.target.closest && e.target.closest('#btn-sound')) return;
+  if (window.__rtnDealerAudioOn) return;
+  window.__rtnDealerAudioOn = true;
+  applyDealerAudioState();
+  document.removeEventListener('pointerdown', unmuteDealer, true);
+  document.removeEventListener('keydown', unmuteDealer, true);
+}
+document.addEventListener('pointerdown', unmuteDealer, true);
+document.addEventListener('keydown', unmuteDealer, true);
+// Explicit toggle so desktop users (or anyone who started muted by accident)
+// can flip dealer audio on/off without hunting for it.
+document.getElementById('btn-sound').addEventListener('click', () => {
+  window.__rtnDealerAudioOn = !window.__rtnDealerAudioOn;
+  applyDealerAudioState();
+});
+function setDealerPoster(path){
+  const v = document.getElementById('dealer-vid'); if (!v) return;
+  if (v.dataset.stem === 'static:' + path) return;
+  v.dataset.stem = 'static:' + path;
+  try { v.pause(); } catch(_){}
+  v.innerHTML = '';                   // drop sources so poster takes over
+  v.removeAttribute('src');
+  v.poster = path;
+  v.load();
+}
+function swapDealerVideo(phase){
+  switch (phase) {
+    case 'betting':   setDealerVideo('pro_dealer'); break;
+    case 'dealing':
+    case 'squeeze':   setDealerVideo('dealing'); break;
+    case 'resolving': setDealerPoster(DEALER_POSTERS.intense); break;
+    case 'payout':    /* result handler picks the right mood */ break;
+    default:          setDealerVideo('pro_dealer');
+  }
+}
+function playCongratsVideo()  { setDealerVideo('warm_congrats'); }
+function showLaughingDealer() { setDealerPoster(DEALER_POSTERS.laughing); }
+function showSmirkDealer()    { setDealerPoster(DEALER_POSTERS.smirk); }
+function showSympatheticDealer(){ setDealerPoster(DEALER_POSTERS.sympathetic); }
+
+// ── Running totals tracker ───────────────────────────────────────
+const _totals = { player: [], banker: [] };
+function resetTotals(){
+  _totals.player.length = 0; _totals.banker.length = 0;
+  document.getElementById('t-p').textContent = '—';
+  document.getElementById('t-b').textContent = '—';
+  document.querySelectorAll('.total').forEach(el => el.classList.remove('win', 'lose'));
+}
+function pushTotal(side, card){
+  _totals[side].push(card);
+  const t = _totals[side].reduce((s, c) => s + cardValue(c.rank), 0) % 10;
+  document.getElementById(side === 'player' ? 't-p' : 't-b').textContent = String(t);
+}
+function highlightWinner(winner){
+  const tp = document.querySelector('.total.t-player');
+  const tb = document.querySelector('.total.t-banker');
+  [tp, tb].forEach(el => el.classList.remove('win', 'lose'));
+  if (winner === 'P') { tp.classList.add('win');  tb.classList.add('lose'); }
+  if (winner === 'B') { tb.classList.add('win');  tp.classList.add('lose'); }
+  // 3D: scale the winning cards up + slide them toward their bet zone.
+  if (winner !== 'T') celebrateWinningCards(winner);
+}
+
+// Animate the winning side's card group: ease-out scale to 1.18 with a small
+// slide outward (toward that side's bet circle on the felt).
+function celebrateWinningCards(winner){
+  if (!webglOK) return;
+  const cards = dealController.activeCards;
+  // Player on -x, Banker on +x — winners pushed FURTHER toward their bet zone.
+  const winningCards = cards.filter(c => (winner === 'P' && c.group.position.x <  0) ||
+                                         (winner === 'B' && c.group.position.x >  0));
+  const losingCards  = cards.filter(c => !winningCards.includes(c));
+  const dx = winner === 'P' ? -0.05 : 0.05;
+  // Winning side: scale + push outward + small lift
+  winningCards.forEach((c, i) => {
+    const startScale = c.group.scale.x;
+    const startX = c.group.position.x;
+    const startY = c.group.position.y;
+    const t0 = performance.now() + i * 60, dur = 620;
+    const tick = () => {
+      const now = performance.now();
+      if (now < t0) { requestAnimationFrame(tick); return; }
+      const t = Math.min(1, (now - t0) / dur);
+      const e = 1 - Math.pow(1 - t, 2.6);
+      c.group.scale.setScalar(startScale + (1.18 - startScale) * e);
+      c.group.position.x = startX + dx * e;
+      c.group.position.y = startY + Math.sin(t * Math.PI) * 0.025;
+      if (t < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  });
+  // Losing cards: stay put but dim slightly
+  losingCards.forEach(c => {
+    [c.back, c.face].forEach(m => {
+      if (m && m.material) {
+        m.material.opacity = 0.55;
+        m.material.transparent = true;
+        m.material.needsUpdate = true;
+      }
+    });
+  });
+}
+window.__rtnTotals = _totals;
+
+// ── Squeeze stage hint — narrows the value as the card peels ────
+function setSqueezeHint(card){
+  const hintEl = document.getElementById('squeeze-hint');
+  if (!hintEl) return;
+  if (state.phase !== 'squeeze') { hintEl.style.display = 'none'; return; }
+  hintEl.style.display = 'block';
+  const cat = ['T','J','Q','K'].includes(card.rank) ? 'monkey'
+            : ['A','2','3'].includes(card.rank) ? 'one'
+            : ['4','5'].includes(card.rank) ? 'two' : 'dots';
+  if (card.peel < 0.15) {
+    hintEl.innerHTML = 'TAP TO FLIP &nbsp;·&nbsp; SWIPE UP TO PEEL';
+  } else if (card.peel < 0.40) {
+    hintEl.innerHTML = cat === 'monkey'
+      ? '🃏 MONKEY — VALUE 0'
+      : cat === 'one' ? '👁 ONE LINE — A · 2 · 3'
+      : cat === 'two' ? '👁 TWO LINES — 4 · 5'
+      :                  '👁 DOTS — 6 · 7 · 8 · 9';
+  } else if (card.peel < 0.70) {
+    hintEl.innerHTML = cat === 'monkey'
+      ? '🃏 MONKEY'
+      : cat === 'one' ? 'A · 2 · or 3'
+      : cat === 'two' ? '4 · or 5'
+      :                  '6 · 7 · 8 · or 9';
+  } else if (card.peel < 0.95) {
+    hintEl.innerHTML = '✦ ALMOST THERE…';
+  } else {
+    hintEl.innerHTML = (card.rank === 'T' ? '10' : card.rank) + ' ' + card.suit;
+  }
+}
+
+// React to card reveals → bump the totals
+bus.on('cardRevealed', card => {
+  // Player is on the LEFT (-x), Banker on the RIGHT (+x).
+  const side = card.group.position.x < 0 ? 'player' : 'banker';
+  pushTotal(side, card);
+});
+
+function totalBet() { return state.bets.player + state.bets.banker + state.bets.tie; }
+
+function syncBetUI() {
+  ['player','banker','tie','bdragon','pdragon','pair_p','pair_b'].forEach(side => {
+    const el = document.getElementById('amt-' + side);
+    if (el) el.textContent = '$' + state.bets[side].toLocaleString();
+  });
+  // Mutual-exclusion rule: dim only the OPPOSITE of Player/Banker once one
+  // is chosen. Tie + side bets stay freely combinable.
+  const exc = (typeof activeExclusiveSide === 'function') ? activeExclusiveSide() : null;
+  document.querySelectorAll('.slot').forEach(s => {
+    const side = s.dataset.side;
+    const v = state.bets[side] || 0;
+    s.classList.toggle('active', v > 0);
+    s.classList.toggle('has-bet', v > 0);
+    const isOpposite = exc && (
+      (exc === 'player' && side === 'banker') ||
+      (exc === 'banker' && side === 'player')
+    );
+    s.classList.toggle('locked', !!isOpposite);
+    const lim = LIMITS[side];
+    s.classList.toggle('under-min', !!(v > 0 && lim && v < lim.min));
+  });
+  // DEAL gating: any placed bet must be at or above its minimum, and there
+  // must be at least one bet on the felt. We keep the button enabled when
+  // there's an under-min bet (rather than `disabled`) so the click handler
+  // can still fire and surface the specific reason — disabled buttons
+  // swallow the tap silently and leave the player guessing.
+  const underMin = Object.entries(state.bets).find(([s, v]) => v > 0 && LIMITS[s] && v < LIMITS[s].min);
+  const dealBtn = document.getElementById('btn-deal');
+  dealBtn.disabled = totalBet() === 0;
+  dealBtn.classList.toggle('blocked', !!underMin);
+  dealBtn.dataset.blockReason = underMin
+    ? `${underMin[0].toUpperCase().replace(/\d/, ' $&')} BET BELOW MIN ${fmtMoney(LIMITS[underMin[0]].min)}`
+    : '';
+  // Mute the gold a bit if no main bet, so the player gets a subtle visual hint.
+  document.getElementById('btn-deal').classList.toggle('needs-main', totalBet() > 0 && mainBet() === 0);
+  document.getElementById('bal-val').textContent = '$' + state.balance.toLocaleString();
+  // Mirror user chips onto the 3D felt so the table looks lived-in
+  if (typeof refreshUserChipStacks === 'function') refreshUserChipStacks();
+}
+
+function showMsg(text, kind, ms = 2400) {
+  const el = document.getElementById('msg');
+  el.textContent = text;
+  el.className = ''; if (kind) el.classList.add(kind);
+  el.classList.add('show');
+  clearTimeout(showMsg._t);
+  showMsg._t = setTimeout(() => el.classList.remove('show'), ms);
+}
+
+// ════════════════════════════════════════════════════════════════
+//  CELEBRATION FX — visual-only payout cues for Banker Dragon / Player Dragon
+//  No text popups. Glow ring on the zone + a tasteful particle burst.
+// ════════════════════════════════════════════════════════════════
+function celebrateZone(side, kind, betAmount){
+  const slot = document.querySelector(`.slot[data-side="${side}"]`);
+  if (!slot) return;
+  const cls = kind === 'biolum'   ? 'celebrate-biolum'
+            : kind === 'pearl'    ? 'celebrate-pearl'
+            : kind === 'sapphire' ? 'celebrate-sapphire'
+            : kind === 'push'     ? 'celebrate-push' : '';
+  if (!cls) return;
+  slot.classList.remove(cls); void slot.offsetWidth; // restart animation
+  slot.classList.add(cls);
+  setTimeout(() => slot.classList.remove(cls), 3400);
+
+  if (kind === 'push') {
+    haptic([40, 60, 30]);
+    sfx.cardLand();
+    return;
+  }
+  // Particle burst from zone center.
+  fxParticleBurst(slot.getBoundingClientRect(), kind);
+  sfx.win();
+  haptic(kind === 'biolum' ? [30, 30, 80, 30, 120] : [18, 24, 50]);
+}
+
+// EZ Baccarat headline flybys — distinct emoji + particle palette per
+// side bet. Banker's Dragon 7 gets a 🐉 dragon with molten-gold embers;
+// Player's Panda 8 gets a 🐼 panda with jade leaves. Triggered from
+// playHand on the matching big-hit flag (isBDragonBig / isPDragonBig).
+function triggerWhaleFlyby(){ return triggerDragonFlyby(); }   // legacy alias
+
+function _flybyParticles(elId, opts){
+  const sy = window.innerHeight * 0.36;
+  const ex = window.innerWidth + 120, sx = -120;
+  let t0 = performance.now();
+  const dur = 2100;
+  const palette = opts.palette;
+  const emit = () => {
+    const t = (performance.now() - t0) / dur;
+    if (t > 1) return;
+    const x = sx + (ex - sx) * t;
+    const y = sy + Math.sin(t * Math.PI) * -30;
+    for (let i = 0; i < 3; i++) {
+      _fxParticles.push({
+        x: x - 30 + (Math.random()-0.5)*22,
+        y: y + 18 + (Math.random()-0.5)*12,
+        vx: -1 - Math.random()*2, vy: -0.8 - Math.random()*1.6,
+        life: 1, decay: 0.020 + Math.random()*0.010,
+        r: 2 + Math.random()*4,
+        color: palette[Math.floor(Math.random() * palette.length)],
+      });
+    }
+    if (!fxParticleBurst._raf) tickFx();
+    requestAnimationFrame(emit);
+  };
+  requestAnimationFrame(emit);
+}
+
+function triggerDragonFlyby(){
+  const el = document.getElementById('dragon-flyby');
+  if (!el) return;
+  el.classList.remove('go'); void el.offsetWidth;
+  el.classList.add('go');
+  // Dragon 7 trail — molten gold + crimson embers
+  _flybyParticles('dragon-flyby', {
+    palette: ['#ffd76e', '#ff8a1a', '#ff5e00', '#ffaa1a', '#b8001f'],
+  });
+  setTimeout(() => el.classList.remove('go'), 2200);
+}
+
+function triggerPandaFlyby(){
+  const el = document.getElementById('panda-flyby');
+  if (!el) return;
+  el.classList.remove('go'); void el.offsetWidth;
+  el.classList.add('go');
+  // Panda 8 trail — jade green + bamboo leaves + pearl white
+  _flybyParticles('panda-flyby', {
+    palette: ['#a8f5d0', '#52d99a', '#0d8a52', '#ffffff', '#c8f5e0'],
+  });
+  setTimeout(() => el.classList.remove('go'), 2200);
+}
+
+// Bahamas: no theatrical splash. Big Dragon Bonus hits use the
+// bioluminescent zone glow + whale flyby + bubble particles in
+// celebrateZone above. Splash CSS / DOM are leftover from the
+// EZ Baccarat template and unused here.
+
+const fxCanvas = document.getElementById('fx-canvas');
+const fxCtx = fxCanvas.getContext('2d');
+function fxResize(){ fxCanvas.width = window.innerWidth * (window.devicePixelRatio||1);
+                     fxCanvas.height = window.innerHeight * (window.devicePixelRatio||1);
+                     fxCtx.setTransform(window.devicePixelRatio||1, 0, 0, window.devicePixelRatio||1, 0, 0); }
+fxResize(); window.addEventListener('resize', fxResize);
+
+const _fxParticles = [];
+function fxParticleBurst(rect, kind){
+  const cx = rect.left + rect.width/2, cy = rect.top + rect.height/2;
+  // Palette per kind. biolum = bioluminescent deep-blue+cyan,
+  // pearl = pearl/white, sapphire = cool sapphire blue.
+  const PALETTES = {
+    biolum:   ['#5cc9ff','#bce4ff','#a8eaff','#7fd4d8','#ffffff'],
+    pearl:    ['#fff8ec','#ffe9c8','#fff','#fde8c0','#f4d0a8'],
+    sapphire: ['#aac4ff','#7faaff','#cfddff','#ffffff','#9bb6f0'],
+  };
+  const colors = PALETTES[kind] || PALETTES.biolum;
+  for (let i = 0; i < 80; i++) {
+    const a = Math.random() * Math.PI * 2;
+    const sp = 2 + Math.random() * 7;
+    _fxParticles.push({
+      x:cx, y:cy,
+      vx:Math.cos(a)*sp, vy:Math.sin(a)*sp - 2 - Math.random()*2,
+      life:1, decay:0.012 + Math.random()*0.01,
+      r:2 + Math.random()*3.5,
+      color:colors[Math.floor(Math.random()*colors.length)]
+    });
+  }
+  if (!fxParticleBurst._raf) tickFx();
+}
+function tickFx(){
+  fxCtx.clearRect(0, 0, fxCanvas.width, fxCanvas.height);
+  let alive = 0;
+  for (const p of _fxParticles) {
+    if (p.life <= 0) continue;
+    alive++;
+    p.x += p.vx; p.y += p.vy;
+    p.vy += 0.18; p.vx *= 0.985;
+    p.life -= p.decay;
+    fxCtx.globalAlpha = Math.max(0, p.life);
+    fxCtx.fillStyle = p.color;
+    fxCtx.beginPath(); fxCtx.arc(p.x, p.y, p.r, 0, Math.PI*2); fxCtx.fill();
+  }
+  fxCtx.globalAlpha = 1;
+  if (alive > 0) fxParticleBurst._raf = requestAnimationFrame(tickFx);
+  else { fxParticleBurst._raf = null; _fxParticles.length = 0; fxCtx.clearRect(0,0,fxCanvas.width,fxCanvas.height); }
+}
+
+// ════════════════════════════════════════════════════════════════
+//  BET PANEL — chip selection + slot taps
+// ════════════════════════════════════════════════════════════════
+document.querySelectorAll('.chip').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+    btn.classList.add('selected');
+    state.selectedChip = +btn.dataset.val;
+    sfx.chip(); haptic([6]);
+  });
+});
+
+// VIP-room table limits. Side-bet caps are intentionally lower than the main
+// because their payouts (25:1 / 40:1 / 8:1) compound risk much faster.
+const LIMITS = {
+  player:  { min: 100, max: 5000 },
+  banker:  { min: 100, max: 5000 },
+  tie:     { min:  25, max:  500 },
+  pdragon: { min:  25, max:  500 },
+  bdragon: { min:  25, max:  500 },
+  pair_p:  { min:  25, max:  500 },
+  pair_b:  { min:  25, max:  500 },
+};
+function fmtMoney(n){ return '$' + n.toLocaleString(); }
+
+// Bet placement — Player and Banker are mutually exclusive (you can't hedge
+// both sides of a single hand). Tie is an independent wager that can be
+// stacked alongside either Player OR Banker. Side bets (Banker Dragon / Player Dragon)
+// can be combined with anything.
+const EXCLUSIVE_SIDES = ['player','banker'];
+function activeExclusiveSide(){
+  return EXCLUSIVE_SIDES.find(s => state.bets[s] > 0) || null;
+}
+
+document.querySelectorAll('.slot').forEach(slot => {
+  slot.addEventListener('click', () => {
+    if (state.phase !== 'betting') return;
+    const side = slot.dataset.side;
+    const chip = state.selectedChip;
+    if (state.balance < chip) { showMsg('NOT ENOUGH CHIPS', 'lose', 1500); return; }
+
+    // Only block when clicking the OTHER of Player/Banker.
+    if (EXCLUSIVE_SIDES.includes(side)) {
+      const cur = activeExclusiveSide();
+      if (cur && cur !== side) {
+        showMsg('CAN’T BET BOTH PLAYER AND BANKER · CLEAR FIRST', 'lose', 1800);
+        haptic([14, 80, 14]);
+        return;
+      }
+    }
+
+    // Table-limit check: reject the chip if it would push this side over max.
+    const lim = LIMITS[side];
+    if (lim && state.bets[side] + chip > lim.max) {
+      showMsg(`MAX ${fmtMoney(lim.max)} ON ${side.toUpperCase()}`, 'lose', 1500);
+      slot.classList.remove('limit-flash'); void slot.offsetWidth;
+      slot.classList.add('limit-flash');
+      setTimeout(() => slot.classList.remove('limit-flash'), 600);
+      haptic([14, 60, 14]);
+      return;
+    }
+
+    state.bets[side] += chip;
+    state.balance -= chip;
+    sfx.chip(); haptic([10]);
+    syncBetUI();
+  });
+});
+
+document.getElementById('btn-clear').addEventListener('click', () => {
+  if (state.phase !== 'betting') return;
+  state.balance += totalBet();
+  state.bets = { player: 0, banker: 0, tie: 0, bdragon: 0, pdragon: 0, pair_p: 0, pair_b: 0 };
+  syncBetUI();
+});
+
+// ════════════════════════════════════════════════════════════════
+//  ROADS — Bead, Big Road, Big Eye Boy, Small, Cockroach
+// ════════════════════════════════════════════════════════════════
+const ROWS = 6;
+const history = []; // each entry: { w: 'B'|'P'|'T' }
+
+function bigRoadCells() {
+  // Pure baccarat Big Road logic (ties hang on previous result as a slash)
+  const cells = [];
+  let col = 0, row = 0, lastSide = null;
+  for (const h of history) {
+    if (h.w === 'T') {
+      if (cells.length) cells[cells.length - 1].ties = (cells[cells.length - 1].ties || 0) + 1;
+      else cells.push({ side: 'T', col: 0, row: 0, ties: 1 });
+      continue;
+    }
+    if (lastSide === null) { col = 0; row = 0; }
+    else if (h.w === lastSide) {
+      // Continue the streak downward
+      if (row + 1 < ROWS) row++; else col++; // overflow turns right
+    } else {
+      col++; row = 0;
+    }
+    cells.push({ side: h.w, col, row, ties: 0 });
+    lastSide = h.w;
+  }
+  return cells;
+}
+function streaksFromBigRoad(cells) {
+  // Each "streak" = consecutive cells in same column with same side
+  const streaks = []; let cur = null;
+  for (const c of cells) {
+    if (c.side === 'T') continue;
+    if (!cur || cur.col !== c.col) { cur = { col: c.col, side: c.side, len: 0 }; streaks.push(cur); }
+    cur.len++;
+  }
+  return streaks;
+}
+function derivedRoad(cells, k) {
+  // k=1 Big Eye, k=2 Small, k=3 Cockroach
+  const out = [];
+  const colsLen = {};
+  cells.forEach(c => { if (c.side !== 'T') colsLen[c.col] = (colsLen[c.col] || 0) + 1; });
+  // Walk the cells in order; for each cell at position (col, row), compare with col-k.
+  for (const c of cells) {
+    if (c.side === 'T') continue;
+    if (c.col - k < 0) continue;
+    if (c.col === 0) continue;
+    let red;
+    if (c.row === 0) {
+      // Compare column lengths: the previous column vs col-k length
+      red = (colsLen[c.col - 1] || 0) === (colsLen[c.col - 1 - k + 1] || 0);
+    } else {
+      // Is there a cell directly to the left at col-k? red if yes
+      const exists = cells.some(x => x.col === c.col - k && x.row === c.row && x.side !== 'T');
+      red = exists;
+    }
+    out.push({ red });
+  }
+  return out;
+}
+
+function paintRoadCells(canvas, cells, isBigRoad) {
+  const ctx = canvas.getContext('2d');
+  const w = canvas.clientWidth, h = canvas.clientHeight;
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  if (canvas.width !== w * dpr) { canvas.width = w * dpr; canvas.height = h * dpr; }
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, w, h);
+  // Cell size — fit ROWS=6 vertically
+  const cell = h / ROWS;
+  // Grid
+  ctx.strokeStyle = 'rgba(100,80,30,0.18)'; ctx.lineWidth = 1;
+  for (let r = 0; r <= ROWS; r++) {
+    ctx.beginPath(); ctx.moveTo(0, r * cell); ctx.lineTo(w, r * cell); ctx.stroke();
+  }
+  const cols = Math.ceil(w / cell);
+  for (let cIdx = 0; cIdx <= cols; cIdx++) {
+    ctx.beginPath(); ctx.moveTo(cIdx * cell, 0); ctx.lineTo(cIdx * cell, h); ctx.stroke();
+  }
+  // Cells
+  for (const c of cells) {
+    const cx = c.col * cell + cell / 2;
+    const cy = c.row * cell + cell / 2;
+    if (cx > w + cell) continue;
+    const color = c.side === 'B' ? '#cc1111' : c.side === 'P' ? '#1540cc' : '#0f8f2e';
+    if (isBigRoad) {
+      // Hollow circle (traditional Big Road)
+      ctx.strokeStyle = color; ctx.lineWidth = 1.8;
+      ctx.beginPath(); ctx.arc(cx, cy, cell * 0.34, 0, Math.PI * 2); ctx.stroke();
+      if (c.ties) {
+        ctx.strokeStyle = '#0f8f2e'; ctx.lineWidth = 1.4;
+        ctx.beginPath(); ctx.moveTo(cx - cell*0.3, cy + cell*0.3); ctx.lineTo(cx + cell*0.3, cy - cell*0.3); ctx.stroke();
+      }
+    } else {
+      // Solid fill (Bead)
+      ctx.fillStyle = color;
+      ctx.beginPath(); ctx.arc(cx, cy, cell * 0.36, 0, Math.PI * 2); ctx.fill();
+    }
+  }
+}
+
+function paintBead(canvas, hist) {
+  const ctx = canvas.getContext('2d');
+  const w = canvas.clientWidth, h = canvas.clientHeight;
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  if (canvas.width !== w * dpr) { canvas.width = w * dpr; canvas.height = h * dpr; }
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, w, h);
+  const cell = h / ROWS;
+  ctx.strokeStyle = 'rgba(100,80,30,0.18)'; ctx.lineWidth = 1;
+  for (let r = 0; r <= ROWS; r++) { ctx.beginPath(); ctx.moveTo(0, r*cell); ctx.lineTo(w, r*cell); ctx.stroke(); }
+  const cols = Math.ceil(w / cell);
+  for (let c = 0; c <= cols; c++) { ctx.beginPath(); ctx.moveTo(c*cell, 0); ctx.lineTo(c*cell, h); ctx.stroke(); }
+  hist.forEach((entry, i) => {
+    const col = Math.floor(i / ROWS), row = i % ROWS;
+    const cx = col * cell + cell/2, cy = row * cell + cell/2;
+    const color = entry.w === 'B' ? '#cc1111' : entry.w === 'P' ? '#1540cc' : '#0f8f2e';
+    ctx.fillStyle = color;
+    ctx.beginPath(); ctx.arc(cx, cy, cell * 0.36, 0, Math.PI*2); ctx.fill();
+  });
+}
+
+function paintDerived(canvas, marks, slash) {
+  const ctx = canvas.getContext('2d');
+  const w = canvas.clientWidth, h = canvas.clientHeight;
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  if (canvas.width !== w * dpr) { canvas.width = w * dpr; canvas.height = h * dpr; }
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, w, h);
+  const cell = h / ROWS;
+  ctx.strokeStyle = 'rgba(100,80,30,0.18)'; ctx.lineWidth = 1;
+  for (let r = 0; r <= ROWS; r++) { ctx.beginPath(); ctx.moveTo(0, r*cell); ctx.lineTo(w, r*cell); ctx.stroke(); }
+  const cols = Math.ceil(w / cell);
+  for (let c = 0; c <= cols; c++) { ctx.beginPath(); ctx.moveTo(c*cell, 0); ctx.lineTo(c*cell, h); ctx.stroke(); }
+  marks.forEach((m, i) => {
+    const col = Math.floor(i / ROWS), row = i % ROWS;
+    const cx = col * cell + cell/2, cy = row * cell + cell/2;
+    const color = m.red ? '#cc1111' : '#1540cc';
+    if (slash) {
+      ctx.strokeStyle = color; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(cx - cell*0.32, cy + cell*0.32); ctx.lineTo(cx + cell*0.32, cy - cell*0.32); ctx.stroke();
+    } else {
+      ctx.strokeStyle = color; ctx.lineWidth = 1.8;
+      ctx.beginPath(); ctx.arc(cx, cy, cell * 0.32, 0, Math.PI*2); ctx.stroke();
+    }
+  });
+}
+
+function repaintRoads() {
+  const big = bigRoadCells();
+  paintBead(document.getElementById('bead-road'), history);
+  paintRoadCells(document.getElementById('big-road'), big, true);
+  paintDerived(document.getElementById('big-eye'), derivedRoad(big, 1), false);
+  paintDerived(document.getElementById('small-road'), derivedRoad(big, 2), false);
+  paintDerived(document.getElementById('cockroach'), derivedRoad(big, 3), true);
+}
+
+// Roads drawer (mobile right-side slide-out). The handle is a dedicated
+// hit target; a swipe-right gesture inside the panel also closes it.
+const roadsShelf = document.getElementById('roads-shelf');
+const roadsHandle = document.getElementById('roads-handle');
+if (roadsHandle) {
+  roadsHandle.addEventListener('click', () => {
+    if (window.innerWidth >= 900) return;
+    roadsShelf.classList.toggle('open');
+  });
+}
+let roadsTouchX = null;
+roadsShelf.addEventListener('touchstart', e => {
+  if (window.innerWidth >= 900 || !roadsShelf.classList.contains('open')) return;
+  roadsTouchX = e.touches[0].clientX;
+}, { passive: true });
+roadsShelf.addEventListener('touchend', e => {
+  if (roadsTouchX === null) return;
+  const dx = (e.changedTouches[0]?.clientX ?? roadsTouchX) - roadsTouchX;
+  if (dx > 50) roadsShelf.classList.remove('open');   // swipe right → close
+  roadsTouchX = null;
+});
+roadsShelf.addEventListener('click', () => {
+  if (window.innerWidth < 900) roadsShelf.classList.toggle('open');
+});
+
+// ════════════════════════════════════════════════════════════════
+//  HAND ORCHESTRATION
+// ════════════════════════════════════════════════════════════════
+function mainBet() {
+  return state.bets.player + state.bets.banker + state.bets.tie;
+}
+function sideBet() {
+  return state.bets.bdragon + state.bets.pdragon
+       + state.bets.pair_p  + state.bets.pair_b;
+}
+
+async function playHand() {
+  if (state.phase !== 'betting') return;
+  if (totalBet() === 0) return;
+  // Dragon Bonus Baccarat side bets require a main wager — Banker Dragon / Player Dragon don't pay
+  // unless there's a Banker, Player, or Tie bet on the felt.
+  if (mainBet() === 0) {
+    showMsg('PLACE A BANKER, PLAYER OR TIE BET FIRST', 'lose', 2200);
+    haptic([20, 60, 20]);
+    return;
+  }
+  setPhase('dealing');
+  document.getElementById('btn-deal').disabled = true;
+  showMsg('NO MORE BETS', null, 1000);
+
+  // Tournament v2 anti-cheat: snapshot the locked-in bets so the
+  // server can replay this hand against the deterministic shoe and
+  // verify our claimed final balance. Key names are translated from
+  // the JS internal names (bdragon / pdragon) to the engine's
+  // canonical names (dragon7 / panda8).
+  if (TOURNAMENT) {
+    if (!Array.isArray(TOURNAMENT.betHistory)) TOURNAMENT.betHistory = [];
+    TOURNAMENT.betHistory.push({
+      banker:  state.bets.banker  | 0,
+      player:  state.bets.player  | 0,
+      tie:     state.bets.tie     | 0,
+      dragon7: state.bets.bdragon | 0,
+      panda8:  state.bets.pdragon | 0,
+      pair_p:  state.bets.pair_p  | 0,
+      pair_b:  state.bets.pair_b  | 0,
+    });
+  }
+
+  // Reshuffle if shoe is too thin (and reseed ambient table chips on a new shoe).
+  // In tournament mode the shoe is locked to the tournament seed, so a "new shoe"
+  // would be the same cards as the first — but we cap the tournament at handCap
+  // hands well before that happens, so we never reach this branch.
+  if (shoe.length < 6) { shoe = newShoe(TOURNAMENT ? TOURNAMENT.rng : undefined); seedAmbientChips(); }
+
+  const dealt = await dealController.dealInitial();
+  const playerCards = dealt.P.map(d => d.data);
+  const bankerCards = dealt.B.map(d => d.data);
+  let pT = handTotal(playerCards), bT = handTotal(bankerCards);
+  const natural = pT >= 8 || bT >= 8;
+
+  // Squeeze phase — let the player peel THEIR side; the dealer flips the other.
+  setPhase('squeeze');
+  document.getElementById('squeeze-hint').style.display = 'block';
+  autoFlipNonUserSide();
+  await waitForAllRevealed(dealController.activeCards.slice());
+
+  let pThird = null, bThird = null;
+  if (!natural) {
+    // Deal third cards per rules
+    if (pT <= 5) {
+      pThird = shoe.shift();
+      const c = await dealController.dealThird('P', pThird);
+      playerCards.push(pThird); pT = handTotal(playerCards);
+      // Reveal new third instantly (for pacing); keep squeezeable if you want
+      flipCard(c);
+    }
+    if (bankerDraws(bT, pThird)) {
+      bThird = shoe.shift();
+      const c = await dealController.dealThird('B', bThird);
+      bankerCards.push(bThird); bT = handTotal(bankerCards);
+      flipCard(c);
+    }
+  }
+
+  // Resolve
+  setPhase('resolving');
+  await wait(500);
+  const winner = pT === bT ? 'T' : (bT > pT ? 'B' : 'P');
+
+
+  if (isKoreanBBQ(playerCards, bankerCards)) triggerKoreanBBQ();
+// ── EZ Baccarat rules — Dragon 7 + Panda 8 ──
+  // The Macau VIP table is EZ Baccarat. Two side bets sit on the felt:
+  //   DRAGON 7  → Banker wins with a 3-card total of 7  pays 40:1
+  //   PANDA 8   → Player wins with a 3-card total of 8  pays 25:1
+  // EZ also re-routes the main banker payout: when Banker wins with a
+  // 3-card 7 the main banker bet PUSHES (returns stake) instead of
+  // paying 1:1 — the house edge moves into the Dragon 7 side bet.
+  // Pairs still pay 11:1 on the first two cards of that side.
+  const cardRank = c => c && c.r;
+  const isPairP = playerCards.length >= 2 && cardRank(playerCards[0]) === cardRank(playerCards[1]);
+  const isPairB = bankerCards.length >= 2 && cardRank(bankerCards[0]) === cardRank(bankerCards[1]);
+  const naturalWin = natural;       // pT≥8 || bT≥8 on the initial two cards
+
+  // The two EZ headline outcomes — these are the only side-bet payouts
+  // that reach the celebration animation.
+  //   isDragon7 → Banker, 3 cards, total 7 → 40:1
+  //   isPanda8  → Player, 3 cards, total 8 → 25:1
+  const isDragon7 = winner === 'B' && bankerCards.length === 3 && bT === 7;
+  const isPanda8  = winner === 'P' && playerCards.length === 3 && pT === 8;
+
+  // The Banker-Dragon-Talon slot now hosts DRAGON 7 (40:1).
+  // The Player-Dragon-Talon slot now hosts PANDA 8  (25:1).
+  // Multipliers below are stake + win returned to the bankroll on a hit
+  // (so 41 = 40:1 plus stake back; 26 = 25:1 plus stake back; 1 = push,
+  //  stake back only; 0 = bet loses).
+  const dragon7Mult = isDragon7 ? 41 : (winner === 'T' ? 1 : 0);
+  const panda8Mult  = isPanda8  ? 26 : (winner === 'T' ? 1 : 0);
+  // Aliases preserved so the celebration / stats code paths below keep
+  // their existing names. pdragon = Panda 8, bdragon = Dragon 7.
+  const pDragonMult = panda8Mult;
+  const bDragonMult = dragon7Mult;
+  // Big-celebration triggers for the bioluminescent ring + dealer
+  // congrats reaction. Both EZ headline hits are "BIG".
+  const isPDragonBig = isPanda8;
+  const isBDragonBig = isDragon7;
+
+  // Winnings = cash returned (stake + profit on win, stake only on push).
+  let winnings = 0;
+  if (winner === 'P') winnings += state.bets.player * 2;     // 1:1
+  // EZ Baccarat: Banker 3-card 7 wins push the main banker bet.
+  if (winner === 'B' && isDragon7) winnings += state.bets.banker;        // push
+  else if (winner === 'B')         winnings += state.bets.banker * 2;     // 1:1
+  if (winner === 'T') {
+    winnings += state.bets.tie * 9;            // 8:1 + stake
+    winnings += state.bets.player;             // push player main
+    winnings += state.bets.banker;             // push banker main
+  }
+  // EZ side bets
+  winnings += state.bets.pdragon * pDragonMult;     // Panda 8  — 25:1
+  winnings += state.bets.bdragon * bDragonMult;     // Dragon 7 — 40:1
+  // Pair side bets — independent of winner; pay regardless.
+  if (isPairP) winnings += state.bets.pair_p * 12;   // 11:1 + stake
+  if (isPairB) winnings += state.bets.pair_b * 12;   // 11:1 + stake
+
+  const net = winnings - totalBet();
+  state.balance += winnings;
+  if (typeof checkVipMilestone === 'function') checkVipMilestone();
+  if (typeof checkApexCrossing === 'function') checkApexCrossing();
+
+  // Visual-only celebrations:
+  //   • Big Dragon Bonus hit (margin ≥ 6) → bioluminescent deep-blue glow + whale flyby
+  //   • Smaller Dragon Bonus hit          → bioluminescent glow only
+  //   • Pair                              → soft pearl glow
+  //   • Tie                               → sapphire pulse
+  if (pDragonMult > 1) celebrateZone('pdragon', 'biolum', state.bets.pdragon);
+  if (bDragonMult > 1) celebrateZone('bdragon', 'biolum', state.bets.bdragon);
+  if (isPairP)         celebrateZone('pair_p',  'pearl',  state.bets.pair_p);
+  if (isPairB)         celebrateZone('pair_b',  'pearl',  state.bets.pair_b);
+  if (winner === 'T')  celebrateZone('tie',     'sapphire', state.bets.tie);
+  if (isBDragonBig) triggerDragonFlyby();
+  if (isPDragonBig) triggerPandaFlyby();
+
+  // Tag the winning side on the totals panel.
+  highlightWinner(winner);
+  // Dealer reaction matched to the outcome (uses every video / mood JPEG):
+  //   Big win or special side bet → warm_congrats.mp4
+  //   Small win                   → playful_smirk.jpeg
+  //   Tie                         → laughing.jpeg
+  //   Loss                        → sympathetic.jpeg
+  // Congrats only when the player actually walked away with money — a
+  // big-margin Dragon Bonus outcome shouldn't fire this if they lost.
+  if (net > 0 && (isPDragonBig || isBDragonBig || net > 100)) playCongratsVideo();
+  else if (net > 0)                            showSmirkDealer();
+  else if (winner === 'T' && state.bets.tie===0) showLaughingDealer();
+  else if (net < 0)                            showSympatheticDealer();
+
+  // Adjust stats
+  state.stats.hands++;
+  state.stats[winner]++;
+  state.stats.pnl += net;
+
+  // Tournament hand-count + auto-end. We tick the counter only AFTER a
+  // resolved hand and check the cap once. End-of-tournament UI is shown
+  // by the tournament-mode overlay (see #bg-tournament-hud below).
+  if (TOURNAMENT) {
+    TOURNAMENT.handsPlayed++;
+    if (typeof updateTournamentHud === 'function') updateTournamentHud();
+    if (TOURNAMENT.handsPlayed >= TOURNAMENT.handCap && !TOURNAMENT.submitted) {
+      if (typeof showTournamentEnd === 'function') showTournamentEnd();
+    }
+  }
+  // Vegas board stats: natural 8/9 only count as a "natural" when the hand
+  // is a natural (no third card drawn on either side), per casino convention.
+  if (natural) {
+    const peakTotal = Math.max(pT, bT);
+    if (peakTotal === 9) state.stats.nat9++;
+    else if (peakTotal === 8) state.stats.nat8++;
+  }
+  if (pDragonMult > 1) state.stats.pdragon++;
+  if (bDragonMult > 1) state.stats.bdragon++;
+  if (isPairP) (state.stats.pair_p = (state.stats.pair_p||0) + 1);
+  if (isPairB) (state.stats.pair_b = (state.stats.pair_b||0) + 1);
+  repaintBoardStats();
+
+  // Add to roads
+  history.push({ w: winner });
+  repaintRoads();
+
+  // Result UI
+  const lbl = winner === 'B' ? 'BANKER WINS' : winner === 'P' ? 'PLAYER WINS' : 'TIE';
+  const scoreLine = `${pT} – ${bT}`;
+  if (net > 0) { sfx.win(); showMsg(`${lbl} · ${scoreLine} · +$${net.toLocaleString()}`, 'win', 2800); }
+  else if (net < 0) { sfx.lose(); showMsg(`${lbl} · ${scoreLine} · -$${Math.abs(net).toLocaleString()}`, 'lose', 2200); }
+  else { showMsg(`${lbl} · ${scoreLine} · push`, null, 2000); }
+
+  // Wait, then clear cards and reset for next hand
+  setPhase('payout');
+  await wait(2200);
+  dealController.clear();
+  state.bets = { player: 0, banker: 0, tie: 0, bdragon: 0, pdragon: 0, pair_p: 0, pair_b: 0 };
+  syncBetUI();
+  setPhase('betting');
+  updateMenuStats();
+}
+
+function waitForAllRevealed(cards) {
+  return new Promise(resolve => {
+    // 2D fallback (no WebGL): no squeeze interaction is possible, so reveal
+    // everything for the player. With WebGL on, the user ALWAYS keeps the
+    // squeeze option for their own side — autoFlipNonUserSide handles the
+    // dealer's hand, and FLIP ALL is one tap away if they want to skip the
+    // theatre. The 18-second failsafe below covers the wandered-off case.
+    if (!webglOK) {
+      cards.forEach((c, i) => setTimeout(() => flipCard(c), 350 + i*220));
+    }
+    const off = bus.on('cardRevealed', () => {});
+    const failsafe = setTimeout(() => {
+      cards.forEach(c => { if (!c.revealed) flipCard(c); });
+    }, 18000);
+    const iv = setInterval(() => {
+      if (cards.every(c => c.revealed)) {
+        clearInterval(iv); clearTimeout(failsafe); off(); resolve();
+      }
+    }, 200);
+  });
+}
+const wait = ms => new Promise(r => setTimeout(r, ms));
+
+document.getElementById('btn-deal').addEventListener('click', (e) => {
+  const btn = e.currentTarget;
+  if (btn.classList.contains('blocked')) {
+    showMsg(btn.dataset.blockReason || 'BET BELOW MINIMUM', 'lose', 1800);
+    haptic([14, 60, 14]);
+    return;
+  }
+  if (audioCtx === null) ac(); // unlock audio on user gesture
+  playHand();
+});
+
+// FLIP ALL — instantly reveal every unrevealed card during the squeeze phase
+document.getElementById('btn-flip-all').addEventListener('click', () => {
+  if (state.phase !== 'squeeze') return;
+  dealController.activeCards.forEach((c, i) => {
+    if (!c.revealed) setTimeout(() => flipCard(c), i * 140);
+  });
+  document.getElementById('btn-flip-all').classList.remove('show');
+  document.getElementById('squeeze-hint').style.display = 'none';
+});
+
+// ════════════════════════════════════════════════════════════════
+//  HAMBURGER MENU
+// ════════════════════════════════════════════════════════════════
+const menu = document.getElementById('menu-overlay');
+const menuDim = document.getElementById('menu-dim');
+function openMenu() { menu.classList.add('open'); menuDim.classList.add('open'); updateMenuStats(); }
+function closeMenu() { menu.classList.remove('open'); menuDim.classList.remove('open'); }
+document.getElementById('btn-burger').addEventListener('click', openMenu);
+document.getElementById('menu-close').addEventListener('click', closeMenu);
+menuDim.addEventListener('click', closeMenu);
+
+document.querySelectorAll('.toggle[data-key]').forEach(t => {
+  t.addEventListener('click', () => {
+    const k = t.dataset.key;
+    const newVal = !t.classList.contains('on');
+    t.classList.toggle('on', newVal);
+    settings[k] = newVal;
+    localStorage.setItem('rtn_' + k, newVal ? '1' : '0');
+  });
+});
+document.getElementById('opt-theme').value = settings.theme;
+document.getElementById('opt-theme').addEventListener('change', e => {
+  settings.theme = e.target.value;
+  localStorage.setItem('rtn_theme', settings.theme);
+  // Live-swap felt texture
+  feltTex.dispose();
+  feltTex = makeFeltTexture(FELT_THEMES[settings.theme]);
+  feltMat.map = feltTex;
+  feltMat.needsUpdate = true;
+});
+
+function updateMenuStats() {
+  const s = state.stats;
+  document.getElementById('stat-hands').textContent = s.hands;
+  document.getElementById('stat-b').textContent = s.B;
+  document.getElementById('stat-p').textContent = s.P;
+  document.getElementById('stat-t').textContent = s.T;
+  const sign = s.pnl >= 0 ? '+' : '-';
+  document.getElementById('stat-pnl').textContent = `${sign}$${Math.abs(s.pnl).toLocaleString()}`;
+}
+
+function repaintBoardStats() {
+  const s = state.stats;
+  const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+  set('bs-hand', s.hands);
+  set('bs-b',    s.B);
+  set('bs-p',    s.P);
+  set('bs-t',    s.T);
+  set('bs-n9',   s.nat9);
+  set('bs-n8',   s.nat8);
+  set('bs-pa',   s.pdragon);
+  set('bs-dr',   s.bdragon);
+}
+
+// ════════════════════════════════════════════════════════════════
+//  RENDER LOOP — adaptive frame rate (battery-aware)
+// ════════════════════════════════════════════════════════════════
+let lastFrame = performance.now();
+let fpsEMA = 60;
+let lastInteractionT = performance.now();
+['pointerdown','keydown'].forEach(t => addEventListener(t, () => lastInteractionT = performance.now()));
+
+function frame() {
+  if (!renderer) return; // WebGL unavailable — skip render loop entirely
+  const now = performance.now();
+  const dt = (now - lastFrame) / 1000;
+  lastFrame = now;
+  fpsEMA = fpsEMA * 0.94 + (1/dt) * 0.06;
+
+  // Adaptive pixel ratio
+  const target = Math.min(window.devicePixelRatio || 1, 2);
+  if (fpsEMA < 50 && pixelRatio > 1) {
+    pixelRatio = Math.max(1, pixelRatio - 0.1);
+    renderer.setPixelRatio(pixelRatio);
+  } else if (fpsEMA > 58 && pixelRatio < target) {
+    pixelRatio = Math.min(target, pixelRatio + 0.05);
+    renderer.setPixelRatio(pixelRatio);
+  }
+
+  // Idle throttle: drop to 30fps if betting and idle 2s
+  const idle = state.phase === 'betting' && (now - lastInteractionT > 2000);
+  if (idle) {
+    if ((Math.floor(now / 16) & 1) === 0) renderer.render(scene, camera);
+  } else {
+    renderer.render(scene, camera);
+  }
+  requestAnimationFrame(frame);
+}
+
+// ════════════════════════════════════════════════════════════════
+//  BOOTSTRAP
+// ════════════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════════════
+//  AQUARIUM VIDEO — backdrop is a single fullscreen <video>
+//  Chrome Mobile: muted + playsinline are required for autoplay; we
+//  also retry play() after the first user gesture in case autoplay was
+//  blocked (older Chrome iOS behavior).
+// ════════════════════════════════════════════════════════════════
+const aquariumVideo = document.getElementById('aquarium-video');
+function ensureAquariumPlaying() {
+  if (!aquariumVideo) return;
+  const p = aquariumVideo.play();
+  if (p && p.catch) p.catch(() => {/* will retry on first gesture */});
+}
+ensureAquariumPlaying();
+['pointerdown', 'touchstart'].forEach(ev =>
+  document.addEventListener(ev, ensureAquariumPlaying, { once:true, passive:true }));
+
+// Lantern sprite overlay — drifts red/gold paper lanterns across the
+// scene to evoke the Cotai Strip. Pure-CSS shapes (no emoji art); the
+// SIZES table varies the lantern scale per spawn so the room reads
+// with depth. ≤10 sprites + 4 ember motes live at a time so the GPU
+// compositor never breaks 60fps.
+const MARINE_SPECIES = [
+  { s:38, a:'drift-rtl', d:30, o:0.85 },
+  { s:46, a:'drift-bob', d:34, o:0.85 },
+  { s:52, a:'drift-rtl', d:42, o:0.80 },
+  { s:60, a:'drift-bob', d:48, o:0.78 },
+  { s:42, a:'drift-rtl', d:36, o:0.85 },
+  { s:54, a:'drift-bob', d:50, o:0.80 },
+  { s:48, a:'drift-rtl', d:38, o:0.85 },
+];
+const aquariumOverlay = document.getElementById('aquarium');
+function spawnMarine() {
+  if (!aquariumOverlay) return;
+  const sp = MARINE_SPECIES[Math.floor(Math.random() * MARINE_SPECIES.length)];
+  const el = document.createElement('span');
+  el.className = 'marine';
+  // Pure-CSS lantern (the .marine selector renders the shape) — no
+  // textContent, just inline width/height to scale the lantern.
+  const w = sp.s;
+  const h = Math.round(sp.s * 1.20);
+  el.style.width   = w + 'px';
+  el.style.height  = h + 'px';
+  el.style.opacity = sp.o;
+  el.style.top     = (8 + Math.random() * 70) + '%';
+  el.style.animation = `${sp.a} ${sp.d}s linear forwards`;
+  if (Math.random() < 0.4) el.classList.add('left');
+  aquariumOverlay.appendChild(el);
+  setTimeout(() => el.remove(), sp.d * 1000 + 500);
+}
+function spawnBubble() {
+  // Floating ember mote — small amber dot rising up the screen
+  if (!aquariumOverlay) return;
+  const el = document.createElement('span');
+  // Bypass the .marine lantern shape — give it explicit ember style
+  el.style.cssText = `
+    position:absolute; left:${Math.random()*100}%;
+    width:${4 + Math.random()*8}px; height:${4 + Math.random()*8}px;
+    border-radius:50%;
+    background:radial-gradient(circle, rgba(255,200,80,0.95), rgba(255,120,0,0.4) 60%, transparent 100%);
+    box-shadow:0 0 12px rgba(255,160,40,0.55);
+    animation:bubble-up ${5 + Math.random()*6}s linear forwards;
+    pointer-events:none;
+  `;
+  aquariumOverlay.appendChild(el);
+  setTimeout(() => el.remove(), 12000);
+}
+let _aquariumInterval = null;
+function startAquarium() {
+  ensureAquariumPlaying();
+  if (_aquariumInterval) return;
+  for (let i = 0; i < 4; i++) setTimeout(spawnMarine, i * 600);
+  _aquariumInterval = setInterval(() => {
+    if (aquariumOverlay && aquariumOverlay.childElementCount < 10) spawnMarine();
+    if (aquariumOverlay && aquariumOverlay.childElementCount < 14 && Math.random() < 0.6) spawnBubble();
+  }, 2400);
+}
+
+// ════════════════════════════════════════════════════════════════
+//  APEX VENUE GATE — Caribbean Whale Room requires $1M bankroll.
+//  If the user lands without enough, show the brushed-steel modal.
+//  If they cross $1M during play, show the cinematic "VIP WHALE" card.
+// ════════════════════════════════════════════════════════════════
+const APEX_THRESHOLD = 1_000_000;
+let _apexCardFired = false;
+function checkApexGate() {
+  // First load: if balance < threshold, show the gate (dismissable for demo).
+  if (state.balance < APEX_THRESHOLD) showApexGate();
+}
+function showApexGate() {
+  const el = document.getElementById('apex-gate');
+  if (!el) return;
+  el.classList.add('show');
+}
+function hideApexGate() {
+  const el = document.getElementById('apex-gate');
+  if (el) el.classList.remove('show');
+}
+document.getElementById('apex-gate-close')?.addEventListener('click', hideApexGate);
+function checkApexCrossing() {
+  if (_apexCardFired) return;
+  if (state.balance < APEX_THRESHOLD) return;
+  _apexCardFired = true;
+  showWhaleCard();
+}
+function showWhaleCard() {
+  const el = document.getElementById('vip-whale-card');
+  if (!el) return;
+  el.classList.add('show');
+  haptic([60, 40, 120, 40, 200]);
+  // Auto-dismiss after the player has taken in the moment.
+  setTimeout(() => el.classList.remove('show'), 5200);
+}
+
+// ════════════════════════════════════════════════════════════════
+//  VIP MILESTONE — 50% bankroll growth → color up + rum + whale
+// ════════════════════════════════════════════════════════════════
+const VIP_MULT = 1.5;
+const _vipStartBalance = 1000;   // matches state.balance default
+let _vipFired = false;
+function checkVipMilestone() {
+  if (_vipFired) return;
+  if (state.balance < _vipStartBalance * VIP_MULT) return;
+  _vipFired = true;
+  triggerColorUp();
+  setTimeout(triggerRumTray, 900);
+  setTimeout(triggerWhaleEvent, 1600);
+}
+function triggerColorUp() {
+  const el = document.getElementById('vip-color-up'); if (!el) return;
+  el.classList.add('show');
+  // Add rail-leather class to the bet panel for the polished frame
+  document.getElementById('bet-panel').classList.add('rail-leather');
+  setTimeout(() => el.classList.remove('show'), 2200);
+}
+function triggerRumTray() {
+  const el = document.getElementById('vip-rail-tray'); if (!el) return;
+  el.classList.add('show');
+  // Rum tray persists for the rest of the session as a quiet status indicator
+}
+function triggerWhaleEvent() {
+  const el = document.getElementById('vip-whale'); if (!el) return;
+  el.classList.remove('go'); void el.offsetWidth;
+  el.classList.add('go');
+  setTimeout(() => el.classList.remove('go'), 14500);
+}
+
+// ── Korean BBQ — the 2-card stand-off ────────────────────────────
+// Triggers ONLY when both sides reach the table on initial 2 cards
+// each, with totals 7 and 6 (in either order). Both sides stand on
+// 6+ when the opposite side has stood, so no third card is drawn —
+// the hand ends right there. Hot-and-cold next to each other on the
+// felt earned it the "Korean BBQ" nickname (one side sizzling at 7,
+// the other parked at 6, no flip-overs). Real frequency ≈ 0.5% per
+// hand (rare — that's why the banner pops when it does).
+function isKoreanBBQ(pH, bH) {
+  if (!pH || !bH || pH.length !== 2 || bH.length !== 2) return false;
+  const pT = handTotal(pH), bT = handTotal(bH);
+  const hi = Math.max(pT, bT), lo = Math.min(pT, bT);
+  return hi === 7 && lo === 6;
+}
+function triggerKoreanBBQ() {
+  const el = document.getElementById('korean-bbq');
+  if (!el) return;
+  el.classList.remove('go'); void el.offsetWidth;
+  el.classList.add('go');
+  if (typeof haptic === 'function') haptic([20, 30, 50, 30, 80]);
+  setTimeout(() => el.classList.remove('go'), 2400);
+}
+
+function init() {
+  setCameraForViewport();
+  if (typeof seedAmbientChips === 'function') seedAmbientChips();
+  syncBetUI();
+  repaintRoads();
+  // Ensure body picks up the orientation class for the default pro_dealer
+  // clip baked into the HTML — setDealerVideo only fires on phase changes.
+  document.body.classList.add('dealer-portrait');
+  document.getElementById('dealer-vid').dataset.stem = 'pro_dealer';
+  // Apply persisted toggle states
+  document.querySelectorAll('.toggle[data-key]').forEach(t => {
+    t.classList.toggle('on', !!settings[t.dataset.key]);
+  });
+  if (!localStorage.getItem('rtn_seen')) {
+    document.getElementById('first-tip').style.display = 'block';
+  }
+  startAquarium();
+  // First-load Apex gate — uncomment in production. Demo mode skips
+  // the gate so the page is playable for testing without $1M.
+  // checkApexGate();
+  requestAnimationFrame(frame);
+}
+
+window.addEventListener('resize', () => {
+  setCameraForViewport();
+  repaintRoads();
+});
+window.addEventListener('orientationchange', () => setTimeout(setCameraForViewport, 200));
+
+// If a newer service worker activates while the page is open, reload once so
+// the user sees the fresh build instead of the previous SW's cached HTML.
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.addEventListener('message', e => {
+    if (e.data && e.data.type === 'sw-updated' && !window.__rtnReloaded) {
+      window.__rtnReloaded = true;
+      console.log('[RTN] new build', e.data.version, '— reloading');
+      setTimeout(() => location.reload(), 50);
+    }
+  });
+  // Also kick off a registration so this page picks up updates even if it
+  // wasn't the SW's original entry point.
+  try { navigator.serviceWorker.register('/sw.js'); } catch (e) {}
+}
+
+// Expose a small debug hook for smoke tests (no PII, no game-altering surface)
+window.__rtn = {
+  get state(){ return state; },
+  get history(){ return history; },
+  get dealController(){ return dealController; },
+  get webglOK(){ return webglOK; },
+  get settings(){ return settings; },
+  get scene(){ return scene; },
+  get camera(){ return camera; },
+  get renderer(){ return renderer; },
+  THREE,
+  flipCard,
+  triggerWhaleFlyby
+};
+
+init();
+</script>
+
+<!-- Korean BBQ — one side wins with 7 vs 6. -->
+<div id="korean-bbq" aria-hidden="true">
+  <span class="grill">🔥</span><span class="meat">🥩</span><span class="label">KOREAN BBQ</span>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════
+     TOURNAMENT HUD + END-OF-TOURNAMENT MODAL
+     Hidden by default. Activated by `?tournament=YYYY-MM` URL param —
+     we hydrate the HUD inline so the casual-play UX stays untouched.
+     ════════════════════════════════════════════════════════════════ -->
+<div id="bg-tournament-hud" hidden>
+  <div class="tnt-pill">
+    <span class="tnt-id">TOURNAMENT</span>
+    <span class="tnt-id" id="tnt-month">—</span>
+    <span class="tnt-sep">·</span>
+    <span class="tnt-hand">HAND <b id="tnt-handn">0</b>/<b id="tnt-handcap">0</b></span>
+  </div>
+</div>
+
+<div id="bg-tournament-end" hidden>
+  <div class="tnt-end-card">
+    <div class="tnt-end-pre">★ TOURNAMENT COMPLETE ★</div>
+    <div class="tnt-end-title">FINAL BALANCE</div>
+    <div class="tnt-end-balance" id="tnt-end-bal">$0</div>
+    <div class="tnt-end-stats">
+      <div><span class="lbl">Hands</span><span class="val" id="tnt-end-hands">0</span></div>
+      <div><span class="lbl">Dragon 7</span><span class="val" id="tnt-end-d7">0</span></div>
+      <div><span class="lbl">Panda 8</span><span class="val" id="tnt-end-p8">0</span></div>
+    </div>
+    <button id="tnt-submit-btn" class="tnt-submit">SUBMIT SCORE</button>
+    <div class="tnt-end-flair">Top score earns the <b id="tnt-flair">🏆 Champion</b> flair on the global leaderboard.</div>
+    <div class="tnt-end-status" id="tnt-status"></div>
+  </div>
+</div>
+
+<style>
+/* Tournament-only chrome — only paints when ?tournament=… is in the URL */
+#bg-tournament-hud {
+  position:fixed; top:max(16px, env(safe-area-inset-top)); left:50%;
+  transform:translateX(-50%);
+  z-index:60;
+  pointer-events:none;
+}
+#bg-tournament-hud .tnt-pill {
+  display:flex; gap:10px; align-items:center;
+  padding:8px 16px;
+  border:1.5px solid rgba(255,215,110,0.65);
+  border-radius:999px;
+  background:linear-gradient(180deg, rgba(28,8,12,0.78), rgba(56,20,28,0.62));
+  backdrop-filter:blur(10px) saturate(1.1);
+  -webkit-backdrop-filter:blur(10px) saturate(1.1);
+  font-family:'Cinzel', serif; font-weight:900;
+  font-size:0.74rem; letter-spacing:0.16em; color:#ffd76e;
+  text-shadow:0 0 10px rgba(255,180,40,0.5), 0 1px 2px rgba(0,0,0,0.85);
+  box-shadow:0 4px 18px rgba(0,0,0,0.45), 0 0 22px rgba(255,180,40,0.18);
+}
+#bg-tournament-hud .tnt-id   { color:#ffd76e; }
+#bg-tournament-hud .tnt-sep  { color:rgba(255,215,110,0.45); }
+#bg-tournament-hud .tnt-hand { color:#fff7d6; letter-spacing:0.10em; }
+#bg-tournament-hud .tnt-hand b { color:#ffd76e; font-weight:900; }
+
+#bg-tournament-end {
+  position:fixed; inset:0; z-index:80;
+  background:radial-gradient(ellipse 80% 60% at 50% 30%, rgba(255,180,40,0.22), transparent 55%),
+             radial-gradient(ellipse 90% 90% at 50% 60%, rgba(184,0,31,0.45), rgba(20,4,8,0.92) 75%);
+  display:flex; align-items:center; justify-content:center; padding:24px;
+  animation: tnt-end-fade 0.5s ease forwards;
+}
+/* The ID selector above (specificity 1,0,0) was beating the UA default
+   `[hidden] { display:none }` (specificity 0,1,0), so the modal rendered
+   on every page load — visible to anyone outside an active tournament.
+   Force the hidden attribute to win for both tournament containers. */
+#bg-tournament-end[hidden],
+#bg-tournament-hud[hidden] { display:none !important; }
+@keyframes tnt-end-fade { from { opacity:0; } to { opacity:1; } }
+.tnt-end-card {
+  width:min(560px, 92vw);
+  padding:36px 32px;
+  background:linear-gradient(180deg, rgba(28,8,12,0.92), rgba(56,20,28,0.86));
+  border:3px solid rgba(255,215,110,0.7);
+  border-radius:22px;
+  box-shadow:0 14px 50px rgba(0,0,0,0.6), 0 0 70px rgba(255,180,40,0.25);
+  text-align:center;
+  font-family:'Cinzel', serif; color:#fff7d6;
+}
+.tnt-end-card .tnt-end-pre {
+  font-family:'Press Start 2P', monospace; font-size:0.7rem; letter-spacing:0.42em;
+  color:#ffd76e; margin-bottom:14px; text-shadow:0 0 12px rgba(255,180,40,0.65);
+}
+.tnt-end-card .tnt-end-title {
+  font-size:1.1rem; letter-spacing:0.22em; opacity:0.85; margin-bottom:6px;
+}
+.tnt-end-card .tnt-end-balance {
+  font-family:'Cinzel Decorative', 'Cinzel', serif; font-weight:900;
+  font-size:5rem; line-height:1;
+  background:linear-gradient(180deg, #fff7d6 0%, #ffd76e 35%, #ff8a1a 78%, #b8001f 100%);
+  -webkit-background-clip:text; background-clip:text;
+  -webkit-text-fill-color:transparent; color:transparent;
+  filter:drop-shadow(0 6px 18px rgba(0,0,0,0.85));
+  margin-bottom:22px;
+}
+.tnt-end-card .tnt-end-stats {
+  display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; margin-bottom:24px;
+}
+.tnt-end-card .tnt-end-stats > div {
+  display:flex; flex-direction:column; align-items:center;
+  padding:10px;
+  border:1px solid rgba(255,215,110,0.35); border-radius:10px;
+  background:rgba(0,0,0,0.3);
+}
+.tnt-end-card .tnt-end-stats .lbl {
+  font-family:'Press Start 2P', monospace; font-size:0.45rem; letter-spacing:0.32em;
+  color:rgba(255,215,110,0.6); margin-bottom:6px;
+}
+.tnt-end-card .tnt-end-stats .val {
+  font-family:'Cinzel', serif; font-weight:900; font-size:1.3rem; color:#ffd76e;
+}
+.tnt-submit {
+  display:inline-block; padding:14px 36px;
+  background:linear-gradient(180deg, #ffd76e 0%, #ff8a1a 70%, #b8001f 100%);
+  color:#1a0408; border:3px solid rgba(255,247,214,0.85); border-radius:60px;
+  font-family:'Cinzel', serif; font-weight:900; font-size:1.05rem; letter-spacing:0.18em;
+  cursor:pointer;
+  box-shadow:0 8px 22px rgba(0,0,0,0.55), 0 0 26px rgba(255,180,40,0.4);
+  text-shadow:0 1px 0 rgba(255,255,255,0.45);
+  transition:transform 0.15s ease, box-shadow 0.15s ease, opacity 0.2s;
+}
+.tnt-submit:hover { transform:translateY(-2px); box-shadow:0 10px 26px rgba(0,0,0,0.65), 0 0 32px rgba(255,180,40,0.5); }
+.tnt-submit:disabled { opacity:0.5; cursor:wait; transform:none; }
+.tnt-end-flair {
+  margin-top:20px; font-size:0.78rem; letter-spacing:0.05em; line-height:1.5;
+  color:rgba(255,247,214,0.78);
+}
+.tnt-end-flair b { color:#ffd76e; }
+.tnt-end-status {
+  margin-top:14px; font-family:'Press Start 2P', monospace; font-size:0.55rem; letter-spacing:0.18em;
+  color:#52d99a; min-height:1.2em;
+}
+.tnt-end-status.error { color:#ff7676; }
+</style>
+
+<script>
+(() => {
+  if (!window.__bgTournament) return;
+  const T = window.__bgTournament;
+
+  // ── HUD ─────────────────────────────────────────────────────────
+  const hud = document.getElementById('bg-tournament-hud');
+  hud.hidden = false;
+  document.getElementById('tnt-month').textContent   = T.id;
+  document.getElementById('tnt-handcap').textContent = T.handCap;
+
+  window.updateTournamentHud = function () {
+    document.getElementById('tnt-handn').textContent = T.handsPlayed;
+  };
+
+  // ── End-of-tournament modal ────────────────────────────────────
+  const endEl    = document.getElementById('bg-tournament-end');
+  const balEl    = document.getElementById('tnt-end-bal');
+  const handsEl  = document.getElementById('tnt-end-hands');
+  const d7El     = document.getElementById('tnt-end-d7');
+  const p8El     = document.getElementById('tnt-end-p8');
+  const flairEl  = document.getElementById('tnt-flair');
+  const statusEl = document.getElementById('tnt-status');
+  const btn      = document.getElementById('tnt-submit-btn');
+  flairEl.textContent = T.flair;
+
+  window.showTournamentEnd = function () {
+    if (T.submitted) return;
+    const s = window.__macauState || {};
+    balEl.textContent   = '$' + (s.balance || 0).toLocaleString();
+    handsEl.textContent = T.handsPlayed;
+    d7El.textContent    = (s.stats && s.stats.bdragon) || 0;
+    p8El.textContent    = (s.stats && s.stats.pdragon) || 0;
+    endEl.hidden = false;
+  };
+
+  btn.addEventListener('click', async () => {
+    if (T.submitted) return;
+    btn.disabled = true;
+    btn.textContent = 'SUBMITTING…';
+    statusEl.classList.remove('error');
+    statusEl.textContent = '';
+    // v2 anti-cheat: server replays the seeded shoe with our submitted
+    // bet history and computes the trusted final balance. We send the
+    // bets array, not a claimed balance.
+    const payload = {
+      tournament:  T.id,
+      bets:        T.betHistory || [],
+      submittedAt: new Date().toISOString(),
+    };
+    // Attempt cloud submission via the existing apiFetch helper if the
+    // page exposes it (parent dashboards do). Otherwise fall back to
+    // localStorage — the score persists locally and submits next time
+    // the user returns from a context that has cloud auth.
+    try {
+      if (typeof window.apiFetch === 'function') {
+        await window.apiFetch('/tournament/score', { method: 'POST', body: payload });
+        statusEl.textContent = '✓ Score submitted';
+      } else {
+        const all = JSON.parse(localStorage.getItem('bg_tournament_pending') || '[]');
+        all.push(payload);
+        localStorage.setItem('bg_tournament_pending', JSON.stringify(all));
+        statusEl.textContent = '✓ Score saved locally — will sync on next sign-in';
+      }
+      T.submitted = true;
+      btn.textContent = 'SUBMITTED';
+    } catch (e) {
+      statusEl.classList.add('error');
+      statusEl.textContent = 'Submission failed — saved locally';
+      const all = JSON.parse(localStorage.getItem('bg_tournament_pending') || '[]');
+      all.push(payload);
+      localStorage.setItem('bg_tournament_pending', JSON.stringify(all));
+      btn.disabled = false;
+      btn.textContent = 'TRY AGAIN';
+    }
+  });
+})();
+</script>
+
+</body>
+</html>

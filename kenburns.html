@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body {
+  width:100vw; height:100vh; background:#000;
+  overflow:hidden;
+}
+.frame {
+  position:fixed; inset:0;
+  display:flex; align-items:center; justify-content:center;
+}
+/* Blurred copy of the same image fills the vertical bars top + bottom.
+   Heavy boxblur + slight desaturation so it reads as ambient color
+   without competing for attention. */
+.bg {
+  position:absolute; inset:-40px;
+  background-size:cover; background-position:center;
+  filter:blur(28px) brightness(0.55) saturate(1.05);
+  transform:scale(1.18);
+}
+/* Subtle vignette adds cinematic depth */
+.vignette {
+  position:absolute; inset:0; pointer-events:none;
+  background:radial-gradient(ellipse at 50% 50%,
+    rgba(0,0,0,0) 38%,
+    rgba(0,0,0,0.55) 100%);
+}
+/* Foreground = the actual preview JPG, full viewport-width.
+   Source is 1200x630, so at width:100% it renders ~1080x567 — leaves
+   ~676 px of vertical space split top/bottom for the blurred bg. */
+.fg {
+  position:relative;
+  width:100%;
+  height:auto;
+  display:block;
+  box-shadow:
+    0 16px 80px rgba(0,0,0,0.85),
+    0 0 0 2px rgba(255,255,255,0.06);
+  /* Ken Burns: slow zoom + tiny pan over 5 seconds. The cubic-bezier is
+     deliberately gentle so the motion is felt but never distracting. */
+  animation:kb 5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  transform-origin:50% 45%;
+}
+@keyframes kb {
+  from { transform:scale(1)    translateY(0); }
+  to   { transform:scale(1.14) translateY(-12px); }
+}
+/* Optional: warm gold rim border around the photo so it sells "premium" */
+.rim {
+  position:absolute; left:0; right:0; top:50%;
+  width:100%;
+  transform:translateY(-50%);
+  pointer-events:none;
+  aspect-ratio:1200/630;
+  border:2px solid rgba(255,210,80,0.35);
+  box-shadow:0 0 36px rgba(255,200,80,0.2);
+  animation:kb 5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  transform-origin:50% 45%;
+}
+</style>
+</head>
+<body>
+<div class="frame">
+  <div class="bg" id="bg"></div>
+  <img class="fg" id="fg" alt="">
+  <div class="vignette"></div>
+</div>
+<script>
+const url = new URLSearchParams(location.search).get('img');
+if (url) {
+  document.getElementById('bg').style.backgroundImage = 'url("' + url + '")';
+  document.getElementById('fg').src = url;
+}
+</script>
+</body>
+</html>
