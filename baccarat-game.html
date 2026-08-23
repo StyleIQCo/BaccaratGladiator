@@ -1403,6 +1403,21 @@ body { padding-bottom:185px; }
 }
 .hctrl-btn.player-style:hover:not(:disabled) { background:rgba(34,68,204,0.2); border-color:#7799ff; }
 
+/* Step-by-step reveal control (settings: Step Reveal ON) */
+.step-reveal-controls { display:none; justify-content:center; margin:8px 0 2px; }
+.step-reveal-btn {
+  background:var(--gold); color:#000; border:none; border-radius:6px;
+  font-family:'Cinzel',serif; font-weight:700; font-size:0.7rem;
+  padding:9px 24px; cursor:pointer; letter-spacing:0.06em;
+  animation:stepPulse 1.6s ease-in-out infinite;
+}
+.step-reveal-btn:hover { background:var(--gold-lt); }
+@keyframes stepPulse {
+  0%,100% { box-shadow:0 0 8px rgba(201,168,76,0.35); }
+  50%     { box-shadow:0 0 20px rgba(201,168,76,0.7); }
+}
+.card-container.step-next { outline:2px solid var(--gold); outline-offset:3px; border-radius:6px; }
+
 /* ─── BET SLOTS ─── */
 .bet-section {
   grid-column:1/-1;
@@ -1921,6 +1936,90 @@ body[data-themed='1'] .road-hdr {
   background:linear-gradient(90deg,#1a0d04,#2a1a08,#1a0d04) !important;
   border-bottom-color:rgba(140,100,30,0.45) !important;
 }
+
+/* ═══════ JUICE PACK: settlement FX, tactile buttons, crowd feed, streak share ═══════ */
+
+/* Tactile button + slot press states */
+.btn:hover:not(:disabled) { filter:brightness(1.08); box-shadow:0 2px 12px rgba(0,0,0,0.35); }
+.btn:active:not(:disabled) { transform:translateY(1px) scale(0.96); filter:brightness(0.95); }
+.bet-slot { transition:transform 0.12s ease, border-color 0.2s, background 0.2s, box-shadow 0.3s; }
+.bet-slot:active { transform:scale(0.955); }
+
+/* Bet-slot settlement states */
+@keyframes slotWinGlow {
+  0%   { box-shadow:0 0 0 0 rgba(255,215,0,0); }
+  22%  { box-shadow:0 0 20px 5px rgba(255,215,0,0.55); }
+  60%  { box-shadow:0 0 12px 3px rgba(255,215,0,0.3); }
+  100% { box-shadow:0 0 0 0 rgba(255,215,0,0); }
+}
+.bet-slot.slot-won { animation:slotWinGlow 1.8s ease-out; border-color:var(--gold) !important; }
+@keyframes slotLostFade {
+  0%   { filter:none; }
+  25%  { filter:saturate(0.35) brightness(0.7); }
+  100% { filter:none; }
+}
+.bet-slot.slot-lost { animation:slotLostFade 1.6s ease-out; }
+@keyframes slotPushFlash { 30% { background:rgba(210,210,210,0.10); } }
+.bet-slot.slot-push { animation:slotPushFlash 1.2s ease-out; }
+
+/* Payout floaters (+$X / −$X above slots) */
+.payout-floater {
+  position:fixed; z-index:9100; pointer-events:none;
+  font-family:'Cinzel',serif; font-weight:700; font-size:1.02rem; letter-spacing:0.04em;
+  text-shadow:0 2px 6px rgba(0,0,0,0.85);
+  animation:floaterUp 1.5s cubic-bezier(0.2,0.8,0.3,1) forwards;
+}
+.payout-floater.up   { color:#7fe08f; }
+.payout-floater.down { color:#ff7070; font-size:0.85rem; }
+@keyframes floaterUp {
+  0%   { opacity:0; transform:translate(-50%,8px)   scale(0.8); }
+  15%  { opacity:1; transform:translate(-50%,-6px)  scale(1.1); }
+  75%  { opacity:1; }
+  100% { opacity:0; transform:translate(-50%,-48px) scale(1); }
+}
+
+/* Flying chips (payout to balance / sweep to dealer) */
+.fx-chip {
+  position:fixed; z-index:9050; width:20px; height:20px; border-radius:50%;
+  pointer-events:none;
+  background:radial-gradient(circle at 35% 35%, #ffdf80 0%, #c9a84c 55%, #8a6d25 100%);
+  box-shadow:0 1px 4px rgba(0,0,0,0.6), inset 0 0 0 2px rgba(255,255,255,0.35);
+  border:1px dashed rgba(120,80,10,0.8);
+}
+
+/* Road panel flash when a new result lands */
+@keyframes roadFlash {
+  0%   { box-shadow:none; }
+  30%  { box-shadow:0 0 14px 2px rgba(201,168,76,0.5); }
+  100% { box-shadow:none; }
+}
+.road-panel.road-flash { animation:roadFlash 0.9s ease-out; }
+
+/* Crowd feed message styles */
+.feed-msg.fm-bet   { color:rgba(215,195,150,0.62); }
+.feed-msg.fm-cwin  { color:rgba(120,220,140,0.85); }
+.feed-msg.fm-close { color:rgba(230,120,120,0.7); }
+.feed-live-count { font-size:0.56rem; color:#7fd897; letter-spacing:0.06em; white-space:nowrap; }
+.feed-live-count .dot {
+  display:inline-block; width:6px; height:6px; border-radius:50%;
+  background:#38d269; margin-right:4px; animation:livePulse 1.6s infinite;
+}
+@keyframes livePulse { 0%,100%{opacity:1;} 50%{opacity:0.35;} }
+
+/* Share-your-streak pill */
+.share-streak-btn {
+  display:none; margin:4px auto; align-items:center; gap:6px;
+  padding:6px 18px; border-radius:20px;
+  border:1px solid #ff9d3c;
+  background:linear-gradient(135deg,rgba(200,60,0,0.55),rgba(120,20,0,0.65));
+  color:#ffce8a; font-family:'Cinzel',serif; font-size:0.68rem; font-weight:700;
+  letter-spacing:0.08em; cursor:pointer;
+  transition:transform 0.15s ease, box-shadow 0.2s;
+}
+.share-streak-btn.show { display:flex; animation:sharePop 0.45s cubic-bezier(0.34,1.56,0.64,1); }
+.share-streak-btn:hover { transform:scale(1.05); box-shadow:0 0 16px rgba(255,140,40,0.5); }
+.share-streak-btn:active { transform:scale(0.95); }
+@keyframes sharePop { from{transform:scale(0.6);opacity:0;} to{transform:scale(1);opacity:1;} }
 </style>
 </head>
 <body>
@@ -2345,6 +2444,10 @@ body[data-themed='1'] .road-hdr {
       <button class="dealer-ctl-btn active" id="dealer-voice-btn" onclick="toggleDealerVoice()">🔊 Voice ON</button>
     </div>
     <div class="hdr-settings-row">
+      <span class="hdr-settings-label">Reveal:</span>
+      <button class="dealer-ctl-btn" id="step-reveal-toggle" onclick="toggleStepReveal()">🎴 Step-by-Step OFF</button>
+    </div>
+    <div class="hdr-settings-row">
       <span class="hdr-settings-label">💎 <strong id="eco-gems">50</strong> Gems &nbsp;·&nbsp; Streak <strong id="eco-streak">0</strong></span>
       <button class="eco-btn secondary" onclick="watchAdForChips()">+5k Chips</button>
       <button class="eco-btn" onclick="exchangeGemsForChips(5,25000)">5💎→25k</button>
@@ -2547,6 +2650,11 @@ body[data-themed='1'] .road-hdr {
     </div>
   </div>
 
+  <!-- STEP-BY-STEP REVEAL (visible only when the setting is on, during a reveal) -->
+  <div class="step-reveal-controls" id="step-reveal-controls">
+    <button class="step-reveal-btn" id="btn-step-reveal" onclick="stepRevealNext()">🎴 REVEAL NEXT</button>
+  </div>
+
   <!-- THIRD CARD ZONE (shown after initial reveal if third cards exist) -->
   <div class="third-card-zone" id="third-card-zone">
     <div class="third-slot" id="player-third-slot">
@@ -2678,6 +2786,8 @@ body[data-themed='1'] .road-hdr {
   <div class="lightning-banner" id="lightning-banner"></div>
   <!-- Hot streak pill -->
   <div class="streak-pill" id="streak-pill"></div>
+  <!-- Share-your-streak pill (appears at 3+ consecutive wins) -->
+  <button class="share-streak-btn" id="share-streak-btn" onclick="shareStreak()">🔥 <span id="share-streak-label">3-WIN STREAK</span> · SHARE</button>
   <!-- Road prediction bar (shown after 5+ hands) -->
   <div class="predict-bar" id="predict-bar">
     <span class="predict-label">ROAD TREND:</span>
@@ -2731,6 +2841,7 @@ body[data-themed='1'] .road-hdr {
 <div class="feed-panel" id="feed-panel">
   <div class="feed-header">
     <span class="feed-title">📢 LIVE FEED</span>
+    <span class="feed-live-count" id="feed-live-count"><span class="dot"></span>—</span>
     <button class="feed-clear-btn" onclick="clearFeed()">Clear</button>
   </div>
   <div class="feed-scroll" id="feed-scroll">
@@ -2907,6 +3018,11 @@ const MODE_RULES={
 
 // ── GAME STATE ──────────────────────────────────────────────────
 let gameMode='ez';
+// Step-by-step reveal setting (persisted). Captured into _stepRevealThisHand
+// at deal() time so toggling mid-hand can't corrupt an in-flight reveal.
+let stepByStepReveal=false;
+try{ stepByStepReveal = localStorage.getItem('bgStepReveal')==='1'; }catch(e){}
+let _stepRevealThisHand=false;
 let balance=1000;
 let hardGems=50;
 let playerXp=0;
@@ -4456,7 +4572,17 @@ function makeCardEl(card, id, clickable, pending){
   container.appendChild(inner);
 
   if(clickable&&!pending){
-    container.onclick=()=>{ if(!inner.classList.contains('revealed')&&!inner.classList.contains('squeezing')) triggerSqueeze(container,id); };
+    container.onclick=()=>{
+      if(inner.classList.contains('revealed')||inner.classList.contains('squeezing')) return;
+      if(stepRevealActive()){
+        const next=nextStepCardId();
+        if(id!==next){
+          if(next) setMsg('Step-by-step: reveal the '+STEP_CARD_LABELS[next]+' card first.');
+          return;
+        }
+      }
+      triggerSqueeze(container,id);
+    };
   }
   return container;
 }
@@ -5353,16 +5479,26 @@ function deal(){
     thirdDealt:false
   };
 
+  // Capture the step-reveal setting for the whole hand. Director's Cut
+  // always auto-reveals; step-by-step overrides Speed's auto-reveal.
+  _stepRevealThisHand = stepByStepReveal && !window.__directorCut;
+
   // Render initial 4 cards face-down
   renderInitialCards();
 
   // Speed Baccarat: hide squeeze controls, auto-reveal all cards
   // Director's Cut also gets auto-reveal regardless of mode for clean replay.
-  if(gameMode==='speed' || window.__directorCut){
+  if(window.__directorCut || (gameMode==='speed' && !_stepRevealThisHand)){
     document.getElementById('dealer-controls').style.display='none';
     document.getElementById('player-controls').style.display='none';
     setMsg(window.__directorCut ? '🎬 Director\'s Cut — auto-reveal' : '⚡ Speed deal — revealing…');
-    setTimeout(()=>revealCards(['pc0','bc0','pc1','bc1'],90),350);
+    // 720ms lets the deal-in trajectory land before the auto-squeeze starts
+    setTimeout(()=>revealCards(['pc0','bc0','pc1','bc1'],90),720);
+  } else if(_stepRevealThisHand){
+    // Step-by-step: the single ordered REVEAL NEXT button replaces the
+    // free-form squeeze controls (shown via updateRevealButtons below)
+    document.getElementById('dealer-controls').style.display='none';
+    document.getElementById('player-controls').style.display='none';
   } else {
     // Show dealer/player controls
     document.getElementById('dealer-controls').style.display='flex';
@@ -5379,7 +5515,8 @@ function deal(){
   bets={banker:0,player:0,tie:0,dragon7:0,panda8:0,bigTiger:0,smallTiger:0,tigerTie:0,playerPair:0,bankerPair:0};
   refreshUI(); // will display _resolvedBets since phase is now 'revealing'
   dealerPhaseAnnounced = false;
-  setMsg('🎴 Click your cards to squeeze! Ask the dealer to reveal banker cards.');
+  if(_stepRevealThisHand) setMsg('🎴 Step-by-step reveal — tap REVEAL NEXT to flip each card in order.');
+  else setMsg('🎴 Click your cards to squeeze! Ask the dealer to reveal banker cards.');
 }
 
 function renderInitialCards(){
@@ -5394,6 +5531,9 @@ function renderInitialCards(){
   // Player: 2 face-down, clickable
   pRow.appendChild(makeCardEl(pendingHand.pH[0],'pc0',true,false));
   pRow.appendChild(makeCardEl(pendingHand.pH[1],'pc1',true,false));
+
+  // Deal-in trajectory from the shoe (top-right), staggered to match deal sounds
+  animateDealIn('bc0',0); animateDealIn('pc0',130); animateDealIn('bc1',260); animateDealIn('pc1',390);
 
   // Staggered deal sounds: banker 1, player 1, banker 2, player 2
   [0, 0.13, 0.26, 0.39].forEach(d => soundDeal(d));
@@ -5413,10 +5553,12 @@ function renderThirdCards(){
   const {pThird,bThird}=pendingHand;
   let hasThird=false;
 
+  let dealInDelay=0;
   if(pThird){
     pSlot.appendChild(makeCardEl(pThird,'pc2',true,false));
     hasThird=true;
     document.getElementById('player-third-slot').style.display='block';
+    animateDealIn('pc2',dealInDelay); dealInDelay+=140;
   } else {
     document.getElementById('player-third-slot').style.display='none';
   }
@@ -5424,6 +5566,7 @@ function renderThirdCards(){
     bSlot.appendChild(makeCardEl(bThird,'bc2',true,false));
     hasThird=true;
     document.getElementById('banker-third-slot').style.display='block';
+    animateDealIn('bc2',dealInDelay);
   } else {
     document.getElementById('banker-third-slot').style.display='none';
   }
@@ -5432,9 +5575,11 @@ function renderThirdCards(){
     zone.classList.add('visible');
     // deal sounds for third card(s)
     let tc=0; if(pThird){ soundDeal(tc*0.14); tc++; } if(bThird){ soundDeal(tc*0.14); }
-    if(gameMode==='speed' || window.__directorCut){
+    if(window.__directorCut || (gameMode==='speed' && !_stepRevealThisHand)){
       const speedIds=[]; if(pThird) speedIds.push('pc2'); if(bThird) speedIds.push('bc2');
-      setTimeout(()=>revealCards(speedIds,110),260);
+      setTimeout(()=>revealCards(speedIds,110),460);
+    } else if(_stepRevealThisHand){
+      setMsg('Third card'+(pThird&&bThird?'s':'')+' dealt — tap REVEAL NEXT for the result.');
     } else {
       setMsg('Third card(s) dealt! Squeeze them to reveal the result.');
     }
@@ -5537,6 +5682,77 @@ function updateRevealButtons(){
   if(ball) ball.disabled = bPending===0;
   if(p1)   p1.disabled   = pPending===0;
   if(pall) pall.disabled = pPending===0;
+
+  updateStepRevealBtn();
+}
+
+// ── STEP-BY-STEP REVEAL (settings toggle) ─────────────────────────
+// Standard baccarat reveal order: Player 1st, Banker 1st, Player 2nd,
+// Banker 2nd, then Player 3rd / Banker 3rd if drawn. resolveHand() stays
+// gated behind checkRevealProgress(), so payouts never fire early.
+const STEP_CARD_LABELS={pc0:'Player 1st',bc0:'Banker 1st',pc1:'Player 2nd',bc1:'Banker 2nd',pc2:'Player 3rd',bc2:'Banker 3rd'};
+
+function stepRevealActive(){
+  return _stepRevealThisHand && phase==='revealing' && !window.__directorCut;
+}
+
+function nextStepCardId(){
+  if(!pendingHand) return null;
+  if(!revealState.playerInitial[0]) return 'pc0';
+  if(!revealState.bankerInitial[0]) return 'bc0';
+  if(!revealState.playerInitial[1]) return 'pc1';
+  if(!revealState.bankerInitial[1]) return 'bc1';
+  if(revealState.thirdDealt){
+    if(pendingHand.pThird && !revealState.playerThird) return 'pc2';
+    if(pendingHand.bThird && !revealState.bankerThird) return 'bc2';
+  }
+  return null;
+}
+
+function stepRevealNext(){
+  if(!stepRevealActive()) return;
+  const id=nextStepCardId();
+  if(!id) return;
+  const c=document.getElementById(id);
+  if(c) triggerSqueeze(c,id);  // no-op if already squeezing, so spam-taps can't double-advance
+}
+
+function updateStepRevealBtn(){
+  const wrap=document.getElementById('step-reveal-controls');
+  if(!wrap) return;
+  document.querySelectorAll('.card-container.step-next').forEach(el=>el.classList.remove('step-next'));
+  const id=stepRevealActive()?nextStepCardId():null;
+  if(!id){ wrap.style.display='none'; return; }
+  wrap.style.display='flex';
+  // Count only cards on the table — don't leak upcoming third cards early
+  const done=(revealState.playerInitial[0]?1:0)+(revealState.playerInitial[1]?1:0)
+            +(revealState.bankerInitial[0]?1:0)+(revealState.bankerInitial[1]?1:0)
+            +(revealState.playerThird?1:0)+(revealState.bankerThird?1:0);
+  const dealt=4+(revealState.thirdDealt?((pendingHand.pThird?1:0)+(pendingHand.bThird?1:0)):0);
+  document.getElementById('btn-step-reveal').textContent=
+    '🎴 REVEAL '+STEP_CARD_LABELS[id].toUpperCase()+' ('+(done+1)+'/'+dealt+')';
+  const card=document.getElementById(id);
+  if(card) card.classList.add('step-next');
+}
+
+function toggleStepReveal(){
+  stepByStepReveal=!stepByStepReveal;
+  try{ localStorage.setItem('bgStepReveal', stepByStepReveal?'1':'0'); }catch(e){}
+  updateStepRevealToggleBtn();
+  if(phase==='revealing' && stepByStepReveal!==_stepRevealThisHand){
+    showDealerCaption('Step-by-step reveal '+(stepByStepReveal?'on':'off')+' from the next hand.');
+  } else {
+    showDealerCaption(stepByStepReveal
+      ? 'Step-by-step reveal ON — cards flip one at a time, in order.'
+      : 'Step-by-step reveal OFF.');
+  }
+}
+
+function updateStepRevealToggleBtn(){
+  const btn=document.getElementById('step-reveal-toggle');
+  if(!btn) return;
+  btn.textContent='🎴 Step-by-Step '+(stepByStepReveal?'ON':'OFF');
+  btn.classList.toggle('active', stepByStepReveal);
 }
 
 // ── RESOLVE HAND (called after all cards revealed) ────────────────
@@ -5548,6 +5764,7 @@ function resolveHand(){
   document.getElementById('btn-new').style.display='inline-block';
   document.getElementById('dealer-controls').style.display='none';
   document.getElementById('player-controls').style.display='none';
+  updateStepRevealBtn(); // hides REVEAL NEXT + clears card highlight (phase is 'dealt')
 
   const r=pendingHand;
   const b=r.betsSnapshot;
@@ -5639,6 +5856,10 @@ function resolveHand(){
   if(b.playerPair>0){ if(pIsPair){ const w=b.playerPair*11; balance+=b.playerPair+w; netChange+=w; msgs.push(`P Pair! +$${w}`); } else { netChange-=b.playerPair; } }
   if(b.bankerPair>0){ if(bIsPair){ const w=b.bankerPair*11; balance+=b.bankerPair+w; netChange+=w; msgs.push(`B Pair! +$${w}`); } else { netChange-=b.bankerPair; } }
 
+  // ── Visual settlement FX: glow winning slots, sweep losing chips, fly payouts.
+  //    Cosmetic mirror of the payout rules above — never touches balance.
+  try{ animateSettlement(computeSlotOutcomes(r,b,pIsPair,bIsPair)); }catch(e){}
+
   // ── Lightning multiplier bonus (Lightning mode only)
   if(gameMode==='lightning'){
     if(r.winner==='B'&&b.banker>0&&lightningMult.banker>1){
@@ -5658,10 +5879,19 @@ function resolveHand(){
   results.push({w:r.winner, d7:!!r.isDragon7, p8:!!r.isPanda8, pp:pIsPair, bp:bIsPair, score:winScore, nat:isNatural});
   if(isNatural) natWins++;
   // Special win celebrations (priority: Dragon7 > Panda8 > Tiger > Natural)
-  if(r.isDragon7){ triggerSpecialAnim('dragon7'); soundDragon7(); }
-  else if(r.isPanda8){ triggerSpecialAnim('panda8'); soundPanda8(); }
-  else if((r.isBigTiger||r.isSmallTiger||r.isTigerTie)&&(gameMode==='tiger'||window.__directorCut)){ triggerSpecialAnim('tiger'); soundTiger(); }
-  else if(isNatural){ triggerSpecialAnim(isNatural9?'natural9':'natural8'); soundNatural(); }
+  let winCelebCard=false;
+  if(r.isDragon7){ triggerSpecialAnim('dragon7'); soundDragon7(); winCelebCard=true; }
+  else if(r.isPanda8){ triggerSpecialAnim('panda8'); soundPanda8(); winCelebCard=true; }
+  else if((r.isBigTiger||r.isSmallTiger||r.isTigerTie)&&(gameMode==='tiger'||window.__directorCut)){ triggerSpecialAnim('tiger'); soundTiger(); winCelebCard=true; }
+  else if(isNatural){ triggerSpecialAnim(isNatural9?'natural9':'natural8'); soundNatural(); winCelebCard=true; }
+  else if(handWager>0 && netChange>=handWager*3 && netChange>=100){ triggerSpecialAnim('bigwin','+$'+netChange.toLocaleString()+' PAYOUT'); winCelebCard=true; }
+  // Confetti is strictly a USER-WIN signal: every winning hand gets a burst,
+  // scaled to the size of the win. The celebration cards above are table
+  // events and may fire on a losing hand — no confetti in that case.
+  if(netChange>0 && handWager>0){
+    const _winRatio=netChange/handWager;
+    try{ winConfetti(winCelebCard?0.8:_winRatio>=3?0.7:_winRatio>=1.5?0.5:0.3); }catch(e){}
+  }
 
   // ── Centralized haptic feedback — unique pattern per outcome ──────
   // Priority: biggest bonus first, then naturals, then regular win/tie/loss
@@ -5753,6 +5983,10 @@ function resolveHand(){
   if(aiSpecialNote) aiSpecialNote = aiSpecialNote + ' — the crowd goes wild!';
   aiResolve(r.winner, aiSpecialNote);
 
+  // ── Win-streak tracking + mock-table settlement (cosmetic)
+  try{ updateWinStreak(netChange, r.winner, _isFreeHand); }catch(e){}
+  try{ crowdSettle(r, pIsPair, bIsPair); }catch(e){}
+
   // remember this bet for auto-play re-use
   lastBet = {...r.betsSnapshot};
   addXp(Math.max(1, Math.floor(handWager/2)));
@@ -5773,6 +6007,7 @@ function resolveHand(){
   // Animate balance count-up/down after the hand resolves
   if(balance !== _balanceBefore) animateBalanceChange(_balanceBefore, balance);
   updateAllRoads();
+  try{ flashRoads(); }catch(e){}
   checkRoomUnlocks();
   showEmotePanel(!_isFreeHand);
   submitHandEventToCloud(r, b, false);
@@ -5855,6 +6090,7 @@ function newRound(){
   document.getElementById('third-card-zone').classList.remove('visible');
   document.getElementById('dealer-controls').style.display='none';
   document.getElementById('player-controls').style.display='none';
+  updateStepRevealBtn();
   // only show Deal btn when not in auto-play mode
   if(autoPlayRemaining<=0){
     document.getElementById('btn-deal').style.display='inline-block';
@@ -6236,7 +6472,7 @@ function renderDerived(canvasId,scrollId,countId,entries,preds,cockroach){
 }
 
 // ─── Dragon 7 / Panda 8 / Tiger 6 Celebration Animation ───────
-function triggerSpecialAnim(type){
+function triggerSpecialAnim(type, subOverride){
   // Legendary side-bet wins use the no-emoji SVG/canvas module.
   // Naturals (8/9) keep using the emoji card renderer below.
   if((type==='dragon7'||type==='panda8'||type==='tiger')
@@ -6269,8 +6505,13 @@ function triggerSpecialAnim(type){
               bg:'linear-gradient(135deg,#0d1220 0%,#142240 40%,#0d1220 100%)',
               titleGrad:'linear-gradient(90deg,#c0d8ff,#ffd700,#c0d8ff)',
               sub_c:'#aaccff', glow:'rgba(160,200,255,0.6)', ring:'#6699ff' },
+    bigwin: { emoji:'💰', title:'BIG WIN',     sub:'MASSIVE PAYOUT',
+              bg:'linear-gradient(135deg,#141001 0%,#2e2405 40%,#141001 100%)',
+              titleGrad:'linear-gradient(90deg,#ffd700,#fff6c8,#ffd700)',
+              sub_c:'#ffe27a', glow:'rgba(255,200,40,0.6)', ring:'#ffd700' },
   };
   const cfg=cfgMap[type]||cfgMap.natural9;
+  const subText=subOverride||cfg.sub;
 
   const overlay=document.createElement('div');
   overlay.id='special-anim-overlay';
@@ -6281,9 +6522,12 @@ function triggerSpecialAnim(type){
     <div class="special-anim-card" style="background:${cfg.bg}; --glow-color:${cfg.glow}; border:2px solid ${cfg.ring};">
       <span class="special-anim-emoji">${cfg.emoji}</span>
       <span class="special-anim-title" style="background-image:${cfg.titleGrad};">${cfg.title}</span>
-      <span class="special-anim-sub" style="color:${cfg.sub_c};">${cfg.sub}</span>
+      <span class="special-anim-sub" style="color:${cfg.sub_c};">${subText}</span>
     </div>`;
   document.body.appendChild(overlay);
+  // Confetti here only for Director's Cut promo recordings (no-bet hands);
+  // real hands get win-gated confetti from resolveHand instead.
+  if(window.__directorCut){ try{ winConfetti(0.85); }catch(e){} }
 
   // Auto-dismiss after 2.8s with fade-out
   setTimeout(()=>{
@@ -6767,6 +7011,7 @@ if(hasOauthCodeReturn && !authHashHandled){
   botPersonaLocked = true;
 })();
 setDealerStyle('core');
+updateStepRevealToggleBtn();  // reflect persisted step-reveal setting
 applyStoreSafeMode();
 maybeShowAgeGate();
 // Only skip the splash when Cognito actually returned with tokens/code on this load.
@@ -7726,6 +7971,7 @@ function updateAutoProgress(){
 // Auto-deal: same as deal() but instantly resolves without animation
 function dealAuto(){
   if(totalBet()===0) return;
+  _stepRevealThisHand=false;  // auto-play always resolves instantly
   phase='revealing';
   dealerCall('no_more_bets', {}, {feed:false, caption:true});
   soundDrum();  // drum roll for auto-deal
@@ -7772,6 +8018,7 @@ function renderInitialCardsAuto(){
   bRow.innerHTML=''; pRow.innerHTML='';
   [pendingHand.bH[0],pendingHand.bH[1]].forEach((c,i)=>{ bRow.appendChild(makeFaceUpCardEl(c,'bc'+i)); });
   [pendingHand.pH[0],pendingHand.pH[1]].forEach((c,i)=>{ pRow.appendChild(makeFaceUpCardEl(c,'pc'+i)); });
+  animateDealIn('bc0',0); animateDealIn('pc0',90); animateDealIn('bc1',180); animateDealIn('pc1',270);
   revealState={bankerInitial:[true,true],playerInitial:[true,true],bankerThird:false,playerThird:false,thirdDealt:false};
 }
 
@@ -7780,8 +8027,8 @@ function renderThirdCardsAuto(){
   const bTRow=document.getElementById('banker-third-cards');
   const pTRow=document.getElementById('player-third-cards');
   bTRow.innerHTML=''; pTRow.innerHTML='';
-  if(pendingHand.bThird){ bTRow.appendChild(makeFaceUpCardEl(pendingHand.bThird,'bc2')); revealState.bankerThird=true; }
-  if(pendingHand.pThird){ pTRow.appendChild(makeFaceUpCardEl(pendingHand.pThird,'pc2')); revealState.playerThird=true; }
+  if(pendingHand.bThird){ bTRow.appendChild(makeFaceUpCardEl(pendingHand.bThird,'bc2')); revealState.bankerThird=true; animateDealIn('bc2',0); }
+  if(pendingHand.pThird){ pTRow.appendChild(makeFaceUpCardEl(pendingHand.pThird,'pc2')); revealState.playerThird=true; animateDealIn('pc2',120); }
   revealState.thirdDealt=true;
   zone.classList.add('visible');
 }
@@ -8299,6 +8546,339 @@ function updatePredictBar(){
     bar.classList.add('show');
   } catch(e){ bar.classList.remove('show'); }
 }
+
+// ═══════════════════════════════════════════════════════════════
+//  JUICE PACK — deal trajectory, confetti, settlement FX,
+//  win-streak share, mock live-bet crowd. All cosmetic: every
+//  entry point is wrapped or try/caught at the call site so a
+//  failure here can never affect game or money logic.
+// ═══════════════════════════════════════════════════════════════
+const REDUCED_FX = !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+
+// ── Card deal-in trajectory (from the shoe, top-right) ──────────
+function animateDealIn(id, delay){
+  if(REDUCED_FX) return;
+  const el = typeof id==='string' ? document.getElementById(id) : id;
+  if(!el || !el.animate) return;
+  try{
+    const rect = el.getBoundingClientRect();
+    const dx = (window.innerWidth - 24) - (rect.left + rect.width/2);
+    const dy = -80 - rect.top;
+    el.animate([
+      { transform:'translate('+dx+'px,'+dy+'px) rotate(12deg) scale(0.82)', opacity:0 },
+      { offset:0.25, opacity:1 },
+      { transform:'translate(0,0) rotate(0deg) scale(1)', opacity:1 }
+    ], { duration:380, delay:delay||0, easing:'cubic-bezier(0.22,0.85,0.3,1.02)', fill:'backwards' });
+  }catch(e){}
+}
+
+// ── Confetti cannons (canvas, fires from both side edges) ───────
+let _fxCanvas=null,_fxCtx=null,_fxParts=[],_fxRaf=0;
+function winConfetti(power){
+  if(REDUCED_FX) return;
+  power=Math.max(0.15,Math.min(1,power||0.5));
+  if(!_fxCanvas){
+    _fxCanvas=document.createElement('canvas');
+    _fxCanvas.style.cssText='position:fixed;inset:0;z-index:9200;pointer-events:none;';
+    document.body.appendChild(_fxCanvas);
+    _fxCtx=_fxCanvas.getContext('2d');
+  }
+  const W=_fxCanvas.width=window.innerWidth, H=_fxCanvas.height=window.innerHeight;
+  const colors=['#ffd700','#c9a84c','#fff6da','#ff5555','#5588ff','#7fe08f'];
+  const n=Math.round(50+power*130);
+  for(let i=0;i<n;i++){
+    const fromLeft=(i%2===0);
+    _fxParts.push({
+      x:fromLeft?-10:W+10, y:H*0.25+Math.random()*H*0.35,
+      vx:(fromLeft?1:-1)*(3+Math.random()*7)*(0.7+power*0.6),
+      vy:-(4+Math.random()*7),
+      g:0.18+Math.random()*0.12,
+      w:4+Math.random()*5, h:7+Math.random()*7,
+      a:Math.random()*Math.PI, va:(Math.random()-0.5)*0.3,
+      c:colors[i%colors.length], life:110+Math.random()*50
+    });
+  }
+  if(!_fxRaf) _fxLoop();
+}
+function _fxLoop(){
+  _fxRaf=requestAnimationFrame(_fxLoop);
+  const W=_fxCanvas.width,H=_fxCanvas.height;
+  _fxCtx.clearRect(0,0,W,H);
+  _fxParts=_fxParts.filter(p=>p.life>0&&p.y<H+30);
+  if(!_fxParts.length){ cancelAnimationFrame(_fxRaf); _fxRaf=0; return; }
+  for(const p of _fxParts){
+    p.life--; p.x+=p.vx; p.y+=p.vy; p.vy+=p.g; p.vx*=0.985; p.a+=p.va;
+    _fxCtx.save(); _fxCtx.translate(p.x,p.y); _fxCtx.rotate(p.a);
+    _fxCtx.globalAlpha=Math.max(0,Math.min(1,p.life/40));
+    _fxCtx.fillStyle=p.c; _fxCtx.fillRect(-p.w/2,-p.h/2,p.w,p.h);
+    _fxCtx.restore();
+  }
+}
+
+// ── Settlement FX: cosmetic mirror of resolveHand's payout rules ─
+function computeSlotOutcomes(r,b,pIsPair,bIsPair){
+  const o={};
+  const set=(k,res,delta)=>{ if(Number(b[k]||0)>0) o[k]={res:res,delta:delta}; };
+  if(r.winner==='T'){
+    set('banker','push',0); set('player','push',0); set('tie','win',b.tie*8);
+  } else if(r.winner==='B'){
+    let pay;
+    if(gameMode==='standard') pay=Math.floor(b.banker*0.95);
+    else if(gameMode==='ez')  pay=r.isDragon7?0:b.banker;
+    else                      pay=(r.bT===6)?Math.floor(b.banker*0.5):b.banker;
+    if(gameMode==='lightning'&&lightningMult.banker>1) pay+=Math.floor(b.banker*(lightningMult.banker-1));
+    set('banker',(gameMode==='ez'&&r.isDragon7)?'push':'win',pay);
+    set('player','lose',-b.player); set('tie','lose',-b.tie);
+  } else {
+    let pay=b.player;
+    if(gameMode==='lightning'&&lightningMult.player>1) pay+=Math.floor(b.player*(lightningMult.player-1));
+    set('player','win',pay); set('banker','lose',-b.banker); set('tie','lose',-b.tie);
+  }
+  if(gameMode==='ez'){
+    set('dragon7', r.isDragon7?'win':'lose', r.isDragon7? b.dragon7*40 : -b.dragon7);
+    set('panda8',  r.isPanda8 ?'win':'lose', r.isPanda8 ? b.panda8*25  : -b.panda8);
+  }
+  if(gameMode==='tiger'){
+    set('tigerTie',  r.isTigerTie  ?'win':'lose', r.isTigerTie  ? b.tigerTie*35   : -b.tigerTie);
+    set('smallTiger',r.isSmallTiger?'win':'lose', r.isSmallTiger? b.smallTiger*22 : -b.smallTiger);
+    set('bigTiger',  r.isBigTiger  ?'win':'lose', r.isBigTiger  ? b.bigTiger*50   : -b.bigTiger);
+  }
+  set('playerPair', pIsPair?'win':'lose', pIsPair? b.playerPair*11 : -b.playerPair);
+  set('bankerPair', bIsPair?'win':'lose', bIsPair? b.bankerPair*11 : -b.bankerPair);
+  return o;
+}
+function animateSettlement(outcomes){
+  const balEl=document.getElementById('bal-display')||document.getElementById('hdr-balance');
+  const balRect=balEl?balEl.getBoundingClientRect():{left:window.innerWidth/2,top:20,width:0,height:0};
+  let chipBudget=14, stagger=0;
+  Object.keys(outcomes).forEach(function(slot){
+    const o=outcomes[slot];
+    const el=document.getElementById('slot-'+slot);
+    if(!el) return;
+    el.classList.remove('slot-won','slot-lost','slot-push');
+    void el.offsetWidth; // restart CSS animation
+    const cls=o.res==='win'?'slot-won':o.res==='lose'?'slot-lost':'slot-push';
+    el.classList.add(cls);
+    setTimeout(function(){ el.classList.remove(cls); },2000);
+    if(REDUCED_FX) return;
+    const rect=el.getBoundingClientRect();
+    if(o.delta) spawnFloater(rect,o.delta);
+    if(o.res==='win'&&chipBudget>0){
+      const n=Math.min(chipBudget,o.delta>=500?5:3); chipBudget-=n;
+      for(let i=0;i<n;i++) flyChip(rect,balRect,stagger+i*70,true);
+    } else if(o.res==='lose'&&chipBudget>0){
+      const n=Math.min(chipBudget,2); chipBudget-=n;
+      const tray={left:window.innerWidth/2-11,top:-60,width:22,height:22};
+      for(let i=0;i<n;i++) flyChip(rect,tray,stagger+i*80,false);
+    }
+    stagger+=90;
+  });
+}
+function spawnFloater(rect,delta){
+  const f=document.createElement('div');
+  f.className='payout-floater '+(delta>0?'up':'down');
+  f.textContent=(delta>0?'+':'−')+'$'+Math.abs(delta).toLocaleString();
+  f.style.left=(rect.left+rect.width/2)+'px';
+  f.style.top=(rect.top-6)+'px';
+  document.body.appendChild(f);
+  setTimeout(function(){ f.remove(); },1600);
+}
+function flyChip(fromRect,toRect,delay,isWin){
+  const c=document.createElement('div');
+  c.className='fx-chip';
+  const sx=fromRect.left+fromRect.width/2-10+(Math.random()*24-12);
+  const sy=fromRect.top+fromRect.height/2-10+(Math.random()*10-5);
+  c.style.left=sx+'px'; c.style.top=sy+'px';
+  document.body.appendChild(c);
+  const dx=(toRect.left+toRect.width/2-10)-sx;
+  const dy=(toRect.top+toRect.height/2-10)-sy;
+  try{
+    const anim=c.animate([
+      { transform:'translate(0,0) scale(1)', opacity:1 },
+      { transform:'translate('+dx+'px,'+dy+'px) scale('+(isWin?0.5:0.8)+')', opacity:isWin?0.9:0 }
+    ], { duration:isWin?520:440, delay:delay||0,
+         easing:isWin?'cubic-bezier(0.3,0.7,0.3,1)':'cubic-bezier(0.5,0,0.8,0.4)', fill:'backwards' });
+    anim.onfinish=function(){ c.remove(); };
+  }catch(e){ c.remove(); }
+  setTimeout(function(){ if(c.parentNode) c.remove(); },1600); // safety net
+}
+
+// ── Road panel flash when a new result lands ────────────────────
+function flashRoads(){
+  document.querySelectorAll('.roads-row1 .road-panel').forEach(function(p){
+    p.classList.remove('road-flash');
+    void p.offsetWidth;
+    p.classList.add('road-flash');
+    setTimeout(function(){ p.classList.remove('road-flash'); },1000);
+  });
+}
+
+// ── Win-streak tracking + Share-Your-Streak ─────────────────────
+let winStreak=0, streakNet=0, _streakSides=[];
+let bestWinStreak=0;
+try{ bestWinStreak=Number(localStorage.getItem('bg_bestWinStreak'))||0; }catch(e){}
+function updateWinStreak(net,winner,isFree){
+  if(isFree||!Number.isFinite(net)) return;
+  const btn=document.getElementById('share-streak-btn');
+  if(net>0){
+    winStreak++; streakNet+=net; _streakSides.push(winner);
+    if(winStreak>bestWinStreak){
+      bestWinStreak=winStreak;
+      try{ localStorage.setItem('bg_bestWinStreak',String(bestWinStreak)); }catch(e){}
+    }
+    if([3,5,7,10,15,20].indexOf(winStreak)>=0){
+      postFeedMsg('🔥 '+winStreak+' wins in a row — you\'re on fire!','natural');
+      try{ winConfetti(Math.min(0.25+winStreak*0.05,0.85)); }catch(e){}
+      if(typeof haptic==='function') haptic([30,20,30,20,60]);
+    }
+    if(btn&&winStreak>=3){
+      const lbl=document.getElementById('share-streak-label');
+      if(lbl) lbl.textContent=winStreak+'-WIN STREAK';
+      btn.classList.add('show');
+    }
+  } else if(net<0){
+    if(winStreak>=3){
+      postFeedMsg('💔 Streak ends at '+winStreak+'. Run total: +$'+streakNet.toLocaleString()+'.','info');
+    }
+    winStreak=0; streakNet=0; _streakSides=[];
+    if(btn) btn.classList.remove('show');
+  }
+  // net===0 (push) → streak holds
+}
+function shareStreak(){
+  if(winStreak<3) return;
+  const counts=_streakSides.reduce(function(m,s){ m[s]=(m[s]||0)+1; return m; },{});
+  const bC=counts.B||0,pC=counts.P||0,tC=counts.T||0;
+  const domSide=bC>=pC&&bC>=tC?'B':pC>=tC?'P':'T';
+  const domCount=domSide==='B'?bC:domSide==='P'?pC:tC;
+  const sideLine=domCount/winStreak>=0.7
+    ?(domSide==='B'?' Riding the Banker train! 🚂':domSide==='P'?' Riding the Player wave! 🌊':' Tie magic! 🍀')
+    :'';
+  const text='🔥 '+winStreak+'-WIN STREAK at Baccarat Gladiator!'+sideLine+'\n'
+    +'💰 Up $'+streakNet.toLocaleString()+' over my last '+winStreak+' hands'
+    +(bestWinStreak>winStreak?' (best: '+bestWinStreak+')':' — personal best!')+'\n'
+    +'⚔️ Think you can beat it? https://baccaratgladiator.com';
+  const done=function(verb){
+    const btn=document.getElementById('share-streak-btn');
+    if(btn){
+      const orig=btn.innerHTML;
+      btn.textContent=verb==='shared'?'✅ SHARED':'✅ COPIED';
+      setTimeout(function(){ btn.innerHTML=orig; },1800);
+    }
+    postFeedMsg('📋 Streak '+(verb==='shared'?'shared':'copied')+' — go brag!','info');
+  };
+  if(navigator.share){
+    navigator.share({text:text}).then(function(){ done('shared'); })
+      .catch(function(){ _copyText(text,function(){ done('copied'); }); });
+  } else {
+    _copyText(text,function(){ done('copied'); });
+  }
+}
+function _copyText(t,ok){
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(t).then(ok).catch(function(){ _copyLegacy(t,ok); });
+  } else _copyLegacy(t,ok);
+}
+function _copyLegacy(t,ok){
+  const ta=document.createElement('textarea');
+  ta.value=t; ta.style.position='fixed'; ta.style.opacity='0';
+  document.body.appendChild(ta); ta.select();
+  try{ document.execCommand('copy'); ok(); }catch(e){}
+  ta.remove();
+}
+
+// ── Mock live-bet crowd (fake table regulars, betting phase only) ─
+const CROWD_NAMES=[
+  'Late Bet Larry','Even Steven','Jay Dawg','2ndBankFrank','DragonSlayer',
+  'NaturalNine Nina','Squeeze King','Macau Mike','Pit Boss Pam','Third Card Theo',
+  'Lucky Lin','Big Road Bobby','Commission Kim','Marina Bay Max','Vegas Vee',
+  'Tie Guy Ty','Chip Stack Charlie','Slow Roll Sam','Banker Betty','Player Pete',
+  'Dragon Diana','Panda Paul','High Limit Hana','Cut Card Carl','Shoe Whisperer',
+  'Neon Nick','Baccarat Bea','Streaky Stella','Fortune Frankie','Monaco Mo'
+];
+const CROWD_LABELS={banker:'BANKER',player:'PLAYER',tie:'TIE',playerPair:'P PAIR',bankerPair:'B PAIR',
+  dragon7:'DRAGON 7',panda8:'PANDA 8',smallTiger:'SMALL TIGER',bigTiger:'BIG TIGER',tigerTie:'TIGER TIE'};
+const CROWD_AMTS=[25,25,50,50,50,100,100,100,150,200,250,250,500,500,1000,2500];
+let _crowdTimer=null,_crowdRoundBets=[];
+let _crowdTableCount=14+Math.floor(Math.random()*12);
+function _crowdSides(){
+  const s=[['banker',0.42],['player',0.34],['tie',0.07],['playerPair',0.04],['bankerPair',0.04]];
+  if(gameMode==='ez'){ s.push(['dragon7',0.05],['panda8',0.04]); }
+  else if(gameMode==='tiger'){ s.push(['smallTiger',0.03],['bigTiger',0.03],['tigerTie',0.03]); }
+  else { s[0][1]+=0.05; s[1][1]+=0.04; }
+  return s;
+}
+function _pickWeighted(pairs){
+  const tot=pairs.reduce(function(a,p){ return a+p[1]; },0);
+  let roll=Math.random()*tot;
+  for(const p of pairs){ roll-=p[1]; if(roll<=0) return p[0]; }
+  return pairs[0][0];
+}
+function crowdStart(){
+  if(_crowdTimer) return;
+  _crowdTick();
+}
+function _crowdTick(){
+  _crowdTimer=setTimeout(function(){
+    try{
+      if(phase==='betting'&&!document.hidden&&!guestTrialExpired()){
+        const name=CROWD_NAMES[Math.floor(Math.random()*CROWD_NAMES.length)];
+        if(Math.random()<0.08){
+          postFeedMsg('👋 '+name+' pulled up a chair.','bet');
+          _crowdTableCount=Math.min(34,_crowdTableCount+1);
+          _updateLiveCount();
+        } else {
+          const side=_pickWeighted(_crowdSides());
+          const amt=CROWD_AMTS[Math.floor(Math.random()*CROWD_AMTS.length)];
+          _crowdRoundBets.push({name:name,side:side,amt:amt});
+          if(_crowdRoundBets.length>14) _crowdRoundBets.shift();
+          postFeedMsg('💰 '+name+' — $'+amt.toLocaleString()+' on '+CROWD_LABELS[side],'bet');
+        }
+      }
+    }catch(e){}
+    _crowdTick();
+  },1300+Math.random()*2300);
+}
+function crowdSettle(r,pIsPair,bIsPair){
+  const roundBets=_crowdRoundBets.slice(); _crowdRoundBets=[];
+  if(!roundBets.length||document.hidden) return;
+  const winMap={
+    banker:r.winner==='B'&&!(gameMode==='ez'&&r.isDragon7), player:r.winner==='P', tie:r.winner==='T',
+    playerPair:pIsPair, bankerPair:bIsPair, dragon7:r.isDragon7, panda8:r.isPanda8,
+    smallTiger:r.isSmallTiger, bigTiger:r.isBigTiger, tigerTie:r.isTigerTie
+  };
+  const mult={banker:1,player:1,tie:8,playerPair:11,bankerPair:11,dragon7:40,panda8:25,smallTiger:22,bigTiger:50,tigerTie:35};
+  const isPush=function(bet){ return gameMode==='ez'&&r.isDragon7&&bet.side==='banker'; };
+  const winners=roundBets.filter(function(bet){ return winMap[bet.side]; });
+  const losers=roundBets.filter(function(bet){ return !winMap[bet.side]&&!isPush(bet); });
+  let d=900;
+  winners.slice(0,3).forEach(function(bet){
+    const w=Math.floor(bet.amt*mult[bet.side]);
+    const big=mult[bet.side]>=8;
+    setTimeout(function(){
+      postFeedMsg((big?'🤑 ':'🎉 ')+bet.name+' won $'+w.toLocaleString()+' on '+CROWD_LABELS[bet.side]+(big?'!':''),'cwin');
+    },d);
+    d+=650+Math.random()*500;
+  });
+  if(losers.length&&Math.random()<0.35){
+    const bet=losers[Math.floor(Math.random()*losers.length)];
+    setTimeout(function(){
+      postFeedMsg('😤 '+bet.name+' dropped $'+bet.amt.toLocaleString()+' on '+CROWD_LABELS[bet.side],'close');
+    },d);
+  }
+}
+function _updateLiveCount(){
+  const el=document.getElementById('feed-live-count');
+  if(el) el.innerHTML='<span class="dot"></span>'+_crowdTableCount+' at table';
+}
+setInterval(function(){
+  _crowdTableCount=Math.max(9,Math.min(34,_crowdTableCount+(Math.random()<0.5?-1:1)));
+  _updateLiveCount();
+},18000);
+
+// ── Juice pack boot ─────────────────────────────────────────────
+_updateLiveCount();
+crowdStart();
 </script>
 
 <!-- ═══════ WAITRESS OVERLAY ═══════ -->
