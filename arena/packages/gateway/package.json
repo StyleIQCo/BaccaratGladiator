@@ -1,0 +1,12 @@
+{
+  "name": "@bg/gateway",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "src/server.ts",
+  "dependencies": {
+    "@bg/shared": "*", "@bg/persistence": "*",
+    "socket.io": "^4.7.5", "ioredis": "^5.4.1"
+  },
+  "devDependencies": { "tsx": "^4.19.0", "typescript": "^5.5.0" },
+  "scripts": { "start": "tsx src/server.ts" }
+}

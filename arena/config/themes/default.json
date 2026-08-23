@@ -1,0 +1,19 @@
+{
+  "brand": "Baccarat Gladiator",
+  "logo": "/baccarat-gladiator-logo.svg",
+  "stages": {
+    "macau-dragon7": {
+      "palette": { "bg1": "#3a0a0a", "bg2": "#160202", "glow": "rgba(255,200,60,0.32)", "line": "rgba(255,160,120,0.28)" },
+      "video": "/baccarat-gladiator-macau-dragon7-short.mp4",
+      "videoPoster": "/thumb-dragon7-16x9.jpg",
+      "tableSkin": "/macau.png"
+    },
+    "imperial-china": {
+      "palette": { "bg1": "#3a0a0a", "bg2": "#160202", "glow": "rgba(255,200,60,0.32)", "line": "rgba(255,160,120,0.28)" },
+      "video": "/baccarat-gladiator-macau-panda8-short.mp4",
+      "videoPoster": "/thumb-dragon7-9x16.jpg",
+      "tableSkin": "/macau-night.png"
+    }
+  },
+  "fallback": { "cardBack": "/card_back.png", "cardFront": "/card_front.png" }
+}

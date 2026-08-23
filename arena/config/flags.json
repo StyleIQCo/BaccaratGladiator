@@ -1,0 +1,17 @@
+{
+  "_comment": "ROLLBACK KILL SWITCH. Set enabled:false and deploy ONLY this file to instantly take the arena offline without touching the classic game. The web shell reads this before connecting any WebSocket.",
+  "enabled": true,
+  "maintenanceMessage": "The Grand Arena is taking a short break — back soon.",
+  "classicGameUrl": "/",
+  "features": {
+    "crashSideBet": true,
+    "rainBounty": true,
+    "chat": true,
+    "video": true
+  },
+  "limits": {
+    "minConnectIntervalMs": 250,
+    "cashOutBucketTokens": 5,
+    "cashOutBucketRefillMs": 1000
+  }
+}

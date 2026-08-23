@@ -1,0 +1,177 @@
+// ═══════════════════════════════════════════════════════════════════
+//  BACCARAT GLADIATOR — SOCIAL LAYER SCHEMA
+//  Durable social data lives here (Postgres). The HOT leaderboard path
+//  stays in Redis ZSETs (`lb:{seasonKey}:{tier}`) — this schema stores
+//  the durable mirror: season results, audit history, profile state.
+//  Chips remain virtual social-casino currency; integrity rules are
+//  still written as if they were real money (same stance as ledger.ts).
+// ═══════════════════════════════════════════════════════════════════
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ── USERS & GLOBE PROGRESSION ────────────────────────────────────────
+// 62 stages across 10 tiers. `tier` is the bracket used for leaderboard
+// matchmaking; `stageIndex` is the global pointer along the world tour.
+
+model User {
+  id         String   @id @default(cuid())
+  handle     String   @unique // public display name, profanity-screened
+  avatarKey  String   @default("gladiator-01")
+  cognitoSub String?  @unique // bridge to the existing Cognito identity
+  createdAt  DateTime @default(now())
+  lastSeenAt DateTime @default(now())
+
+  tier       Int    @default(1) // 1..10 — leaderboard bracket
+  stageIndex Int    @default(0) // 0..61 — world-tour pointer
+  chips      BigInt @default(1000)
+  gems       Int    @default(50)
+  xp         Int    @default(0)
+
+  stageClears      StageClear[]
+  scores           LeaderboardScore[]
+  missionProgress  MissionProgress[]
+  buddyPasses      BuddyPass[]
+  referralsSent    Referral[]         @relation("Referrer")
+  referralReceived Referral?          @relation("Referee")
+
+  @@index([tier])
+}
+
+// Passport stamps: one row per cleared stage. Powers the Digital
+// Passport grid and "stages cleared" mission metrics.
+model StageClear {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  stageSlug String // 'macau', 'candy-rush', … (matches themes-extended.js slugs)
+  tier      Int
+  bestScore Int      @default(0)
+  clearedAt DateTime @default(now())
+
+  @@unique([userId, stageSlug]) // a stamp can't be earned twice
+  @@index([userId, tier])
+}
+
+// ── REFERRALS: BUDDY PASSES ──────────────────────────────────────────
+// A BuddyPass is the shareable artifact (the glowing ticket). A
+// Referral is one redemption of a pass — created when the invitee
+// signs up, QUALIFIED once they hit the anti-fraud bar (e.g. 20 hands
+// played + tier 2), REWARDED once both sides claim.
+
+model BuddyPass {
+  id          String     @id @default(cuid())
+  code        String     @unique // short share code, e.g. "GLAD-7F3K"
+  ownerId     String
+  owner       User       @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  maxUses     Int        @default(5)
+  uses        Int        @default(0) // denormalized count, bumped in the redeem txn
+  expiresAt   DateTime?
+  createdAt   DateTime   @default(now())
+  redemptions Referral[]
+}
+
+model Referral {
+  id                    String         @id @default(cuid())
+  passId                String
+  pass                  BuddyPass      @relation(fields: [passId], references: [id])
+  referrerId            String
+  referrer              User           @relation("Referrer", fields: [referrerId], references: [id])
+  refereeId             String         @unique // one referral credit per new account, ever
+  referee               User           @relation("Referee", fields: [refereeId], references: [id])
+  status                ReferralStatus @default(PENDING)
+  createdAt             DateTime       @default(now())
+  qualifiedAt           DateTime? // set when the referee clears the anti-fraud bar
+  referrerRewardClaimed Boolean        @default(false)
+  refereeRewardClaimed  Boolean        @default(false)
+
+  @@index([referrerId, status])
+}
+
+enum ReferralStatus {
+  PENDING // referee signed up, hasn't qualified yet
+  QUALIFIED // qualification bar met — rewards claimable
+  REWARDED // both sides claimed
+  EXPIRED // referee inactive past the qualification window
+}
+
+// ── LEADERBOARDS (tier-bracketed, seasonal) ──────────────────────────
+// Live ranks are answered by Redis (ZREVRANK on lb:{seasonKey}:{tier});
+// every score mutation ALSO upserts here so seasons can be closed,
+// audited, and replayed. The covering index makes "top N in my tier"
+// a single index scan when Redis is cold.
+
+model LeaderboardSeason {
+  id       String             @id @default(cuid())
+  key      String             @unique // '2026-08' — monthly seasons
+  startsAt DateTime
+  endsAt   DateTime
+  scores   LeaderboardScore[]
+}
+
+model LeaderboardScore {
+  id         String            @id @default(cuid())
+  seasonId   String
+  season     LeaderboardSeason @relation(fields: [seasonId], references: [id], onDelete: Cascade)
+  userId     String
+  user       User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tier       Int // bracket at time of scoring — a mid-season tier-up re-brackets forward, history stays
+  score      BigInt            @default(0)
+  bestStreak Int               @default(0)
+  updatedAt  DateTime          @updatedAt
+
+  @@unique([seasonId, tier, userId])
+  @@index([seasonId, tier, score(sort: Desc)]) // the bracket query
+}
+
+// ── DAILY MISSIONS ───────────────────────────────────────────────────
+// Templates are authored once; a daily job deals 3 per user per UTC day
+// (rows in MissionProgress). Game events increment `progress` via the
+// metric router; `claimedAt` gates the reward exactly once.
+
+model MissionTemplate {
+  id          String            @id @default(cuid())
+  slug        String            @unique // 'win-3-banker'
+  title       String // "Win 3 Banker bets"
+  metric      MissionMetric
+  target      Int
+  rewardChips Int               @default(0)
+  rewardGems  Int               @default(0)
+  minTier     Int               @default(1) // don't deal Dragon-7 missions to tier-1 rookies
+  active      Boolean           @default(true)
+  progress    MissionProgress[]
+}
+
+enum MissionMetric {
+  HANDS_PLAYED
+  HANDS_WON
+  BANKER_WINS
+  PLAYER_WINS
+  NATURALS
+  SIDE_BET_WINS
+  STREAK_REACHED
+  CHIPS_WON
+  STAGES_CLEARED
+  BUDDIES_INVITED
+}
+
+model MissionProgress {
+  id          String          @id @default(cuid())
+  userId      String
+  user        User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  templateId  String
+  template    MissionTemplate @relation(fields: [templateId], references: [id])
+  day         DateTime        @db.Date // UTC mission day
+  progress    Int             @default(0)
+  completedAt DateTime? // set the moment progress >= target
+  claimedAt   DateTime? // set exactly once by the claim txn
+
+  @@unique([userId, templateId, day]) // idempotent daily deal
+  @@index([userId, day])
+}

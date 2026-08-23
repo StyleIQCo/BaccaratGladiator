@@ -4113,6 +4113,7 @@ async function processCognitoCallbackCode(){
       updateTrialBadge();
       refreshUI();
       fetchCloudProfile();
+      try{ redeemBuddyCodeIfPending(); }catch(e){}
       _authDebug('SUCCESS — authLocked=' + authLocked + ' user=' + currentUsername);
       const dbg = document.getElementById('bg-auth-debug');
       if(dbg) dbg.style.borderColor = '#0f0';
@@ -8876,9 +8877,45 @@ setInterval(function(){
   _updateLiveCount();
 },18000);
 
+// ── Buddy Pass referral capture ─────────────────────────────────
+// A shared invite lands on ?buddy=GLAD-XXXX. Capture the code now;
+// redeem it against the arena backend after the invitee signs up.
+// A 404 (endpoint not deployed yet) keeps the code pending — it
+// retries on the next successful sign-in, so codes shared today
+// still attribute once the referral backend ships.
+function captureBuddyCode(){
+  try{
+    const code=new URLSearchParams(location.search).get('buddy');
+    if(code && /^[A-Z0-9-]{4,24}$/i.test(code) && !localStorage.getItem('bg_buddyRedeemed')){
+      localStorage.setItem('bg_buddyCode', code.toUpperCase());
+    }
+  }catch(e){}
+}
+function redeemBuddyCodeIfPending(){
+  let code=null;
+  try{ code=localStorage.getItem('bg_buddyCode'); }catch(e){}
+  if(!code || !authLocked) return;
+  apiFetch('/referral/redeem', {method:'POST', body:JSON.stringify({code:code})})
+    .then(function(){
+      try{
+        localStorage.removeItem('bg_buddyCode');
+        localStorage.setItem('bg_buddyRedeemed','1');
+      }catch(e){}
+      postFeedMsg('🎟 Buddy Pass linked! Rewards land when you clear Tier 1.','info');
+    })
+    .catch(function(err){
+      // 4xx = pass invalid/exhausted/already referred — drop the code.
+      // Anything else (404 route missing, network) stays pending for retry.
+      if(err && err.status>=400 && err.status<500 && err.status!==404){
+        try{ localStorage.removeItem('bg_buddyCode'); }catch(e){}
+      }
+    });
+}
+
 // ── Juice pack boot ─────────────────────────────────────────────
 _updateLiveCount();
 crowdStart();
+captureBuddyCode();
 </script>
 
 <!-- ═══════ WAITRESS OVERLAY ═══════ -->

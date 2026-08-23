@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  /* Glassmorphism panel — the base surface for every social card/modal */
+  .glass {
+    @apply bg-white/[0.06] backdrop-blur-xl border border-white/10 rounded-3xl;
+    background-image: linear-gradient(160deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02) 40%);
+  }
+
+  /* Chunky tactile button base — pair with a bg + text color */
+  .btn-chunky {
+    @apply rounded-2xl font-display font-bold tracking-wider shadow-chunky
+           transition-transform duration-100 select-none cursor-pointer
+           active:translate-y-[3px] active:shadow-chunky-sm;
+  }
+}

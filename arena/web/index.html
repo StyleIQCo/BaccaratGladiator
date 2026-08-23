@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Baccarat Gladiator — Grand Arena</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <!-- Arena-scoped service worker: owns /arena/ caching, isolated from the root sw.js -->
+    <script>
+      if ('serviceWorker' in navigator)
+        navigator.serviceWorker.register('/arena/sw.js', { scope: '/arena/' }).catch(() => {});
+    </script>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

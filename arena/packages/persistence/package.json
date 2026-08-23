@@ -1,0 +1,13 @@
+{
+  "name": "@bg/persistence",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate deploy",
+    "db:migrate:dev": "prisma migrate dev"
+  },
+  "dependencies": { "@bg/shared": "*", "@prisma/client": "^5.19.0", "ioredis": "^5.4.1" },
+  "devDependencies": { "prisma": "^5.19.0" }
+}

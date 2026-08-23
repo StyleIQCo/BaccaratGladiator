@@ -1,0 +1,22 @@
+{
+  "_comment": "Round timings and crash curve. Hot-reloadable by the engine; no redeploy of code needed to retune.",
+  "phaseMs": {
+    "BETTING": 10000,
+    "DEALING": 15000,
+    "PAYOUT": 5000
+  },
+  "shoe": {
+    "decks": 8
+  },
+  "crash": {
+    "growth": 0.00006,
+    "tickMs": 100,
+    "naturalCrashBonus": 0.18,
+    "ceilingByCards": { "4": 1.5, "5": 4.0, "6": 12.0 }
+  },
+  "rain": {
+    "maxClaims": 50,
+    "windowMs": 20000,
+    "minIntervalRounds": 12
+  }
+}

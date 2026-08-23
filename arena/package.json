@@ -1,0 +1,19 @@
+{
+  "name": "@bg/arena",
+  "private": true,
+  "type": "module",
+  "version": "0.1.0",
+  "description": "Grand Arena — server-authoritative live baccarat, isolated under /arena/",
+  "workspaces": [
+    "packages/shared",
+    "packages/persistence",
+    "packages/engine",
+    "packages/gateway",
+    "web"
+  ],
+  "scripts": {
+    "dev": "docker compose up",
+    "e2e": "node test-arena-e2e.js",
+    "build:web": "npm -w web run build"
+  }
+}

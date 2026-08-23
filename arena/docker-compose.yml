@@ -1,0 +1,43 @@
+# Local dev: Redis + one authoritative engine + two stateless gateways.
+# Mirrors prod topology so race conditions surface locally (two gateways = the
+# rain/cash-out atomicity is exercised across processes, not just threads).
+services:
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    ports: ["6379:6379"]
+
+  # Durable social data (profiles, referrals, season history, missions).
+  # Hot paths never block on it — gateways/engine degrade to Redis-only
+  # if it's down. First run: npm -w packages/persistence run db:migrate
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: bg
+      POSTGRES_PASSWORD: bg
+      POSTGRES_DB: social
+    ports: ["5432:5432"]
+    volumes: [pgdata:/var/lib/postgresql/data]
+
+  engine:
+    build: { context: ., dockerfile: packages/engine/Dockerfile }
+    environment:
+      REDIS_URL: redis://redis:6379
+      DATABASE_URL: postgres://bg:bg@postgres:5432/social
+      CONFIG_DIR: /app/config
+    depends_on: [redis, postgres]
+    # Only ONE engine. Leader election still runs so a second instance would be
+    # a hot standby, not a second loop.
+
+  gateway:
+    build: { context: ., dockerfile: packages/gateway/Dockerfile }
+    environment:
+      REDIS_URL: redis://redis:6379
+      DATABASE_URL: postgres://bg:bg@postgres:5432/social
+      CONFIG_DIR: /app/config
+    depends_on: [redis, engine, postgres]
+    deploy: { replicas: 2 }
+    ports: ["8080-8081:8080"]
+
+volumes:
+  pgdata:

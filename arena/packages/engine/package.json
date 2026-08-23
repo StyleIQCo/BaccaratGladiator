@@ -1,0 +1,9 @@
+{
+  "name": "@bg/engine",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "src/index.ts",
+  "dependencies": { "@bg/shared": "*", "@bg/persistence": "*", "ioredis": "^5.4.1" },
+  "devDependencies": { "tsx": "^4.19.0", "typescript": "^5.5.0" },
+  "scripts": { "start": "tsx src/index.ts" }
+}
