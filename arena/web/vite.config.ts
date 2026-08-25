@@ -7,6 +7,9 @@ import { resolve } from 'path';
 export default defineConfig({
   base: '/arena/',
   plugins: [react()],
+  // Scan only real entries — keeps the dep-scanner out of any dist-* build
+  // output sitting in the web root (their bundles confuse it).
+  optimizeDeps: { entries: ['index.html', 'race-demo.html'] },
   resolve: {
     alias: { '@bg/shared': resolve(__dirname, '../packages/shared/src/index.ts') },
     // The odyssey campaign module (repo-root odyssey/src) sits outside this
@@ -20,5 +23,15 @@ export default defineConfig({
       '/arena/config': { target: 'http://localhost:5173', bypass: () => undefined }, // served from public/
     },
   },
-  build: { outDir: 'dist', emptyOutDir: true },
+  build: {
+    outDir: 'dist',
+    emptyOutDir: true,
+    rollupOptions: {
+      input: {
+        main: resolve(__dirname, 'index.html'),
+        // Standalone Daily Jumbotron Race page → /arena/race-demo.html
+        'race-demo': resolve(__dirname, 'race-demo.html'),
+      },
+    },
+  },
 });
