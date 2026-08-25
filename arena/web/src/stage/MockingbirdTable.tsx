@@ -21,7 +21,7 @@
 //     know they hit *something* without announcing what.
 // ═══════════════════════════════════════════════════════════════════
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { useMemo, useState, type ReactNode } from 'react';
+import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { formatChips } from '../i18n/lucky';
 import { useCountUp } from '../social/useCountUp';
 import StageAtmosphere, { moodForStreak } from './StageAtmosphere';
@@ -71,6 +71,13 @@ function RainingChip({ x, delay, dur, spin }: { x: number; delay: number; dur: n
 function SecretStashOverlay({ onCollect }: { onCollect: () => void }) {
   const reduceMotion = useReducedMotion();
   const chipsWon = useCountUp(SECRET_STASH_BONUS, true, 0.5);
+  // Input lockout: the unlock fires mid-triple-tap, so an excited 4th tap
+  // would land here and dismiss the jackpot before it's seen. Arm late.
+  const [armed, setArmed] = useState(false);
+  useEffect(() => {
+    const t = setTimeout(() => setArmed(true), 800);
+    return () => clearTimeout(t);
+  }, []);
   const rain = useMemo(
     () =>
       Array.from({ length: 26 }, () => ({
@@ -88,7 +95,7 @@ function SecretStashOverlay({ onCollect }: { onCollect: () => void }) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0, transition: { duration: 0.35 } }}
-      onPointerDown={onCollect}
+      onPointerDown={() => armed && onCollect()}
       role="dialog"
       aria-label={`Secret stash unlocked: ${SECRET_STASH_BONUS} chips`}
     >

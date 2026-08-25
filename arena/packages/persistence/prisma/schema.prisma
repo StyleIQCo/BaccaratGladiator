@@ -47,6 +47,7 @@ model User {
   referralsSent    Referral[]         @relation("Referrer")
   referralReceived Referral?          @relation("Referee")
   chipTxns         ChipTransaction[]
+  loreUnlocks      UserCollectible[]
 
   @@index([tier])
 }
@@ -222,4 +223,61 @@ model MissionProgress {
 
   @@unique([userId, templateId, day]) // idempotent daily deal
   @@index([userId, day])
+}
+
+// ── LORE COLLECTIBLES ────────────────────────────────────────────────
+// The 62 stages tell one overarching story. Each stage hides a few
+// secret collectibles (a sheriff's badge, a torn diary page…); each
+// unlock reveals a fragment of that stage character's backstory.
+// Collectible is the authored library (MissionTemplate stance);
+// UserCollectible is the per-player unlock fact. Stage identity is
+// stageSlug — matching StageClear.stageSlug / themes-extended.js — so
+// reordering the world tour never orphans lore. `tier` is denormalized
+// from the stage entry to group codex pages without a stage lookup.
+
+model Collectible {
+  id            String            @id @default(cuid())
+  slug          String            @unique // 'lone-star-sheriffs-badge'
+  title         String // "Lone Star Sheriff's Badge"
+  characterName String // "Sheriff Rosa 'Lone Star' Delgado"
+  loreText      String            @db.Text // backstory fragment shown in the unlock cinematic
+  icon          String            @default("🔶") // emoji relic for the drift-in object; asset key later
+  stageSlug     String // where it can drop — matches themes-extended.js slugs
+  tier          Int
+  trigger       UnlockTrigger
+  triggerValue  Int               @default(0) // trigger parameter, e.g. streak length for WIN_STREAK
+  sortOrder     Int               @default(0) // codex order within a character's set
+  active        Boolean           @default(true)
+  unlocks       UserCollectible[]
+
+  @@index([stageSlug, active]) // the per-hand candidate scan
+  @@index([characterName]) // the completionist-bar count
+}
+
+enum UnlockTrigger {
+  STAGE_CLEAR // awarded when this stage's clear condition completes
+  TIE_WIN // win a resolved TIE bet on this stage
+  NATURAL_WIN // win with a natural 8/9
+  BANKER_WIN
+  PLAYER_WIN
+  WIN_STREAK // triggerValue = required consecutive wins, judged after the hand
+}
+
+// One row per unlocked item. The @@unique is the hard exactly-once
+// guarantee (same stance as Referral.refereeId): racing settle events
+// hit the constraint and the award path treats P2002 as "already
+// owned", never as an error. seenAt gates the unlock cinematic exactly
+// once via the guarded-flip pattern (MissionProgress.claimedAt).
+model UserCollectible {
+  id            String      @id @default(cuid())
+  userId        String
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  collectibleId String
+  collectible   Collectible @relation(fields: [collectibleId], references: [id])
+  unlockedAt    DateTime    @default(now())
+  roundId       String? // the hand that triggered it — audit trail, like Referral.codeUsed
+  seenAt        DateTime? // cinematic acked; null = still queued for the client
+
+  @@unique([userId, collectibleId]) // an item can't be unlocked twice
+  @@index([userId, seenAt]) // "what's queued for this player" bootstrap query
 }

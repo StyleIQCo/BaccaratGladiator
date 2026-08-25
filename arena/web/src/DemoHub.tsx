@@ -13,8 +13,9 @@ import { BOSSES } from './battle/bosses';
 import SpectateMode from './spectate/SpectateMode';
 import { ClutchDemo } from './replay/ClutchReplayModal';
 import { MockingbirdDemo } from './stage/MockingbirdTable';
+import OdysseyDemo from './odyssey/OdysseyDemo';
 
-type Tab = 'social' | 'battle' | 'spectate' | 'clutch' | 'mockingbird';
+type Tab = 'social' | 'battle' | 'spectate' | 'clutch' | 'mockingbird' | 'odyssey';
 
 const TABS: Array<{ id: Tab; label: string }> = [
   { id: 'social',      label: '🏆 SOCIAL' },
@@ -22,6 +23,7 @@ const TABS: Array<{ id: Tab; label: string }> = [
   { id: 'spectate',    label: '👁 SPECTATE' },
   { id: 'clutch',      label: '🎬 CLUTCH REPLAY' },
   { id: 'mockingbird', label: '🤠 MOCKINGBIRD' },
+  { id: 'odyssey',     label: '🏛 ODYSSEY' },
 ];
 
 export default function DemoHub() {
@@ -84,6 +86,8 @@ export default function DemoHub() {
         {tab === 'mockingbird' && (
           <div className="mx-auto max-w-xl"><MockingbirdDemo /></div>
         )}
+
+        {tab === 'odyssey' && <OdysseyDemo />}
 
         {tab === 'clutch' && (
           <div className="mx-auto flex max-w-md flex-col gap-3">
