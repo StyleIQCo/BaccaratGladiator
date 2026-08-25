@@ -4,3 +4,4 @@ export * from './rounds';
 export * from './leaderboard';
 export * from './social-store';
 export * from './collectibles-store';
+export * from './fishmonger-store';

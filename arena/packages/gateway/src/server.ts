@@ -19,6 +19,7 @@ import { registerChat } from './handlers/chat';
 import { registerBets } from './handlers/bets';
 import { registerLeaderboard } from './handlers/leaderboard';
 import { registerLore } from './handlers/lore';
+import { registerFishToss } from './handlers/fishtoss';
 import { dropSocket } from './ratelimit';
 
 const PORT = Number(process.env.PORT ?? 8080);
@@ -107,6 +108,7 @@ io.on('connection', (socket: Socket) => {
   registerChat(socket);
   registerLeaderboard(socket);
   registerLore(socket);
+  registerFishToss(socket);
 
   socket.on('disconnect', () => dropSocket(socket.id));
 });

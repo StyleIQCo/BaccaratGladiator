@@ -48,6 +48,7 @@ model User {
   referralReceived Referral?          @relation("Referee")
   chipTxns         ChipTransaction[]
   loreUnlocks      UserCollectible[]
+  fishmongerScores FishmongerScore[]
 
   @@index([tier])
 }
@@ -147,6 +148,7 @@ enum ChipTxReason {
   MISSION_REWARD
   STAGE_REWARD
   GAME_SETTLEMENT // durable mirror of Redis settleRound credits
+  MINIGAME_PAYOUT // weekly arcade prize sweep (fish-toss & future cabinets)
   ADMIN_ADJUST
 }
 
@@ -280,4 +282,36 @@ model UserCollectible {
 
   @@unique([userId, collectibleId]) // an item can't be unlocked twice
   @@index([userId, seenAt]) // "what's queued for this player" bootstrap query
+}
+
+// ── ARCADE MINI-GAMES: WEEKLY FISHMONGER ─────────────────────────────
+// Pike Place Fish Toss weekly leaderboard. The hot path is a Redis ZSET
+// (`ft:lb:{weekKey}`, ZADD GT = keep the highest single run); this is
+// the durable mirror plus the payout audit trail. Prize chips flow
+// through the Redis ledger (creditChips, idemKey `ft:{weekKey}:{userId}`)
+// with ChipTransaction receipts — same stance as ledger.ts.
+
+model FishmongerScore {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  weekKey    String // ISO week bucket, UTC — '2026-W35'
+  score      Int // highest single run this week (GT-upsert semantics)
+  createdAt  DateTime @default(now()) // first run of the week
+  achievedAt DateTime @default(now()) // when the best landed — audit + tie-break
+
+  @@unique([userId, weekKey]) // one row per player per week
+  @@index([weekKey, score(sort: Desc)]) // "top N this week" scan
+}
+
+// One row per settled week — the durable exactly-once receipt for the
+// prize sweep. The hot guard is the Redis `ft:paid:{weekKey}` NX lock;
+// this unique is the audit-grade backstop (ChipTransaction.idemKey
+// already makes each individual credit replay-safe).
+model FishmongerPayout {
+  id        String   @id @default(cuid())
+  weekKey   String   @unique
+  winners   Int      @default(0)
+  totalPaid BigInt   @default(0)
+  paidAt    DateTime @default(now())
 }

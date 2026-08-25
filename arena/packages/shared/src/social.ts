@@ -26,6 +26,9 @@ export enum SocialServerEvent {
   REFERRAL_QUALIFIED    = 'referral:qualified',
   PASSPORT_STAMP        = 'passport:stamp',  // stage cleared → new stamp earned
   LORE_UNLOCK           = 'lore:unlock',     // secret collectible earned → play the cinematic
+  FT_SNAPSHOT           = 'ft:snapshot',     // weekly fish-toss board: top-10 + your row
+  FT_SUBMIT_RESULT      = 'ft:submit_result',// ack for ft:submit — weekly best + rank after the run
+  FT_RUN_TOKEN          = 'ft:run_token',    // single-use run proof issued by ft:run_start
 }
 
 export enum SocialClientEvent {
@@ -34,6 +37,9 @@ export enum SocialClientEvent {
   MISSION_CLAIM  = 'mission:claim',  // { missionProgressId } — server validates, exactly-once
   PASS_CREATE    = 'pass:create',    // → { code, url }
   LORE_SEEN      = 'lore:seen',      // { unlockId } — acks the unlock cinematic, exactly-once
+  FT_GET         = 'ft:get',         // { meId? } → FT_SNAPSHOT reply
+  FT_RUN_START   = 'ft:run_start',   // { meId? } → FT_RUN_TOKEN; call when a run begins
+  FT_SUBMIT      = 'ft:submit',      // { score, runId, ... } → FT_SUBMIT_RESULT + fresh FT_SNAPSHOT
 }
 
 // ── SHARED SHAPES ──────────────────────────────────────────────────
@@ -154,4 +160,65 @@ export interface MissionClaimPayload {
 
 export interface LoreSeenPayload {
   unlockId: string;
+}
+
+// ── FISH TOSS: WEEKLY FISHMONGER (arcade mini-game) ────────────────
+// Snapshot-on-request only — no delta stream. The board is weekly and
+// low-churn; clients re-emit FT_GET to refresh (same heal-by-snapshot
+// stance as the tier leaderboard, minus the deltas).
+
+export interface FishTossEntry {
+  userId: string;
+  handle: string;
+  avatarKey: string;
+  score: number;      // highest single run this week
+  rank: number;       // 1-based
+}
+
+export interface FishTossSnapshotPayload {
+  v: number;                // SOCIAL_PROTOCOL_VERSION
+  weekKey: string;          // ISO week, UTC — '2026-W35'
+  ts: number;
+  endsAt: number;           // epoch ms the board locks (Mon 00:00 UTC) — drives the countdown
+  top: FishTossEntry[];     // top N (server-capped, default 10)
+  me: FishTossEntry | null; // requester's row even outside top N; null = hasn't tossed yet
+  totalPlayers: number;
+  prizes: number[];         // chip ladder, index = rank-1 — server-authoritative for the UI
+}
+
+export interface FishTossGetPayload {
+  meId?: string; // client-claimed until Cognito-verified profiles land (see gateway HELLO)
+}
+
+export interface FishTossRunStartPayload {
+  meId?: string; // client-claimed until Cognito-verified profiles land
+}
+
+/** Single-use run proof. Request one at run start; it rides the submit. */
+export interface FishTossRunTokenPayload {
+  v: number;
+  ts: number;
+  runId: string;
+}
+
+export interface FishTossSubmitPayload {
+  score: number;
+  /** Run proof from FT_RUN_TOKEN — the submit is rejected without a live,
+   *  owned, unconsumed token whose elapsed time can plausibly produce
+   *  `score`. */
+  runId?: string;
+  // Client-claimed identity/profile — same trust level as HELLO's fields.
+  meId?: string;
+  handle?: string;
+  avatarKey?: string;
+}
+
+export interface FishTossSubmitResultPayload {
+  v: number;
+  ts: number;
+  weekKey: string;
+  submitted: number;
+  best: number;      // weekly best after this run
+  improved: boolean; // this run set a new weekly best
+  rank: number;      // 1-based rank after this run
 }
