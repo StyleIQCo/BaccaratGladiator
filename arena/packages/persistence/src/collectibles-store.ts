@@ -9,6 +9,8 @@
 // gateway/engine at settle, or the solo-game backend at PAYOUT).
 // Client claims never reach evaluateLoreUnlocks — same anti-fraud
 // stance as referral-engine's /api/referrals/validate.
+import { SOCIAL_PROTOCOL_VERSION, type LoreUnlockItem, type LoreUnlockPayload } from '@bg/shared';
+import { pub } from './redis';
 import { hasDb, prisma } from './social-store';
 
 export type LoreSide = 'player' | 'banker' | 'tie';
@@ -29,19 +31,16 @@ export interface HandSettleEvent {
   stageCleared?: boolean;
 }
 
-/** What the unlock cinematic needs — pushed over `lore:unlock` or
- *  served by getUnseenLore on session bootstrap. */
-export interface LoreUnlock {
-  unlockId: string; // UserCollectible.id — the client acks it via markLoreSeen
-  slug: string;
-  title: string;
-  characterName: string;
-  loreText: string;
-  icon: string;
-  stageSlug: string;
-  tier: number;
-  /** Completionist bar for this character's set, e.g. { collected: 3, total: 5 }. */
-  progress: { collected: number; total: number };
+/** What the unlock cinematic needs — the wire shape is owned by
+ *  @bg/shared (social.ts), same as the leaderboard payloads. */
+export type LoreUnlock = LoreUnlockItem;
+
+/** Redis pub/sub channel gateways relay to the owning user's room
+ *  (`u:{userId}`) — the LB_CHANNEL pattern, scoped to one player. */
+export const LORE_CHANNEL = 'arena:lore';
+export interface LoreBusEnvelope {
+  userId: string;
+  payload: LoreUnlockPayload;
 }
 
 /** Does this settle event satisfy a collectible's unlock trigger? */
@@ -97,6 +96,22 @@ export async function evaluateLoreUnlocks(ev: HandSettleEvent): Promise<LoreUnlo
     }
   }
   return awarded;
+}
+
+/**
+ * THE integration point for the settle loop (settleLeaderboardScore's
+ * sibling): evaluate the event, and if anything dropped, publish the
+ * bus envelope gateways relay to the player's socket. Call it
+ * fire-and-forget — lore must never block a payout.
+ */
+export async function settleLoreUnlocks(ev: HandSettleEvent): Promise<void> {
+  const unlocks = await evaluateLoreUnlocks(ev);
+  if (unlocks.length === 0) return;
+  const envelope: LoreBusEnvelope = {
+    userId: ev.userId,
+    payload: { v: SOCIAL_PROTOCOL_VERSION, ts: Date.now(), unlocks },
+  };
+  await pub.publish(LORE_CHANNEL, JSON.stringify(envelope));
 }
 
 /** "Texas Backstory: 3/5" — collected vs authored for one character's set. */

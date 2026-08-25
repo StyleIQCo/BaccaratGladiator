@@ -72,12 +72,13 @@ function Starfield({ reduced }: { reduced: boolean }) {
           transition={reduced ? { duration: 0 } : { duration: s.dur, delay: s.delay, repeat: Infinity, ease: 'easeInOut' }}
         />
       ))}
-      {/* Moon over the Aegean — soft double halo */}
+      {/* Moon over the Aegean — tucked into the corner so it never
+          collides with the plaque text on narrow screens */}
       <div
-        className="absolute right-[8%] top-[9%] h-14 w-14 rounded-full"
+        className="absolute right-3 top-3 h-10 w-10 rounded-full"
         style={{
           background: 'radial-gradient(circle at 38% 34%, #fdf6dd, #e8d9a0 60%, #cbb877)',
-          boxShadow: '0 0 40px rgba(253,246,221,0.45), 0 0 90px rgba(253,246,221,0.18)',
+          boxShadow: '0 0 26px rgba(253,246,221,0.4), 0 0 60px rgba(253,246,221,0.15)',
         }}
       />
     </div>

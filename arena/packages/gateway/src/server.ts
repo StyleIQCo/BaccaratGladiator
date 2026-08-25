@@ -5,13 +5,20 @@
 // next broadcast (each state blob is self-contained).
 import { createServer } from 'http';
 import { Server, type Socket } from 'socket.io';
-import { sub, data, creditChips, lbRoom, LB_CHANNEL, type LbBusEnvelope } from '@bg/persistence';
-import { Phase, ServerEvent, ClientEvent, PROTOCOL_VERSION, SocialServerEvent, type GameStatePayload } from '@bg/shared';
+import {
+  sub, data, creditChips, lbRoom, LB_CHANNEL, LORE_CHANNEL, getUnseenLore,
+  type LbBusEnvelope, type LoreBusEnvelope,
+} from '@bg/persistence';
+import {
+  Phase, ServerEvent, ClientEvent, PROTOCOL_VERSION,
+  SocialServerEvent, SOCIAL_PROTOCOL_VERSION, type GameStatePayload,
+} from '@bg/shared';
 import { registerCashOut } from './handlers/cashout';
 import { registerRain } from './handlers/rain';
 import { registerChat } from './handlers/chat';
 import { registerBets } from './handlers/bets';
 import { registerLeaderboard } from './handlers/leaderboard';
+import { registerLore } from './handlers/lore';
 import { dropSocket } from './ratelimit';
 
 const PORT = Number(process.env.PORT ?? 8080);
@@ -23,7 +30,7 @@ let currentRound = { roundId: '', betting: false };
 const getRound = () => currentRound;
 
 // ── Bus → clients fan-out ─────────────────────────────────────────────────
-sub.subscribe('arena:state', 'arena:crash', 'arena:chat', 'arena:rain', LB_CHANNEL);
+sub.subscribe('arena:state', 'arena:crash', 'arena:chat', 'arena:rain', LB_CHANNEL, LORE_CHANNEL);
 sub.on('message', (channel, raw) => {
   switch (channel) {
     case 'arena:state': {
@@ -47,25 +54,46 @@ sub.on('message', (channel, raw) => {
       );
       break;
     }
+    case LORE_CHANNEL: {
+      // User-scoped: only the player who earned the collectible sees it.
+      const { userId, payload } = JSON.parse(raw) as LoreBusEnvelope;
+      io.to(`u:${userId}`).emit(SocialServerEvent.LORE_UNLOCK, payload);
+      break;
+    }
   }
 });
 
 // ── Per-connection wiring ─────────────────────────────────────────────────
 io.on('connection', (socket: Socket) => {
-  socket.on(ClientEvent.HELLO, async ({ clientSeed, protocolVersion, userId, name, tier, avatarKey }) => {
+  socket.on(ClientEvent.HELLO, async ({ clientSeed, protocolVersion, userId, name, tier, avatarKey, stageSlug }) => {
     if (protocolVersion !== PROTOCOL_VERSION) {
       return socket.emit(ServerEvent.ERROR, { code: 'PROTOCOL_MISMATCH', expected: PROTOCOL_VERSION });
     }
     // TODO: geo-block + responsible-play gate here (per CLAUDE.md / region-block).
     socket.data.userId = userId ?? socket.id;
     socket.data.name = name;
-    // World-tour bracket + avatar for leaderboard attribution (client-claimed
-    // for now; once Cognito-verified profiles land, read these server-side).
+    // World-tour bracket + avatar for leaderboard attribution, and the
+    // current stage for lore triggers (client-claimed for now; once
+    // Cognito-verified profiles land, read these server-side).
     socket.data.tier = Math.min(10, Math.max(1, Math.floor(Number(tier)) || 1));
     socket.data.avatarKey = typeof avatarKey === 'string' ? avatarKey.slice(0, 32) : 'gladiator-01';
+    socket.data.stageSlug = typeof stageSlug === 'string' ? stageSlug.slice(0, 40) : undefined;
+    // Per-user room — user-scoped pushes (lore unlocks) address this, so
+    // they reach the player on whichever gateway they're connected to.
+    await socket.join(`u:${socket.data.userId}`);
     // Welcome stack: idempotent per userId — seeds new wallets exactly once.
     const balance = await creditChips(socket.data.userId, 1000, `welcome:${socket.data.userId}`);
     socket.emit(ServerEvent.BALANCE, { balance });
+    // Replay any unlock cinematic the player never acked (killed app,
+    // missed push). Postgres-backed; degrades to nothing without a DB.
+    getUnseenLore(socket.data.userId)
+      .then(unlocks => {
+        if (unlocks.length) {
+          socket.emit(SocialServerEvent.LORE_UNLOCK,
+            { v: SOCIAL_PROTOCOL_VERSION, ts: Date.now(), unlocks });
+        }
+      })
+      .catch(() => {});
     // Contribute to the pooled client seed for an upcoming round (capped list).
     if (typeof clientSeed === 'string' && clientSeed.length <= 128) {
       await data.lpush('arena:clientseeds:pending', clientSeed);
@@ -78,6 +106,7 @@ io.on('connection', (socket: Socket) => {
   registerRain(socket);
   registerChat(socket);
   registerLeaderboard(socket);
+  registerLore(socket);
 
   socket.on('disconnect', () => dropSocket(socket.id));
 });

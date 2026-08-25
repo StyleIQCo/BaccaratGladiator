@@ -25,6 +25,7 @@ export enum SocialServerEvent {
   MISSION_COMPLETE      = 'mission:complete',
   REFERRAL_QUALIFIED    = 'referral:qualified',
   PASSPORT_STAMP        = 'passport:stamp',  // stage cleared → new stamp earned
+  LORE_UNLOCK           = 'lore:unlock',     // secret collectible earned → play the cinematic
 }
 
 export enum SocialClientEvent {
@@ -32,6 +33,7 @@ export enum SocialClientEvent {
   LB_UNSUBSCRIBE = 'lb:unsubscribe',
   MISSION_CLAIM  = 'mission:claim',  // { missionProgressId } — server validates, exactly-once
   PASS_CREATE    = 'pass:create',    // → { code, url }
+  LORE_SEEN      = 'lore:seen',      // { unlockId } — acks the unlock cinematic, exactly-once
 }
 
 // ── SHARED SHAPES ──────────────────────────────────────────────────
@@ -120,6 +122,25 @@ export interface PassportStampPayload {
   stampNumber: number;       // 1..62 — "Stamp 23 of 62"
 }
 
+/** One unlocked lore collectible — the unlock cinematic's data. */
+export interface LoreUnlockItem {
+  unlockId: string;          // UserCollectible.id — the LORE_SEEN ack handle
+  slug: string;              // 'lone-star-sheriffs-badge'
+  title: string;             // "Lone Star Sheriff's Badge"
+  characterName: string;     // "Sheriff Rosa 'Lone Star' Delgado"
+  loreText: string;          // the backstory fragment
+  icon: string;              // emoji relic for the drift-in object
+  stageSlug: string;         // themes-extended.js slug the item belongs to
+  tier: number;
+  progress: { collected: number; total: number }; // this character's set
+}
+
+export interface LoreUnlockPayload {
+  v: number;                 // SOCIAL_PROTOCOL_VERSION
+  ts: number;
+  unlocks: LoreUnlockItem[]; // ≥1 — the client plays them one at a time
+}
+
 // ── ClientEvent payloads ───────────────────────────────────────────
 
 export interface LeaderboardSubscribePayload {
@@ -129,4 +150,8 @@ export interface LeaderboardSubscribePayload {
 
 export interface MissionClaimPayload {
   missionProgressId: string;
+}
+
+export interface LoreSeenPayload {
+  unlockId: string;
 }

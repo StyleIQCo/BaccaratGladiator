@@ -24,11 +24,14 @@ export function registerBets(socket: Socket, getRound: () => { roundId: string; 
       const amount = validAmount(p.main.amount);
       if (amount === null || !SIDES.has(p.main.side)) return;
       // Snapshot identity into the bet so settlement + leaderboard need no lookups.
+      // stageSlug rides along for stage-scoped lore triggers (undefined is
+      // dropped by JSON.stringify — pre-lore clients settle exactly as before).
       const stored = JSON.stringify({
         side: p.main.side, amount,
         handle: socket.data.name ?? 'Gladiator',
         avatarKey: socket.data.avatarKey ?? 'gladiator-01',
         tier: socket.data.tier ?? 1,
+        stageSlug: socket.data.stageSlug,
       });
       const placed = await data.hsetnx(`bets:${r.roundId}:main`, u, stored);
       if (!placed) return; // one main bet per round — first placement is final

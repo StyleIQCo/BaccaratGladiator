@@ -8,6 +8,8 @@ import { LocaleProvider } from './i18n/LocaleContext';
 import { useGameSync } from './hooks/useGameSync';
 import { VideoTable } from './render/VideoTable';
 import { CssTable } from './render/CssTable';
+import CollectibleUnlockModal from './collectibles/CollectibleUnlockModal';
+import { stageNameFromSlug } from './collectibles/stageName';
 
 const WS_URL = window.location.origin; // /arena/ws on the same origin (CSP 'self')
 
@@ -22,6 +24,9 @@ function Arena() {
   }, []);
 
   const game = useGameSync(WS_URL, clientSeed);
+  // Unlock cinematics play one at a time; acking pops the queue and the
+  // next queued unlock (if any) mounts on the following render.
+  const nextLore = game.loreQueue[0] ?? null;
 
   return (
     <div className="arena">
@@ -40,6 +45,11 @@ function Arena() {
         <button disabled={game.phase !== 'BETTING'} onClick={() => game.placeBet({ crash: { amount: 100 } })}>Crash Bet</button>
         <button disabled={game.phase !== 'DEALING' || game.crashed} onClick={game.cashOut}>CASH OUT ×{game.multiplier.toFixed(2)}</button>
       </footer>
+
+      <CollectibleUnlockModal
+        unlock={nextLore && { ...nextLore, stageName: stageNameFromSlug(nextLore.stageSlug) }}
+        onClose={() => nextLore && game.ackLore(nextLore.unlockId)}
+      />
     </div>
   );
 }

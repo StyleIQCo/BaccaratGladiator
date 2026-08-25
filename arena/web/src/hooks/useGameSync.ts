@@ -7,7 +7,8 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import { io, type Socket } from 'socket.io-client';
 import {
   Phase, ServerEvent, ClientEvent, PROTOCOL_VERSION, verifyRound,
-  type GameStatePayload,
+  SocialServerEvent, SocialClientEvent,
+  type GameStatePayload, type LoreUnlockItem, type LoreUnlockPayload,
 } from '@bg/shared';
 
 export interface GameSyncView {
@@ -20,6 +21,12 @@ export interface GameSyncView {
   verified: boolean | null;
   placeBet: (p: object) => void;
   cashOut: () => void;
+  /** Unlock cinematics waiting to play, oldest first (server push +
+   *  bootstrap replay of anything never acked). */
+  loreQueue: LoreUnlockItem[];
+  /** Ack one cinematic: tells the server (exactly-once flip) and pops
+   *  it from the queue so the next one can play. */
+  ackLore: (unlockId: string) => void;
 }
 
 export function useGameSync(url: string, clientSeed: string, identity: { userId?: string; name?: string } = {}): GameSyncView {
@@ -29,6 +36,7 @@ export function useGameSync(url: string, clientSeed: string, identity: { userId?
   const [state, setState] = useState<GameStatePayload | null>(null);
   const [secondsLeft, setSecondsLeft] = useState(0);
   const [verified, setVerified] = useState<boolean | null>(null);
+  const [loreQueue, setLoreQueue] = useState<LoreUnlockItem[]>([]);
 
   useEffect(() => {
     const socket = io(url, { path: '/arena/ws', transports: ['websocket'] });
@@ -67,6 +75,15 @@ export function useGameSync(url: string, clientSeed: string, identity: { userId?
       setState(prev => (prev && prev.roundId === s.roundId ? { ...prev, crash: s.crash } : prev));
     });
 
+    // Lore unlocks: live settle pushes AND the hello-time replay of
+    // anything unacked can overlap — dedupe by unlockId, keep order.
+    socket.on(SocialServerEvent.LORE_UNLOCK, (p: LoreUnlockPayload) => {
+      setLoreQueue(prev => {
+        const have = new Set(prev.map(u => u.unlockId));
+        return [...prev, ...p.unlocks.filter(u => !have.has(u.unlockId))];
+      });
+    });
+
     return () => { socket.close(); socketRef.current = null; };
   }, [url, clientSeed]);
 
@@ -88,6 +105,11 @@ export function useGameSync(url: string, clientSeed: string, identity: { userId?
     socketRef.current?.emit(ClientEvent.CASH_OUT, { roundId: state?.roundId });
   }, [state?.roundId]);
 
+  const ackLore = useCallback((unlockId: string) => {
+    socketRef.current?.emit(SocialClientEvent.LORE_SEEN, { unlockId });
+    setLoreQueue(prev => prev.filter(u => u.unlockId !== unlockId));
+  }, []);
+
   return {
     connected, state,
     phase: state?.phase ?? null,
@@ -95,5 +117,6 @@ export function useGameSync(url: string, clientSeed: string, identity: { userId?
     multiplier: state?.crash.multiplier ?? 1,
     crashed: state?.crash.crashed ?? false,
     verified, placeBet, cashOut,
+    loreQueue, ackLore,
   };
 }

@@ -66,13 +66,14 @@ export default function VIPGate({
         {children}
       </div>
 
-      {/* The gate */}
-      <div className="absolute inset-0 z-20 grid place-items-center bg-gradient-to-b from-slate-950/60 via-blue-950/40 to-slate-950/70 p-6">
+      {/* The gate — content rides on a dark glass card so it stays crisp
+          over the bright blurred marble beneath */}
+      <div className="absolute inset-0 z-20 grid place-items-center bg-gradient-to-b from-slate-950/70 via-blue-950/55 to-slate-950/80 p-6">
         <motion.div
           initial={{ y: 24, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ type: 'spring', stiffness: 260, damping: 24 }}
-          className="flex max-w-xs flex-col items-center text-center"
+          className="glass flex max-w-xs flex-col items-center bg-abyss-900/60 px-6 py-8 text-center"
         >
           <motion.div
             className="grid h-20 w-20 place-items-center rounded-full border border-neon-gold/50 bg-abyss-900/80"

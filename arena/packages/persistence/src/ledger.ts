@@ -3,6 +3,7 @@
 // chips — but the integrity rules are written as if they were real money.
 import { data, loadScript } from './redis';
 import { settleLeaderboardScore, currentSeasonKey } from './leaderboard';
+import { settleLoreUnlocks, type LoreSide } from './collectibles-store';
 
 const bal = (u: string) => `bal:${u}`;
 const done = (scope: string) => `settled:${scope}`; // idempotency guard set
@@ -69,7 +70,7 @@ export async function getLiveCrash(roundId: string): Promise<{ multiplier: numbe
  * Each winning credit also feeds the tier leaderboard; a leaderboard or
  * mirror failure never blocks a payout.
  */
-export async function settleRound(ctx: { roundId: string; hand: { outcome: string } }): Promise<void> {
+export async function settleRound(ctx: { roundId: string; hand: { outcome: string; natural?: boolean } }): Promise<void> {
   const guard = await data.set(`roundsettled:${ctx.roundId}`, '1', 'EX', 3600, 'NX');
   if (guard !== 'OK') return; // already settled (e.g. leader failover replay)
 
@@ -79,7 +80,7 @@ export async function settleRound(ctx: { roundId: string; hand: { outcome: strin
   for (const [userId, raw] of Object.entries(bets)) {
     try {
       const bet = JSON.parse(raw) as {
-        side: string; amount: number; handle?: string; avatarKey?: string; tier?: number;
+        side: string; amount: number; handle?: string; avatarKey?: string; tier?: number; stageSlug?: string;
       };
       const amount = Math.floor(Number(bet.amount));
       if (!(amount > 0)) continue;
@@ -96,8 +97,26 @@ export async function settleRound(ctx: { roundId: string; hand: { outcome: strin
           { userId, handle: bet.handle ?? 'Gladiator', avatarKey: bet.avatarKey ?? 'gladiator-01' },
           winnings,
         ).catch(() => {});
+        // Win streak: INCR on win, reset on loss, untouched on push —
+        // powers WIN_STREAK lore triggers. Runs once per round thanks to
+        // the roundsettled guard above.
+        const streak = await data.incr(`streak:${userId}`);
+        await data.expire(`streak:${userId}`, 30 * 86_400);
+        // Lore collectibles ride the settle, fire-and-forget: a lore/DB
+        // outage never blocks a payout. No stage snapshot on the bet
+        // (pre-lore client) → nothing stage-scoped can drop; skip.
+        if (bet.stageSlug) {
+          settleLoreUnlocks({
+            userId, roundId: ctx.roundId, stageSlug: bet.stageSlug,
+            bet: { side: bet.side as LoreSide, amount },
+            hand: { outcome: outcome as LoreSide, natural: ctx.hand.natural === true },
+            winStreak: streak,
+          }).catch(() => {});
+        }
       } else if (outcome === 'tie') {
-        await creditChips(userId, amount, idem); // push — stake back
+        await creditChips(userId, amount, idem); // push — stake back, streak untouched
+      } else {
+        await data.del(`streak:${userId}`); // loss ends the run
       }
     } catch { /* one malformed row never blocks the rest of the table */ }
   }

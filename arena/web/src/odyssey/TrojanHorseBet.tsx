@@ -19,6 +19,7 @@
 // ═══════════════════════════════════════════════════════════════════
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { useEffect, useMemo, useState, type CSSProperties } from 'react';
+import { createPortal } from 'react-dom';
 import { GoldChip } from './AegeanTable';
 
 const RUMBLE_MS = 950;
@@ -228,7 +229,12 @@ export default function TrojanHorseBet({
         </div>
       </motion.button>
 
-      {/* ── Full-screen burst: flash → coin spray → multiplier reveal ── */}
+      {/* ── Full-screen burst: flash → coin spray → multiplier reveal ──
+          Portaled to <body>: rendered in place, a `fixed` overlay joins
+          the stage's stacking context (and any future ancestor
+          transform would re-anchor it), letting page chrome paint over
+          the celebration. */}
+      {createPortal(
       <AnimatePresence>
         {celebration === 'burst' && (
           <motion.div
@@ -237,6 +243,15 @@ export default function TrojanHorseBet({
             exit={{ opacity: 0, transition: { duration: 0.35 } }}
             aria-live="polite"
           >
+            {/* Vignette behind the reveal — keeps gold text legible over
+                the gold plaque (or anything else) beneath */}
+            <motion.div
+              className="absolute inset-0"
+              style={{ background: 'radial-gradient(ellipse 62% 42% at 50% 50%, rgba(2,6,23,0.8), rgba(2,6,23,0.4) 55%, transparent 78%)' }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.25 }}
+            />
             {!reduced && (
               <>
                 <motion.div
@@ -277,7 +292,8 @@ export default function TrojanHorseBet({
             </div>
           </motion.div>
         )}
-      </AnimatePresence>
+      </AnimatePresence>,
+      document.body)}
     </>
   );
 }
