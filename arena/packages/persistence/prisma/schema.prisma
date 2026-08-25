@@ -28,9 +28,15 @@ model User {
   createdAt  DateTime @default(now())
   lastSeenAt DateTime @default(now())
 
+  // Evergreen personal invite code ("GLAD-7F3K" style), assigned at
+  // registration. BuddyPass codes are the limited-use VIP tickets; this
+  // one never expires and never runs out. Nullable so legacy rows can
+  // backfill lazily on next login.
+  referralCode String? @unique
+
   tier       Int    @default(1) // 1..10 — leaderboard bracket
   stageIndex Int    @default(0) // 0..61 — world-tour pointer
-  chips      BigInt @default(1000)
+  chips      BigInt @default(1000) // canonical durable balance; Redis holds the hot mirror
   gems       Int    @default(50)
   xp         Int    @default(0)
 
@@ -40,6 +46,7 @@ model User {
   buddyPasses      BuddyPass[]
   referralsSent    Referral[]         @relation("Referrer")
   referralReceived Referral?          @relation("Referee")
+  chipTxns         ChipTransaction[]
 
   @@index([tier])
 }
@@ -79,8 +86,9 @@ model BuddyPass {
 
 model Referral {
   id                    String         @id @default(cuid())
-  passId                String
-  pass                  BuddyPass      @relation(fields: [passId], references: [id])
+  passId                String? // set when redeemed via a BuddyPass ticket; null for User.referralCode signups
+  pass                  BuddyPass?     @relation(fields: [passId], references: [id])
+  codeUsed              String? // the literal code entered at signup — audit trail for fraud review
   referrerId            String
   referrer              User           @relation("Referrer", fields: [referrerId], references: [id])
   refereeId             String         @unique // one referral credit per new account, ever
@@ -96,9 +104,40 @@ model Referral {
 
 enum ReferralStatus {
   PENDING // referee signed up, hasn't qualified yet
-  QUALIFIED // qualification bar met — rewards claimable
-  REWARDED // both sides claimed
+  QUALIFIED // qualification bar met — rewards claimable (buddy-pass claim flow)
+  REWARDED // both sides claimed (buddy-pass claim flow)
+  COMPLETED // referral-engine instant-payout path: welcome gift paid at signup, referrer bounty auto-paid on Stage-1 clear
   EXPIRED // referee inactive past the qualification window
+}
+
+// ── CURRENCY LEDGER ──────────────────────────────────────────────────
+// Durable append-only record of every chip mutation the social/referral
+// layer makes. The unique `idemKey` is the hard exactly-once guarantee:
+// a replayed credit attempt hits the constraint and rolls back its whole
+// transaction, so a reward can never pay twice — same stance as the
+// Redis ledger's `done(idemKey)` set, but audit-grade and permanent.
+
+model ChipTransaction {
+  id           String       @id @default(cuid())
+  userId       String
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  amount       BigInt // signed: positive = credit, negative = debit
+  balanceAfter BigInt // User.chips immediately after this row's write, same txn
+  reason       ChipTxReason
+  idemKey      String       @unique // e.g. "referral:{referralId}:bounty"
+  meta         Json? // free-form context: { referralId, refereeId, ... }
+  createdAt    DateTime     @default(now())
+
+  @@index([userId, createdAt(sort: Desc)]) // "recent activity" statement query
+}
+
+enum ChipTxReason {
+  REFERRAL_WELCOME_GIFT // referee's instant signup gift
+  REFERRAL_BOUNTY // referrer's payout when the referee clears Stage 1
+  MISSION_REWARD
+  STAGE_REWARD
+  GAME_SETTLEMENT // durable mirror of Redis settleRound credits
+  ADMIN_ADJUST
 }
 
 // ── LEADERBOARDS (tier-bracketed, seasonal) ──────────────────────────
