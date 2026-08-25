@@ -55,9 +55,16 @@ case "$TARGET" in
   all|*)
     echo "  Building web/ ..."
     ( cd "$HERE/web" && npm run build )   # vite build, base=/arena/, outputs web/dist
+    # Deploy from an immutable snapshot: parallel builds in this shared
+    # worktree can regenerate dist/ mid-deploy, leaving the uploaded HTML
+    # referencing asset hashes that were never synced (verified outage
+    # 2026-08-25). Copy first; every upload below reads the snapshot.
+    SNAPROOT="$(mktemp -d)"
+    cp -R "$HERE/web/dist" "$SNAPROOT/dist"
+    DIST="$SNAPROOT/dist"
     # Sync the built static app under the arena prefix.
-    echo "  Syncing web/dist → s3://$BUCKET/$PREFIX/"
-    aws s3 sync "$HERE/web/dist/" "s3://$BUCKET/$PREFIX/" --delete \
+    echo "  Syncing dist snapshot → s3://$BUCKET/$PREFIX/"
+    aws s3 sync "$DIST/" "s3://$BUCKET/$PREFIX/" --delete \
       --exclude "config/*"   # never let a build wipe the live kill switch
     # Directory-index aliases. The distribution's URL-rewrite function
     # appends ".html" to extensionless viewer paths, so "/arena/" fetches
@@ -65,8 +72,8 @@ case "$TARGET" in
     # via x-amz-error-detail-key). Publish index.html at BOTH keys — this
     # is what makes https://…/arena/ load. Re-created after every sync
     # because --delete removes them (they aren't in web/dist).
-    aws s3api put-object --bucket "$BUCKET" --key "$PREFIX/.html" --body "$HERE/web/dist/index.html" --content-type "text/html" > /dev/null
-    aws s3api put-object --bucket "$BUCKET" --key "$PREFIX.html"  --body "$HERE/web/dist/index.html" --content-type "text/html" > /dev/null
+    aws s3api put-object --bucket "$BUCKET" --key "$PREFIX/.html" --body "$DIST/index.html" --content-type "text/html" > /dev/null
+    aws s3api put-object --bucket "$BUCKET" --key "$PREFIX.html"  --body "$DIST/index.html" --content-type "text/html" > /dev/null
     INVALIDATE_PATHS+=("/$PREFIX/*" "/$PREFIX")
     # Configs deployed explicitly with no-store.
     upload "config/flags.json"          "config/flags.json"          "application/json" "no-store"
