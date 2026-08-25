@@ -867,6 +867,134 @@ function drawPopups(ctx: CanvasRenderingContext2D, popups: ScorePopup[]): void {
   ctx.globalAlpha = 1;
 }
 
+// ── Share poster ───────────────────────────────────────────────────
+
+function posterItem(kind: ItemKind, x: number, y: number, opts: Partial<FallingItem> = {}): FallingItem {
+  return {
+    kind, x, y, baseX: x, vy: 0, spin: 0, spinVel: 0,
+    wobblePhase: 0, wobbleAmp: 0, wobbleHz: 0, chute: false, seed: 7, dead: false,
+    ...opts,
+  };
+}
+
+/**
+ * 1200×630 OG/share poster — a STAGED frame composed from the real game
+ * art (same draw calls the gameplay uses). Consumed by the one-off
+ * capture harness that generates web/public/hotdog-preview.png; kept
+ * exported so store/marketing shots can re-render it any time.
+ */
+export function renderPosterFrame(ctx: CanvasRenderingContext2D, w: number, h: number): void {
+  const t = 1.25;                                  // fixed clock: flames mid-lick
+
+  const sky = buildSky(ctx, w, h);                 // sky + seeded cloud field
+  ctx.fillStyle = sky.grad;
+  ctx.fillRect(0, 0, w, h);
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+  for (const c of sky.clouds) {
+    ctx.beginPath();
+    ctx.arc(c.x, c.y, 26 * c.s, 0, Math.PI * 2);
+    ctx.arc(c.x + 24 * c.s, c.y + 6 * c.s, 20 * c.s, 0, Math.PI * 2);
+    ctx.arc(c.x - 24 * c.s, c.y + 7 * c.s, 18 * c.s, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.28)';
+  ctx.lineWidth = 2;
+  for (const s of sky.streaks) {
+    ctx.beginPath();
+    ctx.moveTo(s.x, s.y);
+    ctx.lineTo(s.x, s.y + 28 * s.s);
+    ctx.stroke();
+  }
+
+  // The raining menu, scaled up for poster legibility.
+  const cast: Array<[FallingItem, number]> = [
+    [posterItem('mustard_relish', 780, 120, { spin: 0.22, seed: 3 }), 1.7],
+    [posterItem('chili_cheese', 300, 330, { spin: -0.15, seed: 11 }), 1.9],
+    [posterItem('pretzel', 560, 300, { spin: 0.5, seed: 5 }), 2.0],
+    [posterItem('beer_stein', 165, 445, { spin: -0.08, seed: 9 }), 2.0],
+    [posterItem('plain_hotdog', 665, 435, { chute: true, wobblePhase: 0.6, seed: 4 }), 1.6],
+    [posterItem('burnt_hotdog', 430, 545, { spin: 0.1, seed: 8 }), 1.9],   // ON FIRE, front row
+  ];
+  for (const [it, s] of cast) {
+    ctx.save();
+    ctx.translate(it.x, it.y);
+    ctx.scale(s, s);
+    ctx.translate(-it.x, -it.y);
+    drawItem(ctx, it, t);
+    ctx.restore();
+  }
+
+  // Gretchen, hero-sized, mid-bliss.
+  ctx.save();
+  ctx.translate(950, 470);
+  ctx.scale(2.6, 2.6);
+  drawPlayer(ctx, 0, 0, -0.06, t, { t: 0.55, dur: 0.95, phrase: '', big: false }, 0);
+  ctx.restore();
+
+  for (const [hx, hy, s] of [[830, 295, 15], [1062, 250, 12], [905, 205, 9]] as const) {
+    ctx.save();
+    ctx.translate(hx, hy);
+    ctx.fillStyle = '#ff5d73';
+    heartPath(ctx, s);
+    ctx.fill();
+    ctx.restore();
+  }
+  for (const [sx, sy, s] of [[1105, 330, 10], [860, 240, 7]] as const) {
+    ctx.save();
+    ctx.translate(sx, sy);
+    ctx.fillStyle = '#ffd75e';
+    starPath(ctx, s);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  // Type. lineJoin round — heavy stroked text miter-spikes otherwise.
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'alphabetic';
+  ctx.lineJoin = 'round';
+  ctx.save();
+  ctx.translate(950, 140);
+  ctx.rotate(-0.08);
+  ctx.font = `900 58px ${HUD_FONT}`;
+  ctx.textAlign = 'center';
+  ctx.lineWidth = 12;
+  ctx.strokeStyle = 'rgba(12, 30, 60, 0.95)';
+  ctx.strokeText('PROST!', 0, 0);
+  ctx.fillStyle = '#ffb027';
+  ctx.fillText('PROST!', 0, 0);
+  ctx.restore();
+
+  ctx.font = `900 78px ${HUD_FONT}`;
+  ctx.lineWidth = 14;
+  ctx.strokeStyle = 'rgba(12, 30, 60, 0.95)';
+  ctx.strokeText('HOTDOG', 60, 130);
+  ctx.fillStyle = '#fff8e7';
+  ctx.fillText('HOTDOG', 60, 130);
+  ctx.strokeText('PARACHUTE DROP', 60, 215);
+  ctx.fillStyle = '#f4c534';
+  ctx.fillText('PARACHUTE DROP', 60, 215);
+  ctx.font = `800 30px ${HUD_FONT}`;
+  ctx.lineWidth = 8;
+  ctx.strokeText('Catch lunch. Dodge the flaming one.', 62, 262);
+  ctx.fillStyle = '#ffffff';
+  ctx.fillText('Catch lunch. Dodge the flaming one.', 62, 262);
+
+  // "PLAY FREE" pill, bottom-left.
+  ctx.save();
+  capsule(ctx, 208, 588, 296, 56);
+  ctx.fillStyle = '#f4c534';
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(12, 30, 60, 0.95)';
+  ctx.lineWidth = 4;
+  ctx.stroke();
+  ctx.font = `900 26px ${HUD_FONT}`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = '#1d3557';
+  ctx.fillText('▶ PLAY · 30 SECONDS', 208, 589);
+  ctx.restore();
+}
+
 // ── Component ──────────────────────────────────────────────────────
 
 export function HotdogCanvas({ onGameOver, hazardMode, runSeconds, className }: HotdogCanvasProps) {

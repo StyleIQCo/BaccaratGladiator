@@ -6,7 +6,10 @@
 //  param that DemoHub and HotdogDemo both honor.
 // ═══════════════════════════════════════════════════════════════════
 
-export const hotdogShareUrl = (): string => `${window.location.origin}/arena/?game=hotdog`;
+// /arena/hotdog is the dedicated share page (public/hotdog.html): it
+// carries the game's own OG preview image, then redirects humans into
+// /arena/?game=hotdog. Share THAT url so chat apps unfurl the poster.
+export const hotdogShareUrl = (): string => `${window.location.origin}/arena/hotdog`;
 
 export type ShareResult = 'shared' | 'copied' | 'failed';
 

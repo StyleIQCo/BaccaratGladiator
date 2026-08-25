@@ -74,7 +74,13 @@ case "$TARGET" in
     # because --delete removes them (they aren't in web/dist).
     aws s3api put-object --bucket "$BUCKET" --key "$PREFIX/.html" --body "$DIST/index.html" --content-type "text/html" > /dev/null
     aws s3api put-object --bucket "$BUCKET" --key "$PREFIX.html"  --body "$DIST/index.html" --content-type "text/html" > /dev/null
-    INVALIDATE_PATHS+=("/$PREFIX/*" "/$PREFIX")
+    # CloudFront caches under the POST-rewrite URI: the viewer-request
+    # function rewrites "/arena" → "/arena.html" BEFORE the cache lookup,
+    # so invalidating "/arena" never purges the no-slash variant — it sat
+    # stale through two deploys (2026-08-25) until "/arena.html" itself
+    # was invalidated. "/$PREFIX/*" covers the slash variant's rewritten
+    # key ("/arena/.html"); "/$PREFIX.html" covers the no-slash one.
+    INVALIDATE_PATHS+=("/$PREFIX/*" "/$PREFIX" "/$PREFIX.html")
     # Configs deployed explicitly with no-store.
     upload "config/flags.json"          "config/flags.json"          "application/json" "no-store"
     upload "config/round.json"          "config/round.json"          "application/json" "no-store"
