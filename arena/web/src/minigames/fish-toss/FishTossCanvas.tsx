@@ -529,7 +529,7 @@ export function FishTossCanvas({ onGameOver, hazardMode, runSeconds, className }
       ctx.fillStyle = '#ffb347';
       ctx.font = `900 12px ${HUD_FONT}`;
       ctx.textAlign = 'center';
-      ctx.fillText('PIKE ST. FISH CO.', stallX + stallW * 0.5, 126);
+      ctx.fillText('PIKE PLACE MARKET', stallX + stallW * 0.5, 126);
       // Counter + ice bed with tails poking out
       ctx.fillStyle = '#4a3626';
       rr(ctx, stallX, counterY, stallW, 40, 6); ctx.fill();
