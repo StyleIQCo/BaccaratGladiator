@@ -15,8 +15,9 @@ import { ClutchDemo } from './replay/ClutchReplayModal';
 import { MockingbirdDemo } from './stage/MockingbirdTable';
 import OdysseyDemo from './odyssey/OdysseyDemo';
 import LoreDemo from './collectibles/LoreDemo';
+import HotdogDemo from './minigames/hotdog/HotdogDemo';
 
-type Tab = 'social' | 'battle' | 'spectate' | 'clutch' | 'mockingbird' | 'odyssey' | 'lore';
+type Tab = 'social' | 'battle' | 'spectate' | 'clutch' | 'mockingbird' | 'odyssey' | 'lore' | 'hotdog';
 
 const TABS: Array<{ id: Tab; label: string }> = [
   { id: 'social',      label: '🏆 SOCIAL' },
@@ -26,6 +27,7 @@ const TABS: Array<{ id: Tab; label: string }> = [
   { id: 'mockingbird', label: '🤠 MOCKINGBIRD' },
   { id: 'odyssey',     label: '🏛 ODYSSEY' },
   { id: 'lore',        label: '📜 LORE' },
+  { id: 'hotdog',      label: '🌭 HOTDOG DROP' },
 ];
 
 export default function DemoHub() {
@@ -94,6 +96,8 @@ export default function DemoHub() {
         {tab === 'lore' && (
           <div className="mx-auto max-w-md"><LoreDemo /></div>
         )}
+
+        {tab === 'hotdog' && <HotdogDemo />}
 
         {tab === 'clutch' && (
           <div className="mx-auto flex max-w-md flex-col gap-3">
