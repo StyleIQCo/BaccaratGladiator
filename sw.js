@@ -4,7 +4,7 @@
   On install: pre-cache core shell. On activate: purge old caches.
 */
 
-const CACHE_VERSION = 'bg-v113';
+const CACHE_VERSION = 'bg-v114';
 const SHELL_CACHE   = `${CACHE_VERSION}-shell`;
 const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`;
 
@@ -45,6 +45,10 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', event => {
   const { request } = event;
   const url = new URL(request.url);
+
+  // Never intercept the Grand Arena — it owns its own SW + a no-store config.
+  // (See arena/infra/sw-bypass-patch.md; keeps the arena kill switch honest.)
+  if (url.pathname.startsWith('/arena/')) return;
 
   if (request.method !== 'GET') return;
   if (url.origin !== self.location.origin && !url.hostname.endsWith('fonts.googleapis.com') && !url.hostname.endsWith('fonts.gstatic.com')) return;

@@ -12,14 +12,16 @@ import BossBattle from './battle/BossBattle';
 import { BOSSES } from './battle/bosses';
 import SpectateMode from './spectate/SpectateMode';
 import { ClutchDemo } from './replay/ClutchReplayModal';
+import { MockingbirdDemo } from './stage/MockingbirdTable';
 
-type Tab = 'social' | 'battle' | 'spectate' | 'clutch';
+type Tab = 'social' | 'battle' | 'spectate' | 'clutch' | 'mockingbird';
 
 const TABS: Array<{ id: Tab; label: string }> = [
-  { id: 'social',   label: '🏆 SOCIAL' },
-  { id: 'battle',   label: '⚔️ BOSS BATTLE' },
-  { id: 'spectate', label: '👁 SPECTATE' },
-  { id: 'clutch',   label: '🎬 CLUTCH REPLAY' },
+  { id: 'social',      label: '🏆 SOCIAL' },
+  { id: 'battle',      label: '⚔️ BOSS BATTLE' },
+  { id: 'spectate',    label: '👁 SPECTATE' },
+  { id: 'clutch',      label: '🎬 CLUTCH REPLAY' },
+  { id: 'mockingbird', label: '🤠 MOCKINGBIRD' },
 ];
 
 export default function DemoHub() {
@@ -77,6 +79,10 @@ export default function DemoHub() {
 
         {tab === 'spectate' && (
           <div className="mx-auto max-w-md"><SpectateMode /></div>
+        )}
+
+        {tab === 'mockingbird' && (
+          <div className="mx-auto max-w-xl"><MockingbirdDemo /></div>
         )}
 
         {tab === 'clutch' && (
