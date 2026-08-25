@@ -19,7 +19,7 @@
 //  transform only) so the relic never jumps when the card appears.
 // ═══════════════════════════════════════════════════════════════════
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { useEffect, useMemo, useState } from 'react';
+import { useLayoutEffect, useMemo, useState } from 'react';
 import { useLocale } from '../i18n/LocaleContext';
 
 export interface LoreUnlockView {
@@ -78,8 +78,12 @@ export default function CollectibleUnlockModal({
   const reduced = useReducedMotion();
   const [beat, setBeat] = useState<Beat>('drift');
 
-  // Replay the beat sheet for every queued unlock.
-  useEffect(() => {
+  // Replay the beat sheet for every queued unlock. Layout effect, not
+  // effect: `beat` is stale ('lore') after a dismissal, and a plain
+  // effect would let the browser paint one frame of the fully-assembled
+  // card before the reset lands — back-to-back queue unlocks would
+  // flash the ending before the drift begins.
+  useLayoutEffect(() => {
     if (!unlock) return;
     if (reduced) { setBeat('lore'); return; }
     setBeat('drift');
@@ -113,11 +117,11 @@ export default function CollectibleUnlockModal({
               <AnimatePresence>
                 {beat !== 'drift' && (
                   <motion.div
-                    initial={{ opacity: 0, y: -10, letterSpacing: '0.6em' }}
-                    animate={{ opacity: 1, y: 0, letterSpacing: '0.22em' }}
+                    initial={{ opacity: 0, y: -10, letterSpacing: '0.5em' }}
+                    animate={{ opacity: 1, y: 0, letterSpacing: '0.18em' }}
                     exit={{ opacity: 0 }}
                     transition={reduced ? { duration: 0 } : { duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
-                    className="whitespace-nowrap text-center font-display text-lg font-black text-neon-gold [text-shadow:0_0_18px_rgba(255,210,74,0.6)]"
+                    className="whitespace-nowrap text-center font-display text-base font-black text-neon-gold [text-shadow:0_0_18px_rgba(255,210,74,0.6)]"
                   >
                     {isZh ? '✦ 发现新藏品! ✦' : '✦ NEW COLLECTIBLE UNLOCKED! ✦'}
                   </motion.div>
