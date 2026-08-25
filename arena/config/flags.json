@@ -1,6 +1,7 @@
 {
-  "_comment": "ROLLBACK KILL SWITCH. Set enabled:false and deploy ONLY this file to instantly take the arena offline without touching the classic game. The web shell reads this before connecting any WebSocket.",
+  "_comment": "ROLLBACK KILL SWITCH. Set enabled:false and deploy ONLY this file to instantly take the arena offline without touching the classic game. The web shell reads this before connecting any WebSocket. demoMode:true renders the mock-driven Demo Hub instead of the live table (no backend needed) — flip to false once the gateway is hosted.",
   "enabled": true,
+  "demoMode": true,
   "maintenanceMessage": "The Grand Arena is taking a short break — back soon.",
   "classicGameUrl": "/",
   "features": {

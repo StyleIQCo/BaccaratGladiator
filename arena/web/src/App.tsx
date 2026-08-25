@@ -2,7 +2,9 @@
 // confirm the arena is enabled. Render path branches on the bandwidth-gated flag.
 import { useMemo } from 'react';
 import { KillSwitchGate } from './KillSwitchGate';
+import DemoHub from './DemoHub';
 import { ThemeProvider, useTheme } from './context/ThemeContext';
+import { LocaleProvider } from './i18n/LocaleContext';
 import { useGameSync } from './hooks/useGameSync';
 import { VideoTable } from './render/VideoTable';
 import { CssTable } from './render/CssTable';
@@ -45,10 +47,16 @@ function Arena() {
 export default function App() {
   return (
     <KillSwitchGate>
-      {() => (
-        <ThemeProvider brand="default" stage="macau-dragon7">
-          <Arena />
-        </ThemeProvider>
+      {flags => (
+        <LocaleProvider>
+          {flags.demoMode ? (
+            <DemoHub />
+          ) : (
+            <ThemeProvider brand="default" stage="macau-dragon7">
+              <Arena />
+            </ThemeProvider>
+          )}
+        </LocaleProvider>
       )}
     </KillSwitchGate>
   );

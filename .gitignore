@@ -30,3 +30,6 @@ __pycache__/
 /baccarat-gladiator-*.mp4
 /dragon7_clip.mp4
 /baccarat-gladiator-itchio.zip
+
+# Vite build output (arena web)
+arena/web/dist/

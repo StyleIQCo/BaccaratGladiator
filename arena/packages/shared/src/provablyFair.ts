@@ -1,13 +1,17 @@
 // Provably Fair Baccarat. Pure functions, identical output in Node and browser.
 // Commit/reveal: server broadcasts sha256(serverSeed) BEFORE bets, reveals
 // serverSeed at PAYOUT; anyone re-derives the shoe and re-deals to verify.
-import { createHash, createHmac } from 'crypto';
+// @noble/hashes (pure JS, audited) instead of node:crypto so the client
+// bundle can verify rounds too — HMAC-SHA256 output is byte-identical.
+import { sha256 } from '@noble/hashes/sha256';
+import { hmac } from '@noble/hashes/hmac';
+import { bytesToHex, utf8ToBytes } from '@noble/hashes/utils';
 import type { Card } from './protocol';
 
 const SUITS = 4, RANKS = 13, DECKS = 8;
 
 export function sha256Hex(input: string): string {
-  return createHash('sha256').update(input).digest('hex');
+  return bytesToHex(sha256(utf8ToBytes(input)));
 }
 
 function freshShoe(): Card[] {
@@ -20,10 +24,10 @@ function freshShoe(): Card[] {
 
 /** Chained HMAC byte stream — never runs short for a 416-card shuffle. */
 function* hmacByteStream(serverSeed: string, clientSeed: string, nonce: number): Generator<number> {
+  const key = utf8ToBytes(serverSeed);
   let round = 0;
   while (true) {
-    const digest = createHmac('sha256', serverSeed)
-      .update(`${clientSeed}:${nonce}:${round}`).digest();
+    const digest = hmac(sha256, key, utf8ToBytes(`${clientSeed}:${nonce}:${round}`));
     for (const byte of digest) yield byte;
     round++;
   }

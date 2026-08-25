@@ -7,6 +7,10 @@ export default {
       colors: {
         abyss:   { 900: '#0a0618', 800: '#120b2e', 700: '#1a1145', 600: '#241857' },
         neon:    { pink: '#ff2e88', blue: '#2ee6ff', gold: '#ffd24a', green: '#3dff8f', violet: '#a855f7' },
+        // Semantic outcome tokens — CSS-var backed so zh locales can flip
+        // red↔green (palettes in social.css, stamped by i18n/LocaleContext).
+        win:     'rgb(var(--c-win) / <alpha-value>)',
+        loss:    'rgb(var(--c-loss) / <alpha-value>)',
       },
       fontFamily: {
         display: ['Cinzel', 'serif'], // matches the game's table typography
@@ -18,6 +22,8 @@ export default {
         'glow-gold': '0 0 18px rgba(255,210,74,0.55), 0 0 42px rgba(255,210,74,0.22)',
         'glow-pink': '0 0 18px rgba(255,46,136,0.55), 0 0 42px rgba(255,46,136,0.22)',
         'glow-blue': '0 0 18px rgba(46,230,255,0.5), 0 0 42px rgba(46,230,255,0.2)',
+        'glow-win':  '0 0 18px rgb(var(--c-win) / 0.55), 0 0 42px rgb(var(--c-win) / 0.22)',
+        'glow-loss': '0 0 18px rgb(var(--c-loss) / 0.5), 0 0 42px rgb(var(--c-loss) / 0.2)',
       },
       keyframes: {
         'pulse-glow': {

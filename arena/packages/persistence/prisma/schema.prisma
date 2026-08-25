@@ -99,6 +99,15 @@ model Referral {
   referrerRewardClaimed Boolean        @default(false)
   refereeRewardClaimed  Boolean        @default(false)
 
+  // Hongbao skin: the referral IS a red envelope. hongbaoValue is the
+  // chips inside — 8s only, never a 4: the CHECK constraint added in
+  // 20260825000000_hongbao_referrals rejects any amount containing the
+  // digit 4 (tetraphobia). Opening is exactly-once via hongbaoOpenedAt
+  // (same guarded-flip pattern as MissionProgress.claimedAt).
+  hongbaoValue    Int       @default(8888)
+  hongbaoOpenedAt DateTime? // referee tore it open; null = still sealed
+  blessing        String?   @db.VarChar(120) // referrer's message, e.g. 恭喜发财
+
   @@index([referrerId, status])
 }
 

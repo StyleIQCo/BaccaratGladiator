@@ -9,6 +9,9 @@ interface Flags {
   maintenanceMessage: string;
   classicGameUrl: string;
   features: Record<string, boolean>;
+  /** true → render the mock-driven Demo Hub instead of the live table
+   *  (used while the arena backend isn't hosted; flips off without a build) */
+  demoMode?: boolean;
 }
 
 export function KillSwitchGate({ children }: { children: (flags: Flags) => ReactNode }) {

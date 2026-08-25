@@ -2,6 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── OUTCOME TOKENS (win / loss) ─────────────────────────────────────
+   RGB triplets so Tailwind alpha still works (`text-win/60`).
+   West (default): green wins, red loses. East (`zh`/`yue` locales —
+   LocaleProvider stamps data-outcome-scheme="east" on <html>): RED
+   wins — the Chinese market/luck convention — and green declines.
+   Components must never hardcode green/red for an outcome; use the
+   `win` / `loss` Tailwind utilities (see tailwind.config.js). */
+:root {
+  --c-win: 61 255 143;  /* neon-green */
+  --c-loss: 255 64 81;  /* alarm red */
+}
+:root[data-outcome-scheme='east'] {
+  --c-win: 255 59 71;   /* lucky red — 红涨 */
+  --c-loss: 47 191 113; /* market green — 绿跌 */
+}
+
 @layer components {
   /* Glassmorphism panel — the base surface for every social card/modal */
   .glass {

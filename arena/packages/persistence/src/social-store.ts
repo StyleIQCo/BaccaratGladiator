@@ -57,8 +57,20 @@ export type RedeemResult =
  * Redeem a Buddy Pass for a freshly signed-up user. Transactional:
  * the unique constraint on Referral.refereeId is the hard guarantee that
  * an account can only ever be referred once, even under concurrent calls.
+ * `hongbao` customizes the red envelope riding on the referral; omitted
+ * fields fall back to the schema defaults (8888, no blessing).
  */
-export async function redeemBuddyPass(code: string, refereeId: string): Promise<RedeemResult> {
+export async function redeemBuddyPass(
+  code: string, refereeId: string,
+  hongbao?: { value?: number; blessing?: string },
+): Promise<RedeemResult> {
+  // Fail fast with a clear error instead of tripping the DB's
+  // "no digit 4" CHECK mid-transaction (tetraphobia guard — see the
+  // 20260825000000_hongbao_referrals migration).
+  if (hongbao?.value != null &&
+      (!Number.isInteger(hongbao.value) || hongbao.value <= 0 || String(hongbao.value).includes('4'))) {
+    throw new Error(`unlucky hongbaoValue ${hongbao.value}: must be a positive integer containing no digit 4`);
+  }
   const db = prisma();
   try {
     return await db.$transaction(async tx => {
@@ -69,7 +81,10 @@ export async function redeemBuddyPass(code: string, refereeId: string): Promise<
       if (pass.ownerId === refereeId) return { ok: false as const, reason: 'SELF_REFERRAL' as const };
 
       const referral = await tx.referral.create({
-        data: { passId: pass.id, referrerId: pass.ownerId, refereeId },
+        data: {
+          passId: pass.id, referrerId: pass.ownerId, refereeId,
+          hongbaoValue: hongbao?.value, blessing: hongbao?.blessing,
+        },
       });
       await tx.buddyPass.update({ where: { id: pass.id }, data: { uses: { increment: 1 } } });
       return { ok: true as const, referralId: referral.id, referrerId: pass.ownerId };
@@ -81,6 +96,29 @@ export async function redeemBuddyPass(code: string, refereeId: string): Promise<
     }
     throw e;
   }
+}
+
+/**
+ * Tear open the envelope exactly once — the guarded updateMany is the
+ * lock (same pattern as claimMission below): only one concurrent open
+ * can flip hongbaoOpenedAt from null. Returns the chips to credit via
+ * the ledger with idemKey `hongbao:{referralId}`, or null when the
+ * envelope is already open / not this user's.
+ */
+export async function openHongbao(
+  referralId: string, refereeId: string,
+): Promise<{ chips: number } | null> {
+  const db = prisma();
+  const flipped = await db.referral.updateMany({
+    where: { id: referralId, refereeId, hongbaoOpenedAt: null },
+    data: { hongbaoOpenedAt: new Date() },
+  });
+  if (flipped.count !== 1) return null;
+  const row = await db.referral.findUniqueOrThrow({
+    where: { id: referralId },
+    select: { hongbaoValue: true },
+  });
+  return { chips: row.hongbaoValue };
 }
 
 /**
