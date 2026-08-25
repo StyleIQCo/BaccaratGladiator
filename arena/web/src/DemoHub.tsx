@@ -16,8 +16,9 @@ import { MockingbirdDemo } from './stage/MockingbirdTable';
 import OdysseyDemo from './odyssey/OdysseyDemo';
 import LoreDemo from './collectibles/LoreDemo';
 import HotdogDemo from './minigames/hotdog/HotdogDemo';
+import FishTossDemo from './minigames/fish-toss/FishTossDemo';
 
-type Tab = 'social' | 'battle' | 'spectate' | 'clutch' | 'mockingbird' | 'odyssey' | 'lore' | 'hotdog';
+type Tab = 'social' | 'battle' | 'spectate' | 'clutch' | 'mockingbird' | 'odyssey' | 'lore' | 'hotdog' | 'fishtoss';
 
 const TABS: Array<{ id: Tab; label: string }> = [
   { id: 'social',      label: '🏆 SOCIAL' },
@@ -28,10 +29,16 @@ const TABS: Array<{ id: Tab; label: string }> = [
   { id: 'odyssey',     label: '🏛 ODYSSEY' },
   { id: 'lore',        label: '📜 LORE' },
   { id: 'hotdog',      label: '🌭 HOTDOG DROP' },
+  { id: 'fishtoss',    label: '🐟 FISH TOSS' },
 ];
 
 export default function DemoHub() {
-  const [tab, setTab] = useState<Tab>('social');
+  // Deep links: ?game=<tab id> (e.g. ?game=hotdog) selects that tab on
+  // load, so any mini-game is shareable as a plain URL.
+  const [tab, setTab] = useState<Tab>(() => {
+    const g = new URLSearchParams(window.location.search).get('game');
+    return TABS.some(t => t.id === g) ? (g as Tab) : 'social';
+  });
   const [bossId, setBossId] = useState<'emperor' | 'neonDragon'>('emperor');
 
   return (
@@ -98,6 +105,8 @@ export default function DemoHub() {
         )}
 
         {tab === 'hotdog' && <HotdogDemo />}
+
+        {tab === 'fishtoss' && <FishTossDemo />}
 
         {tab === 'clutch' && (
           <div className="mx-auto flex max-w-md flex-col gap-3">
