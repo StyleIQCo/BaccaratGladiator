@@ -59,7 +59,15 @@ case "$TARGET" in
     echo "  Syncing web/dist → s3://$BUCKET/$PREFIX/"
     aws s3 sync "$HERE/web/dist/" "s3://$BUCKET/$PREFIX/" --delete \
       --exclude "config/*"   # never let a build wipe the live kill switch
-    INVALIDATE_PATHS+=("/$PREFIX/*")
+    # Directory-index aliases. The distribution's URL-rewrite function
+    # appends ".html" to extensionless viewer paths, so "/arena/" fetches
+    # origin key "arena/.html" and "/arena" fetches "arena.html" (verified
+    # via x-amz-error-detail-key). Publish index.html at BOTH keys — this
+    # is what makes https://…/arena/ load. Re-created after every sync
+    # because --delete removes them (they aren't in web/dist).
+    aws s3api put-object --bucket "$BUCKET" --key "$PREFIX/.html" --body "$HERE/web/dist/index.html" --content-type "text/html" > /dev/null
+    aws s3api put-object --bucket "$BUCKET" --key "$PREFIX.html"  --body "$HERE/web/dist/index.html" --content-type "text/html" > /dev/null
+    INVALIDATE_PATHS+=("/$PREFIX/*" "/$PREFIX")
     # Configs deployed explicitly with no-store.
     upload "config/flags.json"          "config/flags.json"          "application/json" "no-store"
     upload "config/round.json"          "config/round.json"          "application/json" "no-store"
