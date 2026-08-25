@@ -4,11 +4,11 @@
 // web bundle in a real browser with touchscreen taps, so z-index and
 // overlay regressions surface the way they would on a phone.
 //
-// Flow: hub renders → HOTDOG DROP tab shows the launch card → PLAY
-// opens the intro modal (legend incl. pretzel + beer rows) → DROP IN
-// starts the canvas run → touch-drag steers → run ends (timer or
-// hazard) → results overlay with Claim → claim closes the modal and
-// persists chips to localStorage.
+// Flow: the SHARE deep link (?game=hotdog) lands straight on the game
+// intro (legend incl. pretzel + beer rows) → DROP IN starts the canvas
+// run → touch-drag steers → run ends (timer or hazard) → results
+// overlay with Claim + Challenge-a-friend → claim closes the modal,
+// persists chips to localStorage, and the launch card is behind it.
 //
 // The run is shortened via the `?hotdogRun=6` test hook so the full
 // loop fits in a smoke-test budget.
@@ -114,26 +114,28 @@ const shot = async (page, name) => {
   try {
     const page = await browser.newPage();
     await page.setViewport({ width: 390, height: 844, deviceScaleFactor: 2, hasTouch: true, isMobile: true });
-    // 6-second runs via the test hook; fresh stats every run.
-    await page.goto(`http://127.0.0.1:${PORT}/arena/?hotdogRun=6`, { waitUntil: 'networkidle0' });
+    // Enter through the SHARE deep link: ?game=hotdog selects the tab AND
+    // auto-opens the intro. 6-second runs via the test hook.
+    await page.goto(`http://127.0.0.1:${PORT}/arena/?game=hotdog&hotdogRun=6`, { waitUntil: 'networkidle0' });
     await page.waitForFunction(seeing('GRAND ARENA'), { timeout: 10_000 });
     await page.evaluate(() => {
       localStorage.removeItem('arena.hotdog.best');
       localStorage.removeItem('arena.hotdog.chips');
+      // Zero-score board: ANY scoring run cracks the top 10, making the
+      // signup prompt deterministic whenever the run caught something.
+      localStorage.setItem(
+        'arena.hotdog.board',
+        JSON.stringify(Array.from({ length: 10 }, (_, i) => ({ name: `BOT${i}`, score: 0 }))),
+      );
     });
 
-    console.log('\nLaunch card');
-    await tap(page, 'HOTDOG DROP');
-    await page.waitForFunction(seeing('HOTDOG PARACHUTE DROP'), { timeout: 5_000 });
-    ok(true, 'tab renders the launch card');
-    await shot(page, '1-launch-card');
-
-    console.log('\nIntro modal');
-    await tap(page, 'PLAY');
+    console.log('\nDeep link + intro modal');
     // NOTE: seeing() reads innerText, which reflects CSS text-transform —
     // the buttons render uppercase, so match "DROP IN!" not "Drop In!".
     // (tap/tapSettled match textContent, which stays as authored.)
-    await page.waitForFunction(seeing('DROP IN!'), { timeout: 5_000 });
+    await page.waitForFunction(seeing('DROP IN!'), { timeout: 8_000 });
+    ok(true, 'share deep link (?game=hotdog) lands straight on the intro');
+    await shot(page, '1-deeplink-intro');
     ok(await page.evaluate(seeing('Bavarian Pretzel')), 'legend lists the pretzel');
     ok(await page.evaluate(seeing('Beer Stein')), 'legend lists the beer stein');
     ok(await page.evaluate(seeing('GAME OVER')), 'legend warns about the burnt dog');
@@ -164,6 +166,21 @@ const shot = async (page, name) => {
     // 6s run (or an early burnt-dog death) → results overlay either way.
     await page.waitForFunction(seeing('CLAIM CHIPS'), { timeout: 15_000 });
     ok(await page.evaluate(seeing('chips!')), 'results overlay shows the chip count');
+    ok(await page.evaluate(seeing('CHALLENGE A FRIEND')), 'results overlay offers the share button');
+    // Let the score count-up settle, then read the final number: with the
+    // zero board, any nonzero run MUST surface the top-10 signup prompt.
+    await new Promise(r => setTimeout(r, 1500));
+    const caught = await page.evaluate(() => {
+      const m = document.body.innerText.match(/([\d,]+)\s*chips!/);
+      return m ? Number(m[1].replace(/,/g, '')) : 0;
+    });
+    if (caught > 0) {
+      ok(await page.evaluate(seeing('TOP 10 RUN')), `run caught ${caught} → top-10 signup prompt shows`);
+      ok(await page.evaluate(seeing('SIGN UP')), 'signup CTA button is present');
+    } else {
+      console.log('  – zero-catch run: signup prompt correctly absent (not asserted)');
+      ok(!(await page.evaluate(seeing('TOP 10 RUN'))), 'no signup prompt on a zero run');
+    }
     await shot(page, '4-results');
     await tapSettled(page, 'Claim Chips');
     await page.waitForFunction(`!${seeing('CLAIM CHIPS')}`, { timeout: 5_000 });

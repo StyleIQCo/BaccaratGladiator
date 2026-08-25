@@ -43,6 +43,7 @@ export interface FallingItem {
   wobblePhase: number;  // chili_cheese: primary sine phase
   wobbleAmp: number;    //   px
   wobbleHz: number;     //   Hz — a second sine at 2.7× freq makes it "erratic"
+  chute: boolean;       // drifting under a mini parachute: slow constant fall + sway
   seed: number;         // stable per-item jitter for the renderer (topping blobs)
   dead: boolean;        // caught or off-screen; compacted at end of step()
 }
@@ -97,6 +98,10 @@ const GRAVITY = 160;                  // px/s²
 const TERMINAL_MULT = 1.5;            // vy cap = base × this
 const SPAWN_START = 0.85;             // seconds between spawns at t=0…
 const SPAWN_END = 0.34;               // …ramping to this by the final second
+const CHUTE_CHANCE = 0.18;            // odds a non-chili item drifts in under a mini parachute
+const CHUTE_VY_MIN = 55;              // px/s — chute drag equilibrium, no gravity applied
+const CHUTE_VY_SPREAD = 25;
+const CHUTE_CLEARANCE = 44;           // extra spawn height so the canopy enters off-screen too
 const MAX_ITEMS = 40;                 // hard cap — spawner skips a beat rather than flood
 const EDGE_MARGIN = 26;               // keep spawns/wobble inside the walls
 const PLAYER_EASE = 14;               // 1/s — how snappily the basket chases the finger
@@ -196,7 +201,13 @@ export function useHotdogPhysics(opts: HotdogPhysicsOptions = {}): HotdogPhysics
 
     const kind = rollKind();
     const stats = ITEM_STATS[kind];
-    const wobbleAmp = stats.wobble ? 30 + Math.random() * 40 : 0;
+    // Chili keeps its fast-and-wobbly identity; anything else may drift
+    // in under a mini parachute — slow, swaying, easy to aim for (and a
+    // chuted BURNT dog is a nice slow-motion menace).
+    const chute = !stats.wobble && Math.random() < CHUTE_CHANCE;
+    const wobbleAmp = stats.wobble ? 30 + Math.random() * 40
+      : chute ? 10 + Math.random() * 8       // gentle hang-sway
+      : 0;
     const lo = EDGE_MARGIN + stats.w / 2 + wobbleAmp;
     const hi = canvasW - EDGE_MARGIN - stats.w / 2 - wobbleAmp;
     const baseX = lo + Math.random() * Math.max(hi - lo, 1);
@@ -204,14 +215,19 @@ export function useHotdogPhysics(opts: HotdogPhysicsOptions = {}): HotdogPhysics
     items.push({
       kind,
       x: baseX,
-      y: -stats.h,                      // just above the top edge
+      y: -stats.h - (chute ? CHUTE_CLEARANCE : 0),   // just above the top edge (canopy too)
       baseX,
-      vy: stats.minVy + Math.random() * (stats.maxVy - stats.minVy),
-      spin: (Math.random() - 0.5) * 0.6,
-      spinVel: (Math.random() - 0.5) * 1.6,
+      vy: chute
+        ? CHUTE_VY_MIN + Math.random() * CHUTE_VY_SPREAD
+        : stats.minVy + Math.random() * (stats.maxVy - stats.minVy),
+      spin: (Math.random() - 0.5) * (chute ? 0.16 : 0.6),      // chuted cargo hangs level
+      spinVel: (Math.random() - 0.5) * (chute ? 0.3 : 1.6),
       wobblePhase: Math.random() * Math.PI * 2,
       wobbleAmp,
-      wobbleHz: stats.wobble ? 0.8 + Math.random() * 0.8 : 0,
+      wobbleHz: stats.wobble ? 0.8 + Math.random() * 0.8
+        : chute ? 0.3 + Math.random() * 0.25
+        : 0,
+      chute,
       seed: Math.random() * 1000,
       dead: false,
     });
@@ -248,8 +264,11 @@ export function useHotdogPhysics(opts: HotdogPhysicsOptions = {}): HotdogPhysics
     for (let i = 0; i < items.length; i++) {
       const it = items[i];
       const st = ITEM_STATS[it.kind];
-      const terminal = st.minVy * TERMINAL_MULT + (st.maxVy - st.minVy);
-      it.vy = Math.min(it.vy + GRAVITY * dt, terminal);
+      if (!it.chute) {
+        // Chutes are at drag equilibrium — constant slow fall, no gravity.
+        const terminal = st.minVy * TERMINAL_MULT + (st.maxVy - st.minVy);
+        it.vy = Math.min(it.vy + GRAVITY * dt, terminal);
+      }
       it.y += it.vy * dt;
       it.spin += it.spinVel * dt;
 

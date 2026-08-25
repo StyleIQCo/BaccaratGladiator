@@ -25,7 +25,7 @@
 // ═══════════════════════════════════════════════════════════════════
 import { useEffect, useRef } from 'react';
 import {
-  useHotdogPhysics, getCatcherBox, ITEM_W, ITEM_H,
+  useHotdogPhysics, getCatcherBox, ITEM_STATS, ITEM_W, ITEM_H,
   type FallingItem, type GameOverReason, type HazardMode, type ItemKind, type ScorePopup,
 } from './useHotdogPhysics';
 import { primeAudio, sfxCatch, sfxGameOver, sfxHazard, sfxStart } from './hotdogSfx';
@@ -192,11 +192,15 @@ function drawHotdog(ctx: CanvasRenderingContext2D, it: FallingItem, t: number): 
   const h = ITEM_H;
 
   if (it.kind === 'burnt_hotdog') {
-    // ── HAZARD: charcoal dog, ember cracks, smoke, pulsing red ring ──
+    // ── HAZARD: charcoal dog ON FIRE — flames, glow, smoke, red ring ──
     const pulse = 0.35 + 0.25 * Math.sin(t * 6 + it.seed);
+    ctx.fillStyle = `rgba(255, 120, 40, ${(0.16 + 0.08 * Math.sin(t * 11 + it.seed)).toFixed(3)})`;
+    ctx.beginPath();                           // flickering fire glow
+    ctx.ellipse(0, -4, w * 0.8, h * 1.15, 0, 0, Math.PI * 2);
+    ctx.fill();
     ctx.strokeStyle = `rgba(255, 60, 40, ${pulse.toFixed(3)})`;
     ctx.lineWidth = 3;
-    ctx.beginPath();
+    ctx.beginPath();                           // pulsing danger ring (gameplay telegraph)
     ctx.ellipse(0, 0, w * 0.72, h * 0.95, 0, 0, Math.PI * 2);
     ctx.stroke();
 
@@ -220,15 +224,39 @@ function drawHotdog(ctx: CanvasRenderingContext2D, it: FallingItem, t: number): 
       ctx.stroke();
     }
 
-    // Smoke wisps: quadratic curves rising and fading on a loop.
+    // Flames: four tongues licking up off the sausage, each flickering on
+    // its own phase — outer orange body with a yellow core.
+    const base = -h * 0.34;
+    for (let i = 0; i < 4; i++) {
+      const fx = -w * 0.33 + i * w * 0.22;
+      const flick = 0.5 + 0.5 * Math.sin(t * 9 + it.seed + i * 1.7);
+      const fh = 9 + flick * 8 + jitter(it.seed, i + 20) * 4;
+      const lean = Math.sin(t * 5 + i * 2.1) * 3;
+      ctx.fillStyle = 'rgba(255, 106, 42, 0.85)';
+      ctx.beginPath();
+      ctx.moveTo(fx - 4, base);
+      ctx.quadraticCurveTo(fx - 5, base - fh * 0.55, fx + lean, base - fh);
+      ctx.quadraticCurveTo(fx + 5, base - fh * 0.55, fx + 4, base);
+      ctx.closePath();
+      ctx.fill();
+      ctx.fillStyle = 'rgba(255, 205, 66, 0.9)';
+      ctx.beginPath();
+      ctx.moveTo(fx - 2, base);
+      ctx.quadraticCurveTo(fx - 2.5, base - fh * 0.35, fx + lean * 0.6, base - fh * 0.55);
+      ctx.quadraticCurveTo(fx + 2.5, base - fh * 0.35, fx + 2, base);
+      ctx.closePath();
+      ctx.fill();
+    }
+
+    // Smoke wisps rise off the flame tips.
     for (let i = 0; i < 3; i++) {
       const cycle = (t * 0.7 + jitter(it.seed, i + 9)) % 1;
       const sx = -w * 0.3 + i * w * 0.3;
       ctx.strokeStyle = `rgba(90, 90, 95, ${(0.5 * (1 - cycle)).toFixed(3)})`;
       ctx.lineWidth = 3;
       ctx.beginPath();
-      ctx.moveTo(sx, -h * 0.5);
-      ctx.quadraticCurveTo(sx + 6, -h * 0.5 - 14 * cycle - 6, sx - 4, -h * 0.5 - 26 * cycle - 10);
+      ctx.moveTo(sx, -h * 0.5 - 12);
+      ctx.quadraticCurveTo(sx + 6, -h * 0.5 - 12 - 14 * cycle - 6, sx - 4, -h * 0.5 - 12 - 26 * cycle - 10);
       ctx.stroke();
     }
     ctx.restore();
@@ -361,7 +389,50 @@ function drawStein(ctx: CanvasRenderingContext2D, it: FallingItem, t: number): v
   ctx.restore();
 }
 
+/** Mini parachute above a drifting item — red/white for treats, ash-gray for the burnt dog. */
+function drawChute(ctx: CanvasRenderingContext2D, it: FallingItem): void {
+  const stats = ITEM_STATS[it.kind];
+  const burnt = it.kind === 'burnt_hotdog';
+  ctx.save();
+  ctx.translate(it.x, it.y);
+  ctx.rotate(Math.sin(it.wobblePhase) * 0.09);       // hang-sway with the drift
+  const top = -stats.h / 2 - 26;
+  const R = 16;
+
+  ctx.strokeStyle = burnt ? '#4a4650' : '#8a6a4f';   // cords first, behind the cargo
+  ctx.lineWidth = 1.2;
+  ctx.beginPath();
+  ctx.moveTo(-R + 2, top);
+  ctx.lineTo(-stats.w * 0.28, -stats.h * 0.3);
+  ctx.moveTo(R - 2, top);
+  ctx.lineTo(stats.w * 0.28, -stats.h * 0.3);
+  ctx.stroke();
+
+  ctx.fillStyle = burnt ? '#3f3b45' : '#e2453f';     // canopy dome
+  ctx.beginPath();
+  ctx.arc(0, top, R, Math.PI, 0);
+  ctx.closePath();
+  ctx.fill();
+  ctx.fillStyle = burnt ? '#5a5462' : '#f6f1e6';     // centre gore
+  ctx.beginPath();
+  ctx.moveTo(0, top);
+  ctx.arc(0, top, R, -Math.PI * 0.68, -Math.PI * 0.32);
+  ctx.closePath();
+  ctx.fill();
+  for (let i = 0; i < 3; i++) {                      // scalloped hem
+    ctx.fillStyle = i === 1
+      ? (burnt ? '#5a5462' : '#f6f1e6')
+      : (burnt ? '#3f3b45' : '#e2453f');
+    ctx.beginPath();
+    ctx.arc(-R + (i + 0.5) * ((R * 2) / 3), top, R / 3, 0, Math.PI);
+    ctx.closePath();
+    ctx.fill();
+  }
+  ctx.restore();
+}
+
 function drawItem(ctx: CanvasRenderingContext2D, it: FallingItem, t: number): void {
+  if (it.chute) drawChute(ctx, it);
   if (it.kind === 'pretzel') drawPretzel(ctx, it);
   else if (it.kind === 'beer_stein') drawStein(ctx, it, t);
   else drawHotdog(ctx, it, t);

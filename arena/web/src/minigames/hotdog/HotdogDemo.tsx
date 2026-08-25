@@ -8,12 +8,19 @@
 // ═══════════════════════════════════════════════════════════════════
 import { useState } from 'react';
 import { DailyHotdogChallenge } from './DailyHotdogChallenge';
+import { hotdogRank, recordScore } from './leaderboard';
+import { shareHotdog } from './share';
 
 const BEST_KEY = 'arena.hotdog.best';
 const TOTAL_KEY = 'arena.hotdog.chips';
 
 export default function HotdogDemo() {
-  const [open, setOpen] = useState(false);
+  // Shared deep link (?game=hotdog) lands straight on the game intro —
+  // audio still primes on the Drop In tap, so the iOS gesture rule holds.
+  const [open, setOpen] = useState(
+    () => new URLSearchParams(window.location.search).get('game') === 'hotdog',
+  );
+  const [copied, setCopied] = useState(false);
   const [best, setBest] = useState(() => Number(localStorage.getItem(BEST_KEY)) || 0);
   const [total, setTotal] = useState(() => Number(localStorage.getItem(TOTAL_KEY)) || 0);
   const runSeconds =
@@ -40,18 +47,39 @@ export default function HotdogDemo() {
           <div className="text-lg font-black text-white">{total.toLocaleString()}</div>
         </div>
       </div>
-      <button
-        onClick={() => setOpen(true)}
-        className="btn-chunky bg-gradient-to-r from-neon-gold to-neon-pink px-10 py-3 text-abyss-900"
-      >
-        ▶ PLAY
-      </button>
+      <div className="flex gap-2">
+        <button
+          onClick={() => setOpen(true)}
+          className="btn-chunky bg-gradient-to-r from-neon-gold to-neon-pink px-10 py-3 text-abyss-900"
+        >
+          ▶ PLAY
+        </button>
+        <button
+          onClick={async () => {
+            if ((await shareHotdog()) === 'copied') {
+              setCopied(true);
+              setTimeout(() => setCopied(false), 2000);
+            }
+          }}
+          className="btn-chunky bg-white/[0.07] px-6 py-3 text-white/80"
+        >
+          {copied ? '✓ COPIED' : '📤 SHARE'}
+        </button>
+      </div>
 
       <DailyHotdogChallenge
         open={open}
         onClose={() => setOpen(false)}
         runSeconds={runSeconds}
+        getRank={hotdogRank}
+        onSignup={() => {
+          // Account creation lives in the classic game (Cognito hosted UI
+          // behind its CREATE ACCOUNT button) — send them there in a new
+          // tab so the arena session (and their local rank) survives.
+          window.open('/', '_blank');
+        }}
         onClaim={chips => {
+          recordScore(chips);
           const b = Math.max(best, chips);
           const tot = total + chips;
           localStorage.setItem(BEST_KEY, String(b));

@@ -19,6 +19,7 @@ import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 import { HotdogCanvas } from './HotdogCanvas';
 import { primeAudio, sfxClaim } from './hotdogSfx';
+import { shareHotdog } from './share';
 import type { GameOverReason, HazardMode } from './useHotdogPhysics';
 
 export interface DailyHotdogChallengeProps {
@@ -26,6 +27,12 @@ export interface DailyHotdogChallengeProps {
   onClose: () => void;
   /** Award the chips (server call lives up here — the game never touches the wallet). */
   onClaim: (chips: number) => void | Promise<void>;
+  /** Top-10 hook: return the 1-based rank a score earns, or null if it
+   *  misses the board. When it hits, the results screen asks the player
+   *  to sign up for an account to claim the rank. */
+  getRank?: (score: number) => number | null;
+  /** Route to account creation (e.g. the classic game's Cognito flow). */
+  onSignup?: (score: number, rank: number) => void;
   hazardMode?: HazardMode;   // default 'end_run': one burnt dog ends the drop
   runSeconds?: number;       // default 30
 }
@@ -59,13 +66,14 @@ const LEGEND: { swatch: string; name: string; chips: string }[] = [
 ];
 
 export function DailyHotdogChallenge({
-  open, onClose, onClaim, hazardMode = 'end_run', runSeconds = 30,
+  open, onClose, onClaim, getRank, onSignup, hazardMode = 'end_run', runSeconds = 30,
 }: DailyHotdogChallengeProps) {
   const reduceMotion = useReducedMotion();
   const [phase, setPhase] = useState<Phase>('intro');
   const [finalScore, setFinalScore] = useState(0);
   const [reason, setReason] = useState<GameOverReason>('time');
   const [claiming, setClaiming] = useState(false);
+  const [shareLabel, setShareLabel] = useState<'idle' | 'copied'>('idle');
   const claimedRef = useRef(false);   // double-tap guard across the async claim
 
   // Fresh run every time the modal opens.
@@ -75,9 +83,18 @@ export function DailyHotdogChallenge({
       setFinalScore(0);
       setReason('time');
       setClaiming(false);
+      setShareLabel('idle');
       claimedRef.current = false;
     }
   }, [open]);
+
+  const handleShare = async () => {
+    const result = await shareHotdog(finalScore);
+    if (result === 'copied') {
+      setShareLabel('copied');
+      setTimeout(() => setShareLabel('idle'), 2000);
+    }
+  };
 
   const handleGameOver = (score: number, r: GameOverReason) => {
     setFinalScore(score);
@@ -206,6 +223,27 @@ export function DailyHotdogChallenge({
                         <CountUp to={finalScore} />{' '}
                         <span className="text-2xl text-amber-300">chips!</span>
                       </div>
+                      {(() => {
+                        const rank = getRank?.(finalScore) ?? null;
+                        return rank != null && (
+                          <div className="w-full rounded-2xl border border-amber-300/40 bg-amber-400/10 px-4 py-3">
+                            <div className="text-sm font-black uppercase tracking-wider text-amber-300">
+                              🏆 Top 10 run — #{rank} on the board!
+                            </div>
+                            <p className="mt-1 text-xs leading-relaxed text-sky-100/80">
+                              Create your Gladiator account to claim this rank when the
+                              global board goes live.
+                            </p>
+                            <motion.button
+                              onClick={() => onSignup?.(finalScore, rank)}
+                              whileTap={{ scale: 0.94 }}
+                              className="mt-2 rounded-full bg-gradient-to-b from-sky-300 to-sky-500 px-6 py-2 text-sm font-black uppercase tracking-wider text-sky-950"
+                            >
+                              Sign up · claim #{rank}
+                            </motion.button>
+                          </div>
+                        );
+                      })()}
                       <motion.button
                         onClick={handleClaim}
                         disabled={claiming}
@@ -215,6 +253,13 @@ export function DailyHotdogChallenge({
                         className="mt-2 rounded-full bg-gradient-to-b from-amber-300 to-amber-500 px-10 py-3 text-lg font-black uppercase tracking-wider text-amber-950 shadow-lg shadow-amber-500/40 disabled:opacity-60"
                       >
                         {claiming ? 'Claiming…' : 'Claim Chips'}
+                      </motion.button>
+                      <motion.button
+                        onClick={handleShare}
+                        whileTap={{ scale: 0.94 }}
+                        className="rounded-full border-2 border-amber-300/60 px-8 py-2.5 text-sm font-black uppercase tracking-wider text-amber-200"
+                      >
+                        {shareLabel === 'copied' ? '✓ Link copied!' : '📤 Challenge a friend'}
                       </motion.button>
                     </motion.div>
                   </motion.div>
