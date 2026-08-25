@@ -33,3 +33,9 @@ __pycache__/
 
 # Vite build output (arena web)
 arena/web/dist/
+
+# Race demo single-file build output
+arena/web/dist-race-demo
+
+# Odyssey smoke harness build output
+odyssey/smoke/dist/

@@ -72,6 +72,9 @@ async function rectOf(page, text, onlyButtons = true) {
       .sort((a, b) => a.textContent.length - b.textContent.length);
     const el = els[0];
     if (!el) return null;
+    // The Demo Hub page scrolls — a target below the fold has viewport
+    // coords the touchscreen can't reach. Center it first (instant).
+    el.scrollIntoView({ block: 'center' });
     const r = el.getBoundingClientRect();
     return { x: r.x + r.width / 2, y: r.y + r.height / 2 };
   }, { text, onlyButtons });
@@ -81,6 +84,19 @@ async function tap(page, text, onlyButtons = true) {
   const r = await rectOf(page, text, onlyButtons);
   if (!r) throw new Error(`tap target not found: "${text}"`);
   await page.touchscreen.tap(r.x, r.y);
+}
+
+/** Tap a data-testid'd element (campaign map ports, cutscene card). */
+async function tapSel(page, selector, yOffset = null) {
+  const el = await page.$(selector);
+  if (!el) throw new Error(`tapSel target not found: ${selector}`);
+  await el.evaluate(e => e.scrollIntoView({ block: 'center' }));
+  await new Promise(r => setTimeout(r, 150));
+  const b = await el.boundingBox();
+  await page.touchscreen.tap(
+    b.x + b.width / 2,
+    yOffset === null ? b.y + b.height / 2 : b.y + yOffset,
+  );
 }
 
 const seeing = t => `document.body.innerText.includes(${JSON.stringify(t)})`;
@@ -102,13 +118,74 @@ const shot = async (page, name) => {
     await page.goto(`http://127.0.0.1:${PORT}/arena/`, { waitUntil: 'networkidle0' });
     await page.waitForFunction(seeing('GRAND ARENA'), { timeout: 10_000 });
 
-    // Fresh voyage: wipe any previous VIP profile, reload locked.
-    await page.evaluate(() => localStorage.removeItem('bg.odyssey.vip'));
+    // Fresh voyage: wipe any previous VIP profile + campaign save.
+    await page.evaluate(() => {
+      localStorage.removeItem('bg.odyssey.vip');
+      localStorage.removeItem('bg_odyssey_progress_v1');
+    });
     await page.reload({ waitUntil: 'networkidle0' });
     await page.waitForFunction(seeing('GRAND ARENA'), { timeout: 10_000 });
 
-    console.log('\nGate (locked)');
+    console.log('\nCampaign voyage (default sub-view)');
     await tap(page, 'ODYSSEY');
+    await page.waitForSelector('[data-testid="odyssey-campaign-map"]', { timeout: 5_000 });
+    const nodeCount = await page.$$eval('[data-testid^="map-node-"]', els => els.length);
+    ok(nodeCount === 10, `campaign map renders 10 ports (got ${nodeCount})`);
+    await shot(page, '0-campaign-map');
+
+    // Locked port: clank + camera shake, but no cutscene.
+    await tapSel(page, '[data-testid="map-node-3"]');
+    await new Promise(r => setTimeout(r, 500));
+    ok(!(await page.$('[data-testid="narrative-cutscene"]')), 'locked port rejects the tap');
+
+    // Frontier port → cutscene → SET SAIL → trial table.
+    await tapSel(page, '[data-testid="map-node-1"]');
+    await page.waitForSelector('[data-testid="narrative-cutscene"]', { timeout: 5_000 });
+    await new Promise(r => setTimeout(r, 700)); // card entrance spring settles
+    let sail = false;
+    for (let i = 0; i < 14 && !sail; i++) {
+      sail = !!(await page.$('[data-testid="cutscene-cta"]'));
+      if (sail) break;
+      await tapSel(page, '[data-testid="cutscene-advance"]', 40);
+      await new Promise(r => setTimeout(r, 500));
+    }
+    ok(sail, 'cutscene pages through to the CTA');
+    const ctaText = sail
+      ? await page.$eval('[data-testid="cutscene-cta"]', el => el.innerText.trim())
+      : '(absent)';
+    ok(ctaText === 'SET SAIL', `CTA reads SET SAIL (got "${ctaText}")`);
+    await shot(page, '0b-cutscene');
+    await new Promise(r => setTimeout(r, 400)); // CTA reveal spring settles
+    await tap(page, 'SET SAIL');
+    await page.waitForFunction(seeing('WIN TRIAL'), { timeout: 5_000 });
+    ok(true, 'SET SAIL lands on the Aegean trial table');
+    await shot(page, '0c-trial-table');
+
+    // Demo-rig win → back on the map with the port cleared.
+    await tap(page, 'WIN TRIAL');
+    // The remounted map hydrates from the save in a post-commit effect —
+    // wait for the status to land rather than racing the first paint.
+    await page.waitForFunction(
+      `document.querySelector('[data-testid="map-node-1"]')?.dataset.status === 'cleared'`,
+      { timeout: 5_000 },
+    );
+    ok(true, 'port 1 cleared after the trial');
+    await page.waitForFunction(seeing('⚔️ 1 / 10'), { timeout: 5_000 });
+    ok(true, 'voyage chip shows ⚔️ 1 / 10');
+
+    // Campaign progress survives reload (namespaced odyssey save).
+    await page.reload({ waitUntil: 'networkidle0' });
+    await tap(page, 'ODYSSEY');
+    await page.waitForSelector('[data-testid="odyssey-campaign-map"]', { timeout: 5_000 });
+    await page.waitForFunction(seeing('⚔️ 1 / 10'), { timeout: 5_000 });
+    ok(true, 'voyage progress survives reload');
+
+    await tap(page, 'RESET VOYAGE');
+    await page.waitForFunction(seeing('⚔️ 0 / 10'), { timeout: 5_000 });
+    ok(true, 'RESET VOYAGE wipes the campaign save');
+
+    console.log('\nGate (locked)');
+    await tap(page, 'AEGEAN VIP TABLE');
     await page.waitForFunction(seeing('THE ODYSSEY AWAITS'), { timeout: 5_000 });
     ok(true, 'locked gate renders over the stage');
     await shot(page, '1-locked-gate');
@@ -167,6 +244,8 @@ const shot = async (page, name) => {
     console.log('\nPersistence');
     await page.reload({ waitUntil: 'networkidle0' });
     await tap(page, 'ODYSSEY');
+    await page.waitForSelector('[data-testid="odyssey-campaign-map"]', { timeout: 5_000 });
+    await tap(page, 'AEGEAN VIP TABLE');
     await page.waitForFunction(seeing('BOARDED · CREW CAPTAIN'), { timeout: 5_000 });
     ok(true, 'unlock survives reload (profile persisted)');
 

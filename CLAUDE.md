@@ -38,6 +38,11 @@ minutes of CloudFront invalidation, so the cost of skipping E2E is high.
      explicitly, including which path the test couldn't find. Do not silently
      swallow the error.
    - **Scoreboard / leaderboard changes** — `node check-scoreboard.js`.
+   - **Odyssey module changes** (anything under `odyssey/src/`) —
+     `node test-odyssey-smoke.js`. Builds a Vite + Tailwind harness from
+     `odyssey/smoke/` and drives the full campaign flow touch-emulated.
+     The module ships to no tester-facing surface yet, but this gate must
+     pass before any host that mounts it is deployed.
 2. Report the test results to the user **before** running any deploy command.
    When a test is skipped under the SAM-venv exception above, list it as
    "skipped — infra unavailable" alongside the other test results.

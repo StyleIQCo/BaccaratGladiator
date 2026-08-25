@@ -1,7 +1,13 @@
 /** Baccarat Gladiator social layer — "juicy UI" design tokens.
  *  Dark abyss base + neon accents; chunky shadows; glow utilities. */
 export default {
-  content: ['./index.html', './src/**/*.{ts,tsx}'],
+  content: [
+    './index.html',
+    './src/**/*.{ts,tsx}',
+    // Odyssey campaign module (repo root) — Tailwind-styled, arbitrary
+    // values only; unscanned it renders unstyled (see odyssey/README.md).
+    '../../odyssey/src/**/*.{ts,tsx}',
+  ],
   theme: {
     extend: {
       colors: {
