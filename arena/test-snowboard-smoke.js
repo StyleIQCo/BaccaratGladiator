@@ -78,13 +78,30 @@ async function rectOf(page, text, onlyButtons = true) {
 
 /** Tap a button once its rect holds still — modal springs move targets.
  *  (The Claim button's idle pulse is a scale about its centre, so the
- *  centre rectOf returns is still a stable target.) */
+ *  centre rectOf returns is still a stable target.)
+ *  Scroll-robust: a taller hub (each new tab can wrap the nav another
+ *  row) shifts everything below it, and the game modal anchors inside
+ *  the transformed tab content — at 390×844 the target can settle a
+ *  fraction of a pixel BELOW the fold, where touchscreen.tap silently
+ *  does nothing (found by baccaratgladiator-a1's 15th-tab candidate:
+ *  live y=804.8 tappable, candidate y=844.9 dead). So after settling,
+ *  centre the button via scrollIntoView, re-measure, then tap. */
 async function tapSettled(page, text) {
   let prev = null;
   for (let i = 0; i < 25; i++) {
     const r = await rectOf(page, text);
     if (r && prev && Math.abs(r.x - prev.x) < 0.5 && Math.abs(r.y - prev.y) < 0.5) {
-      await page.touchscreen.tap(r.x, r.y);
+      await page.evaluate(t => {
+        const els = [...document.querySelectorAll('button')]
+          .filter(el => el.textContent?.includes(t))
+          .filter(el => { const b = el.getBoundingClientRect(); return b.width > 0 && b.height > 0; })
+          .sort((a, b) => a.textContent.length - b.textContent.length);
+        els[0]?.scrollIntoView({ block: 'center', behavior: 'instant' });
+      }, text);
+      await new Promise(res => setTimeout(res, 150));
+      const fresh = await rectOf(page, text);
+      if (!fresh) throw new Error(`tap target vanished after scroll: "${text}"`);
+      await page.touchscreen.tap(fresh.x, fresh.y);
       return;
     }
     prev = r;
