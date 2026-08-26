@@ -1,0 +1,25 @@
+{
+  // The arcade module has no toolchain of its own — like the odyssey
+  // module, react/framer-motion/typescript come from arena/node_modules
+  // (the workspace hoists deps there, NOT arena/web/node_modules).
+  // Typecheck: ../arena/node_modules/.bin/tsc -p emerald-arcade
+  "compilerOptions": {
+    "noEmit": true,
+    "strict": true,
+    "target": "es2020",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "lib": ["es2020", "dom", "dom.iterable"],
+    "skipLibCheck": true,
+    "types": [],
+    "baseUrl": ".",
+    "paths": {
+      "react": ["../arena/node_modules/@types/react"],
+      "react/jsx-runtime": ["../arena/node_modules/@types/react/jsx-runtime"],
+      "react-dom": ["../arena/node_modules/@types/react-dom"],
+      "framer-motion": ["../arena/node_modules/framer-motion/dist/index.d.ts"]
+    }
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx"]
+}
