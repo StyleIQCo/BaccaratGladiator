@@ -17,8 +17,14 @@ import OdysseyDemo from './odyssey/OdysseyDemo';
 import LoreDemo from './collectibles/LoreDemo';
 import HotdogDemo from './minigames/hotdog/HotdogDemo';
 import FishTossDemo from './minigames/fish-toss/FishTossDemo';
+import RainierDemo from './minigames/rainier/RainierDemo';
+import WhaleWatchDemo from './minigames/whale-watch/WhaleWatchDemo';
+import SnowboardDemo from './minigames/snowboard/SnowboardDemo';
+import ForagerDemo from './minigames/puget-forager/ForagerDemo';
+import MadronaDemo from './minigames/madrona/MadronaDemo';
+import EmeraldArcadeDemo from './minigames/emerald-arcade/EmeraldArcadeDemo';
 
-type Tab = 'social' | 'battle' | 'spectate' | 'clutch' | 'mockingbird' | 'odyssey' | 'lore' | 'hotdog' | 'fishtoss';
+type Tab = 'social' | 'battle' | 'spectate' | 'clutch' | 'mockingbird' | 'odyssey' | 'lore' | 'hotdog' | 'fishtoss' | 'rainier' | 'whales' | 'shred' | 'forager' | 'madrona' | 'arcade';
 
 const TABS: Array<{ id: Tab; label: string }> = [
   { id: 'social',      label: '🏆 SOCIAL' },
@@ -30,6 +36,12 @@ const TABS: Array<{ id: Tab; label: string }> = [
   { id: 'lore',        label: '📜 LORE' },
   { id: 'hotdog',      label: '🌭 HOTDOG DROP' },
   { id: 'fishtoss',    label: '🐟 FISH TOSS' },
+  { id: 'rainier',     label: '🐐 RAINIER SCRAMBLE' },
+  { id: 'whales',      label: '🐋 WHALE WATCH' },
+  { id: 'shred',       label: '🏂 NIGHT SHRED' },
+  { id: 'forager',     label: '🦪 SOUND FORAGER' },
+  { id: 'madrona',     label: '🪵 WOOD LABYRINTH' },
+  { id: 'arcade',      label: '🕹️ ARCADE' },
 ];
 
 export default function DemoHub() {
@@ -107,6 +119,18 @@ export default function DemoHub() {
         {tab === 'hotdog' && <HotdogDemo />}
 
         {tab === 'fishtoss' && <FishTossDemo />}
+
+        {tab === 'whales' && <WhaleWatchDemo />}
+
+        {tab === 'rainier' && <RainierDemo />}
+
+        {tab === 'shred' && <SnowboardDemo />}
+
+        {tab === 'forager' && <ForagerDemo />}
+
+        {tab === 'madrona' && <MadronaDemo />}
+
+        {tab === 'arcade' && <EmeraldArcadeDemo />}
 
         {tab === 'clutch' && (
           <div className="mx-auto flex max-w-md flex-col gap-3">

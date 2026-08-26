@@ -7,6 +7,9 @@ export default {
     // Odyssey campaign module (repo root) — Tailwind-styled, arbitrary
     // values only; unscanned it renders unstyled (see odyssey/README.md).
     '../../odyssey/src/**/*.{ts,tsx}',
+    // Emerald City Arcade module (repo root) — the Madrona labyrinth
+    // wrapper + marble inventory are utility-styled; same host contract.
+    '../../emerald-arcade/src/**/*.{ts,tsx}',
   ],
   theme: {
     extend: {
